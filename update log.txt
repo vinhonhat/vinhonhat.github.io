@@ -1,0 +1,21 @@
+Cập nhật trang Blog của Vinh ở Nhật
+
+
+
+blog V25.9.2
+
+1. Thêm rê chuột nhấn ở ảnh của bài viết mới nhất, nhấn vào ảnh hoặc tiêu đề.
+2. cập nhật liên kết và trang phụ rakuten và các menu có sẵn
+3. Cập nhật tiến trình của trang 35%
+
+
+
+
+blog V25.9.1
+
+1. Bản này đã hoàn thiện cơ bản về trang chủ
+2. Thêm phần vòng quay trong giải trí 
+3. cập nhật thêm link chân trang. 
+4. Tăng kích thước logo to lên 12pixel cả 2 trang
+5. Gắn link tải app, video.
+

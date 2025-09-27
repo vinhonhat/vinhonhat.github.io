@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vinh ở Nhật | Blog chia sẽ</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#F6AD55">
+    <link rel="apple-touch-icon" href="/img/logo.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-[#FBF7F0]">
+    <div id="popupOverlay" class="popup-overlay">
+        <div class="popup-content">
+            <button id="closePopupBtn" class="absolute top-2 right-4 text-2xl text-gray-400 hover:text-gray-600">&times;</button>
+            <img id="holidayImage" src="" alt="Hình ảnh ngày lễ" class="max-h-40 mx-auto mb-4 rounded-lg hidden">
+            <h2 id="popupTitle" class="text-2xl font-bold mb-2 text-gray-800"></h2>
+            <p id="popupText" class="text-gray-600 mb-6"></p>
+        </div>
+    </div>
+
+    <header class="bg-white shadow-sm py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center space-x-2">
+                <img src="img/logo.png" onerror="this.onerror=null; this.src='https://placehold.co/40x40/F6AD55/ffffff?text=V';" alt="Logo" class="h-12 w-12 rounded-full">
+                <span class="text-xl font-bold text-gray-800 hidden sm:block">Vinh ở Nhật</span>
+            </a>
+            <div class="flex items-center space-x-4">
+                <div class="text-right time-display">
+                    <div id="time" class="time text-3xl font-bold leading-none">00:00:00</div>
+                    <div id="date" class="date text-sm mt-1">...</div>
+                </div>
+                <div class="sm:hidden">
+                    <button id="menu-toggle" class="text-gray-700 hover:text-yellow-600"><i class="fas fa-bars text-2xl"></i></button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="bg-white shadow-sm mt-4 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-2">
+            <ul class="hidden sm:flex justify-center sm:justify-between items-center space-x-4">
+                <li class="relative group">
+                    <a href="pages/pages-baiviet/bai-viet-hd.html" class="menu-link hover:text-yellow-600 flex items-center">Bài HD<i class="fas fa-chevron-down ml-2 text-xs"></i></a>
+                    <ul class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 py-2 w-40 z-10 dropdown-menu">
+                        <li><a href="pages/pages-baiviet/pages-conten/rakuten.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Rakuten</a></li>
+                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Seven</a></li>
+                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Baito</a></li>
+                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Sim thẻ</a></li>
+                    </ul>
+                    <li><a href="pages/pages-video/video.html" class="menu-link">Video hướng dẫn</a></li>
+                    <li><a href="pages/pages-app/app.html" class="menu-link">Tải ứng dụng</a></li>
+                    <li><a href="pages/pages-hoctap/hoctap.html" class="menu-link">Học tập</a></li>
+                    <li><a href="pages/pages-giaitri/giaitri.html" class="menu-link">Giải trí</a></li>
+            </ul>
+        <div id="mobile-menu" class="hidden sm:hidden absolute left-0 w-full bg-white shadow-lg py-4">
+            <ul class="flex flex-col items-center space-y-4">
+                    <li><a href="pages/pages-baiviet/bai-viet-hd.html" class="menu-link">Bài viết HD</a></li>
+                    <li><a href="pages/pages-video/video.html" class="menu-link">Video hướng dẫn</a></li>
+                    <li><a href="pages/pages-app/app.html" class="menu-link">Tải ứng dụng</a></li>
+                    <li><a href="pages/pages-hoctap/hoctap.html" class="menu-link">Học tập</a></li>
+                    <li><a href="pages/pages-giaitri/giaitri.html" class="menu-link">Giải trí</a></li>
+                </ul>
+        </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 mt-8">
+        <div class="banner-container max-w-5xl mx-auto rounded-lg shadow-md">
+            <div id="bannerSlider" class="banner-slider"></div>
+        </div>
+        
+        <section class="mt-12">
+            <h2 class="text-2xl font-semibold text-gray-800 border-l-4 border-yellow-600 pl-4 mb-6">Bài viết mới nhất</h2>
+            <div id="latest-posts-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+            <div class="text-center mt-8">
+                <a href="#" class="bg-yellow-600 text-white font-semibold py-2 px-6 rounded-full transition-all duration-300 hover:bg-yellow-700 shadow-md">
+                    Xem thêm nhiều bài mới &rarr;
+                </a>
+            </div>
+        </section>
+        
+        <section class="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-bold text-gray-800 border-l-4 border-yellow-600 pl-4 mb-4">Bài viết hướng dẫn</h2>
+        <div id="guide-posts-container" class="space-y-4"></div>
+        <div class="mt-4">
+            <a href="#" class="text-yellow-600 hover:underline">Xem các bài khác &rarr;</a>
+        </div>
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-bold text-gray-800 border-l-4 border-yellow-600 pl-4 mb-4">Video hướng dẫn</h2>
+        <div id="video-guides-container" class="space-y-4"></div>
+        <div class="mt-4">
+            <a href="#" class="text-yellow-600 hover:underline">Xem các video khác &rarr;</a>
+        </div>
+    </div>
+</section>
+    </main>
+    
+    <footer class="bg-gray-800 text-white mt-12 py-8">
+        <div class="container mx-auto px-4 text-center">
+             <div class="flex justify-center space-x-6 mb-6">
+                <a href="http://fb.com/tqv2022" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fab fa-facebook"></i></a>
+                <a href="https://m.me/tqv2022" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fa-brands fa-facebook-messenger"></i></a>
+                <a href="https://www.tiktok.com/@tqv2020" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fab fa-tiktok"></i></a>
+                <a href="https://portal.mobile.rakuten.co.jp/my-rakuten-mobile" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fa-solid fa-r"></i></a>
+            </div>
+            <p class="text-gray-400 max-w-2xl mx-auto mb-6">
+                Đây là nơi chia sẻ kiến thức, kinh nghiệm về học tập, giải trí và các hướng dẫn hữu ích. Mục tiêu của chúng tôi là mang đến những thông tin chất lượng và bổ ích cho cộng đồng.
+            </p>
+            <p class="text-gray-500 text-sm">&copy; 2025 Vinh ở Nhật. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/lunar-calendar.js"></script>
+    <script src="js/holidays.js"></script>
+    <script src="js/proverbs.js"></script>
+    <script src="js/content.js"></script> 
+    <script src="js/script.js"></script>
+</body>
+</html>
