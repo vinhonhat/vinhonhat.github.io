@@ -2,9 +2,11 @@
 
 // --- BIẾN CẤU HÌNH ---
 // Tên của bộ nhớ cache. Rất quan trọng: MỖI KHI BẠN CẬP NHẬT WEBSITE,
-// BẠN PHẢI THAY ĐỔI TÊN NÀY (VÍ DỤ: TỪ v2 thành v3) ĐỂ KÍCH HOẠT CẬP NHẬT.
-const CACHE_NAME = 'vinh-o-nhat-cache-v25.9.3'; 
+// BẠN PHẢI THAY ĐỔI TÊN NÀY 
+// GHI CHÚ 1: THAY ĐỔI TÊN CACHE MỖI KHI BẠN CẬP NHẬT WEBSITE (VÍ DỤ: TỪ v2 thành v3) ĐỂ KÍCH HOẠT CẬP NHẬT.
+const CACHE_NAME = 'vinh-o-nhat-cache-v25.9.1'; 
 
+// GHI CHÚ 2: DANH SÁCH FILE CẦN LƯU
 // Danh sách các file cốt lõi cần được lưu vào cache để chạy offline.
 const urlsToCache = [
   '/',
@@ -18,6 +20,7 @@ const urlsToCache = [
   '/pages/rakuten.html'
 ];
 
+// GHI CHÚ 3: CÀI ĐẶT VÀ KÍCH HOẠT NGAY
 // --- SỰ KIỆN 1: CÀI ĐẶT (install) ---
 // Sự kiện này chỉ chạy một lần khi Service Worker được cài đặt lần đầu hoặc khi có phiên bản mới.
 self.addEventListener('install', event => {
@@ -53,6 +56,8 @@ self.addEventListener('activate', event => {
   );
 });
 
+
+// GHI CHÚ 5: LẤY FILE TỪ CACHE (GIỮ NGUYÊN)
 // --- SỰ KIỆN 3: LẤY DỮ LIỆU (fetch) ---
 // Sự kiện này chạy mỗi khi trang web yêu cầu một tài nguyên (ảnh, css, js...).
 self.addEventListener('fetch', event => {
@@ -66,3 +71,4 @@ self.addEventListener('fetch', event => {
   );
 
 });
+
