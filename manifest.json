@@ -1,20 +1,21 @@
 {
   "name": "Vinh ở Nhật",
   "short_name": "Vinh ở Nhật",
-  "start_url": "./index.html",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#FBF7F0",
   "theme_color": "#F6AD55",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "img/logo.png",
+      "src": "/img/logo.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "img/logo.png",
+      "src": "/img/logo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
@@ -22,3 +23,4 @@
   ]
 
 }
+
