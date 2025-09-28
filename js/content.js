@@ -5,6 +5,8 @@
 const bannerSlides = [
     { imageUrl: "img/banners/banner1.jpg", link: "https://www.google.com" },
     { imageUrl: "img/banners/banner2.jpg", link: "https://www.google.com" },
+    { imageUrl: "img/banners/banner3.jpg", link: "https://www.google.com" },
+    { imageUrl: "img/banners/banner2.jpg", link: "https://www.google.com" },
 ];
 
 // GHI CHÚ 2: KHO NỘI DUNG TỔNG
