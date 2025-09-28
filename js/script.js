@@ -2,6 +2,9 @@
 
 document.addEventListener('DOMContentLoaded', function() {
 
+// ==========================================================
+// MỤC 1: LOGIC CẬP NHẬT PWA (THÔNG MINH)
+// ==========================================================
     // --- PHẦN MỚI: LOGIC THÔNG BÁO CẬP NHẬT PWA ---
     // GHI CHÚ: Dán toàn bộ khối code PWA vào đây.
     if ('serviceWorker' in navigator) {
@@ -44,6 +47,9 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
 
+// ==========================================================
+// MỤC 2: LOGIC CHÍNH CỦA TRANG WEB
+// ==========================================================
 
     // --- ĐĂNG KÝ SERVICE WORKER CHO PWA ---
     if ('serviceWorker' in navigator) {
