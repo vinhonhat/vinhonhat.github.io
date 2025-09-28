@@ -1,0 +1,18 @@
+Cập nhật trang Blog của Vinh ở Nhật
+
+
+
+
+
+blog V25.9.1
+
+1. Bản này đã hoàn thiện cơ bản về trang chủ
+
+2. Thêm phần vòng quay trong giải trí 
+
+3. cập nhật thêm link chân trang. 
+
+4. Tăng kích thước logo to lên 12pixel cả 2 trang
+
+5. Gắn link tải app, video.
+
