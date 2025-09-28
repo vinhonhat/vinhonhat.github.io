@@ -2,7 +2,7 @@
 // MỤC 1: LOGIC CẬP NHẬT PWA (THÔNG MINH)
 // GHI CHÚ: Đoạn mã này sẽ tự động kiểm tra và thông báo khi có phiên bản web mới.
 // ==========================================================
-if ('serviceWorker' in navigator) {
+/* if ('serviceWorker' in navigator) {
     let newWorker;
     function showUpdateNotification() {
         const n = document.createElement('div');
@@ -26,7 +26,7 @@ if ('serviceWorker' in navigator) {
         refreshing = true;
     });
 }
-
+*/
 // ==========================================================
 // MỤC 2: LOGIC CHÍNH CỦA TRANG WEB
 // ==========================================================
