@@ -75,54 +75,54 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- 2.3: CÁC HÀM DÀNH RIÊNG CHO TRANG CHỦ ---
     function initHomepage() {
+        // Lấy các element chỉ có ở trang chủ
+        const bannerSlider = document.getElementById('bannerSlider');
+        const postsContainer = document.getElementById('latest-posts-container');
+        const popupOverlay = document.getElementById('popupOverlay');
+        const guidePostsContainer = document.getElementById('guide-posts-container');
+        const videoGuidesContainer = document.getElementById('video-guides-container');
 
         // 2.3.1: Tải nội dung cho Banner
-        function loadBanner() {
-            if (!bannerSlider || typeof bannerSlides === 'undefined') return;
+        if (bannerSlider && typeof bannerSlides !== 'undefined') {
             bannerSlider.innerHTML = bannerSlides.map(slide => 
                 `<a href="${slide.link}" class="w-full flex-shrink-0" target="_blank" rel="noopener noreferrer">
                     <img src="${slide.imageUrl}" alt="Banner" class="w-full rounded-lg object-cover">
                 </a>`
             ).join('');
-        }
-
-        // 2.3.2: Khởi chạy hiệu ứng trượt cho Banner
-        function initBannerSlider() {
-            if (!bannerSlider) return;
+            
             const slides = bannerSlider.children;
-            if (slides.length <= 1) return;
-            let currentIndex = 0;
-            setInterval(() => {
-                currentIndex = (currentIndex + 1) % slides.length;
-                bannerSlider.style.transform = `translateX(-${currentIndex * 100}%)`;
-            }, 3000);
+            if (slides.length > 1) {
+                let currentIndex = 0;
+                setInterval(() => {
+                    currentIndex = (currentIndex + 1) % slides.length;
+                    bannerSlider.style.transform = `translateX(-${currentIndex * 100}%)`;
+                }, 3000);
+            }
         }
 
-        // 2.3.3: Tải các bài viết nổi bật (ngẫu nhiên)
-        function loadFeaturedPosts() {
-            if (!postsContainer || typeof allContent === 'undefined') return;
+        // 2.3.2: Tải các bài viết nổi bật (ngẫu nhiên)
+        if (postsContainer && typeof allContent !== 'undefined') {
             const allFeaturedItems = allContent.filter(item => item.featured === true);
-            if (allFeaturedItems.length === 0) {
+            if (allFeaturedItems.length > 0) {
+                allFeaturedItems.sort(() => 0.5 - Math.random());
+                const postsToRender = allFeaturedItems.slice(0, 3);
+                postsContainer.innerHTML = postsToRender.map(post => {
+                    const summaryText = post.summary || post.description || '';
+                    return `<a href="${post.link}" class="group block bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
+                                <img src="${post.imageUrl}" alt="${post.title}" class="w-full h-48 object-cover">
+                                <div class="p-6">
+                                    <h3 class="text-xl font-bold text-gray-800 mb-2 transition-colors group-hover:text-yellow-600">${post.title}</h3>
+                                    <p class="text-gray-600 text-sm">${summaryText}</p>
+                                </div>
+                            </a>`;
+                }).join('');
+            } else {
                 postsContainer.innerHTML = "<p class='col-span-full text-center'>Không có bài viết nổi bật nào.</p>";
-                return;
             }
-            allFeaturedItems.sort(() => 0.5 - Math.random());
-            const postsToRender = allFeaturedItems.slice(0, 3);
-            postsContainer.innerHTML = postsToRender.map(post => {
-                const summaryText = post.summary || post.description || '';
-                return `<a href="${post.link}" class="group block bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
-                            <img src="${post.imageUrl}" alt="${post.title}" class="w-full h-48 object-cover">
-                            <div class="p-6">
-                                <h3 class="text-xl font-bold text-gray-800 mb-2 transition-colors group-hover:text-yellow-600">${post.title}</h3>
-                                <p class="text-gray-600 text-sm">${summaryText}</p>
-                            </div>
-                        </a>`;
-            }).join('');
         }
         
-        // 2.3.4: Tải các bài viết & video hướng dẫn mới nhất
-        function loadGuidesAndVideos() {
-            if (typeof allContent === 'undefined') return;
+        // 2.3.3: Tải các bài viết & video hướng dẫn mới nhất
+        if (typeof allContent !== 'undefined') {
             allContent.sort((a, b) => new Date(b.date) - new Date(a.date));
             const latestGuide = allContent.find(item => item.type === 'guide');
             const latestVideo = allContent.find(item => item.type === 'video');
@@ -134,6 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 videoGuidesContainer.innerHTML = `<a href="${latestVideo.link}" class="flex items-center space-x-4 group"><img src="${latestVideo.imageUrl}" alt="${latestVideo.title}" class="w-24 h-16 rounded-lg object-cover"><div class="flex-1"><h3 class="font-bold text-gray-800 group-hover:text-yellow-600">${latestVideo.title}</h3><p class="text-gray-600 text-sm">${latestVideo.description}</p></div></a>`;
             }
         }
+
 
         // 2.3.5: Kiểm tra ngày lễ và hiển thị Popup
         function checkAndShowPopup() {
