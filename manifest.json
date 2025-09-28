@@ -1,7 +1,7 @@
 {
   "name": "Vinh ở Nhật",
   "short_name": "Vinh ở Nhật",
-  "start_url": "https://quangvinh0902jp.github.io/qv/",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#FBF7F0",
   "theme_color": "#F6AD55",
@@ -20,4 +20,5 @@
       "purpose": "any maskable"
     }
   ]
+
 }
