@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
       });
 
-      // Khi Service Worker mới đã przejąć kontrolę, tự động tải lại trang.
+      // Khi Service Worker mới tự động tải lại trang.
       let refreshing;
       navigator.serviceWorker.addEventListener('controllerchange', () => {
         if (refreshing) return;
@@ -51,16 +51,8 @@ document.addEventListener('DOMContentLoaded', function() {
 // MỤC 2: LOGIC CHÍNH CỦA TRANG WEB
 // ==========================================================
 
-    // --- ĐĂNG KÝ SERVICE WORKER CHO PWA ---
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js')
-                .then(registration => console.log('ServiceWorker đã đăng ký:', registration.scope))
-                .catch(err => console.log('ServiceWorker đăng ký thất bại:', err));
-        });
-    }
-
-    // --- LẤY CÁC THÀNH PHẦN HTML (ELEMENTS) ---
+    // --- 2.1: LẤY TẤT CẢ CÁC THÀNH PHẦN HTML ---
+    // GHI CHÚ: Khai báo tất cả các biến cần dùng cho toàn bộ trang.
     const timeEl = document.getElementById('time');
     const dateEl = document.getElementById('date');
     const menuToggle = document.getElementById('menu-toggle');
@@ -76,8 +68,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const videoGuidesContainer = document.getElementById('video-guides-container');
 
     // --- CÁC HÀM CHỨC NĂNG ---
-
-    // 1. Cập nhật đồng hồ
+    // --- 2.2: CÁC HÀM DÙNG CHUNG CHO MỌI TRANG ---
+     // 2.2.1: Cập nhật đồng hồ
     function updateClock() {
         if (!timeEl || !dateEl) return;
         const now = new Date();
@@ -85,21 +77,47 @@ document.addEventListener('DOMContentLoaded', function() {
         dateEl.textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     }
 
+    // 2.2.2: Xử lý menu di động
+    updateClock();
+    setInterval(updateClock, 1000); //không biết đoạn này
+    
+    if (menuToggle && mobileMenu) {
+        // Bật/tắt menu khi nhấn vào nút 3 gạch
+        menuToggle.addEventListener('click', (event) => {
+            // Ngăn sự kiện click này lan ra ngoài document, tránh việc vừa mở đã bị đóng ngay
+            event.stopPropagation(); 
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Đóng menu khi nhấn ra ngoài vùng menu
+        document.addEventListener('click', (event) => {
+            // Kiểm tra xem menu có đang mở không VÀ điểm nhấn có nằm ngoài cả nút toggle và menu không
+            const isClickInsideMenu = mobileMenu.contains(event.target);
+            const isClickOnToggle = menuToggle.contains(event.target);
+            
+            if (!mobileMenu.classList.contains('hidden') && !isClickInsideMenu && !isClickOnToggle) {
+                mobileMenu.classList.add('hidden'); // Chỉ đóng chứ không toggle
+            }
+        });
+    }
+
+    // --- 2.3: CÁC HÀM DÀNH RIÊNG CHO TRANG CHỦ ---
+    function initHomepage() {
+    // 2.3.1: Tải nội dung cho Banner
+
+
+
+    
+    
     // 2. Tải nội dung cho Banner
     function loadBanner() {
-        if (!bannerSlider) return;
-        if (typeof bannerSlides === 'undefined' || bannerSlides.length === 0) return;
-
-        let bannerHtml = '';
-        for (const slide of bannerSlides) {
-            bannerHtml += `
-                <a href="${slide.link}" class="w-full flex-shrink-0">
+            if (!bannerSlider || typeof bannerSlides === 'undefined') return;
+            bannerSlider.innerHTML = bannerSlides.map(slide => 
+                `<a href="${slide.link}" class="w-full flex-shrink-0" target="_blank" rel="noopener noreferrer">
                     <img src="${slide.imageUrl}" alt="Banner" class="w-full rounded-lg object-cover">
-                </a>
-            `;
+                </a>`
+            ).join('');
         }
-        bannerSlider.innerHTML = bannerHtml;
-    }
 
     // 3. Khởi chạy hiệu ứng trượt cho Banner
     function initBannerSlider() {
@@ -228,28 +246,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- GỌI CÁC HÀM ĐỂ CHẠY TRANG WEB ---
 
     // Chạy các chức năng cơ bản
-    updateClock();
-    setInterval(updateClock, 1000);
-    
-    if (menuToggle && mobileMenu) {
-        // Bật/tắt menu khi nhấn vào nút 3 gạch
-        menuToggle.addEventListener('click', (event) => {
-            // Ngăn sự kiện click này lan ra ngoài document, tránh việc vừa mở đã bị đóng ngay
-            event.stopPropagation(); 
-            mobileMenu.classList.toggle('hidden');
-        });
 
-        // Đóng menu khi nhấn ra ngoài vùng menu
-        document.addEventListener('click', (event) => {
-            // Kiểm tra xem menu có đang mở không VÀ điểm nhấn có nằm ngoài cả nút toggle và menu không
-            const isClickInsideMenu = mobileMenu.contains(event.target);
-            const isClickOnToggle = menuToggle.contains(event.target);
-            
-            if (!mobileMenu.classList.contains('hidden') && !isClickInsideMenu && !isClickOnToggle) {
-                mobileMenu.classList.add('hidden'); // Chỉ đóng chứ không toggle
-            }
-        });
-    }
 
     // Tải nội dung động
     loadBanner();
