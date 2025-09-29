@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const sortedItems = featuredItems.sort((a, b) => new Date(b.date) - new Date(a.date));
 
         // BƯỚC 3: Chỉ lấy 4 bài đầu tiên trong danh sách ĐÃ SẮP XẾP để hiển thị
-        const itemsToDisplay = sortedItems.slice(0, 4);
+        const itemsToDisplay = sortedItems.slice(0, 6);
 
         // Nếu không có bài nào được đánh dấu là nổi bật
         if (itemsToDisplay.length === 0) {
@@ -142,7 +142,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // BƯỚC 4: Tạo HTML cho từng bài viết và chèn vào trang
         let postsHtml = '';
-    for (const post of itemsToDisplay) {
+        // Thêm vòng lặp for với chỉ số `i` để thêm class ẩn/hiện
+        for (let i = 0; i < itemsToDisplay.length; i++) {
+            const post = itemsToDisplay[i];
+         // --- PHẦN LOGIC MỚI ---
+            // Khai báo một biến để chứa các lớp CSS responsive    
+            let responsiveClasses = '';
+        
+        // Kiểm tra nếu bài viết là bài thứ 3 trở đi (có chỉ số index là 2, 3, 4, 5)
+        // Bài thứ 3 và 4: Ẩn trên điện thoại, hiện từ iPad trở lên
+        if (i >= 2) {
+            // Gán các lớp CSS của Tailwind để ẩn bài viết trên màn hình nhỏ và hiện trên màn hình lớn.
+            // 'hidden': Ẩn bài viết theo mặc định (áp dụng cho điện thoại).
+            // 'lg:block': Khi màn hình rộng từ 1024px trở lên (máy tính), thì hiện bài viết ra (display: block).
+            responsiveClasses = 'hidden md:block';
+        }
+        /* // Bài thứ 5 và 6: Ẩn trên điện thoại VÀ iPad, chỉ hiện trên PC
+        if (i >= 4) {
+            responsiveClasses = 'hidden lg:block';
+        }*/
         postsHtml += `
             <a href="${post.link}" class="block group bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
             <article>
