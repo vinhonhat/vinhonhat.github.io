@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Trò Chơi Rắn Săn Mồi | Vinh ở Nhật</title>
+    
+    <link rel="manifest" href="../manifest.json">
+    <meta name="theme-color" content="#F6AD55">
+    <link rel="apple-touch-icon" href="../img/logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        /* CSS tối giản để căn giữa nội dung chính */
+        main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        canvas {
+            background-color: #1a202c; /* Tương đương bg-gray-900 của Tailwind */
+            border: 2px solid #4a5568; /* Tương đương border-gray-700 */
+        }
+    </style>
+</head>
+<body class="bg-[#FBF7F0] flex flex-col min-h-screen">
+    <div id="popupOverlay" class="popup-overlay">
+        <div class="popup-content">
+            <button id="closePopupBtn" class="absolute top-2 right-4 text-2xl text-gray-400 hover:text-gray-600">&times;</button>
+            <img id="holidayImage" src="" alt="Hình ảnh ngày lễ" class="max-h-40 mx-auto mb-4 rounded-lg hidden">
+            <h2 id="popupTitle" class="text-2xl font-bold mb-2 text-gray-800"></h2>
+            <p id="popupText" class="text-gray-600 mb-6"></p>
+        </div>
+    </div>
+
+    <header class="bg-white shadow-sm py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="../index.html" class="flex items-center space-x-2">
+                <img src="../img/logo.png" onerror="this.onerror=null; this.src='https://placehold.co/40x40/F6AD55/ffffff?text=V';" alt="Logo" class="h-12 w-12 rounded-full">
+                <span class="text-xl font-bold text-gray-800 hidden sm:block">Vinh ở Nhật</span>
+            </a>
+            <div class="flex items-center space-x-4">
+                <div class="text-right time-display">
+                    <div id="time" class="time text-3xl font-bold leading-none">00:00:00</div>
+                    <div id="date" class="date text-sm mt-1">...</div>
+                </div>
+                <div class="sm:hidden">
+                    <button id="menu-toggle" class="text-gray-700 hover:text-yellow-600"><i class="fas fa-bars text-2xl"></i></button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="bg-white shadow-sm mt-4 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-2">
+            <ul class="hidden sm:flex justify-center sm:justify-between items-center space-x-4">
+                <li class="relative group">
+                    <a href="#" class="menu-link hover:text-yellow-600 flex items-center">Bài viết HD<i class="fas fa-chevron-down ml-2 text-xs"></i></a>
+                    <ul class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 py-2 w-40 z-10 dropdown-menu">
+                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Rakuten</a></li>
+                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Seven</a></li>
+                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Baito</a></li>
+                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Sim thẻ</a></li>
+                    </ul>
+                </li>
+                <li><a href="#" class="menu-link hover:text-yellow-600">Video hướng dẫn</a></li>
+                <li><a href="#" class="menu-link hover:text-yellow-600">Tải ứng dụng</a></li>
+                <li><a href="#" class="menu-link hover:text-yellow-600">Học tập</a></li>
+                <li><a href="#" class="menu-link hover:text-yellow-600">Giải trí</a></li>
+            </ul>
+            <div id="mobile-menu" class="hidden sm:hidden absolute left-0 w-full bg-white shadow-lg py-4">
+                <ul class="flex flex-col items-center space-y-4">
+                    <li><a href="#" class="menu-link">Học tập</a></li>
+                    <li><a href="#" class="menu-link">Giải trí</a></li>
+                    <li><a href="#" class="menu-link">Bài viết HD</a></li>
+                    <li><a href="#" class="menu-link">Video hướng dẫn</a></li>
+                    <li><a href="#" class="menu-link">Tải ứng dụng</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="container mx-auto px-4 mt-8">
+        <div class="text-center">
+            <h1 class="text-3xl font-bold mb-4 text-gray-800">🐍 Rắn Săn Mồi 🐍</h1>
+            <p class="mb-4 text-gray-600">Sử dụng phím mũi tên (máy tính) hoặc vuốt (di động) để điều khiển.</p>
+            <canvas id="gameCanvas" width="320" height="320"></canvas>
+            <div id="score" class="mt-4 text-2xl font-bold text-gray-800">Điểm: 0</div>
+            <div id="gameOverText" class="text-red-500 text-xl font-bold mt-2 h-7"></div>
+        </div>
+    </main>
+    
+    <footer class="bg-gray-800 text-white mt-12 py-8">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex justify-center space-x-6 mb-6">
+                <a href="http://fb.com/tqv2022" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fab fa-facebook"></i></a>
+                <a href="https://m.me/tqv2022" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fa-brands fa-facebook-messenger"></i></a>
+                <a href="https://www.tiktok.com/@tqv2020" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fab fa-tiktok"></i></a>
+                <a href="https://portal.mobile.rakuten.co.jp/my-rakuten-mobile" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fa-solid fa-r"></i></a>
+            </div>
+            <p class="text-gray-400 max-w-2xl mx-auto mb-6">
+                Đây là nơi chia sẻ kiến thức, kinh nghiệm về học tập, giải trí và các hướng dẫn hữu ích. Mục tiêu của chúng tôi là mang đến những thông tin chất lượng và bổ ích cho cộng đồng.
+            </p>
+            <p class="text-gray-500 text-sm">&copy; 2025 Vinh ở Nhật. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../js/lunar-calendar.js"></script>
+    <script src="../js/holidays.js"></script>
+    <script src="../js/proverbs.js"></script>
+    <script src="../js/content.js"></script> 
+    <script src="../js/script.js"></script>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
+        const gameOverText = document.getElementById('gameOverText');
+
+        const gridSize = 20;
+        const canvasSize = canvas.width;
+        const tileCount = canvasSize / gridSize;
+
+        let snake = [{ x: 10, y: 10 }];
+        let food = {};
+        let direction = 'right';
+        let score = 0;
+        let gameOver = false;
+        let gameInterval = null;
+
+        function startGame() {
+            snake = [{ x: 10, y: 10 }];
+            direction = 'right';
+            score = 0;
+            gameOver = false;
+            gameOverText.textContent = '';
+            scoreElement.textContent = 'Điểm: 0';
+            generateFood();
+
+            if (gameInterval) clearInterval(gameInterval);
+            gameInterval = setInterval(gameLoop, 120); // Tốc độ game
+        }
+
+        function generateFood() {
+            food = {
+                x: Math.floor(Math.random() * tileCount),
+                y: Math.floor(Math.random() * tileCount)
+            };
+            // Đảm bảo mồi không xuất hiện trên thân rắn
+            snake.forEach(segment => {
+                if (segment.x === food.x && segment.y === food.y) {
+                    generateFood();
+                }
+            });
+        }
+
+        function draw() {
+            // Vẽ nền
+            ctx.fillStyle = '#1a202c'; // bg-gray-900
+            ctx.fillRect(0, 0, canvasSize, canvasSize);
+
+            // Vẽ rắn
+            ctx.fillStyle = '#48bb78'; // green-500
+            snake.forEach(segment => {
+                ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 2, gridSize - 2);
+            });
+
+            // Vẽ mồi
+            ctx.fillStyle = '#f56565'; // red-500
+            ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize - 2, gridSize - 2);
+        }
+
+        function update() {
+            if (gameOver) return;
+
+            const head = { x: snake[0].x, y: snake[0].y };
+
+            // Cập nhật vị trí đầu rắn dựa trên hướng di chuyển
+            if (direction === 'up') head.y--;
+            if (direction === 'down') head.y++;
+            if (direction === 'left') head.x--;
+            if (direction === 'right') head.x++;
+
+            // Kiểm tra va chạm tường
+            if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount) {
+                endGame();
+                return;
+            }
+            
+            // Kiểm tra tự cắn
+            for (let i = 1; i < snake.length; i++) {
+                if (head.x === snake[i].x && head.y === snake[i].y) {
+                    endGame();
+                    return;
+                }
+            }
+
+            snake.unshift(head);
+
+            // Kiểm tra ăn mồi
+            if (head.x === food.x && head.y === food.y) {
+                score++;
+                scoreElement.textContent = 'Điểm: ' + score;
+                generateFood();
+            } else {
+                snake.pop();
+            }
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+        }
+
+        function endGame() {
+            gameOver = true;
+            clearInterval(gameInterval);
+            gameOverText.textContent = 'THUA! Nhấn F5 để chơi lại.';
+        }
+
+        // Điều khiển bằng bàn phím
+        document.addEventListener('keydown', e => {
+            if ((e.key === 'ArrowUp' || e.key === 'w') && direction !== 'down') direction = 'up';
+            if ((e.key === 'ArrowDown' || e.key === 's') && direction !== 'up') direction = 'down';
+            if ((e.key === 'ArrowLeft' || e.key === 'a') && direction !== 'right') direction = 'left';
+            if ((e.key === 'ArrowRight' || e.key === 'd') && direction !== 'left') direction = 'right';
+        });
+
+        // Điều khiển bằng cảm ứng vuốt (cho di động)
+        let touchStartX = 0, touchStartY = 0;
+        canvas.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        }, false);
+
+        canvas.addEventListener('touchend', e => {
+            let touchEndX = e.changedTouches[0].screenX;
+            let touchEndY = e.changedTouches[0].screenY;
+            handleSwipe(touchStartX, touchStartY, touchEndX, touchEndY);
+        }, false);
+        
+        function handleSwipe(startX, startY, endX, endY) {
+            const dx = endX - startX;
+            const dy = endY - startY;
+            const absDx = Math.abs(dx);
+            const absDy = Math.abs(dy);
+
+            if (absDx > absDy) { // Vuốt ngang
+                if (dx > 0 && direction !== 'left') direction = 'right';
+                else if (dx < 0 && direction !== 'right') direction = 'left';
+            } else { // Vuốt dọc
+                if (dy > 0 && direction !== 'up') direction = 'down';
+                else if (dy < 0 && direction !== 'down') direction = 'up';
+            }
+        }
+        
+        // Bắt đầu game khi tải trang
+        startGame();
+    </script>
+</body>
+</html>
