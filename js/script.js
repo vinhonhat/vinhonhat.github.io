@@ -1,6 +1,20 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-    // --- ĐĂNG KÝ SERVICE WORKER CHO PWA ---
+    // =================================================================
+    // MỤC LỤC
+    // =================================================================
+    // 1. ĐĂNG KÝ SERVICE WORKER (PWA)
+    // 2. LẤY CÁC THÀNH PHẦN HTML (ELEMENTS)
+    // 3. CÁC HÀM CHỨC NĂNG
+    //    3.1. Chức năng không đổi (Đồng hồ, Banner, Popup...)
+    //    3.2. Tải bài viết ĐỀ XUẤT (NÂNG CẤP)
+    //    3.3. Tải bài viết HƯỚNG DẪN (NÂNG CẤP)
+    //    3.4. Tải VIDEO hướng dẫn (NÂNG CẤP)
+    // 4. GỌI CÁC HÀM ĐỂ CHẠY TRANG WEB
+    // =================================================================
+
+
+    // --- 1. ĐĂNG KÝ SERVICE WORKER CHO PWA (Giữ nguyên) ---
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('/sw.js')
@@ -9,13 +23,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- LẤY CÁC THÀNH PHẦN HTML (ELEMENTS) ---
+    // --- 2. LẤY CÁC THÀNH PHẦN HTML (ELEMENTS) (Giữ nguyên) ---
     const timeEl = document.getElementById('time');
     const dateEl = document.getElementById('date');
     const menuToggle = document.getElementById('menu-toggle');
     const mobileMenu = document.getElementById('mobile-menu');
     const bannerSlider = document.getElementById('bannerSlider');
-    const postsContainer = document.getElementById('latest-posts-container');
+    const postsContainer = document.getElementById('latest-posts-container'); // Sẽ dùng cho bài viết đề xuất
     const popupOverlay = document.getElementById('popupOverlay');
     const closePopupBtn = document.getElementById('closePopupBtn');
     const popupTitle = document.getElementById('popupTitle');
@@ -24,9 +38,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const guidePostsContainer = document.getElementById('guide-posts-container');
     const videoGuidesContainer = document.getElementById('video-guides-container');
 
-    // --- CÁC HÀM CHỨC NĂNG ---
 
-    // 1. Cập nhật đồng hồ
+    // --- 3. CÁC HÀM CHỨC NĂNG ---
+
+    // --- 3.1. Chức năng không đổi (Đồng hồ, Banner, Popup...) (Giữ nguyên) ---
+    // HÀM MỚI: Dùng để định dạng ngày tháng cho đẹp
+    function formatDate(dateString) {
+        // Tạo một đối tượng ngày tháng từ chuỗi đầu vào
+        const date = new Date(dateString);
+        // Tạo một đối tượng tùy chọn để định dạng theo kiểu Việt Nam
+        const options = { day: 'numeric', month: 'long', year: 'numeric' };
+        // Trả về chuỗi đã được định dạng
+        return date.toLocaleDateString('vi-VN', options);
+    }      
+    
+    // Cập nhật đồng hồ
     function updateClock() {
         if (!timeEl || !dateEl) return;
         const now = new Date();
@@ -34,11 +60,10 @@ document.addEventListener('DOMContentLoaded', function() {
         dateEl.textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     }
 
-    // 2. Tải nội dung cho Banner
+    // Tải và chạy Banner
     function loadBanner() {
         if (!bannerSlider) return;
         if (typeof bannerSlides === 'undefined' || bannerSlides.length === 0) return;
-
         let bannerHtml = '';
         for (const slide of bannerSlides) {
             bannerHtml += `
@@ -50,12 +75,10 @@ document.addEventListener('DOMContentLoaded', function() {
         bannerSlider.innerHTML = bannerHtml;
     }
 
-    // 3. Khởi chạy hiệu ứng trượt cho Banner
     function initBannerSlider() {
         if (!bannerSlider) return;
         const slides = bannerSlider.children;
         if (slides.length <= 1) return;
-
         let currentIndex = 0;
         setInterval(() => {
             currentIndex = (currentIndex + 1) % slides.length;
@@ -63,32 +86,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 3000);
     }
 
-    // 4. Tải các bài viết mới nhất
-    function loadLatestPosts() {
-        if (!postsContainer) return;
-        if (typeof latestPosts === 'undefined' || latestPosts.length === 0) {
-            postsContainer.innerHTML = "<p class='text-center col-span-full'>Chưa có bài viết nào.</p>";
-            return;
-        }
-
-        let postsHtml = '';
-        for (const post of latestPosts) {
-            postsHtml += `
-                <article class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
-                    <img src="${post.imageUrl}" alt="${post.title}" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-gray-800 mb-2">${post.title}</h3>
-                        <p class="text-gray-600 text-sm">${post.summary}</p>
-                        <a href="${post.link}" class="text-yellow-600 hover:underline mt-4 inline-block">Đọc thêm &rarr;</a>
-                    </div>
-                </article>
-            `;
-        }
-        postsContainer.innerHTML = postsHtml;
-    }
-
-    // 5. Kiểm tra ngày lễ và hiển thị Popup
     function checkAndShowPopup() {
+        // ... (Toàn bộ code của hàm này được giữ nguyên, không thay đổi)
         if (!popupOverlay) return;
         popupText.className = 'text-gray-600 mb-6'; // Reset style
         const today = new Date();
@@ -120,15 +119,73 @@ document.addEventListener('DOMContentLoaded', function() {
         popupOverlay.style.display = 'flex';
     }
 
-// 6. Tải các bài viết hướng dẫn
+
+    // --- 3.2. Tải bài viết ĐỀ XUẤT (ĐÃ SỬA LỖI SẮP XẾP) ---
+    function loadFeaturedPosts() {
+        // Kiểm tra xem element và dữ liệu có tồn tại không
+        if (!postsContainer || typeof allContent === 'undefined') return;
+
+        // BƯỚC 1: Lọc ra tất cả các bài có thuộc tính `featured: true`
+        const featuredItems = allContent.filter(item => item.featured === true);
+    
+        // BƯỚC 2: SẮP XẾP các bài vừa lọc theo ngày mới nhất lên đầu (DÒNG CODE MỚI THÊM VÀO)
+        const sortedItems = featuredItems.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        // BƯỚC 3: Chỉ lấy 4 bài đầu tiên trong danh sách ĐÃ SẮP XẾP để hiển thị
+        const itemsToDisplay = sortedItems.slice(0, 4);
+
+        // Nếu không có bài nào được đánh dấu là nổi bật
+        if (itemsToDisplay.length === 0) {
+        postsContainer.innerHTML = "<p class='text-center col-span-full'>Chưa có bài viết nào nổi bật.</p>";
+        return;
+        }
+
+        // BƯỚC 4: Tạo HTML cho từng bài viết và chèn vào trang
+        let postsHtml = '';
+    for (const post of itemsToDisplay) {
+        postsHtml += `
+            <article class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
+                <img src="${post.imageUrl}" alt="${post.title}" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <div class="text-sm text-gray-500 mb-3 flex items-center">
+                        <i class="far fa-calendar-alt mr-2"></i>
+                        <span>${formatDate(post.date)}</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">${post.title}</h3>
+                    <p class="text-gray-600 text-sm">${post.summary}</p>
+                    <a href="${post.link}" class="text-yellow-600 hover:underline mt-4 inline-block">Đọc thêm &rarr;</a>
+                </div>
+            </article>
+        `;
+    }
+    postsContainer.innerHTML = postsHtml;
+}
+
+
+    // --- 3.3. Tải bài viết HƯỚNG DẪN (NÂNG CẤP) ---
     function loadGuidePosts() {
-        if (!guidePostsContainer) return;
-        if (typeof guidePosts === 'undefined' || guidePosts.length === 0) {
+        // Kiểm tra xem element và dữ liệu có tồn tại không
+        if (!guidePostsContainer || typeof allContent === 'undefined') return;
+
+        // BƯỚC 1: Lọc ra các bài có `type: 'guide'`
+        const guides = allContent.filter(item => item.type === 'guide');
+
+        // BƯỚC 2: Sắp xếp các bài vừa lọc theo ngày tháng, bài mới nhất lên đầu
+        // new Date(b.date) - new Date(a.date) sẽ sắp xếp từ mới đến cũ
+        const sortedGuides = guides.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        // BƯỚC 3: Chỉ lấy 2 bài đầu tiên (mới nhất) để hiển thị
+        const latestGuides = sortedGuides.slice(0, 2);
+
+        // Nếu không có bài hướng dẫn nào
+        if (latestGuides.length === 0) {
             guidePostsContainer.innerHTML = "<p class='text-gray-600'>Chưa có bài viết nào.</p>";
             return;
         }
+
+        // BƯỚC 4: Tạo HTML và chèn vào trang
         let postsHtml = '';
-        for (const post of guidePosts) {
+        for (const post of latestGuides) {
             postsHtml += `
                 <a href="${post.link}" class="flex items-center space-x-4 group">
                     <img src="${post.imageUrl}" alt="${post.title}" class="w-24 h-16 rounded-lg object-cover transition-transform duration-300 group-hover:scale-105">
@@ -142,15 +199,31 @@ document.addEventListener('DOMContentLoaded', function() {
         guidePostsContainer.innerHTML = postsHtml;
     }
 
-    // 7. Tải các video hướng dẫn
+
+    // --- 3.4. Tải VIDEO hướng dẫn (NÂNG CẤP) ---
     function loadVideoGuides() {
-        if (!videoGuidesContainer) return;
-        if (typeof videoGuides === 'undefined' || videoGuides.length === 0) {
+        // Kiểm tra xem element và dữ liệu có tồn tại không
+        if (!videoGuidesContainer || typeof allContent === 'undefined') return;
+
+        // Logic tương tự như loadGuidePosts, chỉ khác là lọc theo `type: 'video'`
+        // BƯỚC 1: Lọc ra các video có `type: 'video'`
+        const videos = allContent.filter(item => item.type === 'video');
+
+        // BƯỚC 2: Sắp xếp các video theo ngày tháng, mới nhất lên đầu
+        const sortedVideos = videos.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        // BƯỚC 3: Chỉ lấy 2 video đầu tiên (mới nhất)
+        const latestVideos = sortedVideos.slice(0, 2);
+
+        // Nếu không có video nào
+        if (latestVideos.length === 0) {
             videoGuidesContainer.innerHTML = "<p class='text-gray-600'>Chưa có video nào.</p>";
             return;
         }
+
+        // BƯỚC 4: Tạo HTML và chèn vào trang
         let videosHtml = '';
-        for (const video of videoGuides) {
+        for (const video of latestVideos) {
             videosHtml += `
                 <a href="${video.link}" class="flex items-center space-x-4 group">
                     <img src="${video.imageUrl}" alt="${video.title}" class="w-24 h-16 rounded-lg object-cover transition-transform duration-300 group-hover:scale-105">
@@ -165,56 +238,40 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 
+    // --- 4. GỌI CÁC HÀM ĐỂ CHẠY TRANG WEB ---
 
-
-
-
-
-
-
-
-
-    // --- GỌI CÁC HÀM ĐỂ CHẠY TRANG WEB ---
-
-    // Chạy các chức năng cơ bản
+    // Chạy các chức năng cơ bản (Giữ nguyên)
     updateClock();
     setInterval(updateClock, 1000);
-    
+
+    // Xử lý menu mobile (Giữ nguyên)
     if (menuToggle && mobileMenu) {
-        // Bật/tắt menu khi nhấn vào nút 3 gạch
         menuToggle.addEventListener('click', (event) => {
-            // Ngăn sự kiện click này lan ra ngoài document, tránh việc vừa mở đã bị đóng ngay
-            event.stopPropagation(); 
+            event.stopPropagation();
             mobileMenu.classList.toggle('hidden');
         });
-
-        // Đóng menu khi nhấn ra ngoài vùng menu
         document.addEventListener('click', (event) => {
-            // Kiểm tra xem menu có đang mở không VÀ điểm nhấn có nằm ngoài cả nút toggle và menu không
             const isClickInsideMenu = mobileMenu.contains(event.target);
             const isClickOnToggle = menuToggle.contains(event.target);
-            
             if (!mobileMenu.classList.contains('hidden') && !isClickInsideMenu && !isClickOnToggle) {
-                mobileMenu.classList.add('hidden'); // Chỉ đóng chứ không toggle
+                mobileMenu.classList.add('hidden');
             }
         });
     }
 
-    // Tải nội dung động
+    // Tải nội dung động (CẬP NHẬT)
     loadBanner();
-    loadLatestPosts();
+    loadFeaturedPosts(); // <-- THAY ĐỔI: Gọi hàm mới thay cho loadLatestPosts()
     loadGuidePosts();
     loadVideoGuides();
 
-    // Khởi chạy các thành phần sau khi nội dung đã được tải
+    // Khởi chạy các thành phần sau khi nội dung đã được tải (Giữ nguyên)
     initBannerSlider();
-    
-    // --- Hẹn giờ cho Popup (CHỈ CHẠY Ở TRANG CHỦ) ---
-    // Kiểm tra nếu đang ở trang chủ (index.html hoặc đường dẫn gốc "/") thì mới chạy popup
+
+    // Hẹn giờ cho Popup (Giữ nguyên)
     if (window.location.pathname.endsWith('/') || window.location.pathname.endsWith('/index.html')) {
         setTimeout(checkAndShowPopup, 500);
-        setTimeout(() => { if (popupOverlay) popupOverlay.style.display = 'none'; }, 7000); // 0.5s chờ + 6.5s hiển thị
-        
+        setTimeout(() => { if (popupOverlay) popupOverlay.style.display = 'none'; }, 7000);
         if (closePopupBtn) {
             closePopupBtn.addEventListener('click', () => popupOverlay.style.display = 'none');
         }
