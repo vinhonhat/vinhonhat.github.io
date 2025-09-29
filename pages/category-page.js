@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // ================== BỐ CỤC HTML MỚI ĐỂ BÉ LẠI TRÊN DI ĐỘNG ==================
             // Cấu trúc này sử dụng Flexbox để co nhỏ lại.
+			// muốn ẩn phần mô tả nhỏ thì thêm hidden và sau mt-1 và trước truncate-2-lines
             contentHtml += `
                 <a href="${item.link}" target="_blank" class="flex items-start space-x-4 group p-4 bg-white rounded-lg shadow-md transition-shadow duration-300 hover:shadow-lg">
                     
@@ -49,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="flex-1">
                         <h3 class="font-bold text-lg text-gray-800 group-hover:text-yellow-600">${item.title}</h3>
                         
-                        <p class="text-gray-600 text-sm mt-1 hidden md:block">${item.summary}</p>
+                        <p class="text-gray-600 text-sm mt-1  truncate-2-lines ">${item.summary}</p>
                         
                         <div class="text-xs text-gray-500 mt-2 flex items-center">
                             <i class="far fa-calendar-alt mr-2"></i>
