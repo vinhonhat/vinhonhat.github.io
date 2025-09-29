@@ -78,6 +78,15 @@
     </style>
 </head>
 <body class="bg-[#FBF7F0] flex flex-col min-h-screen">
+    <div id="popupOverlay" class="popup-overlay">
+        <div class="popup-content">
+            <button id="closePopupBtn" class="absolute top-2 right-4 text-2xl text-gray-400 hover:text-gray-600">&times;</button>
+            <img id="holidayImage" src="" alt="Hình ảnh ngày lễ" class="max-h-40 mx-auto mb-4 rounded-lg hidden">
+            <h2 id="popupTitle" class="text-2xl font-bold mb-2 text-gray-800"></h2>
+            <p id="popupText" class="text-gray-600 mb-6"></p>
+        </div>
+    </div>
+
     <header class="bg-white shadow-sm py-4">
         <div class="container mx-auto px-4 flex justify-between items-center">
             <a href="../index.html" class="flex items-center space-x-2">
@@ -112,6 +121,15 @@
                 <li><a href="#" class="menu-link hover:text-yellow-600">Học tập</a></li>
                 <li><a href="#" class="menu-link hover:text-yellow-600">Giải trí</a></li>
             </ul>
+            <div id="mobile-menu" class="hidden sm:hidden absolute left-0 w-full bg-white shadow-lg py-4">
+                <ul class="flex flex-col items-center space-y-4">
+                    <li><a href="#" class="menu-link">Học tập</a></li>
+                    <li><a href="#" class="menu-link">Giải trí</a></li>
+                    <li><a href="#" class="menu-link">Bài viết HD</a></li>
+                    <li><a href="#" class="menu-link">Video hướng dẫn</a></li>
+                    <li><a href="#" class="menu-link">Tải ứng dụng</a></li>
+                </ul>
+            </div>
         </div>
     </nav>
     
@@ -127,6 +145,15 @@
     
     <footer class="bg-gray-800 text-white mt-12 py-8">
         <div class="container mx-auto px-4 text-center">
+            <div class="flex justify-center space-x-6 mb-6">
+                <a href="http://fb.com/tqv2022" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fab fa-facebook"></i></a>
+                <a href="https://m.me/tqv2022" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fa-brands fa-facebook-messenger"></i></a>
+                <a href="https://www.tiktok.com/@tqv2020" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fab fa-tiktok"></i></a>
+                <a href="https://portal.mobile.rakuten.co.jp/my-rakuten-mobile" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fa-solid fa-r"></i></a>
+            </div>
+            <p class="text-gray-400 max-w-2xl mx-auto mb-6">
+                Đây là nơi chia sẻ kiến thức, kinh nghiệm về học tập, giải trí và các hướng dẫn hữu ích. Mục tiêu của chúng tôi là mang đến những thông tin chất lượng và bổ ích cho cộng đồng.
+            </p>
             <p class="text-gray-500 text-sm">&copy; 2025 Vinh ở Nhật. All rights reserved.</p>
         </div>
     </footer>
@@ -148,7 +175,13 @@
         canvas.width = gameContainer.clientWidth;
         canvas.height = gameContainer.clientHeight;
 
-        let bird, pipes, score, bestScore, gravity, jump, gameSpeed, currentGameState;
+        // Các hằng số của game
+        const GRAVITY = 0.4;
+        const JUMP = -8;
+        const GAME_SPEED = 3;
+
+        // Các biến trạng thái của game
+        let bird, pipes, score, bestScore, currentGameState;
 
         const gameState = {
             start: 'start',
@@ -156,8 +189,8 @@
             gameOver: 'gameOver'
         };
 
-        // Hàm khởi tạo các biến game
-        function initialize() {
+        // Hàm để reset các biến về trạng thái ban đầu để chơi lại
+        function resetGame() {
             bird = {
                 x: 50,
                 y: canvas.height / 2,
@@ -166,11 +199,8 @@
             };
             pipes = [];
             score = 0;
-            bestScore = localStorage.getItem('flappyBestScore') || 0;
-            gravity = 0.4;
-            jump = -8;
-            gameSpeed = 3;
-            currentGameState = gameState.start;
+            // SỬA LỖI: Chuyển trạng thái game sang 'playing' ngay khi reset
+            currentGameState = gameState.playing;
         }
 
         function drawBird() {
@@ -194,6 +224,8 @@
         }
 
         function drawScore() {
+            if (currentGameState === gameState.start) return;
+
             ctx.fillStyle = 'white';
             ctx.font = '45px "Inter", sans-serif';
             ctx.textAlign = 'center';
@@ -221,7 +253,7 @@
         }
 
         function updateBird() {
-            bird.velocity += gravity;
+            bird.velocity += GRAVITY;
             bird.y += bird.velocity;
 
             // Chặn không cho chim bay quá cao
@@ -246,7 +278,7 @@
             }
 
             pipes.forEach(pipe => {
-                pipe.x -= gameSpeed;
+                pipe.x -= GAME_SPEED;
             });
 
             // Xóa ống đã ra khỏi màn hình
@@ -311,27 +343,51 @@
         
         function handleInput() {
             if (currentGameState === gameState.playing) {
-                bird.velocity = jump;
+                bird.velocity = JUMP;
             } else if (currentGameState === gameState.gameOver) {
-                // Chờ 1 chút trước khi cho restart để tránh click nhầm
-                setTimeout(initialize, 300);
+                setTimeout(resetGame, 300);
             }
         }
         
         // Lắng nghe sự kiện
-        startButton.addEventListener('click', () => {
+        startButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             startScreen.style.display = 'none';
-            currentGameState = gameState.playing;
+            resetGame(); // Bắt đầu game với trạng thái đã reset
         });
         
         document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') handleInput();
+            if (e.code === 'Space') {
+                if (currentGameState !== gameState.start) {
+                    handleInput();
+                }
+            }
         });
         
-        window.addEventListener('touchstart', handleInput);
-        window.addEventListener('mousedown', handleInput);
+        window.addEventListener('touchstart', (e) => {
+            if (currentGameState !== gameState.start) {
+                 e.preventDefault();
+                 handleInput();
+            }
+        });
 
-        // Khởi động game
+        window.addEventListener('mousedown', (e) => {
+             if (currentGameState !== gameState.start) {
+                e.preventDefault();
+                handleInput();
+             }
+        });
+
+        // Khởi tạo game
+        function initialize() {
+            bestScore = localStorage.getItem('flappyBestScore') || 0;
+            currentGameState = gameState.start;
+            bird = { x: 50, y: canvas.height / 2, radius: 15, velocity: 0 };
+            pipes = [];
+            score = 0;
+        }
+
         initialize();
         gameLoop();
     </script>
