@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Flappy Bird | Vinh ở Nhật</title>
+    
+    <link rel="manifest" href="../manifest.json">
+    <meta name="theme-color" content="#F6AD55">
+    <link rel="apple-touch-icon" href="../img/logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        /* CSS để cố định khung game và tạo màn hình chờ */
+        html, body {
+            overflow: hidden; /* Ngăn cuộn trang */
+        }
+        main {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #game-container {
+            position: relative;
+            /* Kích thước khung game theo tỉ lệ điện thoại */
+            width: 360px; 
+            height: 640px;
+            max-width: 100vw;
+            max-height: 85vh;
+            border: 2px solid #333;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        #gameCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        #start-screen {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 10;
+        }
+        #start-button {
+            padding: 15px 30px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            background-color: #f6ad55;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.1s;
+        }
+        #start-button:active {
+            transform: scale(0.95);
+        }
+        #start-screen h2 {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body class="bg-[#FBF7F0] flex flex-col min-h-screen">
+    <header class="bg-white shadow-sm py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="../index.html" class="flex items-center space-x-2">
+                <img src="../img/logo.png" onerror="this.onerror=null; this.src='https://placehold.co/40x40/F6AD55/ffffff?text=V';" alt="Logo" class="h-12 w-12 rounded-full">
+                <span class="text-xl font-bold text-gray-800 hidden sm:block">Vinh ở Nhật</span>
+            </a>
+            <div class="flex items-center space-x-4">
+                <div class="text-right time-display">
+                    <div id="time" class="time text-3xl font-bold leading-none">00:00:00</div>
+                    <div id="date" class="date text-sm mt-1">...</div>
+                </div>
+                <div class="sm:hidden">
+                    <button id="menu-toggle" class="text-gray-700 hover:text-yellow-600"><i class="fas fa-bars text-2xl"></i></button>
+                </div>
+            </div>
+        </div>
+    </header>
+    <nav class="bg-white shadow-sm mt-4 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-2">
+            <ul class="hidden sm:flex justify-center sm:justify-between items-center space-x-4">
+                <li class="relative group">
+                    <a href="#" class="menu-link hover:text-yellow-600 flex items-center">Bài viết HD<i class="fas fa-chevron-down ml-2 text-xs"></i></a>
+                    <ul class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 py-2 w-40 z-10 dropdown-menu">
+                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Rakuten</a></li>
+                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Seven</a></li>
+                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Baito</a></li>
+                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Sim thẻ</a></li>
+                    </ul>
+                </li>
+                <li><a href="#" class="menu-link hover:text-yellow-600">Video hướng dẫn</a></li>
+                <li><a href="#" class="menu-link hover:text-yellow-600">Tải ứng dụng</a></li>
+                <li><a href="#" class="menu-link hover:text-yellow-600">Học tập</a></li>
+                <li><a href="#" class="menu-link hover:text-yellow-600">Giải trí</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main class="container mx-auto px-4 mt-8">
+        <div id="game-container">
+            <div id="start-screen">
+                <h2>Flappy Bird</h2>
+                <button id="start-button">Bắt đầu</button>
+            </div>
+            <canvas id="gameCanvas"></canvas>
+        </div>
+    </main>
+    
+    <footer class="bg-gray-800 text-white mt-12 py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-gray-500 text-sm">&copy; 2025 Vinh ở Nhật. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../js/lunar-calendar.js"></script>
+    <script src="../js/holidays.js"></script>
+    <script src="../js/proverbs.js"></script>
+    <script src="../js/content.js"></script> 
+    <script src="../js/script.js"></script>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const startScreen = document.getElementById('start-screen');
+        const startButton = document.getElementById('start-button');
+        const gameContainer = document.getElementById('game-container');
+
+        // Thiết lập kích thước canvas theo container
+        canvas.width = gameContainer.clientWidth;
+        canvas.height = gameContainer.clientHeight;
+
+        let bird, pipes, score, bestScore, gravity, jump, gameSpeed, currentGameState;
+
+        const gameState = {
+            start: 'start',
+            playing: 'playing',
+            gameOver: 'gameOver'
+        };
+
+        // Hàm khởi tạo các biến game
+        function initialize() {
+            bird = {
+                x: 50,
+                y: canvas.height / 2,
+                radius: 15,
+                velocity: 0
+            };
+            pipes = [];
+            score = 0;
+            bestScore = localStorage.getItem('flappyBestScore') || 0;
+            gravity = 0.4;
+            jump = -8;
+            gameSpeed = 3;
+            currentGameState = gameState.start;
+        }
+
+        function drawBird() {
+            ctx.beginPath();
+            ctx.arc(bird.x, bird.y, bird.radius, 0, Math.PI * 2);
+            ctx.fillStyle = '#f6ad55'; // Màu vàng cam
+            ctx.fill();
+            ctx.strokeStyle = '#333';
+            ctx.stroke();
+            ctx.closePath();
+        }
+
+        function drawPipes() {
+            pipes.forEach(pipe => {
+                ctx.fillStyle = '#48bb78'; // Màu xanh lá
+                // Ống trên
+                ctx.fillRect(pipe.x, 0, pipe.width, pipe.top);
+                // Ống dưới
+                ctx.fillRect(pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom);
+            });
+        }
+
+        function drawScore() {
+            ctx.fillStyle = 'white';
+            ctx.font = '45px "Inter", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(score, canvas.width / 2, 60);
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 2;
+            ctx.strokeText(score, canvas.width / 2, 60);
+        }
+
+        function drawGameOver() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = 'white';
+            ctx.font = '40px "Inter", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 50);
+
+            ctx.font = '24px "Inter", sans-serif';
+            ctx.fillText(`Điểm: ${score}`, canvas.width / 2, canvas.height / 2);
+            ctx.fillText(`Cao nhất: ${bestScore}`, canvas.width / 2, canvas.height / 2 + 40);
+
+            ctx.font = '18px "Inter", sans-serif';
+            ctx.fillText('Chạm để chơi lại', canvas.width / 2, canvas.height / 2 + 100);
+        }
+
+        function updateBird() {
+            bird.velocity += gravity;
+            bird.y += bird.velocity;
+
+            // Chặn không cho chim bay quá cao
+            if (bird.y - bird.radius < 0) {
+                bird.y = bird.radius;
+                bird.velocity = 0;
+            }
+        }
+
+        function updatePipes() {
+            if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 200) {
+                const gap = 150;
+                const minHeight = 50;
+                const topHeight = Math.random() * (canvas.height - gap - minHeight * 2) + minHeight;
+                pipes.push({
+                    x: canvas.width,
+                    width: 60,
+                    top: topHeight,
+                    bottom: canvas.height - topHeight - gap,
+                    passed: false
+                });
+            }
+
+            pipes.forEach(pipe => {
+                pipe.x -= gameSpeed;
+            });
+
+            // Xóa ống đã ra khỏi màn hình
+            pipes = pipes.filter(pipe => pipe.x + pipe.width > 0);
+        }
+        
+        function checkCollision() {
+            // Va chạm với sàn
+            if (bird.y + bird.radius > canvas.height) {
+                return true;
+            }
+            // Va chạm với ống
+            for (const pipe of pipes) {
+                if (bird.x + bird.radius > pipe.x && bird.x - bird.radius < pipe.x + pipe.width) {
+                    if (bird.y - bird.radius < pipe.top || bird.y + bird.radius > canvas.height - pipe.bottom) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        function updateScore() {
+            pipes.forEach(pipe => {
+                if (!pipe.passed && pipe.x + pipe.width < bird.x) {
+                    pipe.passed = true;
+                    score++;
+                }
+            });
+        }
+        
+        function gameLoop() {
+            // Xóa canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Vẽ nền
+            ctx.fillStyle = '#87CEEB'; // Bầu trời
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            if (currentGameState === gameState.playing) {
+                updateBird();
+                updatePipes();
+                updateScore();
+                if (checkCollision()) {
+                    currentGameState = gameState.gameOver;
+                    if (score > bestScore) {
+                        bestScore = score;
+                        localStorage.setItem('flappyBestScore', bestScore);
+                    }
+                }
+            }
+
+            drawPipes();
+            drawBird();
+            drawScore();
+
+            if (currentGameState === gameState.gameOver) {
+                drawGameOver();
+            }
+            
+            requestAnimationFrame(gameLoop);
+        }
+        
+        function handleInput() {
+            if (currentGameState === gameState.playing) {
+                bird.velocity = jump;
+            } else if (currentGameState === gameState.gameOver) {
+                // Chờ 1 chút trước khi cho restart để tránh click nhầm
+                setTimeout(initialize, 300);
+            }
+        }
+        
+        // Lắng nghe sự kiện
+        startButton.addEventListener('click', () => {
+            startScreen.style.display = 'none';
+            currentGameState = gameState.playing;
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') handleInput();
+        });
+        
+        window.addEventListener('touchstart', handleInput);
+        window.addEventListener('mousedown', handleInput);
+
+        // Khởi động game
+        initialize();
+        gameLoop();
+    </script>
+</body>
+</html>
