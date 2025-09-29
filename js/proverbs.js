@@ -1,6 +1,10 @@
 // js/proverbs.js
 const proverbs = [
+<<<<<<< HEAD
   "Chúc bạn có một ngày mới vui vẻ, tốt lành!<br><br>Trang Blog hiện đang cập nhật từng ngày, mong chờ bạn ghé thăm nhé! hịhị<br><br>tiến độ<br>====>39%------------",
+=======
+  "Chúc bạn có một ngày mới vui vẻ, tốt lành!<br><br>Trang Blog hiện đang cập nhật từng ngày, mong chờ bạn ghé thăm nhé! hịhị<br><br>tiến độ<br>=====>39%------------",
+>>>>>>> 3b44d1e50f1b44dfcaf0687269f58aea69f21bea
   /* "Một nụ cười bằng mười thang thuốc bổ.",
   "Đi một ngày đàng, học một sàng khôn.",
   "Kiến tha lâu cũng đầy tổ.",
