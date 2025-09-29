@@ -6,8 +6,8 @@ const CACHE_NAME = 'vinh-o-nhat-cache-v25.9.1.test 1';
 
 // GHI CHÚ 2: DANH SÁCH FILE CẦN LƯU
 // Danh sách các file cốt lõi cần được lưu vào cache để chạy offline.
-const urlsToCache = [
-  /*
+/*const urlsToCache = [
+  
   '/',
   '/index.html',
   '/css/style.css',
@@ -74,6 +74,7 @@ self.addEventListener('fetch', event => {
   );
 
 });
+
 
 
 
