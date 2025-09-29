@@ -39,12 +39,14 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+
+        
         let contentHtml = '';
         for (const item of latestContent) {
             contentHtml += `
                 <a href="${item.link}" target="_blank" class="block group bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
                     <article>
-                        <img src="../../${item.imageUrl}" alt="${item.title}" class="w-full h-48 object-cover">
+                        <img src="../../${item.imageUrl}" alt="${item.title}" class="w-24 h-24 object-cover">
                         <div class="p-6">
                             <div class="text-sm text-gray-500 mb-3 flex items-center">
                                 <i class="far fa-calendar-alt mr-2"></i>
