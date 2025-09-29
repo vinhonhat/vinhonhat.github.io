@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chuyển Đổi Tên Sang Tiếng Nhật (Katakana)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #ketQua {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-height: 50px;
+            background-color: #e9ecef;
+            font-size: 20px;
+            text-align: center;
+        }
+        .katakana {
+            font-size: 28px;
+            color: #d9534f;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Chuyển Đổi Tên Sang Katakana</h1>
+        <p>Nhập tên tiếng Việt (viết hoa chữ cái đầu, có dấu):</p>
+        <input type="text" id="tenViet" placeholder="Ví dụ: Nguyễn Văn A">
+        <button onclick="chuyenDoiTen()">Chuyển Đổi</button>
+        
+        <div id="ketQua">
+            <p>Kết quả sẽ hiển thị ở đây.</p>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================
+        // THƯ VIỆN CHUYỂN ĐỔI (PHẦN BẠN CẦN CẬP NHẬT)
+        // =========================================================
+        
+        const MAPPING_HO = {
+            "Nguyễn": "グエン", // Guen
+            "Trần": "トラン",   // Toran
+            "Lê": "レ",         // Re
+            "Phạm": "ファム",    // Famu
+            "Huỳnh": "フイン",   // Huin
+            "Hoàng": "ホアン",   // Hoan
+            "Vũ": "ヴー",       // Vū
+            "Võ": "ヴォ",       // Vo
+            "Phan": "ファン",    // Fan
+            "Bùi": "ブイ",       // Bui
+            // Thêm các họ khác vào đây
+        };
+
+        const MAPPING_TEN = {
+            // Tên thường dùng
+            "Linh": "リン",     // Rin
+            "Minh": "ミン",     // Min
+            "Khoa": "コア",     // Koa
+            "Anh": "アイン",    // Ain
+            "Dũng": "ズン",     // Zun
+            "Hải": "ハイ",      // Hai
+            "Hương": "フオン",   // Fuon
+            "Thảo": "タオ",     // Tao
+            "Việt": "ヴィエト",  // Vieto
+            "Giang": "ザン",    // Zan
+            "Huy": "フイ",      // Fui
+            "Thành": "タイン",   // Tain
+            "Quang": "クアン",   // Kuan
+            // Tên đệm (chỉ nên dùng khi không tìm thấy trong MAPPING_TEN)
+            "Văn": "ヴァン",    // Van
+            "Thị": "ティ",      // Ti
+            // Thêm các tên khác vào đây
+        };
+
+        const MAPPING_AM_TIET_DU_PHONG = {
+            // Dùng để xử lý các từ không có trong mapping trên (ít chính xác hơn)
+            "th": "ト",
+            "ph": "フォ",
+            "ch": "チ",
+            "nh": "ン",
+            "ng": "ン",
+            "a": "ア",
+            "e": "エ",
+            "i": "イ",
+            "o": "オ",
+            "u": "ウ",
+            "ă": "ア",
+            "ê": "エー",
+            "ô": "オー",
+			"tru": "チュ",
+            "ư": "ウー",
+			"n": "ン",
+			
+            // Thêm các âm tiết khác vào đây
+        };
+
+        // =========================================================
+        // HÀM XỬ LÝ CHUYỂN ĐỔI
+        // =========================================================
+
+        /**
+         * Chuyển đổi tên từ tiếng Việt sang Katakana
+         */
+        function chuyenDoiTen() {
+            const tenViet = document.getElementById('tenViet').value.trim();
+            const ketQuaDiv = document.getElementById('ketQua');
+
+            if (!tenViet) {
+                ketQuaDiv.innerHTML = '<p>Vui lòng nhập tên của bạn.</p>';
+                return;
+            }
+
+            // Chia tên thành các từ (tách theo khoảng trắng)
+            const cacTu = tenViet.split(/\s+/).filter(word => word.length > 0);
+            
+            let tenKatakana = [];
+            let hoDaXuLy = false; // Đảm bảo chỉ xử lý họ cho từ đầu tiên
+
+            for (let i = 0; i < cacTu.length; i++) {
+                let tu = cacTu[i];
+                let katakana = '';
+                
+                // 1. Xử lý Họ (từ đầu tiên)
+                if (i === 0) {
+                    if (MAPPING_HO[tu]) {
+                        katakana = MAPPING_HO[tu];
+                        hoDaXuLy = true;
+                    }
+                }
+                
+                // 2. Xử lý Tên đệm & Tên chính (từ thứ 2 trở đi hoặc từ đầu tiên nếu không có trong MAPPING_HO)
+                if (katakana === '') {
+                    if (MAPPING_TEN[tu]) {
+                        katakana = MAPPING_TEN[tu];
+                    }
+                }
+
+                // 3. Xử lý Dự phòng (nếu không tìm thấy trong cả Họ và Tên)
+                if (katakana === '') {
+                    // Cần một hàm phiên âm âm vị phức tạp hơn ở đây
+                    // Tạm thời, chúng ta sẽ để nguyên để người dùng tự cập nhật
+                    // Hoặc dùng một hàm phiên âm rất thô sơ:
+                    katakana = phienAmDuPhong(tu); 
+                }
+
+                if (katakana !== '') {
+                    tenKatakana.push(katakana);
+                } else {
+                    // Nếu không có quy tắc nào, giữ nguyên từ gốc (thông báo lỗi)
+                    tenKatakana.push('(' + tu + '?)'); 
+                }
+            }
+
+            // Nối lại các từ bằng dấu cách
+            const ketQuaCuoi = tenKatakana.join(' ');
+            
+            ketQuaDiv.innerHTML = `
+                <p>Tên Katakana của bạn là:</p>
+                <div class="katakana">${ketQuaCuoi}</div>
+            `;
+        }
+
+        /**
+         * Hàm phiên âm dự phòng (rất thô sơ, chỉ để tránh lỗi)
+         */
+        function phienAmDuPhong(word) {
+            let result = '';
+            let cleanedWord = word.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Xóa dấu
+
+            // Ánh xạ từng ký tự (rất thô sơ)
+            for (const [viet, kana] of Object.entries(MAPPING_AM_TIET_DU_PHONG)) {
+                // Thay thế các âm tiết phức tạp trước
+                if (cleanedWord.startsWith(viet)) {
+                    result += kana;
+                    cleanedWord = cleanedWord.substring(viet.length);
+                }
+            }
+            
+            // Xử lý các ký tự còn lại
+            for (let i = 0; i < cleanedWord.length; i++) {
+                let char = cleanedWord[i];
+                if (MAPPING_AM_TIET_DU_PHONG[char]) {
+                    result += MAPPING_AM_TIET_DU_PHONG[char];
+                } else {
+                    // Nếu không tìm thấy, dùng nguyên tắc Katakana cơ bản (rất thô)
+                    result += char.toUpperCase();
+                }
+            }
+            
+            return result || '(' + word + '?)'; // Trả về Katakana thô hoặc dấu hỏi
+        }
+        
+    </script>
+
+</body>
+</html>
