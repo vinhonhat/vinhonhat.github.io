@@ -9,7 +9,7 @@ const allContent = [
         date: "2025-09-29", // Ngày đăng, dùng để sắp xếp
         featured: true, // true => Sẽ được ưu tiên hiển thị ở mục "Đề xuất"
         title: "Hướng dẫn cài cấu hình APN sim data",
-        summary: "cách cài cấu hình sim data cho các nhà mạng tại Nhật Bản như softbank, docomo, rakuten...cho ios và androi. ",
+        summary: "cách cài cấu hình sim data cho các nhà mạng tại Nhật Bản như softbank, docomo, rakuten...cho iPhone và Android. ",
         imageUrl: "img/posts/APN img.png",
         link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/khac/apn?authuser=0"
     },
@@ -58,12 +58,12 @@ const allContent = [
     {
         type: 'guide', // Loại nội dung: Hướng dẫn
         category: "rakuten",
-        date: "2025-1-02", // Ngày mới nhất
-        featured: false,
-        title: "Cách đăng ký tài khoản Rakuten",
-        summary: "Hướng dẫn chi tiết từng bước để tạo tài khoản mua sắm.",
-        imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=HD+Mới",
-        link: "#guide-1"
+        date: "2025-09-29", // Ngày mới nhất
+        featured: true,
+        title: "Cách đăng ký tài khoản City Exxpress - chuyển tiền Nhật Việt",
+        summary: "Hướng dẫn chi tiết từng bước để tạo tài khoản chuyển tiền về Việt Nam với tỷ giá cao nhất và phí chuyển tiền rẻ nhất lại còn được hoàn point.",
+        imageUrl: "https://img.favpng.com/21/10/7/logo-remittance-city-express-money-transfer-japan-co-ltd-brand-png-favpng-K39it6YWHKeAJm0NwUKpjnpJv.jpg",
+        link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/express-money-transfer/city_express?authuser=0"
     },
     {
         type: 'guide',
@@ -139,13 +139,13 @@ const allContent = [
     },
     {
         type: 'video', // Loại nội dung: Video
-        category: "line",
-        date: "2025-9-05", // Ngày mới nhất
+        category: "app",
+        date: "2025-9-29", // Ngày mới nhất
         featured: false, // Video này cũng có thể được đề xuất
-        title: "Video HD xem video ",
-        summary: "Mô tả ngắn về nội dung video. Thời lượng: 5:30.",
-        imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=Video+Mới",
-        link: "#video-1"
+        title: "Video HD chuyển vùng Apple Store ",
+        summary: "Hướng dẫn chuyển vùng Apple Store qua Nhật Bản và về lại Việt Nam để tải các ứng dụng theo vùng...",
+        imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQa4GHxWR1R2b5i4W_-6OERHtP1rSQpw-0YdQ&s",
+        link: "https://www.google.com/url?q=https%3A%2F%2Fwww.tiktok.com%2F%40tqv2020%2Fvideo%2F7439850028845239570%3Fis_from_webapp%3D1%26sender_device%3Dpc%26web_id%3D7492301021865199105&sa=D&sntz=1&usg=AOvVaw0UggzekE0ReO1vkDZosck-"
     },
     {
         type: 'video',
