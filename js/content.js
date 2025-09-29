@@ -7,16 +7,16 @@ const allContent = [
         type: 'post', // Loại nội dung: bài viết thông thường
         category: "seven", // Chuyên mục (để lọc ở các trang con sau này)
         date: "2025-09-29", // Ngày đăng, dùng để sắp xếp
-        featured: false, // true => Sẽ được ưu tiên hiển thị ở mục "Đề xuất"
-        title: "Hướng dẫn đăng ký tài khoản ngân hàng Seven Bank",
-        summary: "Ngoài Yucho, đây là ngân hàng thứ 2 cho phép người mới đến Nhật có thể đăng ký dễ dàng...",
-        imageUrl: "img/posts/seven/711.png",
-        link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/711/sevenbank"
+        featured: true, // true => Sẽ được ưu tiên hiển thị ở mục "Đề xuất"
+        title: "Hướng dẫn cài cấu hình APN sim data",
+        summary: "cách cài cấu hình sim data cho các nhà mạng tại Nhật Bản như softbank, docomo, rakuten...cho ios và androi. ",
+        imageUrl: "img/posts/APN img.png",
+        link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/khac/apn?authuser=0"
     },
     {
         type: 'post',
         category: "am-thuc",
-        date: "2025-09-28",
+        date: "2025-05-28",
         featured: false, // Nổi bật
         title: "Cách làm món Tonkatsu chuẩn vị Nhật",
         summary: "Hướng dẫn từng bước để làm món thịt heo chiên xù Tonkatsu giòn rụm, thơm ngon ngay tại nhà.",
@@ -26,7 +26,7 @@ const allContent = [
     {
         type: 'post',
         category: "hoc-tap",
-        date: "2025-11-27",
+        date: "2025-1-27",
         featured: true, // Nổi bật
         title: "tài liệu ôn thi tokutei sưu tầm được",
         summary: "Phương pháp học từ vựng hiệu quả và thú vị thông qua các bài hát J-Pop nổi tiếng.",
@@ -36,7 +36,7 @@ const allContent = [
     {
         type: 'post',
         category: "rakuten",
-        date: "2025-09-26",
+        date: "2025-04-26",
         featured: true, // Nổi bật
         title: "5 Mẹo săn sale trên Rakuten Ichiba",
         summary: "Tổng hợp các bí quyết giúp bạn mua sắm thông minh và tiết kiệm hơn trên sàn Rakuten.",
@@ -46,7 +46,7 @@ const allContent = [
     {
         type: 'post',
         category: "doi-song",
-        date: "2025-12-25",
+        date: "2025-2-25",
         featured: false, // Bài viết thường, không hiển thị ở mục đề xuất
         title: "Khám phá vẻ đẹp của công viên Rinkai",
         summary: "Một trong những công viên lớn và nổi tiếng nhất Tokyo, điểm đến lý tưởng cho cả bốn mùa.",
@@ -58,7 +58,7 @@ const allContent = [
     {
         type: 'guide', // Loại nội dung: Hướng dẫn
         category: "rakuten",
-        date: "2025-10-02", // Ngày mới nhất
+        date: "2025-1-02", // Ngày mới nhất
         featured: false,
         title: "Cách đăng ký tài khoản Rakuten",
         summary: "Hướng dẫn chi tiết từng bước để tạo tài khoản mua sắm.",
@@ -98,7 +98,7 @@ const allContent = [
     {
         type: 'guide',
         category: "seven",
-        date: "2025-10-01",
+        date: "2025-1-01",
         featured: false,
         title: "Mẹo sử dụng thẻ thanh toán Seven Bank",
         summary: "Những lưu ý quan trọng khi sử dụng thẻ tại Nhật.",
@@ -107,20 +107,20 @@ const allContent = [
     },
     {
         type: 'guide',
-        category: "sim",
-        date: "2026-10-20", // Ngày cũ hơn
+        category: "seven",
+        date: "2025-09-29", // Ngày cũ hơn
         featured: true,
-        title: "Hướng dẫn đá tàu",
-        summary: "Các cách nạp tiền tiện lợi và nhanh chóng cho sim Linemo.",
-        imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=HD+3",
-        link: "#guide-3"
+        title: "Hướng dẫn đăng ký thẻ ngân hàng seven bank",
+        summary: "Ngoài ngân hàng yucho thì đây là ngân hàng thứ 2 cho phép người mới tới nhật cũng có thể đăng ký và rất dễ ở ngoài cây ATM.",
+        imageUrl: "https://creww.me/assets/collaboration/contents/sevenbank-2016-02/logo-99b065e63fcbc1acea62a64e95a7d5b17b8446373e79ed723369e52e21a60335.png",
+        link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/711/sevenbank?authuser=0"
     },
 
     // --- VIDEO HƯỚNG DẪN (VIDEOS) ---
     {
         type: 'video', // Loại nội dung: Video
         category: "line",
-        date: "2035-10-05", // Ngày mới nhất
+        date: "2024-10-05", // Ngày mới nhất
         featured: true, // Video này cũng có thể được đề xuất
         title: "Video HD đổi mk yucho",
         summary: "Mô tả ngắn về nội dung video. Thời lượng: 5:30.",
@@ -130,7 +130,7 @@ const allContent = [
     {
         type: 'video', // Loại nội dung: Video
         category: "line",
-        date: "2025-11-05", // Ngày mới nhất
+        date: "2025-1-05", // Ngày mới nhất
         featured: false, // Video này cũng có thể được đề xuất
         title: "Video HD xem video hài ",
         summary: "Mô tả ngắn về nội dung video. Thời lượng: 5:30.",
@@ -149,13 +149,13 @@ const allContent = [
     },
     {
         type: 'video',
-        category: "giao-thong",
-        date: "2025-10-04",
-        featured: false,
-        title: "Video HD cách đi tàu điện ngầm ở Tokyo",
-        summary: "Mô tả ngắn về nội dung video. Thời lượng: 8:15.",
-        imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=Video+2",
-        link: "#video-2"
+        category: "yucho",
+        date: "2025-09-29",
+        featured: true,
+        title: "Video HD cách đổi số điện thoại tài khoản yucho",
+        summary: "hướng dẫn đổi mật khẩu thẻ yucho tại cây ATM của bưu điện và tại family mart.",
+        imageUrl: "https://play-lh.googleusercontent.com/pHDhGjmtwOrgrg3XXP_vL99pCngi-7ED93InYG5zQpJjJQmIwfYGlo0zAC39NYOKggA",
+        link: "https://www.google.com/url?q=https%3A%2F%2Fvt.tiktok.com%2FZSr9N3Cwp%2F&sa=D&sntz=1&usg=AOvVaw1CXDvIliTXPvUezlroVD30"
     },
 ];
 
