@@ -120,65 +120,57 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 
-    // --- 3.2. Tải bài viết ĐỀ XUẤT (ĐÃ SỬA LỖI SẮP XẾP) ---
+
+	    // --- 3.2. Tải bài viết ĐỀ XUẤT (THEO KÍCH THƯỚC MÀN HÌNH) ---
     function loadFeaturedPosts() {
         // Kiểm tra xem element và dữ liệu có tồn tại không
         if (!postsContainer || typeof allContent === 'undefined') return;
 
         // BƯỚC 1: Lọc ra tất cả các bài có thuộc tính `featured: true`
         const featuredItems = allContent.filter(item => item.featured === true);
-    
-        // BƯỚC 2: SẮP XẾP các bài vừa lọc theo ngày mới nhất lên đầu (DÒNG CODE MỚI THÊM VÀO)
+
+        // BƯỚC 2: SẮP XẾP các bài vừa lọc theo ngày mới nhất lên đầu
         const sortedItems = featuredItems.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-        // BƯỚC 3: Chỉ lấy 4 bài đầu tiên trong danh sách ĐÃ SẮP XẾP để hiển thị
-        const itemsToDisplay = sortedItems.slice(0, 6);
+        // BƯỚC 3: Giới hạn số bài viết theo kích thước màn hình
+        // PC (>=1024px): 6 bài
+        // iPad (>=640px và <1024px): 4 bài
+        // Mobile (<640px): 2 bài
+        let maxItems = 6;
+        if (window.innerWidth < 640) {
+            maxItems = 2; // Điện thoại
+        } else if (window.innerWidth < 1024) {
+            maxItems = 4; // iPad
+        }
+        const itemsToDisplay = sortedItems.slice(0, maxItems);
 
         // Nếu không có bài nào được đánh dấu là nổi bật
         if (itemsToDisplay.length === 0) {
-        postsContainer.innerHTML = "<p class='text-center col-span-full'>Chưa có bài viết nào nổi bật.</p>";
-        return;
+            postsContainer.innerHTML = "<p class='text-center col-span-full'>Chưa có bài viết nào nổi bật.</p>";
+            return;
         }
 
         // BƯỚC 4: Tạo HTML cho từng bài viết và chèn vào trang
         let postsHtml = '';
-        // Thêm vòng lặp for với chỉ số `i` để thêm class ẩn/hiện
-        for (let i = 0; i < itemsToDisplay.length; i++) {
-            const post = itemsToDisplay[i];
-         // --- PHẦN LOGIC MỚI ---
-            // Khai báo một biến để chứa các lớp CSS responsive    
-            let responsiveClasses = '';
-        
-        // Kiểm tra nếu bài viết là bài thứ 3 trở đi (có chỉ số index là 2, 3, 4, 5)
-        // Bài thứ 3 và 4: Ẩn trên điện thoại, hiện từ iPad trở lên
-        if (i >= 2) {
-            // Gán các lớp CSS của Tailwind để ẩn bài viết trên màn hình nhỏ và hiện trên màn hình lớn.
-            // 'hidden': Ẩn bài viết theo mặc định (áp dụng cho điện thoại).
-            // 'lg:block': Khi màn hình rộng từ 1024px trở lên (máy tính), thì hiện bài viết ra (display: block).
-            responsiveClasses = 'hidden md:block';
+        for (const post of itemsToDisplay) {
+            postsHtml += `
+                <a href="${post.link}" class="block group bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
+                    <article>
+                        <img src="${post.imageUrl}" alt="${post.title}" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <div class="text-sm text-gray-500 mb-3 flex items-center">
+                                <i class="far fa-calendar-alt mr-2"></i>
+                                <span>${formatDate(post.date)}</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2 group-hover:text-yellow-600 transition-colors">${post.title}</h3>
+                            <p class="text-gray-600 text-sm">${post.summary}</p>
+                        </div>
+                    </article>
+                </a>
+            `;
         }
-        /* // Bài thứ 5 và 6: Ẩn trên điện thoại VÀ iPad, chỉ hiện trên PC
-        if (i >= 4) {
-            responsiveClasses = 'hidden lg:block';
-        }*/
-        postsHtml += `
-            <a href="${post.link}" class="block group bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
-            <article>
-                <img src="${post.imageUrl}" alt="${post.title}" class="w-full h-48 object-cover">
-                <div class="p-6">
-                    <div class="text-sm text-gray-500 mb-3 flex items-center">
-                        <i class="far fa-calendar-alt mr-2"></i>
-                        <span>${formatDate(post.date)}</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-2 group-hover:text-yellow-600 transition-colors">${post.title}</h3>
-                    <p class="text-gray-600 text-sm">${post.summary}</p>
-                </div>
-            </article>
-            </a>
-        `;
+        postsContainer.innerHTML = postsHtml;
     }
-    postsContainer.innerHTML = postsHtml;
-}
 
 
     // --- 3.3. Tải bài viết HƯỚNG DẪN (NÂNG CẤP) ---
@@ -293,6 +285,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Tải nội dung động (CẬP NHẬT)
     loadBanner();
     loadFeaturedPosts(); // <-- THAY ĐỔI: Gọi hàm mới thay cho loadLatestPosts()
+	// Khi thay đổi kích thước cửa sổ (PC <-> iPad <-> Mobile) thì load lại danh sách bài viết
+	window.addEventListener('resize', () => {
+    loadFeaturedPosts();
+	});
     loadGuidePosts();
     loadVideoGuides();
 
