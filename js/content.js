@@ -15,23 +15,23 @@ const allContent = [
     },
     {
         type: 'post',
-        category: "am-thuc",
-        date: "2025-05-28",
-        featured: false, // Nổi bật
-        title: "Cách làm món Tonkatsu chuẩn vị Nhật",
-        summary: "Hướng dẫn từng bước để làm món thịt heo chiên xù Tonkatsu giòn rụm, thơm ngon ngay tại nhà.",
+        category: "game",
+        date: "2025-09-30",
+        featured: true, // Nổi bật
+        title: "Chơi Game rắn săn mồi",
+        summary: "mini game rắn săn mồi trên ứng dụng",
         imageUrl: "https://placehold.co/400x250/FBD38D/ffffff?text=Tonkatsu",
-        link: "#post-2"
+        link: "pages/pages-giaitri/snake.html"
     },
     {
         type: 'post',
-        category: "hoc-tap",
-        date: "2025-1-27",
+        category: "game",
+        date: "2025-10-01",
         featured: true, // Nổi bật
-        title: "tài liệu ôn thi tokutei sưu tầm được",
-        summary: "Phương pháp học từ vựng hiệu quả và thú vị thông qua các bài hát J-Pop nổi tiếng.",
+        title: "gmae Flappy Bird",
+        summary: "chơi game",
         imageUrl: "https://placehold.co/400x250/ECC94B/ffffff?text=Học+Tiếng+Nhật",
-        link: "#post-3"
+        link: "pages/pages-giaitri/FlappyBird.html"
     },
     {
         type: 'post',
