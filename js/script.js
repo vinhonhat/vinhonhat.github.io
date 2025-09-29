@@ -144,18 +144,19 @@ document.addEventListener('DOMContentLoaded', function() {
         let postsHtml = '';
     for (const post of itemsToDisplay) {
         postsHtml += `
-            <article class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
+            <a href="${post.link}" class="block group bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
+            <article>
                 <img src="${post.imageUrl}" alt="${post.title}" class="w-full h-48 object-cover">
                 <div class="p-6">
                     <div class="text-sm text-gray-500 mb-3 flex items-center">
                         <i class="far fa-calendar-alt mr-2"></i>
                         <span>${formatDate(post.date)}</span>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">${post.title}</h3>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2 group-hover:text-yellow-600 transition-colors">${post.title}</h3>
                     <p class="text-gray-600 text-sm">${post.summary}</p>
-                    <a href="${post.link}" class="text-yellow-600 hover:underline mt-4 inline-block">Đọc thêm &rarr;</a>
                 </div>
             </article>
+            </a>
         `;
     }
     postsContainer.innerHTML = postsHtml;
