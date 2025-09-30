@@ -45,7 +45,7 @@ const allContent = [
     },
     {
         type: 'post',
-        category: "doi-song",
+        category: "rakuten",
         date: "2025-2-25",
         featured: false, // Bài viết thường, không hiển thị ở mục đề xuất
         title: "Khám phá vẻ đẹp của công viên Rinkai",
@@ -97,7 +97,7 @@ const allContent = [
     },
     {
         type: 'guide',
-        category: "seven",
+        category: "rakuten",
         date: "2025-1-01",
         featured: false,
         title: "Mẹo sử dụng thẻ thanh toán Seven Bank",
