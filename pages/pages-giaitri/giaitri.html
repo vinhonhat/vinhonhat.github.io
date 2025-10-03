@@ -3,142 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vòng Quay Diệu Kỳ | Vinh ở Nhật</title>
-    
-    <link rel="manifest" href="../manifest.json">
+    <title>Hướng dẫn về Rakuten | Vinh ở Nhật</title>
+    <link rel="icon" href="../../img/logoQV.png" type="image/x-icon"> 
+    <link rel="manifest" href="../../manifest.json">
     <meta name="theme-color" content="#F6AD55">
-    <link rel="apple-touch-icon" href="../img/logo.png">
+    <link rel="apple-touch-icon" href="../../img/logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/style.css">
-
-    <style>
-        /* PHẦN 1: CSS - ĐỊNH DẠNG GIAO DIỆN VÒNG QUAY */
-        :root {
-          --primary-color: #ff6b6b;
-          --secondary-color: #6c757d;
-          --surface-color: #ffffff;
-          --border-color: #dddddd;
-        }
-        .vongquay-body {
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: flex-start;
-          width: 100%;
-          box-sizing: border-box;
-        }
-        .vongquay-container {
-          width: 100%;
-          max-width: 420px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          position: relative;
-        }
-        #toggleSettingsBtn {
-            position: absolute;
-            top: 0;
-            right: 0;
-            font-size: 24px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--secondary-color);
-            padding: 5px 10px;
-        }
-        #settingsPanel {
-            display: none; width: 100%; background: var(--surface-color);
-            border: 1px solid var(--border-color); border-radius: 8px;
-            padding: 15px; box-sizing: border-box; margin-top: 50px;
-            margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
-        #settingsPanel.visible { display: block; }
-        #settingsPanel h2 { margin-top: 0; font-size: 18px; text-align: center; }
-        #editNamesArea {
-            width: 100%; height: 100px; font-family: inherit; font-size: 14px;
-            padding: 8px; border: 1px solid var(--border-color);
-            border-radius: 4px; box-sizing: border-box; margin-bottom: 10px;
-        }
-        .settings-actions { display: flex; flex-direction: column; gap: 8px; }
-        .vongquay-container h1 { font-size: 24px; margin: 10px 0; color: #333; text-align: center; }
-        .input-area { display: flex; gap: 8px; width: 100%; margin-bottom: 12px; }
-        .input-area input {
-            flex: 1; padding: 10px; border-radius: 8px;
-            border: 1px solid var(--border-color); font-size: 16px;
-        }
-        .input-area input#nameInput::placeholder { font-size: 14px; color: #aaa; }
-        .list { margin: 8px 0 2px; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
-        .tag {
-            background: var(--surface-color); border: 1px solid var(--border-color);
-            padding: 6px 10px; border-radius: 999px; font-size: 14px;
-        }
-        .vongquay-container button {
-            padding: 10px 16px; border: none; border-radius: 8px; font-size: 16px;
-            cursor: pointer; transition: background-color 0.2s, transform 0.1s;
-        }
-        .vongquay-container button:active { transform: scale(0.97); }
-        .primary-btn { background: var(--primary-color); color: white; }
-        .primary-btn:hover { background: #ff4747; }
-        .secondary-btn { background: var(--secondary-color); color: white; }
-        .secondary-btn:hover { background: #5a6268; }
-        .btn-large { padding: 14px 32px; font-size: 20px; font-weight: bold; }
-        .btn-small { padding: 8px 12px; font-size: 14px; }
-        .wheel-container {
-            position: relative; width: 300px; height: 300px;
-            margin: 30px auto 20px auto; overflow: visible;
-        }
-        .wheel-container canvas { width: 100%; height: 100%; display: block; }
-        .pointer {
-            position: absolute; top: -28px; left: 50%; transform: translateX(-50%) rotate(180deg);
-            width: 0; height: 0; border-left: 15px solid transparent;
-            border-right: 15px solid transparent; border-bottom: 30px solid #333; z-index: 3;
-        }
-        .controls {
-            margin-top: 6px; display: flex; flex-direction: column;
-            align-items: center; gap: 12px; width: 100%;
-        }
-        #result {
-            font-size: 18px; font-weight: bold; color: #333; background: var(--surface-color);
-            padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border-color);
-            min-height: 24px; text-align: center; width: 100%; box-sizing: border-box;
-        }
-        #historyContainer {
-            width: 100%; margin-top: 20px; background: var(--surface-color);
-            border: 1px solid var(--border-color); border-radius: 8px;
-            padding: 12px 16px; box-sizing: border-box;
-        }
-        #historyContainer h2 {
-            font-size: 16px; margin: 0 0 8px 0; display: flex;
-            justify-content: space-between; align-items: center;
-        }
-        #historyList {
-            list-style-type: decimal; list-style-position: inside; padding-left: 0;
-            margin: 0; max-height: 150px; overflow-y: auto; font-size: 14px;
-        }
-        #historyList li { padding: 5px 2px; border-bottom: 1px solid #eee; }
-        #historyList li:last-child { border-bottom: none; }
-        #historyList:empty::after { content: "Chưa có lịch sử."; color: #888; }
-    </style>
+    <link rel="stylesheet" href="../../css/style.css">
+	<style>
+      .truncate-2-lines {
+         display: -webkit-box;
+         -webkit-box-orient: vertical;
+         -webkit-line-clamp: 2; /* <-- SỐ 2 NÀY LÀ SỐ DÒNG TỐI ĐA. BẠN CÓ THỂ THAY BẰNG 3 NẾU MUỐN. */
+         overflow: hidden;
+      }
+    /*   
+        .pagination-container{display:flex;justify-content:center;align-items:center;padding:1rem 0}.pagination-btn{padding:.5rem 1rem;margin:0 .25rem;border:1px solid #ddd;background-color:#fff;color:#333;cursor:pointer;border-radius:.25rem;transition:background-color .3s,color .3s}.pagination-btn:hover:not(:disabled){background-color:#f6ad55;color:#fff}.pagination-btn.active{background-color:#f6ad55;color:#fff;border-color:#f6ad55}.pagination-btn:disabled{cursor:not-allowed;opacity:.5}
+    */
+	</style>
 </head>
-<body class="bg-[#FBF7F0]">
-    <div id="popupOverlay" class="popup-overlay">
-        <div class="popup-content">
-            <button id="closePopupBtn" class="absolute top-2 right-4 text-2xl text-gray-400 hover:text-gray-600">&times;</button>
-            <img id="holidayImage" src="" alt="Hình ảnh ngày lễ" class="max-h-40 mx-auto mb-4 rounded-lg hidden">
-            <h2 id="popupTitle" class="text-2xl font-bold mb-2 text-gray-800"></h2>
-            <p id="popupText" class="text-gray-600 mb-6"></p>
-        </div>
-    </div>
-
+<body 
+    class="bg-[#FBF7F0]"
+    data-category="rakuten"
+    data-title="Tất cả bài viết về Rakuten"
+    data-description="Tổng hợp các bài viết hướng dẫn, chia sẻ kinh nghiệm về các dịch vụ của Rakuten tại Nhật Bản."
+    data-perpage="6"
+>
     <header class="bg-white shadow-sm py-4">
         <div class="container mx-auto px-4 flex justify-between items-center">
-            <a href="../index.html" class="flex items-center space-x-2">
-                <img src="../img/logo.png" onerror="this.onerror=null; this.src='https://placehold.co/40x40/F6AD55/ffffff?text=V';" alt="Logo" class="h-12 w-12 rounded-full">
+            <a href="../../index.html" class="flex items-center space-x-2">
+                <img src="../../img/logo.png" onerror="this.onerror=null; this.src='https://placehold.co/40x40/F6AD55/ffffff?text=V';" alt="Logo" class="h-12 w-12 rounded-full">
                 <span class="text-xl font-bold text-gray-800 hidden sm:block">Vinh ở Nhật</span>
             </a>
             <div class="flex items-center space-x-4">
@@ -155,70 +53,53 @@
 
     <nav class="bg-white shadow-sm mt-4 sticky top-0 z-50">
         <div class="container mx-auto px-4 py-2">
-            <ul class="hidden sm:flex justify-center sm:justify-between items-center space-x-4">
+             <ul class="hidden sm:flex justify-center sm:justify-between items-center space-x-4">
                 <li class="relative group">
-                    <a href="pages/pages-baiviet/bai-viet-hd.html" class="menu-link hover:text-yellow-600 flex items-center">Bài HD<i class="fas fa-chevron-down ml-2 text-xs"></i></a>
+                    <a href="./bai-viet-hd.html" class="menu-link hover:text-yellow-600 flex items-center">Bài viết HD<i class="fas fa-chevron-down ml-2 text-xs"></i></a>
                     <ul class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 py-2 w-40 z-10 dropdown-menu">
-                        <li><a href="pages/pages-baiviet/pages-conten/rakuten.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Rakuten</a></li>
+                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Rakuten</a></li>
                         <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Seven</a></li>
                         <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Baito</a></li>
                         <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Sim thẻ</a></li>
                     </ul>
-                    <li><a href="pages/pages-video/video.html" class="menu-link">Video hướng dẫn</a></li>
-                    <li><a href="pages/pages-app/app.html" class="menu-link">Tải ứng dụng</a></li>
-                    <li><a href="pages/pages-hoctap/hoctap.html" class="menu-link">Học tập</a></li>
-                    <li><a href="pages/pages-giaitri/giaitri.html" class="menu-link">Giải trí</a></li>
+                </li>
+                <li><a href="https://sites.google.com/view/rakutenchiase/video-hd" class="menu-link hover:text-yellow-600">Video HD</a></li>    
+                <li><a href="https://sites.google.com/view/rakutenchiase/%E1%BB%A9ng-d%E1%BB%A5ng" class="menu-link hover:text-yellow-600">Tải Xuống</a></li>    
+                <li><a href="#" class="menu-link hover:text-yellow-600">Học Tập</a></li>    
+                <li><a href="vongquay.html" class="menu-link hover:text-yellow-600">Giải Trí</a></li>
             </ul>
-        <div id="mobile-menu" class="hidden sm:hidden absolute left-0 w-full bg-white shadow-lg py-4">
-            <ul class="flex flex-col items-center space-y-4">
-                    <li><a href="pages/pages-baiviet/bai-viet-hd.html" class="menu-link">Bài viết HD</a></li>
-                    <li><a href="pages/pages-video/video.html" class="menu-link">Video hướng dẫn</a></li>
-                    <li><a href="pages/pages-app/app.html" class="menu-link">Tải ứng dụng</a></li>
-                    <li><a href="pages/pages-hoctap/hoctap.html" class="menu-link">Học tập</a></li>
-                    <li><a href="pages/pages-giaitri/giaitri.html" class="menu-link">Giải trí</a></li>
+            <div id="mobile-menu" class="hidden sm:hidden absolute left-0 w-full bg-white shadow-lg py-4">
+                <ul class="flex flex-col items-center space-y-4">
+                    <li><a href="bai-viet-hd.html" class="menu-link">Bài viết HD</a></li>
+                    <li><a href="#" class="menu-link">Video hướng dẫn</a></li>
+                    <li><a href="#" class="menu-link">Tải ứng dụng</a></li>
+                    <li><a href="#" class="menu-link">Học tập</a></li>
+                    <li><a href="#" class="menu-link">Giải trí</a></li>
                 </ul>
-        </div>
+            </div>
         </div>
     </nav>
     
     <main class="container mx-auto px-4 mt-8">
-        <div class="vongquay-body">
-            <div class="vongquay-container">
-                <button id="toggleSettingsBtn" title="Mở cài đặt">☰</button>
-                <h1>🎡 Vòng Quay Diệu Kỳ 🎡 </h1>
-                
-                <div id="settingsPanel">
-                    <h2>Cài đặt & Sửa DS</h2>
-                    <textarea id="editNamesArea" placeholder="Sửa danh sách tên tại đây, mỗi tên cách nhau bằng dấu phẩy..."></textarea>
-                    <div class="settings-actions">
-                        <button id="updateNamesBtn" class="primary-btn">Cập nhật DS</button>
-                        <button id="clearListBtn" class="secondary-btn btn-small">Xoá Sạch DS</button>
-                        <button id="clearHistoryBtn" class="secondary-btn btn-small">Xoá Sạch Lịch Sử</button>
-                        <button id="resetBtn" class="secondary-btn btn-small">Reset Toàn Bộ</button>
+        <div class="mb-8">
+            <h1 id="page-title" class="text-4xl font-bold text-gray-800 border-l-8 border-yellow-500 pl-4"></h1>
+            <p id="page-description" class="mt-2 text-lg text-gray-600"></p>
+        </div>
+
+        <div class="flex flex-col lg:flex-row lg:space-x-8">
+            <div class="lg:w-2/3">
+                <div id="main-content-container" class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     </div>
-                </div>
-            
-                <div class="input-area">
-                  <input id="nameInput" type="text" placeholder="Nhập tên, cách nhau bằng dấu phẩy...">
-                  <button id="addBtn" class="primary-btn">Thêm</button>
-                </div>
-                <div class="list" id="list"></div>
-            
-                <div class="wheel-container">
-                  <canvas id="wheel"></canvas>
-                  <div class="pointer"></div>
-                </div>
-            
-                <div class="controls">
-                  <button id="spinBtn" class="primary-btn btn-large">Quay</button>
-                  <div id="result">Chưa có kết quả</div>
-                </div>
-                
-                <div id="historyContainer">
-                    <h2>Lịch sử</h2>
-                    <ol id="historyList"></ol>
-                </div>
+                <div id="pagination-container" class="pagination-container mt-8"></div>
             </div>
+
+            <aside class="lg:w-1/3 mt-10 lg:mt-0">
+                <div class="sticky top-24 bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-xl font-bold text-gray-800 border-l-4 border-yellow-500 pl-3 mb-4">Bài viết gợi ý</h2>
+                    <div id="suggested-posts-container" class="grid grid-cols-2 gap-4 lg:grid-cols-1">
+                        </div>
+                </div>
+            </aside>
         </div>
     </main>
     
@@ -230,257 +111,13 @@
                 <a href="https://www.tiktok.com/@tqv2020" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fab fa-tiktok"></i></a>
                 <a href="https://portal.mobile.rakuten.co.jp/my-rakuten-mobile" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fa-solid fa-r"></i></a>
             </div>
-            <p class="text-gray-400 max-w-2xl mx-auto mb-6">
-                Đây là nơi chia sẻ kiến thức, kinh nghiệm về học tập, giải trí và các hướng dẫn hữu ích. Mục tiêu của chúng tôi là mang đến những thông tin chất lượng và bổ ích cho cộng đồng.
-            </p>
             <p class="text-gray-500 text-sm">&copy; 2025 Vinh ở Nhật. All rights reserved.</p>
         </div>
     </footer>
 
-    <script src="../js/lunar-calendar.js"></script>
-    <script src="../js/holidays.js"></script>
-    <script src="../js/proverbs.js"></script>
-    <script src="../js/content.js"></script> 
-    <script src="../js/script.js"></script>
-
-    <script>
-    /* PHẦN 3: JAVASCRIPT - LOGIC VÀ TÍNH NĂNG VÒNG QUAY */
-
-    const nameInput = document.getElementById('nameInput');
-    const addBtn = document.getElementById('addBtn');
-    const list = document.getElementById('list');
-    const wheel = document.getElementById('wheel');
-    const spinBtn = document.getElementById('spinBtn');
-    const result = document.getElementById('result');
-    const historyList = document.getElementById('historyList');
-    const ctx = wheel.getContext('2d');
-    const toggleSettingsBtn = document.getElementById('toggleSettingsBtn');
-    const settingsPanel = document.getElementById('settingsPanel');
-    const editNamesArea = document.getElementById('editNamesArea');
-    const updateNamesBtn = document.getElementById('updateNamesBtn');
-    const clearListBtn = document.getElementById('clearListBtn');
-    const clearHistoryBtn = document.getElementById('clearHistoryBtn');
-    const resetBtn = document.getElementById('resetBtn');
-
-    let names = []; 
-    let history = []; 
-    let angle = 0; 
-    let spinning = false; 
-    const colors = ["#ff8a65", "#42a5f5", "#ab47bc", "#ffca28", "#26c6da", "#66bb6a", "#ef5350", "#9ccc65"];
-
-    function resizeCanvas() {
-      const size = Math.min(300, window.innerWidth - 40);
-      const dpr = window.devicePixelRatio || 1;
-      wheel.style.width = size + 'px';
-      wheel.style.height = size + 'px';
-      wheel.width = Math.round(size * dpr);
-      wheel.height = Math.round(size * dpr);
-      ctx.scale(dpr, dpr);
-      drawWheel();
-    }
-
-    function renderList() {
-      list.innerHTML = '';
-      names.forEach(n => {
-        const tag = document.createElement('div');
-        tag.className = 'tag';
-        tag.textContent = n;
-        list.appendChild(tag);
-      });
-      drawWheel();
-    }
-
-    function renderHistory() {
-        historyList.innerHTML = '';
-        if (history.length > 0) {
-            historyList.setAttribute('reversed', true);
-            historyList.setAttribute('start', history.length);
-        } else {
-            historyList.removeAttribute('reversed');
-            historyList.removeAttribute('start');
-        }
-        [...history].reverse().forEach(item => {
-            const li = document.createElement('li');
-            li.textContent = item;
-            historyList.appendChild(li);
-        });
-    }
-
-    function getNonAdjacentColors(numItems) {
-        const assignments = [];
-        if (numItems === 0) return assignments;
-        const numColors = colors.length;
-        for (let i = 0; i < numItems; i++) {
-            let colorIndex = i % numColors;
-            if (i > 0) {
-                const prevColorIndex = assignments[i - 1];
-                if (colorIndex === prevColorIndex) {
-                    colorIndex = (colorIndex + 1) % numColors;
-                }
-            }
-            assignments.push(colorIndex);
-        }
-        if (numItems > 1) {
-            const firstColorIndex = assignments[0];
-            let lastColorIndex = assignments[numItems - 1];
-            if (lastColorIndex === firstColorIndex) {
-                lastColorIndex = (lastColorIndex + 1) % numColors;
-                if (numItems > 2 && lastColorIndex === assignments[numItems-2]) {
-                    lastColorIndex = (lastColorIndex + 1) % numColors;
-                }
-                assignments[numItems - 1] = lastColorIndex;
-            }
-        }
-        return assignments.map(index => colors[index]);
-    }
-
-    function drawWheel() {
-      const size = wheel.width / (window.devicePixelRatio || 1);
-      const radius = size / 2;
-      ctx.clearRect(0, 0, size, size);
-      if (names.length === 0) {
-        ctx.fillStyle = "#f0f0f0";
-        ctx.beginPath();
-        ctx.arc(radius, radius, radius, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = "#666";
-        ctx.font = 'bold 14px Arial';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('Thêm tên để bắt đầu', radius, radius);
-        return;
-      }
-      const assignedColors = getNonAdjacentColors(names.length);
-      const arc = 2 * Math.PI / names.length;
-      names.forEach((name, i) => {
-        const startAngle = i * arc;
-        ctx.beginPath();
-        ctx.moveTo(radius, radius);
-        ctx.arc(radius, radius, radius, startAngle + angle, startAngle + arc + angle);
-        ctx.closePath();
-        ctx.fillStyle = assignedColors[i];
-        ctx.fill();
-        ctx.save();
-        ctx.translate(radius, radius);
-        ctx.rotate(startAngle + arc / 2 + angle);
-        ctx.textAlign = 'right';
-        ctx.fillStyle = '#fff';
-        ctx.font = 'bold 14px Arial';
-        ctx.textBaseline = 'middle';
-        const textMaxWidth = radius - 20;
-        ctx.fillText(name, radius - 10, 0, textMaxWidth);
-        ctx.restore();
-      });
-    }
-
-    function easeOutCubic(x) { return 1 - Math.pow(1 - x, 4); }
-
-    function spin() {
-      if (spinning || names.length < 2) return;
-      spinning = true;
-      spinBtn.disabled = true;
-      result.textContent = 'Đang quay...';
-      const randomTurns = Math.random() * 3 + 4;
-      const totalRotation = randomTurns * 2 * Math.PI;
-      const currentAngleOffset = angle % (2 * Math.PI);
-      const targetAngle = angle + totalRotation;
-      const duration = 4000 + Math.random() * 1000;
-      const startTime = performance.now();
-      function animate(now) {
-        const elapsed = now - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const easedProgress = easeOutCubic(progress);
-        angle = currentAngleOffset + (targetAngle - currentAngleOffset) * easedProgress;
-        drawWheel();
-        if (progress < 1) {
-          requestAnimationFrame(animate);
-        } else {
-          angle %= (2 * Math.PI);
-          const arc = 2 * Math.PI / names.length;
-          const pointerAngle = -Math.PI / 2;
-          let finalPointerAngle = (pointerAngle - angle) % (2 * Math.PI);
-          if (finalPointerAngle < 0) { finalPointerAngle += 2 * Math.PI; }
-          const winnerIndex = Math.floor(finalPointerAngle / arc);
-          const winnerName = names[winnerIndex];
-          result.textContent = 'Kết quả: ' + winnerName;
-          history.push(winnerName);
-          renderHistory();
-          spinning = false;
-          spinBtn.disabled = false;
-        }
-      }
-      requestAnimationFrame(animate);
-    }
-
-    function addNames() {
-      const value = nameInput.value.trim();
-      if (!value) return;
-      const newNames = value.split(',').map(s => s.trim()).filter(Boolean);
-      const addedNames = [];
-      const duplicatedNames = [];
-      newNames.forEach(name => {
-        if (!names.some(existingName => existingName.toLowerCase() === name.toLowerCase())) {
-            names.push(name);
-            addedNames.push(name);
-        } else {
-            duplicatedNames.push(name);
-        }
-      });
-      if (duplicatedNames.length > 0) {
-          alert('Các tên sau đã tồn tại và không được thêm vào: ' + duplicatedNames.join(', '));
-      }
-      if (addedNames.length > 0) {
-        nameInput.value = '';
-        renderList();
-        nameInput.focus();
-      }
-    }
-
-    addBtn.onclick = addNames;
-    nameInput.addEventListener('keyup', (event) => {
-        if (event.key === 'Enter') { addNames(); }
-    });
-    spinBtn.onclick = spin;
-    window.addEventListener('resize', resizeCanvas);
-
-    toggleSettingsBtn.onclick = () => {
-        const isVisible = settingsPanel.classList.toggle('visible');
-        if (isVisible) {
-            editNamesArea.value = names.join(', ');
-        }
-    };
-    updateNamesBtn.onclick = () => {
-        const newNamesStr = editNamesArea.value.trim();
-        names = newNamesStr.split(',').map(s => s.trim()).filter(Boolean);
-        renderList();
-        alert('Danh sách đã được cập nhật!');
-        settingsPanel.classList.remove('visible');
-    };
-    clearListBtn.onclick = () => {
-        if (names.length > 0 && confirm('Bạn có chắc muốn xoá toàn bộ danh sách tên?')) {
-            names = [];
-            result.textContent = 'Chưa có kết quả';
-            renderList();
-        }
-    };
-    clearHistoryBtn.onclick = () => {
-        if (history.length > 0 && confirm('Bạn có chắc muốn xoá lịch sử quay?')) {
-            history = [];
-            renderHistory();
-        }
-    };
-    resetBtn.onclick = () => {
-        if ((names.length > 0 || history.length > 0) && confirm('Bạn có chắc muốn reset lại toàn bộ vòng quay?')) {
-            names = [];
-            history = [];
-            result.textContent = 'Chưa có kết quả';
-            renderList();
-            renderHistory();
-        }
-    };
-
-    resizeCanvas();
-    renderHistory();
-    </script>
+    <script src="../../js/script.js"></script>
+    <script src="../../js/content.js"></script>
+    
+    <script src="../page-logic.js"></script>
 </body>
 </html>
