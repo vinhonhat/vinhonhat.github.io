@@ -5,7 +5,7 @@ const allContent = [
     // --- BÀI VIẾT (POSTS) ---
     {
         type: 'post', // Loại nội dung: bài viết thông thường
-        category: "seven", // Chuyên mục (để lọc ở các trang con sau này)
+        category: "sim", // Chuyên mục (để lọc ở các trang con sau này)
         date: "2025-09-29", // Ngày đăng, dùng để sắp xếp
         featured: true, // true => Sẽ được ưu tiên hiển thị ở mục "Đề xuất"
         title: "Hướng dẫn cài cấu hình APN sim data",
