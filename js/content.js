@@ -36,7 +36,7 @@ const allContent = [
     {
         type: 'post',
         category: "game",
-        date: "2025-10-01",
+        date: "2025-10-04",
         featured: true, // Nổi bật
         title: "Game Sudoku",
         summary: "chơi game",
