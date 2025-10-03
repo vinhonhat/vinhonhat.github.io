@@ -28,7 +28,7 @@ const allContent = [
         category: "game",
         date: "2025-10-01",
         featured: true, // Nổi bật
-        title: "gmae Flappy Bird",
+        title: "Game Flappy Bird",
         summary: "chơi game",
         imageUrl: "https://placehold.co/400x250/ECC94B/ffffff?text=Học+Tiếng+Nhật",
         link: "pages/pages-giaitri/FlappyBird.html"
