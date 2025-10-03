@@ -101,10 +101,29 @@ function renderSuggestions(containerId) {
         }
 
         container.innerHTML += `
-            <a href="${postLink}" class="flex items-center p-2 rounded-lg hover:bg-yellow-100 transition-colors duration-200 group mb-4">
-                <img src="${imageUrl}" alt="${post.title}" class="w-16 h-16 object-cover rounded-md flex-shrink-0">
+            <!-- PC/iPad view -->
+            <a href="${postLink}" 
+                class="hidden sm:flex items-center p-2 rounded-lg hover:bg-yellow-100 transition-colors duration-200 group mb-4">
+                <img src="${imageUrl}" alt="${post.title}" 
+                    class="w-16 h-16 object-cover rounded-md flex-shrink-0">
                 <div class="ml-4">
                     <h4 class="font-semibold text-gray-800 group-hover:text-yellow-700">${post.title}</h4>
+                    <div class="text-xs text-gray-500 mt-1 flex items-center">
+                        <i class="far fa-calendar-alt mr-1"></i>
+                        <span>${post.date || ''}</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Mobile view -->
+            <a href="${postLink}" 
+                class="block sm:hidden p-2 rounded-lg hover:bg-yellow-100 transition-colors duration-200 group mb-4 text-center">
+                <img src="${imageUrl}" alt="${post.title}" 
+                    class="w-16 h-16 object-cover rounded-md mx-auto mb-2">
+                <h4 class="font-semibold text-gray-800 group-hover:text-yellow-700 truncate-2-lines">${post.title}</h4>
+                <div class="text-xs text-gray-500 mt-1 flex justify-center items-center">
+                    <i class="far fa-calendar-alt mr-1"></i>
+                    <span>${post.date || ''}</span>
                 </div>
             </a>
         `;
@@ -119,3 +138,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
     renderSuggestions('suggested-posts-container');
 });
+
+
