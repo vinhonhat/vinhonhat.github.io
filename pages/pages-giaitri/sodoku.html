@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+<title>Snake — Fullscreen</title>
+<link rel="stylesheet" href="../css/style.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  html,body{height:100%;margin:0}
+  body{display:flex;flex-direction:column;min-height:100vh;background:#f3f4f6}
+  header{background:white; padding:.6rem 0}
+  .game-area{flex:1; display:flex; justify-content:center; align-items:center; padding:12px}
+  .game-box{ width:100%; max-width:520px; background:#0f172a; border-radius:12px; padding:12px; box-shadow:0 10px 30px rgba(2,6,23,.5); position:relative;}
+  canvas{display:block; width:100%; height:auto; background:#0b1220; border-radius:8px;}
+  .controls-mobile{ display:none; position:absolute; bottom:12px; left:50%; transform:translateX(-50%); gap:10px; z-index:40; }
+  .controls-mobile button{ width:56px; height:56px; border-radius:12px; background:rgba(255,255,255,.06); color:#fff; border:none; font-size:20px; }
+  .top-ui{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; color:#fff }
+  .score { font-weight:700; font-size:20px; }
+  @media (max-width:639px){
+    .controls-mobile{ display:flex; }
+  }
+</style>
+</head>
+<body>
+<header class="container mx-auto px-4">
+  <div class="flex items-center justify-between">
+    <a href="../index.html" class="flex items-center gap-2">
+      <img src="../img/logo.png" class="h-10 w-10 rounded-full">
+      <span class="hidden sm:block font-semibold">Vinh ở Nhật</span>
+    </a>
+    <div>
+      <button id="playBtn" class="bg-yellow-400 px-3 py-1 rounded-md mr-2">Play</button>
+      <button id="exitBtn" class="bg-gray-200 px-3 py-1 rounded-md">Thoát</button>
+    </div>
+  </div>
+</header>
+
+<div class="game-area">
+  <div class="game-box" id="gameBox" tabindex="0" role="application" aria-label="Snake game">
+    <div class="top-ui">
+      <div class="score text-white">Điểm: <span id="score">0</span></div>
+      <div class="text-white">Tốc độ: <span id="speedLabel">1</span></div>
+    </div>
+    <canvas id="gameCanvas" width="480" height="480"></canvas>
+
+    <!-- Mobile controls (visible only on small screens) -->
+    <div class="controls-mobile" id="mobileControls">
+      <button id="upBtn">▲</button>
+      <div style="display:flex; gap:10px;">
+        <button id="leftBtn">◀</button>
+        <button id="downBtn">▼</button>
+        <button id="rightBtn">▶</button>
+      </div>
+    </div>
+
+    <!-- Game over overlay -->
+    <div id="overlay" style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; z-index:50; pointer-events:none;">
+      <div id="overlayBox" style="background: rgba(0,0,0,0.6); color:white; padding:18px 24px; border-radius:12px; text-align:center; display:none;">
+        <div id="gameOverText" style="font-size:20px; font-weight:700;"></div>
+        <div style="margin-top:12px;">
+          <button id="restartBtn" style="background:#f6ad55; border:none; padding:8px 12px; border-radius:8px; margin-right:8px;">Chơi lại</button>
+          <button id="backBtn" style="background:rgba(255,255,255,.08); border:none; padding:8px 12px; border-radius:8px;">Thoát</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer style="height:8px"></footer>
+
+<script>
+/*
+  Snake optimized:
+  - Play button triggers fullscreen and starts game
+  - Exit returns to giaitri.html
+  - Keyboard control for PC (arrows / WASD)
+  - On-screen buttons for mobile (no swipe)
+  - Speed increases gradually when score increases
+  - Simple sounds via WebAudio
+*/
+
+(() => {
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+  const playBtn = document.getElementById('playBtn');
+  const exitBtn = document.getElementById('exitBtn');
+  const scoreEl = document.getElementById('score');
+  const speedLabel = document.getElementById('speedLabel');
+  const restartBtn = document.getElementById('restartBtn');
+  const backBtn = document.getElementById('backBtn');
+  const overlayBox = document.getElementById('overlayBox');
+  const overlay = document.getElementById('overlay');
+
+  const upBtn = document.getElementById('upBtn');
+  const downBtn = document.getElementById('downBtn');
+  const leftBtn = document.getElementById('leftBtn');
+  const rightBtn = document.getElementById('rightBtn');
+
+  const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  let muted = false;
+  function sfx(freq=440, dur=0.06, type='sine', vol=0.06) {
+    if (muted) return;
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = type; o.frequency.value = freq;
+    g.gain.value = vol;
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start();
+    setTimeout(()=>{ o.stop(); o.disconnect(); g.disconnect(); }, dur*1000);
+  }
+  function eatSfx(){ sfx(900,0.06,'square',0.08); }
+  function dieSfx(){ sfx(120,0.18,'sawtooth',0.15); }
+
+  // Game params
+  const grid = 20; // pixels per cell
+  const cols = Math.floor(canvas.width / grid);
+  const rows = Math.floor(canvas.height / grid);
+
+  let snake = [{x:Math.floor(cols/2), y:Math.floor(rows/2)}];
+  let dir = {x:1,y:0}; // initial right
+  let food = {};
+  let score = 0;
+  let speedLevel = 1;
+  let baseInterval = 160; // ms
+  let currentInterval = baseInterval;
+  let timer = null;
+  let running = false;
+
+  function randFood() {
+    let x = Math.floor(Math.random()*cols);
+    let y = Math.floor(Math.random()*rows);
+    // make sure not on snake
+    for (let s of snake) if (s.x===x && s.y===y) return randFood();
+    return {x,y};
+  }
+
+  function draw() {
+    // background
+    ctx.fillStyle = '#071122';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    // food
+    ctx.fillStyle = '#ef4444';
+    ctx.fillRect(food.x*grid+2, food.y*grid+2, grid-4, grid-4);
+
+    // snake
+    ctx.fillStyle = '#34d399';
+    for (let i=0;i<snake.length;i++){
+      const s = snake[i];
+      ctx.fillRect(s.x*grid+2, s.y*grid+2, grid-4, grid-4);
+    }
+  }
+
+  function update() {
+    // compute new head
+    const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+
+    // wrap or collide? We'll collide (end game) when hitting walls
+    if (head.x < 0 || head.x >= cols || head.y < 0 || head.y >= rows) {
+      return gameOver();
+    }
+    // self collision
+    for (let i=0;i<snake.length;i++){
+      if (snake[i].x===head.x && snake[i].y===head.y) return gameOver();
+    }
+    snake.unshift(head);
+    if (head.x===food.x && head.y===food.y) {
+      score++; scoreEl.textContent = score; eatSfx();
+      // increase speed every 2 points
+      if (score % 2 === 0) {
+        speedLevel++;
+        currentInterval = Math.max(45, baseInterval - (speedLevel-1)*12);
+        speedLabel.textContent = speedLevel;
+        restartTick();
+      }
+      food = randFood();
+    } else {
+      snake.pop();
+    }
+    draw();
+  }
+
+  function restartTick() {
+    if (timer) clearInterval(timer);
+    timer = setInterval(update, currentInterval);
+  }
+
+  function startGame() {
+    audioCtx.resume().catch(()=>{});
+    // fullscreen request
+    const box = document.getElementById('gameBox');
+    if (box.requestFullscreen) box.requestFullscreen().catch(()=>{});
+    // init
+    snake = [{x:Math.floor(cols/2), y:Math.floor(rows/2)}];
+    dir = {x:1,y:0}; food = randFood(); score = 0; scoreEl.textContent = 0;
+    speedLevel = 1; speedLabel.textContent = speedLevel; currentInterval = baseInterval;
+    overlayBox.style.display = 'none'; overlay.style.pointerEvents = 'none';
+    running = true;
+    restartTick();
+    draw();
+  }
+
+  function gameOver() {
+    running = false;
+    if (timer) clearInterval(timer);
+    overlay.style.pointerEvents = 'auto';
+    overlayBox.style.display = 'block';
+    document.getElementById('gameOverText').textContent = `THUA — Điểm: ${score}`;
+    dieSfx();
+  }
+
+  // controls
+  function setDir(newDir) {
+    // prevent direct reverse
+    if (newDir.x === -dir.x && newDir.y === -dir.y) return;
+    dir = newDir;
+  }
+
+  document.addEventListener('keydown', (e)=>{
+    if (!running && (e.key==='ArrowUp'||e.key==='ArrowDown'||e.key==='ArrowLeft'||e.key==='ArrowRight'||e.key==='w'||e.key==='a'||e.key==='s'||e.key==='d')) startGame();
+    if (e.key==='ArrowUp' || e.key==='w') setDir({x:0,y:-1});
+    if (e.key==='ArrowDown' || e.key==='s') setDir({x:0,y:1});
+    if (e.key==='ArrowLeft' || e.key==='a') setDir({x:-1,y:0});
+    if (e.key==='ArrowRight' || e.key==='d') setDir({x:1,y:0});
+  });
+
+  // Mobile buttons
+  upBtn.addEventListener('click', ()=>{ if (!running) startGame(); setDir({x:0,y:-1}); });
+  downBtn.addEventListener('click', ()=>{ if (!running) startGame(); setDir({x:0,y:1}); });
+  leftBtn.addEventListener('click', ()=>{ if (!running) startGame(); setDir({x:-1,y:0}); });
+  rightBtn.addEventListener('click', ()=>{ if (!running) startGame(); setDir({x:1,y:0}); });
+
+  playBtn.addEventListener('click', ()=> startGame());
+  exitBtn.addEventListener('click', ()=> location.href = '../giaitri.html');
+  restartBtn.addEventListener('click', ()=> startGame());
+  backBtn.addEventListener('click', ()=> location.href = '../giaitri.html');
+
+  // optionally hide mobile controls on desktop by CSS; they show on small screens via media query
+
+  // initial drawing & set up
+  food = randFood();
+  draw();
+
+  // prevent accidental scroll while touching controls
+  ['touchstart','touchmove'].forEach(ev=>{
+    document.addEventListener(ev, (e)=>{
+      if (e.target.closest('#gameBox')) e.preventDefault();
+    }, {passive:false});
+  });
+})();
+</script>
+</body>
+</html>
