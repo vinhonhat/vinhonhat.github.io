@@ -20,7 +20,7 @@ const allContent = [
         featured: true, // Nổi bật
         title: "Chơi Game rắn săn mồi",
         summary: "mini game rắn săn mồi trên ứng dụng",
-        imageUrl: "https://placehold.co/400x250/FBD38D/ffffff?text=Tonkatsu",
+        imageUrl: "https://placehold.co/400x250/FBD38D/ffffff?text=Snake",
         link: "/pages/pages-giaitri/snake.html"
     },
     {
