@@ -1,297 +1,173 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
-<title>Flappy Bird — Fullscreen</title>
-<link rel="stylesheet" href="../css/style.css">
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-  html,body { height:100%; margin:0; }
-  body { background:#000; display:flex; flex-direction:column; min-height:100vh; }
-  .game-shell { position:relative; width:100%; max-width:420px; margin:0 auto; flex:1; display:flex; align-items:center; justify-content:center; }
-  #game-container { width:100%; height:calc(100vh - 16px); max-height:960px; max-width:560px; background:#87CEEB; position:relative; overflow:hidden; border-radius:10px; box-shadow:0 8px 30px rgba(0,0,0,.3); }
-  canvas { display:block; width:100%; height:100%; touch-action:none; }
-  .ui-overlay { position:absolute; top:12px; left:12px; z-index:50; display:flex; gap:8px; }
-  .ui-overlay button { background:#f6ad55; border:none; padding:.5rem .75rem; border-radius:8px; font-weight:600; cursor:pointer; box-shadow:0 3px 8px rgba(0,0,0,.15); }
-  .center-overlay { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:40; pointer-events:auto; }
-  .center-overlay h1 { color:white; font-size:28px; margin-bottom:.75rem; text-shadow:0 3px 8px rgba(0,0,0,.6); }
-  .small-note { color:rgba(255,255,255,.9); font-size:14px; margin-top:.5rem; opacity:.95; }
-  .score-top { position:absolute; top:18px; left:50%; transform:translateX(-50%); z-index:45; font-size:36px; color:white; text-shadow:0 2px 6px #000; }
-  .footer-exit { position:absolute; bottom:14px; left:50%; transform:translateX(-50%); z-index:45; }
-  .footer-exit button { background:rgba(0,0,0,.45); color:white; border:none; padding:8px 12px; border-radius:8px; }
-</style>
-</head>
-<body>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Flappy Bird | Vinh ở Nhật</title>
+    
+    <link rel="manifest" href="../manifest.json">
+    <meta name="theme-color" content="#F6AD55">
+    <link rel="apple-touch-icon" href="../../img/logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
 
-<!-- Header (you can remove and use rakuten header instead) -->
-<header class="bg-white shadow-sm py-3">
-  <div class="container mx-auto px-4 flex justify-between items-center">
-    <a href="../index.html" class="flex items-center space-x-2">
-      <img src="../../img/logo.png" class="h-10 w-10 rounded-full" alt="logo">
-      <span class="hidden sm:block font-bold">Vinh ở Nhật</span>
-    </a>
-    <nav class="text-sm">
-      <a href="../giaitri.html" class="text-gray-700 hover:text-yellow-600">Quay lại</a>
-    </nav>
-  </div>
-</header>
-
-<div class="game-shell">
-  <div id="game-container" tabindex="0" aria-label="Flappy bird game container">
-    <canvas id="gameCanvas"></canvas>
-
-    <div class="ui-overlay">
-      <button id="playBtn">Play</button>
-      <button id="muteBtn">🔈</button>
-      <button id="exitBtn">Thoát</button>
-    </div>
-
-    <div class="score-top" id="scoreDisplay" aria-hidden="true" style="display:none">0</div>
-
-    <div class="center-overlay" id="startOverlay">
-      <h1>Flappy Bird</h1>
-      <button id="startScreenPlay" class="px-6 py-3 rounded-lg font-bold" style="background:#f6ad55;">Bắt đầu</button>
-      <div class="small-note">Chạm / Click hoặc nhấn Space để nhảy</div>
-    </div>
-
-    <div class="footer-exit" id="gameOverOverlay" style="display:none">
-      <div class="text-center text-white">
-        <div id="gameOverText" style="font-weight:700; font-size:20px;"></div>
-        <div style="margin-top:8px;">
-          <button id="retryBtn" class="mr-2" style="background:#f6ad55; padding:.5rem .75rem; border-radius:8px;">Chơi lại</button>
-          <button id="backBtn" style="background:rgba(0,0,0,.5); padding:.5rem .75rem; border-radius:8px;">Quay lại</button>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<footer style="height:8px"></footer>
-
-<script>
-/*
-  Flappy Bird — optimized
-  - Play -> requestFullscreen on #game-container
-  - Exit -> location.href back to giaitri.html
-  - Sound via WebAudio (simple beeps)
-  - Responsive canvas sizing
-  - Score + best stored in localStorage
-*/
-
-(() => {
-  const container = document.getElementById('game-container');
-  const canvas = document.getElementById('gameCanvas');
-  const ctx = canvas.getContext('2d', { alpha: false });
-  const playBtn = document.getElementById('playBtn');
-  const startScreen = document.getElementById('startOverlay');
-  const startScreenPlay = document.getElementById('startScreenPlay');
-  const exitBtn = document.getElementById('exitBtn');
-  const muteBtn = document.getElementById('muteBtn');
-  const scoreDisplay = document.getElementById('scoreDisplay');
-  const gameOverOverlay = document.getElementById('gameOverOverlay');
-  const gameOverText = document.getElementById('gameOverText');
-  const retryBtn = document.getElementById('retryBtn');
-  const backBtn = document.getElementById('backBtn');
-
-  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  let muted = false;
-  let best = parseInt(localStorage.getItem('flappyBest')||0,10);
-
-  function beep(freq=440, duration=0.06, type='sine', gain=0.08) {
-    if (muted) return;
-    const o = audioCtx.createOscillator();
-    const g = audioCtx.createGain();
-    o.type = type; o.frequency.value = freq;
-    g.gain.value = gain;
-    o.connect(g); g.connect(audioCtx.destination);
-    o.start();
-    setTimeout(()=>{ o.stop(); o.disconnect(); g.disconnect(); }, duration*1000);
-  }
-  function flapSound(){ beep(880,0.04,'triangle',0.06); }
-  function pointSound(){ beep(1200,0.06,'square',0.08); }
-  function hitSound(){ beep(120,0.18,'sawtooth',0.15); }
-
-  function resizeCanvas() {
-    // keep device pixels crisp
-    const rect = container.getBoundingClientRect();
-    canvas.width = Math.floor(rect.width * devicePixelRatio);
-    canvas.height = Math.floor(rect.height * devicePixelRatio);
-    canvas.style.width = rect.width + 'px';
-    canvas.style.height = rect.height + 'px';
-    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
-  }
-  window.addEventListener('resize', resizeCanvas);
-  resizeCanvas();
-
-  // Game state
-  const STATE = { start:0, play:1, over:2 };
-  let state = STATE.start;
-  let bird = { x:70, y:100, r:14, vy:0 };
-  let pipes = []; // {x,width,top,bottom,passed}
-  let score=0, speed=2.4;
-  let spawnTimer = 0;
-
-  function reset() {
-    bird = { x:70, y: canvas.height/2, r:14, vy:0 };
-    pipes = [];
-    score = 0;
-    speed = Math.max(2.2, canvas.width/360 * 2.4);
-    spawnTimer = 0;
-    state = STATE.play;
-    scoreDisplay.style.display = 'block';
-    scoreDisplay.textContent = score;
-    gameOverOverlay.style.display = 'none';
-  }
-
-  function spawnPipe() {
-    const gap = Math.max(110, Math.floor(canvas.height*0.22)); // gap scales
-    const min = 40;
-    const top = Math.floor(Math.random() * (canvas.height - gap - min*2)) + min;
-    const w = Math.max(48, Math.floor(canvas.width*0.12));
-    pipes.push({ x: canvas.width + 20, width: w, top: top, bottom: canvas.height - top - gap, passed: false });
-  }
-
-  function update(dt) {
-    if (state !== STATE.play) return;
-    // bird physics
-    bird.vy += 0.36; // gravity
-    bird.y += bird.vy;
-
-    // spawn pipes periodically
-    spawnTimer += dt;
-    if (spawnTimer > Math.max(900 - score*20, 600)) {
-      spawnPipe(); spawnTimer = 0;
-    }
-
-    // move pipes
-    for (const p of pipes) p.x -= speed;
-    // remove offscreen
-    pipes = pipes.filter(p=>p.x + p.width > -10);
-
-    // check collisions & scoring
-    for (const p of pipes) {
-      if (!p.passed && p.x + p.width < bird.x) {
-        p.passed = true; score++; scoreDisplay.textContent = score; pointSound();
-        // increase speed gradually each time score increments
-        speed += 0.06;
-      }
-      // collision with vertical pipes
-      if (bird.x + bird.r > p.x && bird.x - bird.r < p.x + p.width) {
-        if (bird.y - bird.r < p.top || bird.y + bird.r > canvas.height - p.bottom) {
-          // hit
-          state = STATE.over; hitSound();
-          setTimeout(()=> showGameOver(), 200);
+    <style>
+        html, body { overflow: hidden; }
+        main { flex-grow: 1; display: flex; justify-content: center; align-items: center; }
+        #game-container {
+            position: relative;
+            width: 360px; height: 640px;
+            max-width: 100vw; max-height: 85vh;
+            border: 2px solid #333;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
-      }
-    }
+        #gameCanvas { width: 100%; height: 100%; display: block; }
+        #start-screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            color: white; z-index: 10;
+        }
+        #start-button {
+            padding: 15px 30px; font-size: 24px; font-weight: bold;
+            color: #333; background-color: #f6ad55;
+            border: none; border-radius: 10px; cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.1s;
+        }
+        #start-button:active { transform: scale(0.95); }
+        #start-screen h2 { font-size: 36px; font-weight: bold; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
 
-    // floor collision
-    if (bird.y + bird.r > canvas.height) {
-      bird.y = canvas.height - bird.r; state = STATE.over; hitSound(); setTimeout(()=> showGameOver(),200);
-    }
-    // ceiling
-    if (bird.y - bird.r < 0) { bird.y = bird.r; bird.vy = 0; }
-  }
+        /* Mobile full screen */
+        @media (max-width: 768px) {
+            header, nav, footer { display: none !important; }
+            body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; }
+            main { margin: 0 !important; padding: 0 !important; width: 100vw !important; height: 100vh !important; }
+            #game-container { position: fixed; top: 0; left: 0; width: 100vw !important; height: 100vh !important; border: none; max-width: 100%; max-height: 100%; }
+        }
 
-  function draw() {
-    // sky
-    ctx.fillStyle = '#87CEEB'; ctx.fillRect(0,0,canvas.width,canvas.height);
-    // ground (simple)
-    ctx.fillStyle = '#7c3aed'; ctx.fillRect(0, canvas.height - 40, canvas.width, 40);
+        /* Nút mobile */
+        #mobile-controls { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: none; gap: 15px; z-index: 20; }
+        .control-btn { padding: 10px 18px; font-size: 16px; border: none; border-radius: 8px; background: #f6ad55; color: #333; font-weight: bold; cursor: pointer; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
+        .control-btn:active { transform: scale(0.95); }
+        @media (max-width: 768px) { #mobile-controls { display: flex !important; } }
 
-    // pipes
-    for (const p of pipes) {
-      ctx.fillStyle = '#2f855a';
-      ctx.fillRect(p.x, 0, p.width, p.top);
-      ctx.fillRect(p.x, canvas.height - p.bottom, p.width, p.bottom);
-    }
+        /* Nút thoát PC */
+        #btn-exit-pc { position: absolute; top: 10px; left: 10px; padding: 6px 12px; font-size: 14px; border: none; border-radius: 6px; background: #f6ad55; color: #333; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 30; }
+        @media (max-width: 768px) { #btn-exit-pc { display: none; } }
+    </style>
+</head>
+<body class="bg-[#FBF7F0] flex flex-col min-h-screen">
+    <header class="bg-white shadow-sm py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="../index.html" class="flex items-center space-x-2">
+                <img src="../../img/logo.png" alt="Logo" class="h-12 w-12 rounded-full">
+                <span class="text-xl font-bold text-gray-800 hidden sm:block">Vinh ở Nhật</span>
+            </a>
+            <div class="flex items-center space-x-4">
+                <div class="text-right time-display">
+                    <div id="time" class="time text-3xl font-bold leading-none text-gray-800">00:00:00</div>
+                    <div id="date" class="date text-sm mt-1 text-gray-600">...</div>
+                </div>
+            </div>
+        </div>
+    </header>
 
-    // bird
-    ctx.beginPath();
-    ctx.fillStyle = '#f6ad55';
-    ctx.arc(bird.x, bird.y, bird.r, 0, Math.PI*2);
-    ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle='#333'; ctx.stroke();
+    <nav class="bg-white shadow-sm mt-4 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-2">
+            <ul class="hidden sm:flex justify-center sm:justify-between items-center space-x-4">
+                <li><a href="#" class="menu-link hover:text-yellow-600">Bài viết HD</a></li>
+                <li><a href="#" class="menu-link hover:text-yellow-600">Video hướng dẫn</a></li>
+                <li><a href="#" class="menu-link hover:text-yellow-600">Tải ứng dụng</a></li>
+                <li><a href="#" class="menu-link hover:text-yellow-600">Học tập</a></li>
+                <li><a href="#" class="menu-link hover:text-yellow-600">Giải trí</a></li>
+            </ul>
+        </div>
+    </nav>
 
-    // score (top center)
-    if (state !== STATE.start) {
-      ctx.fillStyle='white'; ctx.font='48px Inter, sans-serif'; ctx.textAlign='center';
-      ctx.fillText(score, canvas.width/2, 72);
-    }
-  }
+    <main class="container mx-auto px-4 mt-8">
+        <div id="game-container">
+            <div id="start-screen">
+                <h2>Flappy Bird</h2>
+                <button id="start-button">Bắt đầu</button>
+            </div>
+            <canvas id="gameCanvas"></canvas>
+            <button id="btn-exit-pc">Thoát</button>
+            <div id="mobile-controls">
+                <button id="btn-sound" class="control-btn">Âm thanh</button>
+                <button id="btn-exit" class="control-btn">Thoát</button>
+            </div>
 
-  let lastTime = performance.now();
-  function loop(now) {
-    const dt = now - lastTime;
-    lastTime = now;
-    update(dt);
-    draw();
-    requestAnimationFrame(loop);
-  }
+            <!-- Âm thanh event -->
+            <audio id="jump-sound" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
+            <audio id="gameover-sound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+        </div>
+    </main>
 
-  function showGameOver() {
-    gameOverOverlay.style.display = 'block';
-    gameOverText.textContent = `Điểm: ${score} — Cao nhất: ${best}`;
-    if (score > best) { best = score; localStorage.setItem('flappyBest', best); gameOverText.textContent = `MỚI: ${score} điểm!`; }
-  }
+    <footer class="bg-gray-800 text-white mt-12 py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-gray-400">&copy; 2025 Vinh ở Nhật. All rights reserved.</p>
+        </div>
+    </footer>
 
-  function jump() {
-    if (state === STATE.start) {
-      // start game: hide overlay & request fullscreen
-      startScreen.style.display = 'none';
-      // resume audio context for some browsers
-      audioCtx.resume().catch(()=>{});
-      // request fullscreen
-      if (container.requestFullscreen) container.requestFullscreen();
-      reset();
-    }
-    if (state === STATE.play) {
-      bird.vy = -8;
-      flapSound();
-    } else if (state === STATE.over) {
-      // do nothing or restart
-    }
-  }
+    <script>
+        // ===== Đồng hồ =====
+        function updateClock() {
+            const now = new Date();
+            const time = now.toLocaleTimeString('vi-VN', { hour12: false });
+            const date = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            document.getElementById('time').textContent = time;
+            document.getElementById('date').textContent = date;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
 
-  // Inputs
-  container.addEventListener('touchstart', (e)=>{
-    e.preventDefault();
-    jump();
-  }, {passive:false});
-  container.addEventListener('mousedown', (e)=>{
-    e.preventDefault();
-    jump();
-  });
-  window.addEventListener('keydown', (e)=>{
-    if (e.code === 'Space') { e.preventDefault(); jump(); }
-    if (e.code === 'Escape' && document.fullscreenElement) document.exitFullscreen();
-  });
+        // ===== Game =====
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const startScreen = document.getElementById('start-screen');
+        const startButton = document.getElementById('start-button');
+        const gameContainer = document.getElementById('game-container');
+        const jumpSound = document.getElementById('jump-sound');
+        const gameoverSound = document.getElementById('gameover-sound');
 
-  // Buttons
-  playBtn.addEventListener('click', ()=> startScreenPlay.click());
-  startScreenPlay.addEventListener('click', ()=> {
-    jump();
-  });
-  exitBtn.addEventListener('click', ()=> {
-    location.href = '../giaitri.html';
-  });
-  retryBtn.addEventListener('click', ()=> {
-    reset();
-  });
-  backBtn.addEventListener('click', ()=> {
-    location.href = '../giaitri.html';
-  });
-  muteBtn.addEventListener('click', ()=> {
-    muted = !muted; muteBtn.textContent = muted? '🔇':'🔈';
-  });
+        canvas.width = gameContainer.clientWidth;
+        canvas.height = gameContainer.clientHeight;
 
-  // initialize and start loop
-  resizeCanvas();
-  lastTime = performance.now();
-  requestAnimationFrame(loop);
+        const GRAVITY = 0.4, JUMP = -8, GAME_SPEED = 3;
+        let bird, pipes, score, bestScore, currentGameState;
+        const gameState = { start: 'start', playing: 'playing', gameOver: 'gameOver' };
 
-})();
-</script>
+        function resetGame() {
+            bird = { x: 50, y: canvas.height / 2, radius: 15, velocity: 0 };
+            pipes = []; score = 0; currentGameState = gameState.playing;
+        }
+        function drawBird() { ctx.beginPath(); ctx.arc(bird.x, bird.y, bird.radius, 0, Math.PI*2); ctx.fillStyle = '#f6ad55'; ctx.fill(); ctx.strokeStyle = '#333'; ctx.stroke(); ctx.closePath(); }
+        function drawPipes() { pipes.forEach(pipe => { ctx.fillStyle = '#48bb78'; ctx.fillRect(pipe.x, 0, pipe.width, pipe.top); ctx.fillRect(pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom); }); }
+        function drawScore() { if(currentGameState===gameState.start)return; ctx.fillStyle='white'; ctx.font='45px Inter, sans-serif'; ctx.textAlign='center'; ctx.fillText(score, canvas.width/2,60); ctx.strokeStyle='black'; ctx.lineWidth=2; ctx.strokeText(score,canvas.width/2,60);}        
+        function drawGameOver(){ctx.fillStyle='rgba(0,0,0,0.7)';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='white';ctx.font='40px Inter, sans-serif';ctx.textAlign='center';ctx.fillText('GAME OVER',canvas.width/2,canvas.height/2-50);ctx.font='24px Inter, sans-serif';ctx.fillText(`Điểm: ${score}`,canvas.width/2,canvas.height/2);ctx.fillText(`Cao nhất: ${bestScore}`,canvas.width/2,canvas.height/2+40);ctx.font='18px Inter, sans-serif';ctx.fillText('Chạm để chơi lại',canvas.width/2,canvas.height/2+100);}
+        function updateBird(){bird.velocity+=GRAVITY;bird.y+=bird.velocity;if(bird.y-bird.radius<0){bird.y=bird.radius;bird.velocity=0;}}
+        function updatePipes(){if(pipes.length===0||pipes[pipes.length-1].x<canvas.width-200){const gap=150;const minHeight=50;const topHeight=Math.random()*(canvas.height-gap-minHeight*2)+minHeight;pipes.push({x:canvas.width,width:60,top:topHeight,bottom:canvas.height-topHeight-gap,passed:false});}pipes.forEach(pipe=>pipe.x-=GAME_SPEED);pipes=pipes.filter(pipe=>pipe.x+pipe.width>0);}
+        function checkCollision(){if(bird.y+bird.radius>canvas.height)return true;for(const pipe of pipes){if(bird.x+bird.radius>pipe.x&&bird.x-bird.radius<pipe.x+pipe.width){if(bird.y-bird.radius<pipe.top||bird.y+bird.radius>canvas.height-pipe.bottom){return true;}}}return false;}
+        function updateScore(){pipes.forEach(pipe=>{if(!pipe.passed&&pipe.x+pipe.width<bird.x){pipe.passed=true;score++;}});}
+        function gameLoop(){ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#87CEEB';ctx.fillRect(0,0,canvas.width,canvas.height);if(currentGameState===gameState.playing){updateBird();updatePipes();updateScore();if(checkCollision()){currentGameState=gameState.gameOver;gameoverSound.play();if(score>bestScore){bestScore=score;localStorage.setItem('flappyBestScore',bestScore);}}}drawPipes();drawBird();drawScore();if(currentGameState===gameState.gameOver)drawGameOver();requestAnimationFrame(gameLoop);}        
+        function handleInput(){if(currentGameState===gameState.playing){bird.velocity=JUMP;jumpSound.currentTime=0;jumpSound.play();}else if(currentGameState===gameState.gameOver){setTimeout(resetGame,300);}}
+        startButton.addEventListener('click',e=>{e.preventDefault();startScreen.style.display='none';resetGame();});
+        document.addEventListener('keydown',e=>{if(e.code==='Space'&&currentGameState!==gameState.start)handleInput();});
+        window.addEventListener('touchstart',e=>{if(currentGameState!==gameState.start){e.preventDefault();handleInput();}});
+        window.addEventListener('mousedown',e=>{if(currentGameState!==gameState.start){e.preventDefault();handleInput();}});
+        function initialize(){bestScore=localStorage.getItem('flappyBestScore')||0;currentGameState=gameState.start;bird={x:50,y:canvas.height/2,radius:15,velocity:0};pipes=[];score=0;}
+        initialize();gameLoop();
+
+        // ===== Nút =====
+        document.getElementById("btn-sound")?.addEventListener("click",()=>{const btn=document.getElementById("btn-sound");if(jumpSound.muted){jumpSound.muted=false;gameoverSound.muted=false;btn.innerText="Âm thanh";}else{jumpSound.muted=true;gameoverSound.muted=true;btn.innerText="Tắt âm";}});
+        document.getElementById("btn-exit")?.addEventListener("click",()=>window.history.back());
+        document.getElementById("btn-exit-pc")?.addEventListener("click",()=>window.history.back());
+    </script>
 </body>
 </html>
