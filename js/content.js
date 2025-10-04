@@ -106,7 +106,7 @@ const allContent = [
         link: "#guide-1"
     },
     {
-        type: 'guide',
+        type: 'game',
         category: "game",
         date: "2025-10-05",
         featured: false,
