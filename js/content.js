@@ -35,6 +35,16 @@ const allContent = [
     },
     {
         type: 'post',
+        category: "game",
+        date: "2025-10-04",
+        featured: true, // Nổi bật
+        title: "Game Sudoku",
+        summary: "chơi game",
+        imageUrl: "https://placehold.co/400x250/ECC94B/ffffff?text=Học+Tiếng+Nhật",
+        link: "pages/pages-giaitri/sudoku.html"
+    },
+    {
+        type: 'post',
         category: "rakuten",
         date: "2025-04-26",
         featured: true, // Nổi bật
