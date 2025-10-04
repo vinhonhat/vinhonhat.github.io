@@ -52,10 +52,18 @@
             padding: 5px 10px;
         }
         #settingsPanel {
-            display: none; width: 100%; background: var(--surface-color);
-            border: 1px solid var(--border-color); border-radius: 8px;
-            padding: 15px; box-sizing: border-box; margin-top: 50px;
-            margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        display: none;
+        position: absolute;   /* overlay */
+        top: 40px;            /* ngay dưới nút ☰ */
+        left: 0;
+        right: 0;
+        background: var(--surface-color);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 15px;
+        box-sizing: border-box;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        z-index: 1000;        /* nổi trên */
         }
         #settingsPanel.visible { display: block; }
         #settingsPanel h2 { margin-top: 0; font-size: 18px; text-align: center; }
