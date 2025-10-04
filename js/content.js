@@ -21,7 +21,7 @@ const allContent = [
         title: "Chơi Game rắn săn mồi",
         summary: "mini game rắn săn mồi trên ứng dụng",
         imageUrl: "https://placehold.co/400x250/FBD38D/ffffff?text=Tonkatsu",
-        link: "pages/pages-giaitri/snake.html"
+        link: "/pages/pages-giaitri/snake.html"
     },
     {
         type: 'post',
@@ -31,7 +31,7 @@ const allContent = [
         title: "Game Flappy Bird",
         summary: "chơi game",
         imageUrl: "https://placehold.co/400x250/ECC94B/ffffff?text=Học+Tiếng+Nhật",
-        link: "pages/pages-giaitri/FlappyBird.html"
+        link: "/pages/pages-giaitri/FlappyBird.html"
     },
     {
         type: 'post',
@@ -41,7 +41,7 @@ const allContent = [
         title: "Game Sudoku",
         summary: "chơi game",
         imageUrl: "https://placehold.co/400x250/ECC94B/ffffff?text=Học+Tiếng+Nhật",
-        link: "pages/pages-giaitri/sudoku.html"
+        link: "/pages/pages-giaitri/sudoku.html"
     },
     {
         type: 'post',
