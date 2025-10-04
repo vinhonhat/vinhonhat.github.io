@@ -1,6 +1,9 @@
 Cập nhật trang Blog của Vinh ở Nhật
 
 
+blog V25.10.0
+
+1. Thêm hoàn thiện cac trang
 
 blog V25.9.2
 
