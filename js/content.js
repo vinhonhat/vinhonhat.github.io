@@ -107,13 +107,13 @@ const allContent = [
     },
     {
         type: 'guide',
-        category: "rakuten",
-        date: "2025-1-01",
+        category: "game",
+        date: "2025-10-05",
         featured: false,
-        title: "Mẹo sử dụng thẻ thanh toán Seven Bank",
-        summary: "Những lưu ý quan trọng khi sử dụng thẻ tại Nhật.",
+        title: "🎡 Vòng Quay Diệu Kỳ 🎡",
+        summary: "vòng quay giúp bạn đỡ phân vân với những lựa chọn của mình, giải trí vui",
         imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=HD+2",
-        link: "#guide-2"
+        link: "/pages/pages-giaitri/vongquay.html"
     },
     {
         type: 'guide',
