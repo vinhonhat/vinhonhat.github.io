@@ -30,7 +30,7 @@ const allContent = [
         featured: true, // Nổi bật
         title: "Game Flappy Bird",
         summary: "chơi game",
-        imageUrl: "https://placehold.co/400x250/ECC94B/ffffff?text=Học+Tiếng+Nhật",
+        imageUrl: "https://placehold.co/400x250/ECC94B/ffffff?text=Flappy Bird",
         link: "/pages/pages-giaitri/FlappyBird.html"
     },
     {
@@ -40,7 +40,7 @@ const allContent = [
         featured: true, // Nổi bật
         title: "Game Sudoku",
         summary: "chơi game",
-        imageUrl: "https://placehold.co/400x250/ECC94B/ffffff?text=Học+Tiếng+Nhật",
+        imageUrl: "https://placehold.co/400x250/ECC94B/ffffff?text=Sudoku",
         link: "/pages/pages-giaitri/sudoku.html"
     },
     {
@@ -112,7 +112,7 @@ const allContent = [
         featured: false,
         title: "🎡 Vòng Quay Diệu Kỳ 🎡",
         summary: "vòng quay giúp bạn đỡ phân vân với những lựa chọn của mình, giải trí vui",
-        imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=HD+2",
+        imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=Spin",
         link: "/pages/pages-giaitri/vongquay.html"
     },
     {
