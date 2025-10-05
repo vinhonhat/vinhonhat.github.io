@@ -178,7 +178,7 @@ const allContent = [
         featured: false,
         title: "Đăng ký thẻ My Numeber Online",
         summary: "cách đăng ký thẻ My Number online đơn giản nhất cho người mới.",
-        imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=My Number",
+        imageUrl: "/img/",
         link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/khac/%C4%91%C4%83ng-k%C3%BD-mynumber-online?authuser=0"
     },
     {
