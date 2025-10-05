@@ -48,20 +48,20 @@ const allContent = [
         category: "rakuten",
         date: "2025-04-26",
         featured: true, // Nổi bật
-        title: "5 Mẹo săn sale trên Rakuten Ichiba",
-        summary: "Tổng hợp các bí quyết giúp bạn mua sắm thông minh và tiết kiệm hơn trên sàn Rakuten.",
-        imageUrl: "https://placehold.co/400x250/F6AD55/ffffff?text=Rakuten+Sale",
-        link: "#post-4"
+        title: "Tham gia nhóm gia đình để giảm giá cước của rakuten mobile",
+        summary: "Tổng hợp các họ của các bạn đang dùng rakuten để tham gia nhóm gia đình để giảm giá cước sim hàng tháng.",
+        imageUrl: "https://network.mobile.rakuten.co.jp/assets/img/fee/family/ogp-20240410.png",
+        link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/rakuten/family?authuser=0"
     },
     {
         type: 'post',
         category: "rakuten",
-        date: "2025-2-25",
+        date: "2025-10-06",
         featured: false, // Bài viết thường, không hiển thị ở mục đề xuất
-        title: "Khám phá vẻ đẹp của công viên Rinkai",
-        summary: "Một trong những công viên lớn và nổi tiếng nhất Tokyo, điểm đến lý tưởng cho cả bốn mùa.",
-        imageUrl: "https://placehold.co/400x250/A5D6A7/ffffff?text=Ueno+Park",
-        link: "#post-5"
+        title: "Cách báo mất thẻ và phát hành lại thẻ Rakuten Credit",
+        summary: "Hướng dẫn khoá thẻ và phát hành lại thẻ Credit của rakuten 1 cách nhanh chóng nhất để bảo vệ tài khoản của mình.",
+        imageUrl: "https://image.card.jp.rakuten-static.com/card_corp/pc/contents/logo_200x200.gif",
+        link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/rakuten/b%C3%A1o-m%E1%BA%A5t-th%E1%BA%BB-rakuten-credit?authuser=0"
     },
 
     // --- BÀI VIẾT HƯỚNG DẪN (GUIDES) ---
