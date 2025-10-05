@@ -159,8 +159,9 @@
         function handleInput(){if(currentGameState===gameState.playing){bird.velocity=JUMP;jumpSound.currentTime=0;jumpSound.play();}else if(currentGameState===gameState.gameOver){setTimeout(resetGame,300);}}
         startButton.addEventListener('click',e=>{e.preventDefault();startScreen.style.display='none';resetGame();});
         document.addEventListener('keydown',e=>{if(e.code==='Space'&&currentGameState!==gameState.start)handleInput();});
-        window.addEventListener('touchstart',e=>{if(currentGameState!==gameState.start){e.preventDefault();handleInput();}});
-        window.addEventListener('mousedown',e=>{if(currentGameState!==gameState.start){e.preventDefault();handleInput();}});
+        canvas.addEventListener('mousedown', e => {if(currentGameState !== gameState.start) handleInput();});
+        canvas.addEventListener('touchstart', e => {if(currentGameState !== gameState.start) {e.preventDefault(); // chỉ chặn trong canvas
+        handleInput();}}, { passive: false });
         function initialize(){bestScore=localStorage.getItem('flappyBestScore')||0;currentGameState=gameState.start;bird={x:50,y:canvas.height/2,radius:15,velocity:0};pipes=[];score=0;}
         initialize();gameLoop();
 
