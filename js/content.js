@@ -114,51 +114,51 @@ const allContent = [
         category: "711",
         date: "2025-09-29", // Ngày mới nhất
         featured: true,
-        title: "Cách đăng ký tài khoản City Exxpress - chuyển tiền Nhật Việt",
-        summary: "Hướng dẫn chi tiết từng bước để tạo tài khoản chuyển tiền về Việt Nam với tỷ giá cao nhất và phí chuyển tiền rẻ nhất lại còn được hoàn point.",
+        title: "Cách đăng ký tài khoản trực tuyến của Seven Bank",
+        summary: "Hướng dẫn chi tiết từng bước để tạo tài khoản trực tuyến của Seven Bank 1 cách đơn giản nhất để dùng thanh toán tiền sim.... .",
         imageUrl: "https://img.favpng.com/21/10/7/logo-remittance-city-express-money-transfer-japan-co-ltd-brand-png-favpng-K39it6YWHKeAJm0NwUKpjnpJv.jpg",
-        link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/express-money-transfer/city_express?authuser=0"
+        link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/711/create-account-711?authuser=0"
     },
     {
         type: 'guide',
         category: "711",
         date: "2025-10-01",
         featured: false,
-        title: "Mẹo sử dụng thẻ thanh toán Seven Bank",
-        summary: "Những lưu ý quan trọng khi sử dụng thẻ tại Nhật.",
+        title: "Hướng dẫn đăng nhập ứng dụng Seven Bank",
+        summary: "cách đăng nhập ứng dụng seven bank để quản lý tài khoản, chi tiêu ngân hàng của bạn đơn giản nhất.",
         imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=HD+2",
-        link: "#guide-2"
+        link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/711/app-sevenbank?authuser=0"
     },
     {
-        type: '711',
-        category: "sim",
+        type: 'guide',
+        category: "711",
         date: "2025-09-20", // Ngày cũ hơn
         featured: false,
-        title: "Hướng dẫn nạp tiền vào sim Linemo",
-        summary: "Các cách nạp tiền tiện lợi và nhanh chóng cho sim Linemo.",
+        title: "Hướng dẫn cập nhật thẻ ngoại kiều cho Sevenbank",
+        summary: "Cách cập nhật thẻ ngoại kiều mới để tiếp tục dùng ngân hàng seven bank 1 cách nhanh chóng và dễ dàng.",
         imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=HD+3",
-        link: "#guide-3"
+        link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/711/update-card-711?authuser=0"
     },
     {
-        type: '711',
-        category: "seven",
+        type: 'guide',
+        category: "711",
         date: "2025-09-29", // Ngày cũ hơn
         featured: true,
         title: "Hướng dẫn đăng ký thẻ ngân hàng seven bank",
         summary: "Ngoài ngân hàng yucho thì đây là ngân hàng thứ 2 cho phép người mới tới nhật cũng có thể đăng ký và rất dễ ở ngoài cây ATM.",
         imageUrl: "https://creww.me/assets/collaboration/contents/sevenbank-2016-02/logo-99b065e63fcbc1acea62a64e95a7d5b17b8446373e79ed723369e52e21a60335.png",
         link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/711/sevenbank?authuser=0"
-    }, 
+    },  
     {
-        type: '711',
-        category: "seven",
+        type: 'guide',
+        category: "711",
         date: "2025-09-29", // Ngày cũ hơn
         featured: true,
-        title: "Hướng dẫn đăng ký thẻ ngân hàng seven bank",
-        summary: "Ngoài ngân hàng yucho thì đây là ngân hàng thứ 2 cho phép người mới tới nhật cũng có thể đăng ký và rất dễ ở ngoài cây ATM.",
+        title: "Đăng ký thẻ Debit của Seven bank",
+        summary: "Cách đăng ký thẻ debit cho những người có thẻ ngân hàng seven bank mà chưa có thẻ debit. .",
         imageUrl: "https://creww.me/assets/collaboration/contents/sevenbank-2016-02/logo-99b065e63fcbc1acea62a64e95a7d5b17b8446373e79ed723369e52e21a60335.png",
-        link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/711/sevenbank?authuser=0"
-    },    
+        link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/711/debit711?authuser=0"
+    }, 
 
     // --- BÀI VIẾT HƯỚNG DẪN (GUIDES) ---
     {
