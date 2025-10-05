@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vòng Quay Diệu Kỳ | Vinh ở Nhật</title>
-    
-    <link rel="manifest" href="../manifest.json">
+    <title>Hướng dẫn về Rakuten | Vinh ở Nhật</title>
+    <link rel="icon" href="../../img/logoQV.png" type="image/x-icon"> 
+    <link rel="manifest" href="../../manifest.json">
     <meta name="theme-color" content="#F6AD55">
-    <link rel="apple-touch-icon" href="../img/logo.png">
+    <link rel="apple-touch-icon" href="../../img/logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/style.css">
-
+    <link rel="stylesheet" href="../../css/style.css">
     <style>
         /* PHẦN 1: CSS - ĐỊNH DẠNG GIAO DIỆN VÒNG QUAY */
         :root {
@@ -145,8 +144,8 @@
 
     <header class="bg-white shadow-sm py-4">
         <div class="container mx-auto px-4 flex justify-between items-center">
-            <a href="../index.html" class="flex items-center space-x-2">
-                <img src="../img/logo.png" onerror="this.onerror=null; this.src='https://placehold.co/40x40/F6AD55/ffffff?text=V';" alt="Logo" class="h-12 w-12 rounded-full">
+            <a href="/" class="flex items-center space-x-2">
+                <img src="../../img/logo.png" onerror="this.onerror=null; this.src='https://placehold.co/40x40/F6AD55/ffffff?text=V';" alt="Logo" class="h-12 w-12 rounded-full">
                 <span class="text-xl font-bold text-gray-800 hidden sm:block">Vinh ở Nhật</span>
             </a>
             <div class="flex items-center space-x-4">
@@ -165,26 +164,33 @@
         <div class="container mx-auto px-4 py-2">
             <ul class="hidden sm:flex justify-center sm:justify-between items-center space-x-4">
                 <li class="relative group">
-                    <a href="#" class="menu-link hover:text-yellow-600 flex items-center">Bài viết HD<i class="fas fa-chevron-down ml-2 text-xs"></i></a>
-                    <ul class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 py-2 w-40 z-10 dropdown-menu">
-                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Rakuten</a></li>
-                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Seven</a></li>
-                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Baito</a></li>
-                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Sim thẻ</a></li>
-                    </ul>
-                </li>
-                <li><a href="#" class="menu-link hover:text-yellow-600">Video hướng dẫn</a></li>
-                <li><a href="#" class="menu-link hover:text-yellow-600">Tải ứng dụng</a></li>
-                <li><a href="#" class="menu-link hover:text-yellow-600">Học tập</a></li>
-                <li><a href="#" class="menu-link hover:text-yellow-600">Giải trí</a></li>
-            </ul>
+                    <a href="pages/pages-baiviet/bai-viet-hd.html" class="menu-link hover:text-yellow-600 flex items-center">
+                        Bài HD
+                        <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                    </a>
+             <ul class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 py-2 w-40 z-10 dropdown-menu">
+                <li><a href="pages/pages-baiviet/rakuten.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Rakuten</a></li>
+                <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Seven</a></li>
+                <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Baito</a></li>
+                <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Sim thẻ</a></li>
+        </ul>
+    </li>
+    
+    <li><a href="https://sites.google.com/view/rakutenchiase/video-hd" class="menu-link hover:text-yellow-600">Video HD</a></li>
+    
+    <li><a href="https://sites.google.com/view/rakutenchiase/%E1%BB%A9ng-d%E1%BB%A5ng" class="menu-link hover:text-yellow-600">Tải Xuống</a></li>
+    
+    <li><a href="#" class="menu-link hover:text-yellow-600">Học Tập</a></li>
+    
+    <li><a href="pages/pages-giaitri/giaitri.html" class="menu-link hover:text-yellow-600">Giải Trí</a></li>
+</ul>
             <div id="mobile-menu" class="hidden sm:hidden absolute left-0 w-full bg-white shadow-lg py-4">
                 <ul class="flex flex-col items-center space-y-4">
+                    <li><a href="pages/pages-baiviet/bai-viet-hd.html" class="menu-link">Bài viết HD</a></li>
+                    <li><a href="https://sites.google.com/view/rakutenchiase/video-hd" class="menu-link">Video hướng dẫn</a></li>
+                    <li><a href="https://sites.google.com/view/rakutenchiase/%E1%BB%A9ng-d%E1%BB%A5ng" class="menu-link">Tải ứng dụng</a></li>
                     <li><a href="#" class="menu-link">Học tập</a></li>
-                    <li><a href="#" class="menu-link">Giải trí</a></li>
-                    <li><a href="#" class="menu-link">Bài viết HD</a></li>
-                    <li><a href="#" class="menu-link">Video hướng dẫn</a></li>
-                    <li><a href="#" class="menu-link">Tải ứng dụng</a></li>
+                    <li><a href="pages/pages-giaitri/giaitri.html" class="menu-link">Giải trí</a></li>
                 </ul>
             </div>
         </div>
@@ -244,14 +250,11 @@
             </p>
             <p class="text-gray-500 text-sm">&copy; 2025 Vinh ở Nhật. All rights reserved.</p>
         </div>
-    </footer>
 
-    <script src="../js/lunar-calendar.js"></script>
-    <script src="../js/holidays.js"></script>
-    <script src="../js/proverbs.js"></script>
-    <script src="../js/content.js"></script> 
-    <script src="../js/script.js"></script>
-
+    <script src="../../js/script.js"></script>
+    <script src="../../js/content.js"></script>
+    
+    <script src="../page-logic.js"></script>
     <script>
     /* PHẦN 3: JAVASCRIPT - LOGIC VÀ TÍNH NĂNG VÒNG QUAY */
 
@@ -491,5 +494,6 @@
     resizeCanvas();
     renderHistory();
     </script>
+
 </body>
 </html>
