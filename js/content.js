@@ -111,7 +111,7 @@ const allContent = [
    // --- SEVEN ---
     {
         type: 'guide', // Loại nội dung: Hướng dẫn
-        category: "711",
+        category: "seven",
         date: "2025-09-29", // Ngày mới nhất
         featured: true,
         title: "Cách đăng ký tài khoản trực tuyến của Seven Bank",
@@ -121,7 +121,7 @@ const allContent = [
     },
     {
         type: 'guide',
-        category: "711",
+        category: "seven",
         date: "2025-10-01",
         featured: false,
         title: "Hướng dẫn đăng nhập ứng dụng Seven Bank",
@@ -131,7 +131,7 @@ const allContent = [
     },
     {
         type: 'guide',
-        category: "711",
+        category: "seven",
         date: "2025-09-20", // Ngày cũ hơn
         featured: false,
         title: "Hướng dẫn cập nhật thẻ ngoại kiều cho Sevenbank",
@@ -141,7 +141,7 @@ const allContent = [
     },
     {
         type: 'guide',
-        category: "711",
+        category: "seven",
         date: "2025-09-29", // Ngày cũ hơn
         featured: true,
         title: "Hướng dẫn đăng ký thẻ ngân hàng seven bank",
@@ -151,7 +151,7 @@ const allContent = [
     },  
     {
         type: 'guide',
-        category: "711",
+        category: "seven",
         date: "2025-09-29", // Ngày cũ hơn
         featured: true,
         title: "Đăng ký thẻ Debit của Seven bank",
@@ -195,7 +195,7 @@ const allContent = [
 
     {
         type: 'guide',
-        category: "seven",
+        category: "khac",
         date: "2025-09-29", // Ngày cũ hơn
         featured: true,
         title: "Hướng dẫn đăng ký thẻ ngân hàng seven bank",
