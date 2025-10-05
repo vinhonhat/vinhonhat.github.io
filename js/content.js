@@ -66,7 +66,7 @@ const allContent = [
         imageUrl: "https://placehold.co/400x250/ECC94B/ffffff?text=Sudoku",
         link: "/pages/pages-giaitri/sudoku.html"
     },
-    // --- BÀI VIẾT RAKUTEN ---
+    // --- RAKUTEN ---
     {
         type: 'post',
         category: "rakuten",
