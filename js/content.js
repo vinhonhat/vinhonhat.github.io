@@ -20,7 +20,7 @@ const allContent = [
         featured: true, // true => Sẽ được ưu tiên hiển thị ở mục "Đề xuất"
         title: "Hướng dẫn lấy mã MNP chuyển mạng AU",
         summary: "cách lấy mã MNP chuyển mạng giữ số của nhà mạng AU, UQ để chuyển sang nhà mạng khác ",
-        imageUrl: "img/posts/APNimg.png",
+        imageUrl: "img/posts/MNP.jpg",
         link: "#"
     },
 
