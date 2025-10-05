@@ -112,7 +112,7 @@ const allContent = [
         featured: false,
         title: "🎡 Vòng Quay Diệu Kỳ 🎡",
         summary: "vòng quay giúp bạn đỡ phân vân với những lựa chọn của mình, giải trí vui",
-        imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=Spin",
+        imageUrl: "img/posts/giaitri/vongquay.png",
         link: "/pages/pages-giaitri/vongquay.html"
     },
     {
