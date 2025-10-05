@@ -102,7 +102,7 @@ const allContent = [
         featured: true,
         title: "Cách tính cước sim nhà mạng Rakuten",
         summary: "Hướng dẫn chi tiết xem cách tính và ngày đóng cước sim nhà mạng rakuten đơn giản nhất.",
-        imageUrl: "https://lh3.googleusercontent.com/sitesv/AICyYdamTBcDcbTs5i22oDcuS2_6C64SY4hiwxliDNtViOle81C8fBUY6Sz-gyOBzX0xW_ka7ZCCWiBWm5dCLjACthpMDK5S0iON8sgslD2aDWxljWNRW7zdDf0YoYKsAB9UchIBA0-zQ2os4W72p86f6Rueej60o9-k93-D-a1HsbssJAr6d6DgWnBJpQX-D_cEZeDVXrbJvABA1Z7EfmVD7w1rg355X8M-gjlx=w1280i",
+        imageUrl: "https://corp.mobile.rakuten.co.jp/assets/img/common/ogp.png?200323",
         link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/rakuten/c%C6%B0%E1%BB%9Bc-sim?authuser=0"
     },
     {
