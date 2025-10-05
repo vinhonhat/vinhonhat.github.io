@@ -67,7 +67,7 @@ const allContent = [
     // --- BÀI VIẾT HƯỚNG DẪN (GUIDES) ---
     {
         type: 'guide', // Loại nội dung: Hướng dẫn
-        category: "rakuten",
+        category: "bank",
         date: "2025-09-29", // Ngày mới nhất
         featured: true,
         title: "Cách đăng ký tài khoản City Exxpress - chuyển tiền Nhật Việt",
@@ -98,8 +98,8 @@ const allContent = [
     {
         type: 'guide', // Loại nội dung: Hướng dẫn
         category: "rakuten",
-        date: "2025-10-02", // Ngày mới nhất
-        featured: false,
+        date: "2025-10-05", // Ngày mới nhất
+        featured: true,
         title: "Cách tính cước sim nhà mạng Rakuten",
         summary: "Hướng dẫn chi tiết xem cách tính và ngày đóng cước sim nhà mạng rakuten đơn giản nhất.",
         imageUrl: "https://lh3.googleusercontent.com/sitesv/AICyYdamTBcDcbTs5i22oDcuS2_6C64SY4hiwxliDNtViOle81C8fBUY6Sz-gyOBzX0xW_ka7ZCCWiBWm5dCLjACthpMDK5S0iON8sgslD2aDWxljWNRW7zdDf0YoYKsAB9UchIBA0-zQ2os4W72p86f6Rueej60o9-k93-D-a1HsbssJAr6d6DgWnBJpQX-D_cEZeDVXrbJvABA1Z7EfmVD7w1rg355X8M-gjlx=w1280i",
