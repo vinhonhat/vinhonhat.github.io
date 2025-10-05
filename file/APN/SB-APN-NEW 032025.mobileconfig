@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>APNs</key>
+			<array>
+				<dict>
+					<key>AllowedProtocolMask</key>
+					<integer>3</integer>
+					<key>AllowedProtocolMaskInRoaming</key>
+					<integer>3</integer>
+					<key>AuthenticationType</key>
+					<string>CHAP</string>
+					<key>Name</key>
+					<string>plus.4g</string>
+					<key>Password</key>
+					<string>4g</string>
+					<key>Username</key>
+					<string>plus</string>
+				</dict>
+			</array>
+			<key>AttachAPN</key>
+			<dict>
+				<key>AllowedProtocolMask</key>
+				<integer>3</integer>
+				<key>AuthenticationType</key>
+				<string>CHAP</string>
+				<key>Name</key>
+				<string>plus.4g</string>
+				<key>Password</key>
+				<string>4g</string>
+				<key>Username</key>
+				<string>plus</string>
+			</dict>
+			<key>PayloadDescription</key>
+			<string>モバイルデータ通信設定を構成します</string>
+			<key>PayloadDisplayName</key>
+			<string>detail</string>
+			<key>PayloadIdentifier</key>
+			<string>com.apple.cellular.5A7C4DAF-E569-45A1-AD39-CF2BEB240FAC</string>
+			<key>PayloadType</key>
+			<string>com.apple.cellular</string>
+			<key>PayloadUUID</key>
+			<string>5A7C4DAF-E569-45A1-AD39-CF2BEB240FAC</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>PayloadDescription</key>
+	<string>Cấu hình sim data Softbank 4G. cập nhật và tạo bởi QVIT</string>
+	<key>PayloadDisplayName</key>
+	<string>APN-SB 032025</string>
+	<key>PayloadIdentifier</key>
+	<string>co.mc9 A88CF021-13F4-4BB0-822A-EA714DDAC663</string>
+	<key>PayloadOrganization</key>
+	<string>fb.com/tqv2022</string>
+	<key>PayloadRemovalDisallowed</key>
+	<false/>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>DAD2EFA2-1CAC-4825-A955-52D390E8EBF0</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+</dict>
+</plist>
