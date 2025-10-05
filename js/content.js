@@ -46,7 +46,17 @@ const allContent = [
     {
         type: 'post',
         category: "rakuten",
-        date: "2025-04-26",
+        date: "2025-10-06",
+        featured: true, // Nổi bật
+        title: "Phát hành lại hoá đơn thanh toán combini của rakuten mobile",
+        summary: "Hướng dẫn phát hành lại phiếu thanh toán cước sim rakuten khi bạn quên cho tiền vào thẻ để trừ tiền.",
+        imageUrl: "https://rmcs.file.force.com/servlet/servlet.ImageServer?id=0152r0000003fDX&oid=00D2r000000CtMv&lastMod=1676526487000",
+        link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/rakuten/bill?authuser=0"
+    },
+    {
+        type: 'post',
+        category: "rakuten",
+        date: "2025-10-06",
         featured: true, // Nổi bật
         title: "Tham gia nhóm gia đình để giảm giá cước của rakuten mobile",
         summary: "Tổng hợp các họ của các bạn đang dùng rakuten để tham gia nhóm gia đình để giảm giá cước sim hàng tháng.",
