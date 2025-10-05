@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>ConsentText</key>
+		<dict>
+			<key>default</key>
+			<string>you me mobile SIMサービス</string>
+		</dict>
+		<key>PayloadContent</key>
+		<array>
+			<dict>
+				<key>AttachAPN</key>
+				<dict>
+					<key>Name</key>
+					<string>youme.tokyo</string>
+					<key>AuthenticationType</key>
+					<string>CHAP</string>
+					<key>Username</key>
+					<string>user</string>
+					<key>Password</key>
+					<string>0000</string>
+				</dict>
+				<key>APNs</key>
+				<array>
+					<dict>
+						<key>Name</key>
+						<string>youme.tokyo</string>
+						<key>AuthenticationType</key>
+						<string>CHAP</string>
+						<key>Username</key>
+						<string>user</string>
+						<key>Password</key>
+						<string>0000</string>
+					</dict>
+				</array>
+				<key>PayloadDescription</key>
+				<string>you me mobile SIMサービス</string>
+				<key>PayloadDisplayName</key>
+				<string>you me mobile APN</string>
+				<key>PayloadIdentifier</key>
+				<string>youmemobile.profile</string>
+				<key>PayloadOrganization</key>
+				<string>youmemobile</string>
+				<key>PayloadType</key>
+				<string>com.apple.cellular</string>
+				<key>PayloadUUID</key>
+				<string>02C73060-D5F2-4908-AAB0-F9F453B7AF1E</string>
+				<key>PayloadVersion</key>
+				<integer>1</integer>
+			</dict>
+		</array>
+		<key>PayloadDescription</key>
+		<string>you me mobile SIMサービス</string>
+		<key>PayloadDisplayName</key>
+		<string>you me mobile APN</string>
+		<key>PayloadIdentifier</key>
+		<string>youmemobile.profile</string>
+		<key>PayloadOrganization</key>
+		<string>youmemobile</string>
+		<key>PayloadType</key>
+		<string>Configuration</string>
+		<key>PayloadUUID</key>
+		<string>19AAF43C-3D4D-4B18-9C37-E103615EE76F</string>
+		<key>PayloadVersion</key>
+		<integer>1</integer>
+	</dict>
+</plist>
