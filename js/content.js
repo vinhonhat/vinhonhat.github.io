@@ -13,6 +13,9 @@ const allContent = [
         imageUrl: "img/posts/APN img.png",
         link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/khac/apn?authuser=0"
     },
+
+
+    // --- GAME ---
     {
         type: 'post',
         category: "game",
@@ -30,8 +33,18 @@ const allContent = [
         featured: true, // Nổi bật
         title: "Game Flappy Bird",
         summary: "chơi game",
-        imageUrl: "https://placehold.co/400x250/ECC94B/ffffff?text=Flappy Bird",
+        imageUrl: "img/posts/giaitri/FlappyBird.png",
         link: "/pages/pages-giaitri/FlappyBird.html"
+    },
+    {
+        type: 'game',
+        category: "game",
+        date: "2025-10-05",
+        featured: false,
+        title: "🎡 Vòng Quay Diệu Kỳ 🎡",
+        summary: "vòng quay giúp bạn đỡ phân vân với những lựa chọn của mình, giải trí vui",
+        imageUrl: "img/posts/giaitri/vongquay.png",
+        link: "/pages/pages-giaitri/vongquay.html"
     },
     {
         type: 'post',
@@ -43,6 +56,7 @@ const allContent = [
         imageUrl: "https://placehold.co/400x250/ECC94B/ffffff?text=Sudoku",
         link: "/pages/pages-giaitri/sudoku.html"
     },
+    // --- BÀI VIẾT RAKUTEN ---
     {
         type: 'post',
         category: "rakuten",
@@ -115,16 +129,7 @@ const allContent = [
         imageUrl: "https://corp.mobile.rakuten.co.jp/assets/img/common/ogp.png?200323",
         link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/rakuten/c%C6%B0%E1%BB%9Bc-sim?authuser=0"
     },
-    {
-        type: 'game',
-        category: "game",
-        date: "2025-10-05",
-        featured: false,
-        title: "🎡 Vòng Quay Diệu Kỳ 🎡",
-        summary: "vòng quay giúp bạn đỡ phân vân với những lựa chọn của mình, giải trí vui",
-        imageUrl: "img/posts/giaitri/vongquay.png",
-        link: "/pages/pages-giaitri/vongquay.html"
-    },
+
     {
         type: 'guide',
         category: "seven",
