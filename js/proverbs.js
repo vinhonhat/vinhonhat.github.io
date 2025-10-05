@@ -1,7 +1,7 @@
 // js/proverbs.js
 const proverbs = [
   "Chúc bạn có một ngày mới vui vẻ, tốt lành!<br><br>Trang Blog hiện đang cập nhật, mong chờ bạn ghé thăm nhé! hịhị<br><br>tiến độ<br>========>55%-------",
-  /* "Một nụ cười bằng mười thang thuốc bổ.",
+  "Một nụ cười bằng mười thang thuốc bổ.",
   "Đi một ngày đàng, học một sàng khôn.",
   "Kiến tha lâu cũng đầy tổ.",
   "Gieo nhân nào, gặt quả nấy.",
@@ -17,6 +17,6 @@ const proverbs = [
   "Thất bại là mẹ thành công.",
   "Cách duy nhất để làm nên sự nghiệp vĩ đại là yêu những gì bạn làm. – Steve Jobs",
   `Năm điều Bác Hồ dạy:<br><br>1. Yêu Tổ quốc, yêu đồng bào.<br>2. Học tập tốt, lao động tốt.<br>3. Đoàn kết tốt, kỷ luật tốt.<br>4. Giữ gìn vệ sinh thật tốt.<br>5. Khiêm tốn, thật thà, dũng cảm.`
-*/
+
 
 ];
