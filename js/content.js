@@ -13,6 +13,16 @@ const allContent = [
         imageUrl: "img/posts/APN img.png",
         link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/khac/apn?authuser=0"
     },
+    {
+        type: 'post', // Loại nội dung: bài viết thông thường
+        category: "sim", // Chuyên mục (để lọc ở các trang con sau này)
+        date: "2025-09-29", // Ngày đăng, dùng để sắp xếp
+        featured: true, // true => Sẽ được ưu tiên hiển thị ở mục "Đề xuất"
+        title: "Hướng dẫn lấy mã MNP chuyển mạng AU",
+        summary: "cách lấy mã MNP chuyển mạng giữ số của nhà mạng AU, UQ để chuyển sang nhà mạng khác ",
+        imageUrl: "img/posts/APNimg.png",
+        link: "#"
+    },
 
 
     // --- GAME ---
@@ -78,6 +88,16 @@ const allContent = [
         link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/rakuten/family?authuser=0"
     },
     {
+        type: 'guide', // Loại nội dung: Hướng dẫn
+        category: "rakuten",
+        date: "2025-10-05", // Ngày mới nhất
+        featured: true,
+        title: "Cách tính cước sim nhà mạng Rakuten",
+        summary: "Hướng dẫn chi tiết xem cách tính và ngày đóng cước sim nhà mạng rakuten đơn giản nhất.",
+        imageUrl: "https://corp.mobile.rakuten.co.jp/assets/img/common/ogp.png?200323",
+        link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/rakuten/c%C6%B0%E1%BB%9Bc-sim?authuser=0"
+    },    
+    {
         type: 'post',
         category: "rakuten",
         date: "2025-10-06",
@@ -87,6 +107,58 @@ const allContent = [
         imageUrl: "https://image.card.jp.rakuten-static.com/card_corp/pc/contents/logo_200x200.gif",
         link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/rakuten/b%C3%A1o-m%E1%BA%A5t-th%E1%BA%BB-rakuten-credit?authuser=0"
     },
+
+   // --- SEVEN ---
+    {
+        type: 'guide', // Loại nội dung: Hướng dẫn
+        category: "711",
+        date: "2025-09-29", // Ngày mới nhất
+        featured: true,
+        title: "Cách đăng ký tài khoản City Exxpress - chuyển tiền Nhật Việt",
+        summary: "Hướng dẫn chi tiết từng bước để tạo tài khoản chuyển tiền về Việt Nam với tỷ giá cao nhất và phí chuyển tiền rẻ nhất lại còn được hoàn point.",
+        imageUrl: "https://img.favpng.com/21/10/7/logo-remittance-city-express-money-transfer-japan-co-ltd-brand-png-favpng-K39it6YWHKeAJm0NwUKpjnpJv.jpg",
+        link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/express-money-transfer/city_express?authuser=0"
+    },
+    {
+        type: 'guide',
+        category: "711",
+        date: "2025-10-01",
+        featured: false,
+        title: "Mẹo sử dụng thẻ thanh toán Seven Bank",
+        summary: "Những lưu ý quan trọng khi sử dụng thẻ tại Nhật.",
+        imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=HD+2",
+        link: "#guide-2"
+    },
+    {
+        type: '711',
+        category: "sim",
+        date: "2025-09-20", // Ngày cũ hơn
+        featured: false,
+        title: "Hướng dẫn nạp tiền vào sim Linemo",
+        summary: "Các cách nạp tiền tiện lợi và nhanh chóng cho sim Linemo.",
+        imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=HD+3",
+        link: "#guide-3"
+    },
+    {
+        type: '711',
+        category: "seven",
+        date: "2025-09-29", // Ngày cũ hơn
+        featured: true,
+        title: "Hướng dẫn đăng ký thẻ ngân hàng seven bank",
+        summary: "Ngoài ngân hàng yucho thì đây là ngân hàng thứ 2 cho phép người mới tới nhật cũng có thể đăng ký và rất dễ ở ngoài cây ATM.",
+        imageUrl: "https://creww.me/assets/collaboration/contents/sevenbank-2016-02/logo-99b065e63fcbc1acea62a64e95a7d5b17b8446373e79ed723369e52e21a60335.png",
+        link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/711/sevenbank?authuser=0"
+    }, 
+    {
+        type: '711',
+        category: "seven",
+        date: "2025-09-29", // Ngày cũ hơn
+        featured: true,
+        title: "Hướng dẫn đăng ký thẻ ngân hàng seven bank",
+        summary: "Ngoài ngân hàng yucho thì đây là ngân hàng thứ 2 cho phép người mới tới nhật cũng có thể đăng ký và rất dễ ở ngoài cây ATM.",
+        imageUrl: "https://creww.me/assets/collaboration/contents/sevenbank-2016-02/logo-99b065e63fcbc1acea62a64e95a7d5b17b8446373e79ed723369e52e21a60335.png",
+        link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/711/sevenbank?authuser=0"
+    },    
 
     // --- BÀI VIẾT HƯỚNG DẪN (GUIDES) ---
     {
@@ -101,12 +173,12 @@ const allContent = [
     },
     {
         type: 'guide',
-        category: "seven",
+        category: "jp",
         date: "2025-10-01",
         featured: false,
-        title: "Mẹo sử dụng thẻ thanh toán Seven Bank",
-        summary: "Những lưu ý quan trọng khi sử dụng thẻ tại Nhật.",
-        imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=HD+2",
+        title: "Đăng ký thẻ My Numeber Online",
+        summary: "cách đăng ký thẻ My Number online đơn giản nhất cho người mới.",
+        imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=My Number",
         link: "#guide-2"
     },
     {
@@ -119,16 +191,7 @@ const allContent = [
         imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=HD+3",
         link: "#guide-3"
     },
-    {
-        type: 'guide', // Loại nội dung: Hướng dẫn
-        category: "rakuten",
-        date: "2025-10-05", // Ngày mới nhất
-        featured: true,
-        title: "Cách tính cước sim nhà mạng Rakuten",
-        summary: "Hướng dẫn chi tiết xem cách tính và ngày đóng cước sim nhà mạng rakuten đơn giản nhất.",
-        imageUrl: "https://corp.mobile.rakuten.co.jp/assets/img/common/ogp.png?200323",
-        link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/rakuten/c%C6%B0%E1%BB%9Bc-sim?authuser=0"
-    },
+
 
     {
         type: 'guide',
