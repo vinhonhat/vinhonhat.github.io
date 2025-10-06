@@ -196,7 +196,7 @@ const allContent = [
 
     {
         type: 'guide',
-        category: "khac",
+        category: "jp",
         date: "2025-09-29", // Ngày cũ hơn
         featured: true,
         title: "Hướng dẫn đăng ký thẻ ngân hàng seven bank",
