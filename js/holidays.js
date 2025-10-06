@@ -13,4 +13,5 @@ const holidays = [
     { day: 20, month: 10, isLunar: false, name: "Ngày Phụ nữ Việt Nam", imagePrefix: "2010" },
     { day: 20, month: 11, isLunar: false, name: "Ngày Nhà giáo Việt Nam", imagePrefix: "2011" },
     { day: 25, month: 12, isLunar: false, name: "Lễ Giáng Sinh", imagePrefix: "2512" },
+	{ day: 6, month: 10, isLunar: false, name: "Tết Trung Thu", imagePrefix: "trungthu" }, // 15/8 Âm lịch là ngày 6/10/2025
 ];
