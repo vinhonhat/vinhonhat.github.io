@@ -19,14 +19,16 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="bg-[#FBF7F0]">
-    <div id="popupOverlay" class="popup-overlay">
-        <div class="popup-content">
-            <button id="closePopupBtn" class="absolute top-2 right-4 text-2xl text-gray-400 hover:text-gray-600">&times;</button>
-            <img id="holidayImage" src="" alt="Hình ảnh ngày lễ" class="max-h-40 mx-auto mb-4 rounded-lg hidden">
-            <h2 id="popupTitle" class="text-2xl font-bold mb-2 text-gray-800"></h2>
-            <p id="popupText" class="text-gray-600 mb-6"></p>
-        </div>
-    </div>
+	<!-- PHẦN HIỆN NGÀY LỄ POUP -->
+	<div id="popupOverlay" class="popup-overlay" style="display: none;">
+		<div class="popup-content max-w-2xl">
+			<button id="closePopupBtn" class="absolute top-2 right-4 text-2xl text-gray-400 hover:text-gray-600">&times;</button>
+			<h2 id="popupTitle" class="text-2xl font-bold mb-2 text-gray-800"></h2>
+			<img id="holidayImage" src="" alt="Hình ảnh ngày lễ" 
+				class="w-full max-h-50 object-contain mb-6 rounded-lg hidden">               
+			<p id="popupText" class="text-gray-600 "></p>
+		</div>
+	</div>
 
     <header class="bg-white shadow-sm py-4">
         <div class="container mx-auto px-4 flex justify-between items-center">
