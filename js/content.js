@@ -3,6 +3,7 @@
 
 const allContent = [
     // --- BÀI VIẾT (POSTS) ---
+    // --- SIM ---
     {
         type: 'post', // Loại nội dung: bài viết thông thường
         category: "sim", // Chuyên mục (để lọc ở các trang con sau này)
@@ -47,7 +48,7 @@ const allContent = [
         link: "/pages/pages-giaitri/FlappyBird.html"
     },
     {
-        type: 'game',
+        type: 'post',
         category: "game",
         date: "2025-10-05",
         featured: false,
