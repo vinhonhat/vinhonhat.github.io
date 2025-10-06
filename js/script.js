@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (activeHoliday) {
-            popupTitle.innerHTML = `<span class="rainbow-text font-bold">Chào mừng ngày ${activeHoliday.name}!</span>`;
+            popupTitle.innerHTML = `<span class="rainbow-text font-bold">🎉Chào mừng ngày ${activeHoliday.name}!🎉</span>`;
             popupText.textContent = "Chúc bạn và gia đình có một ngày lễ thật ý nghĩa và vui vẻ!";
 			// --- BỔ SUNG LOGIC CHỌN ẢNH D/M ---
 			// Mặc định là ảnh desktop ('d')
