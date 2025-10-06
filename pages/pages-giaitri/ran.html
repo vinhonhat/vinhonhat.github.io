@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Rắn săn mồi - Single File</title>
+  <style>
+    :root{--bg:#0b1220;--panel:#0f1724;--accent:#1dd3a7;--btn:#e6e6e6}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;background:var(--bg);color:#fff}
+    .app{display:flex;flex-direction:column;height:100vh;gap:0}
+    /* layout: on mobile top half canvas, bottom half controls */
+    .play-area{background:var(--panel);display:flex;align-items:center;justify-content:center}
+    canvas{background:#07111b;border-radius:8px;display:block;max-width:100%;height:auto}
+
+    .controls{display:flex;flex-direction:column;gap:8px;padding:12px;box-sizing:border-box}
+    .row{display:flex;gap:8px;justify-content:center}
+    .btn{background:var(--btn);color:#111;border-radius:10px;padding:12px 14px;font-weight:600;border:none;min-width:56px;min-height:56px;display:inline-flex;align-items:center;justify-content:center;user-select:none}
+    .btn:active{transform:translateY(1px)}
+    .small{min-width:44px;min-height:44px;padding:8px}
+    .toolbar{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:8px}
+    .label{font-size:14px}
+    .info{font-size:14px}
+
+    /* Desktop: large canvas with controls as small overlay */
+    @media(min-width:900px){
+      .app{padding:18px}
+      .main-wrap{display:flex;gap:18px;align-items:flex-start}
+      .play-area{flex:1}
+      .controls{width:260px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:10px;padding:14px}
+      canvas{width:100%;height:720px;max-height:80vh}
+    }
+
+    /* Mobile layout: top half canvas, bottom half controls */
+    @media(max-width:899px){
+      .play-area{height:50vh;padding:8px}
+      .controls{height:50vh;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent)}
+      canvas{width:100%;height:100%;border-radius:8px}
+    }
+
+    .overlay{position:absolute;left:0;right:0;top:0;bottom:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);backdrop-filter:blur(2px);}
+    .panel{background:#071726;padding:18px;border-radius:12px;text-align:center;min-width:220px}
+    .ghost{opacity:0.8;font-size:14px}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="main-wrap" style="position:relative;">
+      <div class="play-area">
+        <canvas id="game"></canvas>
+      </div>
+      <div class="controls" id="controls">
+        <div class="toolbar">
+          <div class="label">Rắn săn mồi</div>
+          <div class="info">Điểm: <span id="score">0</span></div>
+        </div>
+
+        <!-- arrows for both desktop overlay and mobile bottom -->
+        <div class="row" style="justify-content:center;margin-top:6px;">
+          <button class="btn small" id="up">▲</button>
+        </div>
+        <div class="row">
+          <button class="btn" id="left">◀</button>
+          <button class="btn" id="down">▼</button>
+          <button class="btn" id="right">▶</button>
+        </div>
+
+        <div style="height:8px"></div>
+        <div class="row">
+          <button class="btn small" id="sound">Âm thanh: BẬT</button>
+          <button class="btn small" id="exit">Thoát</button>
+          <button class="btn small" id="restart">Khởi động lại</button>
+        </div>
+
+        <div style="height:12px"></div>
+        <div class="ghost">Bắt đầu chơi bằng cách nhấn 1 nút di chuyển (các mũi tên hoặc phím mũi tên/WASD). Di chuyển chuột: click canvas để đổi hướng.</div>
+      </div>
+
+      <!-- initial overlay instructions (desktop & mobile) -->
+      <div id="overlay" class="overlay" style="display:flex;">
+        <div class="panel">
+          <h3>Bắt đầu</h3>
+          <p>Nhấn một nút di chuyển (▲ ◀ ▼ ▶) hoặc dùng phím mũi tên / WASD để bắt đầu chơi.</p>
+          <p style="margin-top:10px"><button id="startBtn" class="btn">Bắt đầu</button></p>
+          <p style="font-size:12px;color:#9fb3c6;margin-top:8px">Trên PC: dùng bàn phím hoặc click canvas để đổi hướng.<br>Trên di động: dùng các nút dưới.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+// --- Game settings ---
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+let S = {cell:20,cols:26,rows:26}; // will resize
+let snake = [];
+let dir = {x:1,y:0};
+let nextDir = null;
+let food = null;
+let running=false;
+let score=0;
+let tickInterval = 120; // ms per move
+let lastTick = 0;
+let allowSound = true;
+let soundOn=true;
+let overlay = document.getElementById('overlay');
+const scoreEl = document.getElementById('score');
+
+// Resize and adapt grid based on available canvas size
+function resizeCanvas(){
+  // choose intended canvas pixel size
+  const container = canvas.parentElement.getBoundingClientRect();
+  const w = Math.floor(container.width);
+  const h = Math.floor(container.height);
+  // for square grid choose min
+  const size = Math.min(w,h);
+  canvas.width = size - 2; canvas.height = size - 2;
+  // adjust cell count so cells are around 20px
+  const cell = Math.max(10, Math.floor(size / 26));
+  S.cell = cell;
+  S.cols = Math.floor(canvas.width / cell);
+  S.rows = Math.floor(canvas.height / cell);
+}
+
+function resetGame(){
+  snake = [];
+  const midX = Math.floor(S.cols/2);
+  const midY = Math.floor(S.rows/2);
+  snake.push({x:midX-1,y:midY});
+  snake.push({x:midX,y:midY});
+  dir = {x:1,y:0}; nextDir=null;
+  placeFood();
+  score = 0; updateScore();
+  running = false; // wait for user press to start per request
+}
+
+function placeFood(){
+  while(true){
+    const f = {x:rand(0,S.cols-1), y:rand(0,S.rows-1)};
+    if(!snake.some(s=>s.x===f.x && s.y===f.y)){ food=f; break; }
+  }
+}
+
+function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+
+function updateScore(){ scoreEl.textContent = score }
+
+function startGame(){ if(!running){ running=true; overlay.style.display='none'; }}
+
+function gameOver(){ running=false; overlay.style.display='flex'; document.querySelector('#overlay .panel h3').textContent = 'Thua rồi!'; document.getElementById('startBtn').textContent='Chơi lại'; playBeep(120,0.07); }
+
+function step(){
+  // apply buffered direction
+  if(nextDir){
+    if(!(nextDir.x === -dir.x && nextDir.y === -dir.y)) dir = nextDir;
+    nextDir=null;
+  }
+  const head = {x: snake[snake.length-1].x + dir.x, y: snake[snake.length-1].y + dir.y};
+  // wrap around
+  head.x = (head.x + S.cols) % S.cols;
+  head.y = (head.y + S.rows) % S.rows;
+  // collision with self?
+  if(snake.some(s=>s.x===head.x && s.y===head.y)) { gameOver(); return; }
+  snake.push(head);
+  // ate food?
+  if(head.x===food.x && head.y===food.y){ score+=10; updateScore(); placeFood(); playBeep(800,0.02); }
+  else { snake.shift(); }
+}
+
+function loop(ts){
+  if(!lastTick) lastTick = ts;
+  if(running && ts - lastTick >= tickInterval){
+    step(); lastTick = ts;
+  }
+  draw();
+  requestAnimationFrame(loop);
+}
+
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  // background grid
+  for(let x=0;x<S.cols;x++){
+    for(let y=0;y<S.rows;y++){
+      ctx.fillStyle = '#071722';
+      ctx.fillRect(x*S.cell,y*S.cell,S.cell-1,S.cell-1);
+    }
+  }
+  // food
+  if(food){
+    ctx.fillStyle = '#ff4d6d';
+    roundRect(ctx,food.x*S.cell+2,food.y*S.cell+2,S.cell-4,S.cell-4,4,true);
+  }
+  // snake
+  for(let i=0;i<snake.length;i++){
+    const s = snake[i];
+    const t = i===snake.length-1 ? '#8cf7c8' : '#34c58f';
+    ctx.fillStyle = t;
+    roundRect(ctx,s.x*S.cell+1,s.y*S.cell+1,S.cell-2,S.cell-2,4,true);
+  }
+}
+
+function roundRect(ctx,x,y,w,h,r,fill){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+  if(fill) ctx.fill(); else ctx.stroke();
+}
+
+// Controls
+function setDirection(dx,dy){
+  const candidate = {x:dx,y:dy};
+  // if game not started, press movement starts the game
+  if(!running){ nextDir = candidate; startGame(); return; }
+  // queue next
+  if(!(candidate.x === -dir.x && candidate.y === -dir.y)) nextDir = candidate;
+}
+
+// keyboard
+window.addEventListener('keydown', e => {
+  const k = e.key;
+  if(['ArrowUp','w','W'].includes(k)) setDirection(0,-1);
+  if(['ArrowDown','s','S'].includes(k)) setDirection(0,1);
+  if(['ArrowLeft','a','A'].includes(k)) setDirection(-1,0);
+  if(['ArrowRight','d','D'].includes(k)) setDirection(1,0);
+  if(k===' '){ running = !running; overlay.style.display = running? 'none':'flex'; }
+});
+
+// UI buttons
+['up','down','left','right'].forEach(id=>{
+  document.getElementById(id).addEventListener('click', ()=>{
+    const map = {up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
+    const [dx,dy] = map[id];
+    setDirection(dx,dy);
+  });
+});
+
+document.getElementById('startBtn').addEventListener('click', ()=>{
+  // if overlay showing message, reset overlay text
+  document.querySelector('#overlay .panel h3').textContent = 'Bắt đầu';
+  document.getElementById('startBtn').textContent='Bắt đầu';
+  startGame();
+});
+
+document.getElementById('restart').addEventListener('click', ()=>{ resetGame(); document.querySelector('#overlay .panel h3').textContent='Bắt đầu'; document.getElementById('startBtn').textContent='Bắt đầu'; overlay.style.display='flex'; });
+
+document.getElementById('exit').addEventListener('click', ()=>{ // simple exit -> reload page/reset
+  running=false; overlay.style.display='flex'; document.querySelector('#overlay .panel h3').textContent='Đã thoát'; document.getElementById('startBtn').textContent='Bắt đầu';
+});
+
+// click canvas to change direction towards click (mouse control)
+canvas.addEventListener('click', (ev)=>{
+  const r = canvas.getBoundingClientRect();
+  const x = ev.clientX - r.left; const y = ev.clientY - r.top;
+  // determine vector from head to click
+  const head = snake[snake.length-1];
+  const hx = head.x*S.cell + S.cell/2; const hy = head.y*S.cell + S.cell/2;
+  const dx = x - hx; const dy = y - hy;
+  if(Math.abs(dx) > Math.abs(dy)) setDirection(dx>0?1:-1,0); else setDirection(0,dy>0?1:-1);
+});
+
+// touch support for mobile swipe (optional): simple directional swipe
+let touchStart = null;
+canvas.addEventListener('touchstart', e=>{ if(e.touches && e.touches[0]) touchStart = {x:e.touches[0].clientX,y:e.touches[0].clientY}; });
+canvas.addEventListener('touchend', e=>{ if(!touchStart) return; const t = e.changedTouches[0]; const dx = t.clientX - touchStart.x; const dy = t.clientY - touchStart.y; if(Math.abs(dx)>Math.abs(dy)) setDirection(dx>0?1:-1,0); else setDirection(0,dy>0?1:-1); touchStart=null; });
+
+// Sound using Web
