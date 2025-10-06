@@ -32,18 +32,32 @@ body {
 }
 
 /* --- POPUP STYLES --- */
+
+/* ================================================================ */
+/* POPUP NGÀY LỄ */
+/* ================================================================ */
+
 .popup-overlay {
-    background-color: rgba(0, 0, 0, 0.6);
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    -webkit-backdrop-filter: blur(5px);
+  /* Các thuộc tính để nó trở thành một lớp phủ toàn màn hình */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Nền đen mờ đậm hơn */
+
+  /* Các thuộc tính để căn giữa nội dung bên trong nó */
+  display: none;
+  justify-content: center;
+  align-items: center;
+
+  /* Đảm bảo nó nằm trên tất cả các phần tử khác */
+  z-index: 1000; 
+  -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
 }
+  
+
 .popup-content {
     background-color: white;
     padding: 2rem;
