@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Snake — Vinh ở Nhật</title>
+<link rel="stylesheet" href="../../css/style.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  html,body{height:100%;margin:0;background:#071122;color:#fff;font-family:Inter,system-ui;}
+  header{background:#fff;padding:.6rem 12px}
+  .container{max-width:1100px;margin:0 auto;padding:12px}
+  .game-area{display:flex;flex-direction:column;align-items:center;padding:20px}
+  canvas{background:#071122;border-radius:8px;display:block}
+  .dpad{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:12px}
+  .dpad .row{display:flex;gap:8px}
+  .btn{width:64px;height:64px;border-radius:999px;border:none;background:rgba(255,255,255,.06);color:white;font-size:22px}
+  .controls-row{display:flex;justify-content:space-between;align-items:center;width:100%}
+  .menu-btn{background:#f6ad55;border:none;padding:.5rem .75rem;border-radius:8px;font-weight:700;cursor:pointer}
+</style>
+</head>
+<body>
+<header class="container flex items-center justify-between">
+  <div class="flex items-center gap-3">
+    <a href="../../index.html"><img src="../../img/logo.png" style="height:40px;width:40px;border-radius:999px"></a>
+    <div><div style="color:#111;font-weight:700">Vinh ở Nhật</div><div style="font-size:12px;color:#666">Snake</div></div>
+  </div>
+  <div><a href="giaitri.html" style="background:transparent;border:1px solid rgba(0,0,0,.06);padding:.4rem .6rem;border-radius:8px">Quay lại</a></div>
+</header>
+<div class="game-area container">
+  <canvas id="snakeCanvas" width="480" height="480"></canvas>
+  <div style="height:12px"></div>
+  <div class="controls-row" style="width:100%;max-width:520px">
+    <div>
+      <button id="play" class="menu-btn">Play</button>
+      <button id="exit" class="menu-btn" style="background:transparent;border:1px solid rgba(255,255,255,.06)">Thoát</button>
+    </div>
+    <div class="dpad">
+      <div class="row"><button id="up" class="btn">▲</button></div>
+      <div class="row"><button id="left" class="btn">◀</button><div style="width:18px"></div><button id="right" class="btn">▶</button></div>
+      <div class="row"><button id="down" class="btn">▼</button></div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  const canvas = document.getElementById('snakeCanvas');
+  const ctx = canvas.getContext('2d');
+  const playBtn = document.getElementById('play'), exitBtn = document.getElementById('exit');
+  const up = document.getElementById('up'), down = document.getElementById('down'), left = document.getElementById('left'), right = document.getElementById('right');
+  const grid = 20;
+  const cols = Math.floor(canvas.width / grid), rows = Math.floor(canvas.height / grid);
+  let snake = [{x:Math.floor(cols/2), y:Math.floor(rows/2)}], dir = {x:1,y:0}, food=null, timer=null, speed=160, running=false, score=0;
+  const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  function sfx(f=880,d=0.06){ if(window.globalMuted) return; try{ const o=audioCtx.createOscillator(); const g=audioCtx.createGain(); o.type='square'; o.frequency.value=f; g.gain.value=0.06; o.connect(g); g.connect(audioCtx.destination); o.start(); setTimeout(()=>o.stop(), d*1000);}catch(e){} }
+
+  function randFood(){ let x=Math.floor(Math.random()*cols), y=Math.floor(Math.random()*rows); for(let s of snake) if(s.x===x&&s.y===y) return randFood(); return {x,y}; }
+  function draw(){ ctx.fillStyle='#071122'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle='#ef4444'; if(food) ctx.fillRect(food.x*grid+2, food.y*grid+2, grid-4, grid-4); ctx.fillStyle='#34d399'; snake.forEach(s=>ctx.fillRect(s.x*grid+2, s.y*grid+2, grid-4, grid-4)); }
+  function step(){ const head={x:snake[0].x + dir.x, y:snake[0].y + dir.y}; if(head.x<0||head.y<0||head.x>=cols||head.y>=rows) return gameOver(); for(let i=0;i<snake.length;i++) if(snake[i].x===head.x && snake[i].y===head.y) return gameOver(); snake.unshift(head); if(food && head.x===food.x && head.y===food.y){ score++; sfx(900,0.06); if(score%2===0){ speed=Math.max(45, speed-12); restart(); } food = randFood(); } else snake.pop(); draw(); }
+  function restart(){ if(timer) clearInterval(timer); timer = setInterval(step, speed); }
+  function start(){ audioCtx.resume().catch(()=>{}); const box = document.documentElement; if(box.requestFullscreen) box.requestFullscreen().catch(()=>{}); snake=[{x:Math.floor(cols/2), y:Math.floor(rows/2)}]; dir={x:1,y:0}; food = randFood(); score=0; speed=160; restart(); running=true; }
+  function gameOver(){ running=false; if(timer) clearInterval(timer); alert('Bạn thua — điểm: '+score); }
+  document.addEventListener('keydown', (e)=>{ if(e.key==='ArrowUp'||e.key==='w'){ if(!running) start(); if(dir.y!==1) dir={x:0,y:-1}; } if(e.key==='ArrowDown'||e.key==='s'){ if(!running) start(); if(dir.y!==-1) dir={x:0,y:1}; } if(e.key==='ArrowLeft'||e.key==='a'){ if(!running) start(); if(dir.x!==1) dir={x:-1,y:0}; } if(e.key==='ArrowRight'||e.key==='d'){ if(!running) start(); if(dir.x!==-1) dir={x:1,y:0}; } });
+  up.addEventListener('click', ()=>{ if(!running) start(); if(dir.y!==1) dir={x:0,y:-1}; });
+  down.addEventListener('click', ()=>{ if(!running) start(); if(dir.y!==-1) dir={x:0,y:1}; });
+  left.addEventListener('click', ()=>{ if(!running) start(); if(dir.x!==1) dir={x:-1,y:0}; });
+  right.addEventListener('click', ()=>{ if(!running) start(); if(dir.x!==-1) dir={x:1,y:0}; });
+  playBtn.addEventListener('click', start);
+  exitBtn.addEventListener('click', ()=> location.href='giaitri.html');
+  food = randFood(); draw();
+})();
+</script>
+</body>
+</html>
