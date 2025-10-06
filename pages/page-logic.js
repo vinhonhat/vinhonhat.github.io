@@ -1,4 +1,5 @@
 // page-logic.js
+// dùng cho trang con hiện thị đầy đủ từng mục con như rakuten, sim, hoc tập
 function initializePage() {
     console.log('[LOGIC] Dữ liệu `allContent` đã sẵn sàng. Bắt đầu hiển thị trang.');
 
