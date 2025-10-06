@@ -25,7 +25,47 @@ const allContent = [
         link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/khac/l%E1%BA%A5y-m%C3%A3-mnp-auuq?authuser=0"
     },
 
-
+    // --- tokutei ---
+    {
+        type: 'post',
+        category: "tokutei",
+        date: "2025-09-30",
+        featured: true, // Nổi bật
+        title: "Chơi Game rắn săn mồi",
+        summary: "mini game rắn săn mồi trên ứng dụng",
+        imageUrl: "https://placehold.co/400x250/FBD38D/ffffff?text=Snake",
+        link: "/pages/pages-giaitri/snake.html"
+    },
+    {
+        type: 'post',
+        category: "tokuei",
+        date: "2025-10-01",
+        featured: true, // Nổi bật
+        title: "Game Flappy Bird",
+        summary: "chơi game",
+        imageUrl: "img/posts/giaitri/FlappyBird.png",
+        link: "/pages/pages-giaitri/FlappyBird.html"
+    },
+    {
+        type: 'post',
+        category: "tokuei",
+        date: "2025-10-05",
+        featured: false,
+        title: "🎡 Vòng Quay Diệu Kỳ 🎡",
+        summary: "vòng quay giúp bạn đỡ phân vân với những lựa chọn của mình, giải trí vui",
+        imageUrl: "img/posts/giaitri/vongquay.png",
+        link: "/pages/pages-giaitri/vongquay.html"
+    },
+    {
+        type: 'post',
+        category: "tokuei",
+        date: "2025-10-04",
+        featured: true, // Nổi bật
+        title: "Game Sudoku",
+        summary: "chơi game",
+        imageUrl: "https://placehold.co/400x250/ECC94B/ffffff?text=Sudoku",
+        link: "/pages/pages-giaitri/sudoku.html"
+    },
     // --- GAME ---
     {
         type: 'post',
