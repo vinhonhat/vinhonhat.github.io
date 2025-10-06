@@ -1,238 +1,150 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chuyển Đổi Tên Sang Tiếng Nhật (Katakana)</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            background-color: #f4f4f4;
-        }
-        .container {
-            max-width: 600px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        #ketQua {
-            margin-top: 20px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            min-height: 50px;
-            background-color: #e9ecef;
-            font-size: 20px;
-            text-align: center;
-        }
-        .katakana {
-            font-size: 28px;
-            color: #d9534f;
-            font-weight: bold;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bài Viết Hướng Dẫn | Vinh ở Nhật</title>
+  <link rel="icon" href="../../img/logoQV.png" type="image/x-icon"> 
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#F6AD55">
+  <link rel="apple-touch-icon" href="../../img/logoQV.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <style>
+    .truncate-2-lines {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+    }
+  </style>
 </head>
-<body>
+<body class="bg-[#FBF7F0]">
 
-    <div class="container">
-        <h1>Chuyển Đổi Tên Sang Katakana</h1>
-        <p>Nhập tên tiếng Việt (viết hoa chữ cái đầu, có dấu):</p>
-        <input type="text" id="tenViet" placeholder="Ví dụ: Nguyễn Văn A">
-        <button onclick="chuyenDoiTen()">Chuyển Đổi</button>
-        
-        <div id="ketQua">
-            <p>Kết quả sẽ hiển thị ở đây.</p>
+  <!-- ================= HEADER ================= -->
+  <header class="bg-white shadow-sm py-4">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <a href="/" class="flex items-center space-x-2">
+        <img src="../../img/logoQV.png" onerror="this.onerror=null; this.src='https://placehold.co/40x40/F6AD55/ffffff?text=V';" alt="Logo" class="h-12 w-12 rounded-full">
+        <span class="text-xl font-bold text-gray-800 hidden sm:block">Vinh ở Nhật</span>
+      </a>
+      <div class="flex items-center space-x-4">
+        <div class="text-right time-display">
+          <div id="time" class="time text-3xl font-bold leading-none">00:00:00</div>
+          <div id="date" class="date text-sm mt-1">...</div>
         </div>
+        <div class="sm:hidden">
+          <button id="menu-toggle" class="text-gray-700 hover:text-yellow-600"><i class="fas fa-bars text-2xl"></i></button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= NAVIGATION ================= -->
+  <nav class="bg-white shadow-sm mt-4 sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-2">
+      <ul class="hidden sm:flex justify-center sm:justify-between items-center space-x-4">
+        <li class="relative group">
+          <a href="./bai-viet-hd.html" class="menu-link hover:text-yellow-600 flex items-center">Bài viết HD<i class="fas fa-chevron-down ml-2 text-xs"></i></a>
+          <ul class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 py-2 w-40 z-10 dropdown-menu">
+            <li><a href="rakuten.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Rakuten</a></li>
+            <li><a href="seven.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Seven</a></li>
+            <li><a href="baito.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Baito</a></li>
+            <li><a href="sim.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Sim thẻ</a></li>
+          </ul>
+        </li>
+        <li><a href="#" class="menu-link hover:text-yellow-600">Video HD</a></li>    
+        <li><a href="#" class="menu-link hover:text-yellow-600">Tải Xuống</a></li>    
+        <li><a href="#" class="menu-link hover:text-yellow-600">Học Tập</a></li>    
+        <li><a href="../pages-giaitri/giaitri.html" class="menu-link hover:text-yellow-600">Giải Trí</a></li>
+      </ul>
+      <div id="mobile-menu" class="hidden sm:hidden absolute left-0 w-full bg-white shadow-lg py-4">
+        <ul class="flex flex-col items-center space-y-4">
+          <li><a href="bai-viet-hd.html" class="menu-link">Bài viết HD</a></li>
+          <li><a href="#" class="menu-link">Video hướng dẫn</a></li>
+          <li><a href="#" class="menu-link">Tải ứng dụng</a></li>
+          <li><a href="#" class="menu-link">Học tập</a></li>
+          <li><a href="../pages-giaitri/giaitri.html" class="menu-link">Giải trí</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ================= MAIN ================= -->
+  <main class="container mx-auto px-4 mt-8">
+    <div class="mb-8">
+      <h1 class="text-4xl font-bold text-gray-800 border-l-8 border-yellow-500 pl-4">Bài Viết Hướng Dẫn</h1>
     </div>
 
-    <script>
-        // =========================================================
-        // THƯ VIỆN CHUYỂN ĐỔI (PHẦN BẠN CẦN CẬP NHẬT)
-        // =========================================================
-        
-        const MAPPING_HO = {
-            "Nguyễn": "グエン", // Guen
-            "Trần": "トラン",   // Toran
-            "Lê": "レ",         // Re
-            "Phạm": "ファム",    // Famu
-            "Huỳnh": "フイン",   // Huin
-            "Hoàng": "ホアン",   // Hoan
-            "Vũ": "ヴー",       // Vū
-            "Võ": "ヴォ",       // Vo
-            "Phan": "ファン",    // Fan
-            "Bùi": "ブイ",       // Bui
-            // Thêm các họ khác vào đây
-        };
+    <div class="flex flex-col lg:flex-row lg:space-x-8">
+      <div class="lg:w-2/3">
+        <!-- Section Rakuten -->
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-6">Chủ đề: Tokutei</h2>
+          <div id="rakuten-posts" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
+          <div class="text-center mt-8">
+            <a href="rakuten.html" class="text-yellow-600 hover:underline font-semibold">Xem tất cả bài viết về Tokutei &rarr;</a>
+          </div>
+        </section>
 
-        const MAPPING_TEN = {
-            // Tên thường dùng
-            "Linh": "リン",     // Rin
-            "Minh": "ミン",     // Min
-            "Khoa": "コア",     // Koa
-            "Anh": "アイン",    // Ain
-            "Dũng": "ズン",     // Zun
-            "Hải": "ハイ",      // Hai
-            "Hương": "フオン",   // Fuon
-            "Thảo": "タオ",     // Tao
-            "Việt": "ヴィエト",  // Vieto
-            "Giang": "ザン",    // Zan
-            "Huy": "フイ",      // Fui
-            "Thành": "タイン",   // Tain
-            "Quang": "クアン",   // Kuan
-            // Tên đệm (chỉ nên dùng khi không tìm thấy trong MAPPING_TEN)
-            "Văn": "ヴァン",    // Van
-            "Thị": "ティ",      // Ti
-            // Thêm các tên khác vào đây
-        };
+        <!-- Section Seven -->
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-6">Chủ đề: Seven Bank</h2>
+          <div id="seven-posts" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
+          <div class="text-center mt-8">
+            <a href="seven.html" class="text-yellow-600 hover:underline font-semibold">Xem tất cả bài viết về Seven Bank &rarr;</a>
+          </div>
+        </section>
 
-        const MAPPING_AM_TIET_DU_PHONG = {
-            // Dùng để xử lý các từ không có trong mapping trên (ít chính xác hơn)
-            "th": "ト",
-            "ph": "フォ",
-            "ch": "チ",
-            "nh": "ン",
-            "ng": "ン",
-            "a": "ア",
-            "e": "エ",
-            "i": "イ",
-            "o": "オ",
-            "u": "ウ",
-            "ă": "ア",
-            "ê": "エー",
-            "ô": "オー",
-			"tru": "チュ",
-            "ư": "ウー",
-			"n": "ン",
-			
-            // Thêm các âm tiết khác vào đây
-        };
+        <!-- Section Baito -->
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-6">Chủ đề: Baito</h2>
+          <div id="baito-posts" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
+          <div class="text-center mt-8">
+            <a href="baito.html" class="text-yellow-600 hover:underline font-semibold">Xem tất cả bài viết về Baito &rarr;</a>
+          </div>
+        </section>
 
-        // =========================================================
-        // HÀM XỬ LÝ CHUYỂN ĐỔI
-        // =========================================================
+        <!-- Section Sim -->
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-6">Chủ đề: Sim thẻ</h2>
+          <div id="sim-posts" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
+          <div class="text-center mt-8">
+            <a href="sim.html" class="text-yellow-600 hover:underline font-semibold">Xem tất cả bài viết về Sim thẻ &rarr;</a>
+          </div>
+        </section>
+      </div>
 
-        /**
-         * Chuyển đổi tên từ tiếng Việt sang Katakana
-         */
-        function chuyenDoiTen() {
-            const tenViet = document.getElementById('tenViet').value.trim();
-            const ketQuaDiv = document.getElementById('ketQua');
+      <!-- Sidebar Gợi ý -->
+      <aside class="lg:w-1/3 mt-10 lg:mt-0">
+        <div class="sticky top-24 bg-white p-6 rounded-lg shadow-md">
+          <h2 class="text-xl font-bold text-gray-800 border-l-4 border-yellow-500 pl-3 mb-4">Bài viết gợi ý</h2>
+          <div id="suggested-posts-container" class="grid grid-cols-2 gap-4 lg:grid-cols-1"></div>
+        </div>
+      </aside>
+    </div>
+  </main>
 
-            if (!tenViet) {
-                ketQuaDiv.innerHTML = '<p>Vui lòng nhập tên của bạn.</p>';
-                return;
-            }
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-gray-800 text-white mt-12 py-8">
+    <div class="container mx-auto px-4 text-center">
+      <div class="flex justify-center space-x-6 mb-6">
+        <a href="http://fb.com/tqv2022" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fab fa-facebook"></i></a>
+        <a href="https://m.me/tqv2022" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fa-brands fa-facebook-messenger"></i></a>
+        <a href="https://www.tiktok.com/@tqv2020" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fab fa-tiktok"></i></a>
+        <a href="https://portal.mobile.rakuten.co.jp/my-rakuten-mobile" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fa-solid fa-r"></i></a>
+      </div>
+      <p class="text-gray-500 text-sm">&copy; 2025 Vinh ở Nhật. All rights reserved.</p>
+    </div>
+  </footer>
 
-            // Chia tên thành các từ (tách theo khoảng trắng)
-            const cacTu = tenViet.split(/\s+/).filter(word => word.length > 0);
-            
-            let tenKatakana = [];
-            let hoDaXuLy = false; // Đảm bảo chỉ xử lý họ cho từ đầu tiên
-
-            for (let i = 0; i < cacTu.length; i++) {
-                let tu = cacTu[i];
-                let katakana = '';
-                
-                // 1. Xử lý Họ (từ đầu tiên)
-                if (i === 0) {
-                    if (MAPPING_HO[tu]) {
-                        katakana = MAPPING_HO[tu];
-                        hoDaXuLy = true;
-                    }
-                }
-                
-                // 2. Xử lý Tên đệm & Tên chính (từ thứ 2 trở đi hoặc từ đầu tiên nếu không có trong MAPPING_HO)
-                if (katakana === '') {
-                    if (MAPPING_TEN[tu]) {
-                        katakana = MAPPING_TEN[tu];
-                    }
-                }
-
-                // 3. Xử lý Dự phòng (nếu không tìm thấy trong cả Họ và Tên)
-                if (katakana === '') {
-                    // Cần một hàm phiên âm âm vị phức tạp hơn ở đây
-                    // Tạm thời, chúng ta sẽ để nguyên để người dùng tự cập nhật
-                    // Hoặc dùng một hàm phiên âm rất thô sơ:
-                    katakana = phienAmDuPhong(tu); 
-                }
-
-                if (katakana !== '') {
-                    tenKatakana.push(katakana);
-                } else {
-                    // Nếu không có quy tắc nào, giữ nguyên từ gốc (thông báo lỗi)
-                    tenKatakana.push('(' + tu + '?)'); 
-                }
-            }
-
-            // Nối lại các từ bằng dấu cách
-            const ketQuaCuoi = tenKatakana.join(' ');
-            
-            ketQuaDiv.innerHTML = `
-                <p>Tên Katakana của bạn là:</p>
-                <div class="katakana">${ketQuaCuoi}</div>
-            `;
-        }
-
-        /**
-         * Hàm phiên âm dự phòng (rất thô sơ, chỉ để tránh lỗi)
-         */
-        function phienAmDuPhong(word) {
-            let result = '';
-            let cleanedWord = word.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Xóa dấu
-
-            // Ánh xạ từng ký tự (rất thô sơ)
-            for (const [viet, kana] of Object.entries(MAPPING_AM_TIET_DU_PHONG)) {
-                // Thay thế các âm tiết phức tạp trước
-                if (cleanedWord.startsWith(viet)) {
-                    result += kana;
-                    cleanedWord = cleanedWord.substring(viet.length);
-                }
-            }
-            
-            // Xử lý các ký tự còn lại
-            for (let i = 0; i < cleanedWord.length; i++) {
-                let char = cleanedWord[i];
-                if (MAPPING_AM_TIET_DU_PHONG[char]) {
-                    result += MAPPING_AM_TIET_DU_PHONG[char];
-                } else {
-                    // Nếu không tìm thấy, dùng nguyên tắc Katakana cơ bản (rất thô)
-                    result += char.toUpperCase();
-                }
-            }
-            
-            return result || '(' + word + '?)'; // Trả về Katakana thô hoặc dấu hỏi
-        }
-        
-    </script>
-
+  <!-- ================= SCRIPT ================= -->
+  <script src="../../js/script.js"></script> <!-- đồng hồ + menu -->
+  <script src="../../js/content.js"></script> <!-- dữ liệu bài viết -->
+  <script src="../overview-page.js"></script> <!-- logic hiển thị 2 bài + gợi ý -->
 </body>
 </html>
