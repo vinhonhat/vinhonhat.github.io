@@ -135,6 +135,11 @@ document.addEventListener('DOMContentLoaded', function () {
     renderPostsForCategory('seven', 'seven-posts');
     renderPostsForCategory('baito', 'baito-posts');
     renderPostsForCategory('sim', 'sim-posts');
+    renderPostsForCategory('tokutei', 'tokutei-posts');
+    renderPostsForCategory('nihongo', 'nihongo-posts');
+    renderPostsForCategory('sim', 'sim-posts');
+    renderPostsForCategory('sim', 'sim-posts');
+    renderPostsForCategory('sim', 'sim-posts');
 
     renderSuggestions('suggested-posts-container');
 });
