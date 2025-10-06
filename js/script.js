@@ -108,8 +108,17 @@ document.addEventListener('DOMContentLoaded', function() {
         if (activeHoliday) {
             popupTitle.innerHTML = `<span class="rainbow-text font-bold">Chào mừng ngày ${activeHoliday.name}!</span>`;
             popupText.textContent = "Chúc bạn và gia đình có một ngày lễ thật ý nghĩa và vui vẻ!";
-            holidayImage.src = `img/holidays/${activeHoliday.imagePrefix}d.jpg`;
-            holidayImage.style.display = 'block';
+			// --- BỔ SUNG LOGIC CHỌN ẢNH D/M ---
+			// Mặc định là ảnh desktop ('d')
+			let imageSuffix = 'd'; 
+			// Nếu chiều rộng màn hình nhỏ hơn 768px (di động/máy tính bảng) thì đổi sang ảnh mobile ('m')
+			if (window.innerWidth < 768) {
+				imageSuffix = 'm';
+			}
+			holidayImage.src = `img/holidays/${activeHoliday.imagePrefix}${imageSuffix}.jpg`;
+			// --- KẾT THÚC LOGIC CHỌN ẢNH ---
+			holidayImage.style.display = 'block';
+			
         } else if (typeof proverbs !== 'undefined') {
             popupTitle.textContent = "";
             popupText.innerHTML = proverbs[Math.floor(Math.random() * proverbs.length)];
