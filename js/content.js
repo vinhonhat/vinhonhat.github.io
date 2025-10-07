@@ -31,30 +31,30 @@ const allContent = [
         category: "tokutei",
         date: "2025-09-30",
         featured: true, // Nổi bật
-        title: "Chơi Game rắn săn mồi",
-        summary: "mini game rắn săn mồi trên ứng dụng",
-        imageUrl: "https://placehold.co/400x250/FBD38D/ffffff?text=Snake",
-        link: "/pages/pages-giaitri/snake.html"
+        title: "Tài liệu ôn thi nhà hàng",
+        summary: "tổng hợp tài liệu ôn thi tokutei nhà hàng",
+        imageUrl: "https://placehold.co/400x250/FBD38D/ffffff?text=tokutei レストラン",
+        link: "/pages/pages-hoctap/nhahang.html"
     },
     {
         type: 'post',
         category: "tokuei",
         date: "2025-10-01",
         featured: true, // Nổi bật
-        title: "Game Flappy Bird",
-        summary: "chơi game",
+        title: "Tài liệu ôn thi thực phẩm ",
+        summary: "tổng hợp tài liệu ôn thi tokutei thực phẩm ",
         imageUrl: "img/posts/giaitri/FlappyBird.png",
-        link: "/pages/pages-giaitri/FlappyBird.html"
+        link: "/pages/pages-hoctap/thucpham.html"
     },
     {
         type: 'post',
         category: "tokuei",
         date: "2025-10-05",
         featured: false,
-        title: "🎡 Vòng Quay Diệu Kỳ 🎡",
-        summary: "vòng quay giúp bạn đỡ phân vân với những lựa chọn của mình, giải trí vui",
+        title: "Tài liệu ôn thi kaigo",
+        summary: "tổng hợp tài liệu ôn thi tokutei kaigo",
         imageUrl: "img/posts/giaitri/vongquay.png",
-        link: "/pages/pages-giaitri/vongquay.html"
+        link: "/pages/pages-hoctap/kaigo.html"
     },
     {
         type: 'post',
