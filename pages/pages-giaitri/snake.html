@@ -214,6 +214,15 @@
     <script>
         // Toàn bộ code JavaScript giữ nguyên, không cần thay đổi
         document.addEventListener('DOMContentLoaded', () => {
+            // ==================================================
+            // ### 🚀 CÀI ĐẶT TỐC ĐỘ CHƠI ###
+            // ==================================================
+            const TOC_DO_BAN_DAU = 150;  // ms - Tốc độ khởi đầu (càng lớn càng chậm)
+            const TOC_DO_TOI_DA = 50;    // ms - Tốc độ nhanh nhất (giới hạn)
+            const MUC_TANG_TOC = 10;     // ms - Mỗi lần rắn sẽ nhanh hơn bao nhiêu
+            const DIEM_DE_TANG_TOC = 20; // Cứ mỗi 20 điểm sẽ tăng tốc
+            // ==================================================
+
             const canvas = document.getElementById('game-canvas');
             const ctx = canvas.getContext('2d');
             const scoreElement = document.getElementById('score');
@@ -221,6 +230,7 @@
             const messageTitle = document.getElementById('message-title');
             const messageSubtitle = document.getElementById('message-subtitle');
             const gameArea = document.getElementById('game-area');
+
 
             let audioCtx;
             let soundEnabled = true;
