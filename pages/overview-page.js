@@ -1,6 +1,6 @@
 
 // overview-page.js
-// 📌 Dùng cho trang bai-viet-hd.html
+// 📌 Dùng cho trang bai-viet-hd.html, hoctap. html, 
 // Hiển thị 2 bài mới nhất của mỗi category, layout y chang rakuten (card PC + list mobile + sidebar gợi ý)
 // Nếu category không có bài => ẩn luôn cả section
 
@@ -131,15 +131,16 @@ function renderSuggestions(containerId) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+    <!-- dành cho trang bài viết HD -->
     renderPostsForCategory('rakuten', 'rakuten-posts');
     renderPostsForCategory('seven', 'seven-posts');
     renderPostsForCategory('baito', 'baito-posts');
     renderPostsForCategory('sim', 'sim-posts');
     renderPostsForCategory('tokutei', 'tokutei-posts');
     renderPostsForCategory('nihongo', 'nihongo-posts');
-    renderPostsForCategory('sim', 'sim-posts');
-    renderPostsForCategory('sim', 'sim-posts');
-    renderPostsForCategory('sim', 'sim-posts');
+    renderPostsForCategory('jlpt', 'jlpt-posts');
+    renderPostsForCategory('windows', 'windows-posts');
+    renderPostsForCategory('dohoa', 'dohoa-posts');
 
     renderSuggestions('suggested-posts-container');
 });
