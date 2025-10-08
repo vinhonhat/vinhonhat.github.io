@@ -265,7 +265,7 @@ const allContent = [
         featured: true, // Video này cũng có thể được đề xuất
         title: "Cài ứng dụng banking của ngân hàng Yucho",
         summary: "Hướng dẫn cài đặt ứng dụng Yucho trên điện thoại.",
-        imageUrl: "https://play-lh.googleusercontent.com/pHDhGjmtwOrgrg3XXP_vL99pCngi-7ED93InYG5zQpJjJQmIwfYGlo0zAC39NYOKggA",
+        imageUrl: "https://stat.ameba.jp/user_images/20200705/00/fta-choro/4a/bf/j/o0750133414784271440.jpg?cpd=654",
         link: "https://vt.tiktok.com/ZSU2qMRPW/"
     },
     {
