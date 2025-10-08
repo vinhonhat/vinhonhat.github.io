@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bài Viết Hướng Dẫn | Vinh ở Nhật</title>
+
+  <!-- 🔹 ICON + MANIFEST DÙNG CHO ỨNG DỤNG WEB -->
+  <link rel="icon" href="../../img/logoQV.png" type="image/x-icon"> 
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#F6AD55">
+  <link rel="apple-touch-icon" href="../../img/logoQV.png">
+
+  <!-- 🔹 TAILWIND CSS: Thư viện CSS giúp tạo giao diện nhanh -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- 🔹 FONT GOOGLE & ICON -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- 🔹 CSS RIÊNG CỦA WEBSITE -->
+  <link rel="stylesheet" href="../../css/style.css">
+
+  <!-- 🔹 CSS PHỤ: GIỚI HẠN DÒNG VĂN BẢN (truncate text) -->
+  <style>
+    .truncate-2-lines {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body class="bg-[#FBF7F0]">
+  <!-- 🟢 HEADER: Thanh đầu trang có logo + đồng hồ -->
+  <header class="bg-white shadow-sm py-4">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <!-- Logo + Tên Website -->
+      <a href="/" class="flex items-center space-x-2">
+        <img src="../../img/logoQV.png" onerror="this.onerror=null; this.src='https://placehold.co/40x40/F6AD55/ffffff?text=V';" alt="Logo" class="h-12 w-12 rounded-full">
+        <span class="text-xl font-bold text-gray-800 hidden sm:block">Vinh ở Nhật</span>
+      </a>
+
+      <!-- Hiển thị thời gian hiện tại (được cập nhật bằng JS trong script.js) -->
+      <div class="flex items-center space-x-4">
+        <div class="text-right time-display">
+          <div id="time" class="time text-3xl font-bold leading-none">00:00:00</div>
+          <div id="date" class="date text-sm mt-1">...</div>
+        </div>
+
+        <!-- Nút menu cho giao diện mobile -->
+        <div class="sm:hidden">
+          <button id="menu-toggle" class="text-gray-700 hover:text-yellow-600">
+            <i class="fas fa-bars text-2xl"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 🟡 MENU TRANG PHỤ (MENU CHUNG CHO TOÀN TRANG PHỤ) -->
+  <nav class="bg-white shadow-sm mt-4 sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-2">
+
+      <!-- 🔹 MENU CHO MÁY TÍNH (PC) -->
+      <ul class="hidden sm:flex justify-center sm:justify-between items-center space-x-4">
+
+        <!-- Mục BÀI VIẾT HD có menu con -->
+        <li class="relative group">
+          <a href="#" class="menu-link hover:text-yellow-600 flex items-center">
+            Bài Viết HD
+            <i class="fas fa-chevron-down ml-2 text-xs"></i>
+          </a>
+
+          <!-- Menu con hiển thị khi rê chuột -->
+          <ul class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 py-2 w-40 z-10 dropdown-menu">
+            <li><a href="rakuten.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Rakuten</a></li>
+            <li><a href="seven.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Seven</a></li>                        
+            <li><a href="sim.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Sim Thẻ</a></li>
+            <li><a href="jp.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Bài viết khác</a></li>                        
+          </ul>
+        </li>
+
+        <!-- Các mục khác -->
+        <li><a href="../pages-video/video.html" class="menu-link hover:text-yellow-600">Video HD</a></li>
+
+        <!-- Mục TẢI XUỐNG có menu con -->
+        <li class="relative group">
+          <a href="#" class="menu-link hover:text-yellow-600 flex items-center">
+            Tải xuống
+            <i class="fas fa-chevron-down ml-2 text-xs"></i>
+          </a>
+          <ul class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 py-2 w-40 z-10 dropdown-menu">
+            <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Windows</a></li>
+            <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Phần mềm Văn Phòng</a></li>
+            <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Đồ Hoạ</a></li>
+            <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Ứng dụng khác</a></li>
+          </ul>
+        </li>
+
+        <!-- Mục HỌC TẬP có menu con -->
+        <li class="relative group">
+          <a href="#" class="menu-link hover:text-yellow-600 flex items-center">
+            Học Tập
+            <i class="fas fa-chevron-down ml-2 text-xs"></i>
+          </a>
+          <ul class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 py-2 w-40 z-10 dropdown-menu">
+            <li><a href="../pages-hoctap/tiengnhat.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Tiếng Nhật</a></li>
+            <li><a href="../pages-hoctap/tokutei.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Tokutei</a></li>                        
+          </ul>
+        </li>
+
+        <!-- Mục GIẢI TRÍ -->
+        <li><a href="../pages-giaitri/giaitri.html" class="menu-link hover:text-yellow-600">Giải Trí</a></li>
+      </ul>
+
+      <!-- 🔹 MENU CHO MOBILE (Ẩn trên PC, hiện khi nhấn nút menu) -->
+      <div id="mobile-menu" class="hidden sm:hidden absolute left-0 w-full bg-white shadow-lg py-4">
+        <ul class="flex flex-col items-center space-y-4">
+          <li><a href="../pages-baiviet/bai-viet-hd.html" class="menu-link">Bài viết HD</a></li>
+          <li><a href="../pages-video/video.html" class="menu-link">Video hướng dẫn</a></li>
+          <li><a href="https://sites.google.com/view/rakutenchiase/%E1%BB%A9ng-d%E1%BB%A5ng" class="menu-link">Tải Ứng Dụng</a></li>
+          <li><a href="../pages-hoctap/hoctap.html" class="menu-link">Học tập</a></li>
+          <li><a href="../pages-giaitri/giaitri.html" class="menu-link">Giải trí</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 🟣 PHẦN MAIN: NỘI DUNG CHÍNH -->
+  <main class="container mx-auto px-4 mt-8">
+    <!-- Tiêu đề chính -->
+    <div class="mb-8">
+      <h1 class="text-4xl font-bold text-gray-800 border-l-8 border-yellow-500 pl-4">Bài Viết Hướng Dẫn</h1>
+    </div>
+
+    <div class="flex flex-col lg:flex-row lg:space-x-8">
+      <!-- 🧱 CỘT TRÁI: DANH SÁCH CÁC CHỦ ĐỀ -->
+      <div class="lg:w-2/3">
+
+        <!-- Chủ đề Rakuten -->
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-6">Chủ đề: Rakuten</h2>
+          <div id="rakuten-posts" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
+          <!-- Nút xem thêm -->
+          <div class="text-center mt-8">
+            <a href="rakuten.html" class="text-yellow-600 hover:underline font-semibold">Xem tất cả bài viết về Rakuten &rarr;</a>
+          </div>
+        </section>
+
+        <!-- Chủ đề Seven Bank -->
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-6">Chủ đề: Seven Bank</h2>
+          <div id="seven-posts" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
+          <div class="text-center mt-8">
+            <a href="seven.html" class="text-yellow-600 hover:underline font-semibold">Xem tất cả bài viết về Seven Bank &rarr;</a>
+          </div>
+        </section>
+
+        <!-- Chủ đề Baito -->
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-6">Chủ đề: Baito</h2>
+          <div id="baito-posts" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
+          <div class="text-center mt-8">
+            <a href="baito.html" class="text-yellow-600 hover:underline font-semibold">Xem tất cả bài viết về Baito &rarr;</a>
+          </div>
+        </section>
+
+        <!-- Chủ đề Sim thẻ -->
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-6">Chủ đề: Sim thẻ</h2>
+          <div id="sim-posts" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
+          <div class="text-center mt-8">
+            <a href="sim.html" class="text-yellow-600 hover:underline font-semibold">Xem tất cả bài viết về Sim thẻ &rarr;</a>
+          </div>
+        </section>
+      </div>
+
+      <!-- 🧱 CỘT PHẢI: THANH GỢI Ý BÀI VIẾT -->
+      <aside class="lg:w-1/3 mt-10 lg:mt-0">
+        <div class="sticky top-24 bg-white p-6 rounded-lg shadow-md">
+          <h2 class="text-xl font-bold text-gray-800 border-l-4 border-yellow-500 pl-3 mb-4">Bài viết gợi ý</h2>
+          <div id="suggested-posts-container" class="grid grid-cols-2 gap-4 lg:grid-cols-1"></div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- 🔵 FOOTER: CHÂN TRANG -->
+  <footer class="bg-gray-800 text-white mt-12 py-8">
+    <div class="container mx-auto px-4 text-center">
+      <!-- Liên kết mạng xã hội -->
+      <div class="flex justify-center space-x-6 mb-6">
+        <a href="http://fb.com/tqv2022" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fab fa-facebook"></i></a>
+        <a href="https://m.me/tqv2022" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fa-brands fa-facebook-messenger"></i></a>
+        <a href="https://www.tiktok.com/@tqv2020" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fab fa-tiktok"></i></a>
+        <a href="https://portal.mobile.rakuten.co.jp/my-rakuten-mobile" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fa-solid fa-r"></i></a>
+      </div>
+      <p class="text-gray-500 text-sm">&copy; 2025 Vinh ở Nhật. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- 🧩 JAVASCRIPT PHẦN CUỐI -->
+  <!-- script.js: đồng hồ + menu di động -->
+  <!-- content.js: tải dữ liệu bài viết vào các phần tử có id như rakuten-posts -->
+  <!-- overview-page.js: chỉ hiển thị 2 bài mỗi chủ đề + thêm bài gợi ý -->
+  <script src="../../js/script.js"></script>
+  <script src="../../js/content.js"></script>
+  <script src="../overview-page.js"></script>
+</body>
+</html>
