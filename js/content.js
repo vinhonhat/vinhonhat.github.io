@@ -312,7 +312,7 @@ const allContent = [
         summary: "Hướng dẫn chuyển vùng Apple Store qua Nhật Bản và về lại Việt Nam để tải các ứng dụng theo vùng...",
         imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQa4GHxWR1R2b5i4W_-6OERHtP1rSQpw-0YdQ&s",
         link: "https://vt.tiktok.com/ZSU2VtULD/"
-    
+    },
 ];
 
 // --- DỮ LIỆU BANNER (Giữ nguyên, không cần gộp vào allContent) ---
