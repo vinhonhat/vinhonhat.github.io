@@ -252,7 +252,7 @@ const allContent = [
         category: "video",
         date: "2025-09-29",
         featured: true,
-        title: "Video HD cách đổi số điện thoại tài khoản yucho",
+        title: "Hướng dẫn đổi số điện thoại tài khoản yucho",
         summary: "hướng dẫn đổi mật khẩu thẻ yucho tại cây ATM của bưu điện và tại family mart.",
         imageUrl: "https://play-lh.googleusercontent.com/pHDhGjmtwOrgrg3XXP_vL99pCngi-7ED93InYG5zQpJjJQmIwfYGlo0zAC39NYOKggA",
         link: "https://vt.tiktok.com/ZSU2Vcnek/"
@@ -263,7 +263,7 @@ const allContent = [
         category: "video",
         date: "2024-10-05", // Ngày mới nhất
         featured: true, // Video này cũng có thể được đề xuất
-        title: "Video cài ứng dụng banking của ngân hàng Yucho",
+        title: "Cài ứng dụng banking của ngân hàng Yucho",
         summary: "Hướng dẫn đổi mật khẩu rút tiền của ngân hàng yucho.",
         imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=Banking yucho",
         link: "https://vt.tiktok.com/ZSU2qMRPW/"
@@ -274,7 +274,7 @@ const allContent = [
         category: "video",
         date: "2024-10-05", // Ngày mới nhất
         featured: true, // Video này cũng có thể được đề xuất
-        title: "Video HD đổi mật khẩu thẻ Yucho",
+        title: "Hướng dẫn đổi mật khẩu thẻ Yucho",
         summary: "Hướng dẫn đổi mật khẩu rút tiền của ngân hàng yucho.",
         imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=Đổi mk yucho",
         link: "https://vt.tiktok.com/ZSU2Vc6HU/"
@@ -285,7 +285,7 @@ const allContent = [
         category: "video",
         date: "2025-1-05", // Ngày mới nhất
         featured: false, // Video này cũng có thể được đề xuất
-        title: "Video phân biệt thẻ ngoại kiều thật giả ",
+        title: "Kiểm tra thẻ ngoại kiều của bạn ",
         summary: "cách check thử thẻ ngoại kiều của bạn có đúng không, vài nơi đi xin việc cũng sẽ được check như thế này.",
         imageUrl: "https://www.moj.go.jp/isa/content/001335881.png",
         link: "https://vt.tiktok.com/ZSU2qDvxy/"
@@ -296,7 +296,7 @@ const allContent = [
         category: "video",
         date: "2025-1-05", // Ngày mới nhất
         featured: false, // Video này cũng có thể được đề xuất
-        title: "Video hướng dẫn đổi mật khẩu wifi poket 2C của rakuten ",
+        title: "Đổi mật khẩu wifi poket 2C rakuten ",
         summary: "Hướng dẫn bạn đổi mật khẩu wifi cầm tay 2C của nhà mạng Rakuten.",
         imageUrl: "https://sumai-kyokasho.net/wp-content/uploads/2021/12/a93267824db43386192995c4a032bf3a-1024x631.png",
         link: "https://vt.tiktok.com/ZSU2qDxy5/"
@@ -308,11 +308,11 @@ const allContent = [
         category: "video",
         date: "2025-9-29", // Ngày mới nhất
         featured: false, // Video này cũng có thể được đề xuất
-        title: "Video HD chuyển vùng Apple Store ",
+        title: "Cách chuyển vùng Apple Store Nhật - Việt ",
         summary: "Hướng dẫn chuyển vùng Apple Store qua Nhật Bản và về lại Việt Nam để tải các ứng dụng theo vùng...",
         imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQa4GHxWR1R2b5i4W_-6OERHtP1rSQpw-0YdQ&s",
         link: "https://vt.tiktok.com/ZSU2VtULD/"
-    },
+    }
 ];
 
 // --- DỮ LIỆU BANNER (Giữ nguyên, không cần gộp vào allContent) ---
