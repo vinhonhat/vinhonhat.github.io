@@ -5,59 +5,86 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vinh ở Nhật | Blog Cá Nhân</title>
     
-    <link rel="manifest" href="manifest.json"> <!-- 🔹 Khai báo file manifest (dùng cho cài web thành app PWA) -->
-    <meta name="theme-color" content="#F6AD55"> <!-- 🔹 Màu thanh trình duyệt khi lưu như ứng dụng -->
-    <link rel="apple-touch-icon" href="/img/logo1.png"> <!-- 🔹 Icon khi thêm vào màn hình chính của iPhone -->
+<!-- 🔹 Khai báo file manifest (dùng cho cài web thành app PWA) -->
+    <link rel="manifest" href="manifest.json"> 
 
+<!-- 🔹 Màu thanh trình duyệt khi lưu như ứng dụng -->
+    <meta name="theme-color" content="#F6AD55"> 
+
+<!-- 🔹 Icon khi thêm vào màn hình chính của iPhone -->
+    <link rel="apple-touch-icon" href="/img/logo1.png"> 
+    
+<!-- 🔹 Icon website (favicon) -->
     <link rel="icon" href="img/logoQV.png" type="image/x-icon"> 
+
+<!-- 🔹 Dùng Tailwind CSS qua CDN để tạo giao diện -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+<!-- 🔹 Kết nối font chữ Google: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
+    <!-- 🔹 Thư viện icon FontAwesome -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- 🔹 File CSS riêng của bạn -->
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body class="bg-[#FBF7F0]">
-	<!-- PHẦN HIỆN NGÀY LỄ POUP -->
+<!-- 🟠 PHẦN POPUP NGÀY LỄ (hiển thị các dịp lễ đặc biệt) -->
 	<div id="popupOverlay" class="popup-overlay" style="display: none;">
 		<div class="popup-content max-w-xl">
+            <!-- Nút đóng popup -->
 			<button id="closePopupBtn" class="absolute top-2 right-4 text-2xl text-gray-400 hover:text-gray-600">&times;</button>
-			<h2 id="popupTitle" class="text-2xl font-bold mb-2 text-gray-800"></h2>
+			
+            <!-- Tiêu đề popup (ví dụ: “Ngày Quốc khánh nước Việt Nam ”) -->
+            <h2 id="popupTitle" class="text-2xl font-bold mb-2 text-gray-800"></h2>
+            <!-- Hình ảnh ngày lễ -->
 			<img id="holidayImage" src="" alt="Hình ảnh ngày lễ" 
 				class="w-full max-h-80 object-contain mb-6 rounded-lg hidden">               
-			<p id="popupText" class="text-gray-600 "></p>
+			<p id="popupText" class="text-gray-600 "></p> <!-- Nội dung mô tả -->
 		</div>
 	</div>
 
+    <!-- 🟣 PHẦN HEADER (logo + thời gian) -->
     <header class="bg-white shadow-sm py-4">
         <div class="container mx-auto px-4 flex justify-between items-center">
+            <!-- Logo và tên website -->
             <a href="/" class="flex items-center space-x-2">
                 <img src="img/logoQV.png" onerror="this.onerror=null; this.src='https://placehold.co/40x40/F6AD55/ffffff?text=V';" alt="Logo" class="h-12 w-12 rounded-full">
                 <span class="text-xl font-bold text-gray-800 hidden sm:block">Vinh ở Nhật</span>
             </a>
+            <!-- Hiển thị thời gian hiện tại -->
             <div class="flex items-center space-x-4">
                 <div class="text-right time-display">
                     <div id="time" class="time text-3xl font-bold leading-none">00:00:00</div>
                     <div id="date" class="date text-sm mt-1">...</div>
                 </div>
+                <!-- Nút mở menu trên mobile -->
                 <div class="sm:hidden">
                     <button id="menu-toggle" class="text-gray-700 hover:text-yellow-600"><i class="fas fa-bars text-2xl"></i></button>
                 </div>
             </div>
         </div>
     </header>
-<!-- ================= MENU TRANG CHỦ ================= -->
+
+
+
+<!-- ================= MENU TRANG CHỦ chính ================= -->
     <nav class="bg-white shadow-sm mt-4 sticky top-0 z-50">
         <div class="container mx-auto px-4 py-2">
 
-        <!-- ================= MENU PC ================= -->
+    <!-- ================= MENU PC ================= -->
             <ul class="hidden sm:flex justify-center sm:justify-between items-center space-x-4">
+        <!-- Menu con: Bài Viết HD -->        
                 <li class="relative group">
                     <a href="#" class="menu-link hover:text-yellow-600 flex items-center">
                         Bài Viết HD
                         <i class="fas fa-chevron-down ml-2 text-xs"></i>
                     </a>
+                    <!-- Dropdown menu xổ xuống của menu chính -->
                     <ul class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 py-2 w-40 z-10 dropdown-menu">
                         <li><a href="pages/pages-baiviet/rakuten.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Rakuten</a></li>
                         <li><a href="pages/pages-baiviet/seven.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Seven</a></li>                        
@@ -65,8 +92,11 @@
                         <li><a href="pages/pages-baiviet/jp.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Bài viết khác</a></li>                        
                     </ul>
                 </li>
-                  
+
+        <!-- Menu Liên kết Video -->          
                 <li><a href="pages/pages-video/video.html" class="menu-link hover:text-yellow-600">Video HD</a></li>
+                
+                
                 <!-- <li class="relative group">
                     <a href="#" class="menu-link hover:text-yellow-600 flex items-center">
                         Video HD
@@ -81,6 +111,7 @@
                 </li> -->
     
                 <!-- <li><a href="#" class="menu-link hover:text-yellow-600">Tải Xuống</a></li> -->
+        <!-- Menu con: Tải xuống -->        
                 <li class="relative group">
                     <a href="#" class="menu-link hover:text-yellow-600 flex items-center">
                         Tải xuống
@@ -93,7 +124,7 @@
                         <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Ứng dụng khác</a></li>
                     </ul>
                 </li>
-    
+        <!-- Menu con: Học tập --> 
                 <li class="relative group">
                     <a href="#" class="menu-link hover:text-yellow-600 flex items-center">
                         Học Tập
@@ -107,9 +138,8 @@
                         -->
                     </ul>
                 </li>
-                <!-- <li><a href="#" class="menu-link hover:text-yellow-600">Học Tập</a></li>
-                ân thẻ này-->
-    
+               
+        <!-- Liên kết Giải trí -->
                 <li><a href="pages/pages-giaitri/giaitri.html" class="menu-link hover:text-yellow-600">Giải Trí</a></li>
                 <!-- <li class="relative group">
                     <a href="#" class="menu-link hover:text-yellow-600 flex items-center">
@@ -143,6 +173,7 @@
 
 <!-- ================= MAIN ================= -->
     <main class="container mx-auto px-4 mt-8">
+        <!-- Banner trình chiếu -->
         <div class="banner-container max-w-5xl mx-auto rounded-lg shadow-md">
             <div id="bannerSlider" class="banner-slider"></div>
         </div>
@@ -156,7 +187,7 @@
                 </a>
             </div>
         </section>
-    <!-- ================= MENU BÀI VIẾT HD ================= -->    
+    <!-- ================= MENU BÀI VIẾT HD BÊN TRÁI ================= -->    
         <section class="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div class="bg-white rounded-lg shadow-md p-6">
                 <h2 class="text-xl font-bold text-gray-800 border-l-4 border-yellow-600 pl-4 mb-4">Bài viết hướng dẫn</h2>
@@ -165,7 +196,7 @@
                     <a href="pages/pages-baiviet/bai-viet-hd.html" class="text-yellow-600 hover:underline">Xem các bài khác &rarr;</a>
                 </div>
             </div>
-    <!-- ================= MENU VIDEO ================= -->
+    <!-- ================= MENU VIDEO BÊN PHẢI ================= -->
             <div class="bg-white rounded-lg shadow-md p-6">
                 <h2 class="text-xl font-bold text-gray-800 border-l-4 border-yellow-600 pl-4 mb-4">Video hướng dẫn</h2>
                 <div id="video-guides-container" class="space-y-4"></div>
@@ -180,12 +211,14 @@
 <!-- ================= CHAN TRANG ================= -->
     <footer class="bg-gray-800 text-white mt-12 py-8">
         <div class="container mx-auto px-4 text-center">
+            <!-- Liên kết mạng xã hội -->
              <div class="flex justify-center space-x-6 mb-6">
                 <a href="http://fb.com/tqv2022" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fab fa-facebook"></i></a>
                 <a href="https://m.me/tqv2022" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fa-brands fa-facebook-messenger"></i></a>
                 <a href="https://www.tiktok.com/@tqv2020" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fab fa-tiktok"></i></a>
                 <a href="https://portal.mobile.rakuten.co.jp/my-rakuten-mobile" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fa-solid fa-r"></i></a>
             </div>
+            <!-- Giới thiệu ngắn -->
             <p class="text-gray-400 max-w-2xl mx-auto mb-6">
                 Đây là nơi chia sẻ kiến thức, kinh nghiệm về học tập, giải trí và các hướng dẫn hữu ích. Mục tiêu của chúng tôi là mang đến những thông tin chất lượng và bổ ích cho cộng đồng.
             </p>
@@ -193,6 +226,12 @@
         </div>
     </footer>
 
+    <!-- 🔸 Gọi các file JavaScript -->
+    <!-- lunar-calendar.js: xử lý lịch âm dương -->
+    <!-- holidays.js: danh sách ngày lễ & popup -->
+    <!-- proverbs.js: có thể chứa câu danh ngôn/ngẫu nhiên -->
+    <!-- content.js: tải nội dung bài viết/video -->
+    <!-- script.js: điều khiển chung (menu, đồng hồ, popup, v.v.) -->
     <script src="js/lunar-calendar.js"></script>
     <script src="js/holidays.js"></script>
     <script src="js/proverbs.js"></script>
