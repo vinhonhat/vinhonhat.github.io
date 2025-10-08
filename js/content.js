@@ -255,7 +255,7 @@ const allContent = [
         title: "Video HD cách đổi số điện thoại tài khoản yucho",
         summary: "hướng dẫn đổi mật khẩu thẻ yucho tại cây ATM của bưu điện và tại family mart.",
         imageUrl: "https://play-lh.googleusercontent.com/pHDhGjmtwOrgrg3XXP_vL99pCngi-7ED93InYG5zQpJjJQmIwfYGlo0zAC39NYOKggA",
-        link: "https://www.google.com/url?q=https%3A%2F%2Fvt.tiktok.com%2FZSr9N3Cwp%2F&sa=D&sntz=1&usg=AOvVaw1CXDvIliTXPvUezlroVD30"
+        link: "https://vt.tiktok.com/ZSU2Vcnek/"
     },
     {
         // BANKING YUHCO
@@ -266,7 +266,7 @@ const allContent = [
         title: "Video cài ứng dụng banking của ngân hàng Yucho",
         summary: "Hướng dẫn đổi mật khẩu rút tiền của ngân hàng yucho.",
         imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=Banking yucho",
-        link: "#video-1"
+        link: "https://vt.tiktok.com/ZSU2qMRPW/"
     },
     {
         // DOI PASS YUCHO
@@ -277,7 +277,7 @@ const allContent = [
         title: "Video HD đổi mật khẩu thẻ Yucho",
         summary: "Hướng dẫn đổi mật khẩu rút tiền của ngân hàng yucho.",
         imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=Đổi mk yucho",
-        link: "#video-1"
+        link: "https://vt.tiktok.com/ZSU2Vc6HU/"
     },
     {
         // CHECK THE NGOAI KIEU
@@ -288,7 +288,7 @@ const allContent = [
         title: "Video phân biệt thẻ ngoại kiều thật giả ",
         summary: "cách check thử thẻ ngoại kiều của bạn có đúng không, vài nơi đi xin việc cũng sẽ được check như thế này.",
         imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=Video+Mới",
-        link: "#video-1"
+        link: "https://vt.tiktok.com/ZSU2qDvxy/"
     },
     {
         // CHUYEN VUNG APPLE STORE
@@ -299,8 +299,7 @@ const allContent = [
         title: "Video HD chuyển vùng Apple Store ",
         summary: "Hướng dẫn chuyển vùng Apple Store qua Nhật Bản và về lại Việt Nam để tải các ứng dụng theo vùng...",
         imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQa4GHxWR1R2b5i4W_-6OERHtP1rSQpw-0YdQ&s",
-        link: "https://www.google.com/url?q=https%3A%2F%2Fwww.tiktok.com%2F%40tqv2020%2Fvideo%2F7439850028845239570%3Fis_from_webapp%3D1%26sender_device%3Dpc%26web_id%3D7492301021865199105&sa=D&sntz=1&usg=AOvVaw0UggzekE0ReO1vkDZosck-"
-    },
+        link: "https://vt.tiktok.com/ZSU2VtULD/"
     
 ];
 
