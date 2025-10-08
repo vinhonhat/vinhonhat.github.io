@@ -287,7 +287,7 @@ const allContent = [
         featured: false, // Video này cũng có thể được đề xuất
         title: "Video phân biệt thẻ ngoại kiều thật giả ",
         summary: "cách check thử thẻ ngoại kiều của bạn có đúng không, vài nơi đi xin việc cũng sẽ được check như thế này.",
-        imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=Video+Mới",
+        imageUrl: "https://www.moj.go.jp/isa/content/001335881.png",
         link: "https://vt.tiktok.com/ZSU2qDvxy/"
     },
     {
@@ -298,7 +298,7 @@ const allContent = [
         featured: false, // Video này cũng có thể được đề xuất
         title: "Video hướng dẫn đổi mật khẩu wifi poket 2C của rakuten ",
         summary: "Hướng dẫn bạn đổi mật khẩu wifi cầm tay 2C của nhà mạng Rakuten.",
-        imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=Video+Mới",
+        imageUrl: "https://sumai-kyokasho.net/wp-content/uploads/2021/12/a93267824db43386192995c4a032bf3a-1024x631.png",
         link: "https://vt.tiktok.com/ZSU2qDxy5/"
     },
     
