@@ -264,8 +264,8 @@ const allContent = [
         date: "2024-10-05", // Ngày mới nhất
         featured: true, // Video này cũng có thể được đề xuất
         title: "Cài ứng dụng banking của ngân hàng Yucho",
-        summary: "Hướng dẫn đổi mật khẩu rút tiền của ngân hàng yucho.",
-        imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=Banking yucho",
+        summary: "Hướng dẫn cài đặt ứng dụng Yucho trên điện thoại.",
+        imageUrl: "https://play-lh.googleusercontent.com/pHDhGjmtwOrgrg3XXP_vL99pCngi-7ED93InYG5zQpJjJQmIwfYGlo0zAC39NYOKggA",
         link: "https://vt.tiktok.com/ZSU2qMRPW/"
     },
     {
@@ -276,7 +276,7 @@ const allContent = [
         featured: true, // Video này cũng có thể được đề xuất
         title: "Hướng dẫn đổi mật khẩu thẻ Yucho",
         summary: "Hướng dẫn đổi mật khẩu rút tiền của ngân hàng yucho.",
-        imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=Đổi mk yucho",
+        imageUrl: "https://play-lh.googleusercontent.com/pHDhGjmtwOrgrg3XXP_vL99pCngi-7ED93InYG5zQpJjJQmIwfYGlo0zAC39NYOKggA",
         link: "https://vt.tiktok.com/ZSU2Vc6HU/"
     },
     {
