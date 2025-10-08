@@ -287,7 +287,7 @@ const allContent = [
         featured: false, // Video này cũng có thể được đề xuất
         title: "Kiểm tra thẻ ngoại kiều của bạn ",
         summary: "cách check thử thẻ ngoại kiều của bạn có đúng không, vài nơi đi xin việc cũng sẽ được check như thế này.",
-        imageUrl: "https://www.moj.go.jp/isa/content/001335881.png",
+        imageUrl: "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/87/18/8a/87188a56-5271-bebe-e050-61dd0e4a21b5/AppIcon-0-0-1x_U007emarketing-0-6-0-85-220.png/1200x600wa.png",
         link: "https://vt.tiktok.com/ZSU2qDvxy/"
     },
     {
