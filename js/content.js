@@ -291,6 +291,18 @@ const allContent = [
         link: "https://vt.tiktok.com/ZSU2qDvxy/"
     },
     {
+        // HD DOI PASS WIFI POKET
+        type: 'video', // Loại nội dung: Video
+        category: "video",
+        date: "2025-1-05", // Ngày mới nhất
+        featured: false, // Video này cũng có thể được đề xuất
+        title: "Video hướng dẫn đổi mật khẩu wifi poket 2C của rakuten ",
+        summary: "Hướng dẫn bạn đổi mật khẩu wifi cầm tay 2C của nhà mạng Rakuten.",
+        imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=Video+Mới",
+        link: "https://vt.tiktok.com/ZSU2qDxy5/"
+    },
+    
+    {
         // CHUYEN VUNG APPLE STORE
         type: 'video', // Loại nội dung: Video
         category: "video",
