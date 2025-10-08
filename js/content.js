@@ -248,7 +248,7 @@ const allContent = [
     // --- VIDEO HƯỚNG DẪN (VIDEOS) ---
     {
         type: 'video', // Loại nội dung: Video
-        category: "line",
+        category: "video",
         date: "2024-10-05", // Ngày mới nhất
         featured: true, // Video này cũng có thể được đề xuất
         title: "Video HD đổi mk yucho",
@@ -258,7 +258,17 @@ const allContent = [
     },
     {
         type: 'video', // Loại nội dung: Video
-        category: "line",
+        category: "video",
+        date: "2024-10-05", // Ngày mới nhất
+        featured: true, // Video này cũng có thể được đề xuất
+        title: "Video HD đổi mk yucho",
+        summary: "Mô tả ngắn về nội dung video. Thời lượng: 5:30.",
+        imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=Video+Mới",
+        link: "#video-1"
+    },
+    {
+        type: 'video', // Loại nội dung: Video
+        category: "video",
         date: "2025-1-05", // Ngày mới nhất
         featured: false, // Video này cũng có thể được đề xuất
         title: "Video HD xem video hài ",
@@ -268,7 +278,7 @@ const allContent = [
     },
     {
         type: 'video', // Loại nội dung: Video
-        category: "app",
+        category: "video",
         date: "2025-9-29", // Ngày mới nhất
         featured: false, // Video này cũng có thể được đề xuất
         title: "Video HD chuyển vùng Apple Store ",
@@ -278,7 +288,7 @@ const allContent = [
     },
     {
         type: 'video',
-        category: "yucho",
+        category: "video",
         date: "2025-09-29",
         featured: true,
         title: "Video HD cách đổi số điện thoại tài khoản yucho",
