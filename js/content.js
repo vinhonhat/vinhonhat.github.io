@@ -29,7 +29,7 @@ const allContent = [
     {
         type: 'post',
         category: "tokutei",
-        date: "2025-09-30",
+        date: "2025-10-08",
         featured: true, // Nổi bật
         title: "Tài liệu ôn thi nhà hàng",
         summary: "tổng hợp tài liệu ôn thi tokutei nhà hàng",
@@ -39,7 +39,7 @@ const allContent = [
     {
         type: 'post',
         category: "tokutei",
-        date: "2025-10-01",
+        date: "2025-10-08",
         featured: true, // Nổi bật
         title: "Tài liệu ôn thi thực phẩm ",
         summary: "tổng hợp tài liệu ôn thi tokutei thực phẩm ",
@@ -49,7 +49,7 @@ const allContent = [
     {
         type: 'post',
         category: "tokutei",
-        date: "2025-10-05",
+        date: "2025-10-09",
         featured: false,
         title: "Tài liệu ôn thi kaigo",
         summary: "tổng hợp tài liệu ôn thi tokutei kaigo",
