@@ -204,7 +204,7 @@ const allContent = [
     // --- BÀI VIẾT HƯỚNG DẪN (GUIDES) ---
     {
         type: 'guide', // Loại nội dung: Hướng dẫn
-        category: "bank",
+        category: "other",
         date: "2025-09-29", // Ngày mới nhất
         featured: true,
         title: "Cách đăng ký tài khoản City Exxpress - chuyển tiền Nhật Việt",
@@ -214,7 +214,7 @@ const allContent = [
     },
     {
         type: 'guide',
-        category: "jp",
+        category: "other",
         date: "2025-10-01",
         featured: false,
         title: "Đăng ký thẻ My Numeber Online",
