@@ -38,7 +38,7 @@ const allContent = [
     },
     {
         type: 'post',
-        category: "tokuei",
+        category: "tokutei",
         date: "2025-10-01",
         featured: true, // Nổi bật
         title: "Tài liệu ôn thi thực phẩm ",
@@ -48,7 +48,7 @@ const allContent = [
     },
     {
         type: 'post',
-        category: "tokuei",
+        category: "tokutei",
         date: "2025-10-05",
         featured: false,
         title: "Tài liệu ôn thi kaigo",
@@ -58,7 +58,7 @@ const allContent = [
     },
     {
         type: 'post',
-        category: "tokuei",
+        category: "tokutei",
         date: "2025-10-04",
         featured: true, // Nổi bật
         title: "Game Sudoku",
