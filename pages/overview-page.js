@@ -141,7 +141,9 @@ document.addEventListener('DOMContentLoaded', function () {
     renderPostsForCategory('jlpt', 'jlpt-posts');
     renderPostsForCategory('windows', 'windows-posts');
     renderPostsForCategory('dohoa', 'dohoa-posts');
-
+    renderPostsForCategory('other', 'other-posts');
+    
+    
     renderSuggestions('suggested-posts-container');
 });
 
