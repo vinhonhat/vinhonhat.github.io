@@ -33,7 +33,7 @@ const allContent = [
         featured: true, // Nổi bật
         title: "Tài liệu ôn thi nhà hàng",
         summary: "tổng hợp tài liệu ôn thi tokutei nhà hàng",
-        imageUrl: "https://placehold.co/400x250/FBD38D/ffffff?text=tokutei レストラン",
+        imageUrl: "https://placehold.co/400x250/FBD38D/ffffff?text=tokutei nhà hàng",
         link: "/pages/pages-hoctap/nhahang.html"
     },
     {
@@ -43,7 +43,7 @@ const allContent = [
         featured: true, // Nổi bật
         title: "Tài liệu ôn thi thực phẩm ",
         summary: "tổng hợp tài liệu ôn thi tokutei thực phẩm ",
-        imageUrl: "img/posts/giaitri/FlappyBird.png",
+        imageUrl: "https://placehold.co/400x250/FBD38D/ffffff?text=tokutei thực phẩm",
         link: "/pages/pages-hoctap/thucpham.html"
     },
     {
@@ -53,7 +53,7 @@ const allContent = [
         featured: false,
         title: "Tài liệu ôn thi kaigo",
         summary: "tổng hợp tài liệu ôn thi tokutei kaigo",
-        imageUrl: "img/posts/giaitri/vongquay.png",
+        imageUrl: "https://placehold.co/400x250/FBD38D/ffffff?text=tokutei kaigo",
         link: "/pages/pages-hoctap/kaigo.html"
     },
     {
@@ -61,10 +61,10 @@ const allContent = [
         category: "tokutei",
         date: "2025-10-04",
         featured: true, // Nổi bật
-        title: "Game Sudoku",
-        summary: "chơi game",
-        imageUrl: "https://placehold.co/400x250/ECC94B/ffffff?text=Sudoku",
-        link: "/pages/pages-giaitri/sudoku.html"
+        title: "Tài liệu tokutei khách sạn",
+        summary: "tổng hợp tài liệu ôn thi tokutei khách sạn",
+        imageUrl: "https://placehold.co/400x250/FBD38D/ffffff?text=tokutei khách sạn",
+        link: "/pages/pages-hoctap/hoctap.html.html"
     },
     // --- GAME ---
     {
