@@ -294,6 +294,7 @@ const allContent = [
         // HD DOI PASS WIFI POKET
         type: 'video', // Loại nội dung: Video
         category: "video",
+        category: "rakuten",
         date: "2025-1-05", // Ngày mới nhất
         featured: false, // Video này cũng có thể được đề xuất
         title: "Đổi mật khẩu wifi poket 2C rakuten ",
