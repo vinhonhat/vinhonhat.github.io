@@ -101,17 +101,14 @@
 </head>
 <body 
     class="bg-[#FBF7F0]"
-    data-category="rakuten"
-    data-title="Tất cả bài viết về Rakuten"
-    data-description="Tổng hợp các bài viết hướng dẫn, chia sẻ kinh nghiệm về các dịch vụ của Rakuten tại Nhật Bản."
-    data-perpage="6"
+    
 >
 <div id="header-placeholder"></div>
 
 <main>
         
         <div id="screen-tester">
-            <h1 id="color-name">Bấm hoặc nhấn Space để bắt đầu kiểm tra (Full Screen)</h1>
+            <h1 id="color-name">Nhấn chuột hoặc phím Space để bắt đầu kiểm tra (Full Screen)</h1>
             <p id="sub-text" class="text-white text-sm opacity-70">Nhấn ESC hoặc Q để thoát</p>
         </div>
         
@@ -319,8 +316,8 @@
 
         // Danh sách các tệp âm thanh cần phát theo thứ tự
         const audioSources = [
-            { src: 'left_speaker.mp3', status: 'Đang phát: LOA TRÁI (LEFT) - Nghe kỹ.' },
-            { src: 'right_speaker.mp3', status: 'Đang phát: LOA PHẢI (RIGHT) - Nghe kỹ.' }
+            { src: '/file/mp3/left_speaker.mp3', status: 'Đang phát: LOA TRÁI (LEFT) - Nghe kỹ.' },
+            { src: '/file/mp3/right_speaker.mp3', status: 'Đang phát: LOA PHẢI (RIGHT) - Nghe kỹ.' }
         ];
 
         let audioIndex = 0;
