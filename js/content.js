@@ -318,15 +318,15 @@ const allContent = [
 // --- DỮ LIỆU BANNER (Giữ nguyên, không cần gộp vào allContent) ---
 const bannerSlides = [
     {
-        imageUrl: "img/banners/banner1.jpg",
+        imageUrl: "/img/banners/1020.jpg",
         link: "#"
     },
     {
-        imageUrl: "img/banners/banner2.jpg",
+        imageUrl: "/img/banners/1120.jpg",
         link: "#"
     },
     {
-        imageUrl: "img/banners/banner3.jpg",
+        imageUrl: "/img/banners/1222.jpg",
         link: "#"
     }
 ];
