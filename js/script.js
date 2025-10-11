@@ -13,7 +13,22 @@ document.addEventListener('DOMContentLoaded', function() {
     // 4. GỌI CÁC HÀM ĐỂ CHẠY TRANG WEB
     // =================================================================
 
-
+	// --- 1. HÀM TẢI HTML ĐỘNG (THÊM MỚI) ---
+    // Hàm này sẽ tải nội dung từ một file (vd: header.html) vào một element trên trang
+    const loadHTML = (file, elementId) => {
+        return fetch(file)
+            .then(response => {
+                if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
+                return response.text();
+            })
+            .then(data => {
+                const element = document.getElementById(elementId);
+                if (element) element.innerHTML = data;
+            })
+            .catch(error => console.error(`Error loading ${file}:`, error));
+    };
+	
+	
     // --- 1. ĐĂNG KÝ SERVICE WORKER CHO PWA (Giữ nguyên) ---
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
@@ -24,10 +39,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- 2. LẤY CÁC THÀNH PHẦN HTML (ELEMENTS) (Giữ nguyên) ---
-    const timeEl = document.getElementById('time');
-    const dateEl = document.getElementById('date');
-    const menuToggle = document.getElementById('menu-toggle');
-    const mobileMenu = document.getElementById('mobile-menu');
+    //const timeEl = document.getElementById('time');
+    //const dateEl = document.getElementById('date');
+    //const menuToggle = document.getElementById('menu-toggle');
+    //const mobileMenu = document.getElementById('mobile-menu');
     const bannerSlider = document.getElementById('bannerSlider');
     const postsContainer = document.getElementById('latest-posts-container'); // Sẽ dùng cho bài viết đề xuất
     const popupOverlay = document.getElementById('popupOverlay');
@@ -54,6 +69,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Cập nhật đồng hồ
     function updateClock() {
+        const timeEl = document.getElementById('time');
+        const dateEl = document.getElementById('date');
         if (!timeEl || !dateEl) return;
         const now = new Date();
         timeEl.textContent = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -271,26 +288,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     // --- 4. GỌI CÁC HÀM ĐỂ CHẠY TRANG WEB ---
+	
+	// 1. Tải Header, SAU ĐÓ chạy các chức năng của header
+    loadHTML('/hf/header.html', 'header-placeholder').then(() => {
+        updateClock();
+        setInterval(updateClock, 1000);
 
-    // Chạy các chức năng cơ bản (Giữ nguyên)
-    updateClock();
-    setInterval(updateClock, 1000);
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (menuToggle && mobileMenu) {
+            menuToggle.addEventListener('click', (event) => {
+                event.stopPropagation();
+                mobileMenu.classList.toggle('hidden');
+            });
+            document.addEventListener('click', (event) => {
+                if (!mobileMenu.classList.contains('hidden') && !mobileMenu.contains(event.target) && !menuToggle.contains(event.target)) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        }
+    });
 
-    // Xử lý menu mobile (Giữ nguyên)
-    if (menuToggle && mobileMenu) {
-        menuToggle.addEventListener('click', (event) => {
-            event.stopPropagation();
-            mobileMenu.classList.toggle('hidden');
-        });
-        document.addEventListener('click', (event) => {
-            const isClickInsideMenu = mobileMenu.contains(event.target);
-            const isClickOnToggle = menuToggle.contains(event.target);
-            if (!mobileMenu.classList.contains('hidden') && !isClickInsideMenu && !isClickOnToggle) {
-                mobileMenu.classList.add('hidden');
-            }
-        });
-    }
+    // 2. Tải Footer
+    loadHTML('/hf/footer.html', 'footer-placeholder');
 
+	
+	
     // Tải nội dung động (CẬP NHẬT)
     loadBanner();
     loadFeaturedPosts(); // <-- THAY ĐỔI: Gọi hàm mới thay cho loadLatestPosts()
