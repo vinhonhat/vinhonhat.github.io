@@ -97,6 +97,71 @@
              -webkit-line-clamp: 2; 
              overflow: hidden;
         }
+
+
+
+        /* CSS MỚI Tối ưu cho bàn phím */
+        #keyboard-layout-container {
+            /* Loại bỏ overflow-x-auto */
+            overflow-x: hidden; 
+        }
+
+        .key-row {
+            display: flex;
+            margin-bottom: 5px; /* Giảm khoảng cách giữa các hàng */
+            gap: 5px; /* Giảm khoảng cách giữa các phím */
+        }
+
+        .key {
+            background-color: #333;
+            color: white;
+            border: 1px solid #555;
+            padding: 2px 5px; /* Giảm padding */
+            border-radius: 4px;
+            text-align: center;
+            font-size: 12px; /* Giảm kích thước chữ */
+            min-width: 0; /* Cho phép co lại */
+            flex-grow: 1; /* Rất quan trọng: cho phép tất cả các phím co giãn */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 35px; /* Chiều cao cố định */
+            transition: background-color 0.1s, border-color 0.1s;
+            cursor: default;
+            /* Dùng Flexbox để hiển thị nhãn phím trên 2 dòng (ví dụ: `~` và `1`) */
+            flex-direction: column; 
+            line-height: 1.1;
+        }
+
+        /* Hiệu ứng khi phím được nhấn */
+        .key.active {
+            background-color: #F6AD55 !important; 
+            border-color: #FFD700 !important;
+            color: #111 !important;
+            box-shadow: 0 0 10px rgba(246, 173, 85, 0.8);
+        }
+
+        /* Hiệu ứng sau khi phím đã được nhấn (màu xám) */
+        .key.checked {
+            background-color: #cecdcd !important; 
+            border-color: #a8a8a8 !important;
+            color: white !important;
+        }
+
+        /* Điều chỉnh tỉ lệ cho các phím dài (sử dụng flex-grow) */
+        .key.key-tab { flex-grow: 1.5; }
+        .key.key-caps { flex-grow: 1.75; }
+        .key.key-shift-l { flex-grow: 2.25; }
+        .key.key-shift-r { flex-grow: 2.75; }
+        .key.key-enter { flex-grow: 2.25; }
+        .key.key-backslash { flex-grow: 1.5; }
+        .key.key-space { flex-grow: 5; max-width: none; } /* Cho phép space chiếm nhiều không gian hơn */
+
+
+        /* CSS đặc biệt cho phím Ctrl/Alt */
+        .key.key-modifier {
+            min-width: 50px;
+        }
 	</style>
 </head>
 <body 
@@ -149,28 +214,16 @@
                 </div>
             </div>
             
-            <div id="keyboard-guide" class="mt-12">
-                 <h3 class="text-2xl font-semibold mb-6 flex items-center"><i class="fas fa-keyboard mr-3 text-yellow-600"></i>Hướng dẫn Phím tắt (MacBook & Windows)</h3>
-                 
-                 <div class="bg-gray-100 p-6 rounded-lg mb-6">
-                    <h4 class="text-xl font-bold mb-3">MacBook Keyboard Shortcuts</h4>
-                    <div class="grid grid-cols-2 gap-4">
-                        <p><strong><span class="bg-gray-300 px-2 py-1 rounded">⌘</span> + C</strong>: Copy</p>
-                        <p><strong><span class="bg-gray-300 px-2 py-1 rounded">⌘</span> + V</strong>: Paste</p>
-                        <p><strong><span class="bg-gray-300 px-2 py-1 rounded">⌘</span> + Space</strong>: Spotlight Search</p>
-                        <p><strong><span class="bg-gray-300 px-2 py-1 rounded">⌘</span> + Tab</strong>: Switch App</p>
-                    </div>
-                 </div>
+            <div id="keyboard-tester" class="mt-12">
+                <h3 class="text-2xl font-semibold mb-6 flex items-center"><i class="fas fa-keyboard mr-3 text-yellow-600"></i>Kiểm Tra Bàn Phím (Keyboard Test)</h3>
+                <p class="text-center text-lg mb-4" id="keyboard-status">Nhấn bất kỳ phím nào trên bàn phím của bạn để kiểm tra phản hồi.</p>
 
-                 <div class="bg-gray-100 p-6 rounded-lg">
-                    <h4 class="text-xl font-bold mb-3">Windows Keyboard Shortcuts</h4>
-                    <div class="grid grid-cols-2 gap-4">
-                        <p><strong><span class="bg-gray-300 px-2 py-1 rounded">Ctrl</span> + C</strong>: Copy</p>
-                        <p><strong><span class="bg-gray-300 px-2 py-1 rounded">Win</span> + D</strong>: Show Desktop</p>
-                        <p><strong><span class="bg-gray-300 px-2 py-1 rounded">Alt</span> + F4</strong>: Close Window</p>
-                        <p><strong><span class="bg-gray-300 px-2 py-1 rounded">Ctrl</span> + <span class="bg-gray-300 px-2 py-1 rounded">Shift</span> + Esc</strong>: Task Manager</p>
+                <div id="keyboard-layout-container" class="bg-gray-900 p-6 rounded-lg shadow-xl overflow-x-auto">
                     </div>
-                 </div>
+                
+                <div class="mt-4 text-center text-sm text-gray-500">
+                    <i class="fas fa-desktop mr-1"></i> Hệ điều hành: <span id="os-display" class="font-bold">Đang nhận diện...</span>
+                </div>
             </div>
 
         </div>
@@ -439,6 +492,164 @@
                     startCameraMicButton.disabled = false;
                 });
         });
+        // ================== D. KEYBOARD CHECKER LOGIC ==================
+
+        const keyboardLayoutContainer = document.getElementById('keyboard-layout-container');
+        const osDisplay = document.getElementById('os-display');
+
+        
+        // Định nghĩa mã phím (key codes) và nhãn hiển thị cho 2 HĐH
+        // SỬ DỤNG MÃ `e.code` (Code) vì nó độc lập với layout ngôn ngữ
+        const KEY_LAYOUTS = {
+            // Layout cho Windows
+            windows: [
+                ['Escape', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', 'PrintScreen', 'ScrollLock', 'Pause', 'Home', 'End'],
+                ['Backquote', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus', 'Equal', 'Backspace', 'NumLock', 'NumpadDivide', 'NumpadMultiply', 'NumpadSubtract'],
+                ['Tab', 'KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'BracketLeft', 'BracketRight', 'Backslash', 'Numpad7', 'Numpad8', 'Numpad9', 'NumpadAdd'],
+                ['CapsLock', 'KeyA', 'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'Semicolon', 'Quote', 'Enter', 'Numpad4', 'Numpad5', 'Numpad6'],
+                ['ShiftLeft', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'Comma', 'Period', 'Slash', 'ShiftRight', 'Numpad1', 'Numpad2', 'Numpad3', 'NumpadEnter'],
+                ['ControlLeft', 'MetaLeft', 'AltLeft', 'Space', 'AltRight', 'ContextMenu', 'ControlRight', 'ArrowUp', 'Numpad0', 'NumpadDecimal'],
+                ['', '', '', '', '', '', '', 'ArrowLeft', 'ArrowDown', 'ArrowRight'] // Hàng cuối cho các phím mũi tên
+            ],
+            // Layout cho macOS
+            macos: [
+                ['Escape', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', 'VolumeUp', 'VolumeDown', 'Mute', 'PlayPause', 'Eject'], // Giả định một số phím chức năng Mac
+                ['Backquote', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus', 'Equal', 'Backspace'],
+                ['Tab', 'KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'BracketLeft', 'BracketRight', 'Backslash'],
+                ['CapsLock', 'KeyA', 'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'Semicolon', 'Quote', 'Enter'],
+                ['ShiftLeft', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'Comma', 'Period', 'Slash', 'ShiftRight'],
+                ['ControlLeft', 'AltLeft', 'MetaLeft', 'Space', 'MetaRight', 'AltRight', 'ControlRight'],
+                ['', '', '', '', 'ArrowLeft', 'ArrowUp', 'ArrowDown', 'ArrowRight']
+            ]
+        };
+
+        // Ánh xạ Mã phím (e.code) sang Nhãn hiển thị (Label)
+        const KEY_LABELS = {
+            'Escape': 'Esc', 'Tab': 'Tab', 'CapsLock': 'Caps', 'ShiftLeft': 'Shift', 'ShiftRight': 'Shift',
+            'ControlLeft': 'Ctrl', 'ControlRight': 'Ctrl', 'AltLeft': 'Alt', 'AltRight': 'Alt',
+            'MetaLeft': '⌘/Win', 'MetaRight': '⌘/Win', 'Space': 'Space', 'Enter': 'Enter',
+            'Backspace': 'Delete', 'Backquote': '` ~', 'Minus': '- _', 'Equal': '= +',
+            'BracketLeft': '[ {', 'BracketRight': '] }', 'Backslash': '\\ |', 'Semicolon': '; :',
+            'Quote': `' "`, 'Comma': ', <', 'Period': '. >', 'Slash': '/ ?',
+            'Digit1': '1 !', 'Digit2': '2 @', /*... cứ thế cho các phím số ...*/
+            'PrintScreen': 'PrtSc', 'ScrollLock': 'ScrLk', 'Pause': 'Pause', 'Insert': 'Ins', 'Delete': 'Del',
+            'ArrowUp': '↑', 'ArrowDown': '↓', 'ArrowLeft': '←', 'ArrowRight': '→',
+            'ContextMenu': 'Menu', 'NumpadDivide': '/', 'NumpadMultiply': '*', 'NumpadSubtract': '-',
+            'NumpadAdd': '+', 'NumpadDecimal': '.', 'NumpadEnter': 'Enter',
+            // Nhãn đơn giản cho các phím chữ cái
+            'KeyA': 'A', 'KeyB': 'B', 'KeyC': 'C', 'KeyD': 'D', 'KeyE': 'E', 'KeyF': 'F',
+            // ... thêm tất cả các phím chữ cái khác
+        };
+        // Tự động thêm nhãn cho các phím F và Digit còn lại (ví dụ)
+        for (let i = 1; i <= 12; i++) { KEY_LABELS[`F${i}`] = `F${i}`; }
+        for (let i = 0; i <= 9; i++) { KEY_LABELS[`Digit${i}`] = i; }
+        for (let i = 0; i <= 9; i++) { KEY_LABELS[`Numpad${i}`] = i; }
+
+
+        // 1. Nhận diện Hệ điều hành
+        function detectOS() {
+            const userAgent = window.navigator.userAgent.toLowerCase();
+            if (userAgent.indexOf('mac') > -1) {
+                return 'macos';
+            }
+            if (userAgent.indexOf('win') > -1) {
+                return 'windows';
+            }
+            return 'windows'; // Mặc định là windows nếu không nhận diện được
+        }
+        const currentOS = detectOS();
+        osDisplay.textContent = currentOS === 'macos' ? 'macOS (Apple)' : 'Windows';
+
+
+        // 2. Xây dựng Layout bàn phím dựa trên OS
+        function buildKeyboardLayout(os) {
+            const layout = KEY_LAYOUTS[os];
+            keyboardLayoutContainer.innerHTML = ''; // Xóa layout cũ
+
+            layout.forEach(row => {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'key-row';
+                
+                row.forEach(keyCode => {
+                    if (!keyCode) { // Xử lý khoảng trống (nếu có)
+                        const spacer = document.createElement('div');
+                        spacer.style.width = '30px'; 
+                        rowDiv.appendChild(spacer);
+                        return;
+                    }
+
+                    const keyDiv = document.createElement('div');
+                    keyDiv.className = 'key';
+                    keyDiv.id = `key-${keyCode}`; // ID quan trọng để xử lý sự kiện
+                    keyDiv.textContent = KEY_LABELS[keyCode] || keyCode.replace('Key', ''); // Hiển thị nhãn
+
+                    // Thêm class đặc biệt cho các phím dài/đặc biệt
+                    if (keyCode === 'Tab') keyDiv.classList.add('key-tab');
+                    if (keyCode === 'CapsLock') keyDiv.classList.add('key-caps');
+                    if (keyCode === 'ShiftLeft') keyDiv.classList.add('key-shift-l');
+                    if (keyCode === 'ShiftRight') keyDiv.classList.add('key-shift-r');
+                    if (keyCode === 'Enter') keyDiv.classList.add('key-enter');
+                    if (keyCode === 'Space') keyDiv.classList.add('key-space');
+                    if (['ControlLeft', 'ControlRight', 'AltLeft', 'AltRight', 'MetaLeft', 'MetaRight'].includes(keyCode)) {
+                        keyDiv.classList.add('key-modifier');
+                    }
+                    
+                    rowDiv.appendChild(keyDiv);
+                });
+                
+                keyboardLayoutContainer.appendChild(rowDiv);
+            });
+        }
+
+        // Gọi hàm xây dựng layout khi tải trang
+        buildKeyboardLayout(currentOS);
+
+        // ... (Tiếp tục trong thẻ <script> của bạn)
+
+        // ================== E. KEYBOARD EVENT HANDLERS ==================
+
+        // Xử lý khi nhấn phím (KeyDown)
+    document.addEventListener('keydown', (e) => {
+        // ... (Logic chuyển màu giữ nguyên) ...
+
+        // 2. Logic cho Key Test (Nếu đang ở chế độ kiểm tra thiết bị)
+        if (peripheralTester.style.display !== 'none') {
+            const targetKey = document.getElementById(`key-${e.code}`);
+            if (targetKey) {
+                e.preventDefault(); 
+                // 💡 1. Khi nhấn: BẬT màu active (CAM)
+                targetKey.classList.add('active');
+                targetKey.classList.remove('checked'); // Đảm bảo lớp checked bị xóa
+            }
+        }
+    });
+
+    // Xử lý khi nhả phím (KeyUp)
+    document.addEventListener('keyup', (e) => {
+        if (peripheralTester.style.display !== 'none') {
+            const targetKey = document.getElementById(`key-${e.code}`);
+            if (targetKey) {
+                // 💡 2. Khi nhả: TẮT active và BẬT checked (XÁM)
+                targetKey.classList.remove('active');
+                targetKey.classList.add('checked');
+            }
+        }
+    });
+
+
+    // 3. Hàm Reset Bàn phím
+    function resetKeyboard() {
+        const checkedKeys = keyboardLayoutContainer.querySelectorAll('.key.checked, .key.active');
+        checkedKeys.forEach(key => {
+            key.classList.remove('checked');
+            key.classList.remove('active');
+        });
+        document.getElementById('keyboard-status').textContent = 'Nhấn bất kỳ phím nào trên bàn phím của bạn để kiểm tra phản hồi.';
+    }
+
+    // 4. Sự kiện Reset
+    resetKeyboardBtn.addEventListener('click', resetKeyboard);
+
 
         // =========================================================================
         // 2. CODE CỦA BẠN (Dùng cho header/footer/logic phân trang)
