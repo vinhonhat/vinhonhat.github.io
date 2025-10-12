@@ -143,9 +143,9 @@
 
         /* Hiệu ứng sau khi phím đã được nhấn (màu xám) */
         .key.checked {
-            background-color: #cecdcd !important; 
-            border-color: #a8a8a8 !important;
-            color: white !important;
+            background-color: #9b9a9a !important; 
+            border-color: #cc4e4e !important;
+            color: rgb(38, 0, 255) !important;
         }
 
         /* Điều chỉnh tỉ lệ cho các phím dài (sử dụng flex-grow) */
@@ -173,11 +173,11 @@
 <main>
         
         <div id="screen-tester">
-            <h1 id="color-name">Nhấn chuột hoặc phím Space để bắt đầu kiểm tra (Full Screen)</h1>
+            <h1 id="color-name">Nhấn phím Space để bắt đầu kiểm tra (Full Screen)</h1>
             <p id="sub-text" class="text-white text-sm opacity-70">Nhấn ESC hoặc Q để thoát</p>
         </div>
         
-        <button id="mode-switcher" style="display:none;">Chuyển sang Kiểm tra Loa & Mic</button>
+        <button id="mode-switcher" style="display:none;">Kiểm tra Loa & Mic</button>
         
         <div id="peripheral-tester" style="display:none;" class="max-w-4xl mx-auto py-12 px-4">
             <h2 class="text-3xl font-bold text-gray-800 text-center mb-10">Công cụ Kiểm tra Loa, Mic & Camera</h2>
@@ -187,7 +187,7 @@
                 <p class="text-center text-lg mb-4" id="speaker-status">Đảm bảo đã cắm tai nghe hoặc bật loa ngoài. Nhấn START.</p>
                 <div class="flex justify-center items-center space-x-6">
                     <button id="start-speaker-check" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded transition duration-300">
-                        <i class="fas fa-play mr-2"></i>START CHECK
+                        <i class="fas fa-play mr-2"></i>BẮT ĐẦU
                     </button>
                     <audio id="audio-player"></audio>
                 </div>
@@ -195,10 +195,10 @@
             
             <div id="camera-mic-tester" class="bg-white p-6 rounded-lg shadow-lg">
                 <h3 class="text-2xl font-semibold mb-4 flex items-center"><i class="fas fa-video mr-3 text-red-500"></i>Kiểm Tra Mic & Camera</h3>
-                <p class="text-center text-lg mb-4" id="camera-mic-status">Nhấn "Cấp quyền" để kiểm tra. Camera sẽ hiển thị, Mic sẽ hiển thị mức độ âm thanh.</p>
+                <p class="text-center text-lg mb-4" id="camera-mic-status">Vui lòng cho phép dùng camera và mic để kiểm tra. Camera sẽ hiển thị, Mic sẽ hiển thị mức độ âm thanh.</p>
                 <div class="flex justify-center mb-6">
                     <button id="start-camera-mic-check" class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded transition duration-300">
-                        <i class="fas fa-camera mr-2"></i>CẤP QUYỀN
+                        <i class="fas fa-camera mr-2"></i>KIỂM TRA
                     </button>
                 </div>
 
@@ -504,12 +504,12 @@
             // Layout cho Windows
             windows: [
                 ['Escape', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', 'PrintScreen', 'ScrollLock', 'Pause', 'Home', 'End'],
-                ['Backquote', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus', 'Equal', 'Backspace', 'NumLock', 'NumpadDivide', 'NumpadMultiply', 'NumpadSubtract'],
-                ['Tab', 'KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'BracketLeft', 'BracketRight', 'Backslash', 'Numpad7', 'Numpad8', 'Numpad9', 'NumpadAdd'],
-                ['CapsLock', 'KeyA', 'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'Semicolon', 'Quote', 'Enter', 'Numpad4', 'Numpad5', 'Numpad6'],
-                ['ShiftLeft', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'Comma', 'Period', 'Slash', 'ShiftRight', 'Numpad1', 'Numpad2', 'Numpad3', 'NumpadEnter'],
-                ['ControlLeft', 'MetaLeft', 'AltLeft', 'Space', 'AltRight', 'ContextMenu', 'ControlRight', 'ArrowUp', 'Numpad0', 'NumpadDecimal'],
-                ['', '', '', '', '', '', '', 'ArrowLeft', 'ArrowDown', 'ArrowRight'] // Hàng cuối cho các phím mũi tên
+                ['Backquote', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus', 'Equal', 'Backspace', 'NumLock', 'NumpadDivide', 'NumpadMultiply', 'NumpadSubtract', 'NumpadAdd'],
+                ['Tab', 'KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'BracketLeft', 'BracketRight', 'Backslash', '','Numpad7', 'Numpad8', 'Numpad9'],
+                ['CapsLock', 'KeyA', 'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'Semicolon', 'Quote', 'Enter', '','Numpad4', 'Numpad5', 'Numpad6'],
+                ['ShiftLeft', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'Comma', 'Period', 'Slash', 'ShiftRight', '','Numpad1', 'Numpad2', 'Numpad3'],
+                ['ControlLeft', 'MetaLeft', 'AltLeft', 'Space', 'AltRight', 'ContextMenu', 'ControlRight', 'ArrowUp', '','Numpad0', 'NumpadDecimal', 'NumpadEnter'],
+                ['', '', '', '', '', '', '','', '','', '','', '', '', 'ArrowLeft', 'ArrowDown', 'ArrowRight','','', '','',''] // Hàng cuối cho các phím mũi tên
             ],
             // Layout cho macOS
             macos: [
