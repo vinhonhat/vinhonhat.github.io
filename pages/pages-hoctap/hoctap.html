@@ -4,27 +4,54 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bài Viết Hướng Dẫn | Vinh ở Nhật</title>
-  <link rel="icon" href="../../img/logoQV.png" type="image/x-icon"> 
-  <link rel="manifest" href="../../manifest.json">
-  <meta name="theme-color" content="#F6AD55">
-  <link rel="apple-touch-icon" href="../../img/logoQV.png">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="../../css/style.css">
-  <style>
-    .truncate-2-lines {
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-      overflow: hidden;
-    }
-  </style>
-</head>
-<body class="bg-[#FBF7F0]">
 
+<!-- 🔹 Khai báo file manifest (dùng cho cài web thành app PWA) -->
+    <link rel="manifest" href="manifest.json"> 
+
+<!-- 🔹 Màu thanh trình duyệt khi lưu như ứng dụng -->
+    <meta name="theme-color" content="#F6AD55"> 
+
+<!-- 🔹 Icon khi thêm vào màn hình chính của iPhone -->
+    <link rel="apple-touch-icon" href="/img/logo1.png"> 
+    
+<!-- 🔹 Icon website (favicon) -->
+    <link rel="icon" href="/img/logoQV.png" type="image/x-icon"> 
+
+<!-- 🔹 Dùng Tailwind CSS qua CDN để tạo giao diện -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+<!-- 🔹 Kết nối font chữ Google: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- 🔹 Thư viện icon FontAwesome -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- 🔹 File CSS riêng của bạn -->
+    <link rel="stylesheet" href="/css/style.css">
+
+	<style>
+      .truncate-2-lines {
+         display: -webkit-box;
+         -webkit-box-orient: vertical;
+         -webkit-line-clamp: 2; /* <-- SỐ 2 NÀY LÀ SỐ DÒNG TỐI ĐA. BẠN CÓ THỂ THAY BẰNG 3 NẾU MUỐN. */
+         overflow: hidden;
+      }
+    /*   
+        .pagination-container{display:flex;justify-content:center;align-items:center;padding:1rem 0}.pagination-btn{padding:.5rem 1rem;margin:0 .25rem;border:1px solid #ddd;background-color:#fff;color:#333;cursor:pointer;border-radius:.25rem;transition:background-color .3s,color .3s}.pagination-btn:hover:not(:disabled){background-color:#f6ad55;color:#fff}.pagination-btn.active{background-color:#f6ad55;color:#fff;border-color:#f6ad55}.pagination-btn:disabled{cursor:not-allowed;opacity:.5}
+    */
+	</style>
+</head>
+
+
+<body 
+    class="bg-[#FBF7F0]"
+    data-category="rakuten"
+    data-title="Tất cả bài viết về Rakuten"
+    data-description="Tổng hợp các bài viết hướng dẫn, chia sẻ kinh nghiệm về các dịch vụ của Rakuten tại Nhật Bản."
+    data-perpage="6"
+>
   <!-- ================= HEADER ================= -->
   <header class="bg-white shadow-sm py-4">
     <div class="container mx-auto px-4 flex justify-between items-center">
@@ -44,131 +71,11 @@
     </div>
   </header>
 
-<!-- ================= MENU TRANG PHỤ 1 ================= -->
-    <nav class="bg-white shadow-sm mt-4 sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-2">
+<!-- ================= HEADER ================= -->
+    <div id="header-placeholder"></div>
 
-        <!-- ================= MENU PC ================= -->
-            <ul class="hidden sm:flex justify-center sm:justify-between items-center space-x-4">
-                <li class="relative group">
-                    <a href="#" class="menu-link hover:text-yellow-600 flex items-center">
-                        Bài Viết HD
-                        <i class="fas fa-chevron-down ml-2 text-xs"></i>
-                    </a>
-                    <ul class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 py-2 w-40 z-10 dropdown-menu">
-                        <li><a href="rakuten.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Rakuten</a></li>
-                        <li><a href="seven.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Seven</a></li>                        
-                        <li><a href="sim.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Sim Thẻ</a></li>
-                        <li><a href="jp.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Bài viết khác</a></li>                        
-                    </ul>
-                </li>
-                  
-                <li><a href="https://sites.google.com/view/rakutenchiase/video-hd" class="menu-link hover:text-yellow-600">Video HD</a></li>
-                <!-- <li class="relative group">
-                    <a href="#" class="menu-link hover:text-yellow-600 flex items-center">
-                        Video HD
-                        <i class="fas fa-chevron-down ml-2 text-xs"></i>
-                    </a>
-                    <ul class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 py-2 w-40 z-10 dropdown-menu">
-                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Rakuten</a></li>
-                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Seven</a></li>
-                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Baito</a></li>
-                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Sim thẻ</a></li>
-                    </ul>
-                </li> 
-    
-                <li><a href="#" class="menu-link hover:text-yellow-600">Tải Xuống</a></li> 
-                -->
-                <li class="relative group">
-                    <a href="#" class="menu-link hover:text-yellow-600 flex items-center">
-                        Tải xuống
-                        <i class="fas fa-chevron-down ml-2 text-xs"></i>
-                    </a>
-                    <ul class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 py-2 w-40 z-10 dropdown-menu">
-                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Windows</a></li>
-                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Phần mềm Văn Phòng</a></li>
-                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Đồ Hoạ</a></li>
-                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Ứng dụng khác</a></li>
-                    </ul>
-                </li>
-    
-                <li class="relative group">
-                    <a href="#" class="menu-link hover:text-yellow-600 flex items-center">
-                        Học Tập
-                        <i class="fas fa-chevron-down ml-2 text-xs"></i>
-                    </a>
-                    <ul class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 py-2 w-40 z-10 dropdown-menu">
-                        <li><a href="../pages-hoctap/tiengnhat.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Tiếng Nhật</a></li>
-                        <li><a href="../pages-hoctap/tokutei.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Tokutei</a></li>                        
-                        <!-- <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Baito</a></li>
-                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Sim thẻ</a></li>
-                        -->
-                    </ul>
-                </li>
-                <!-- <li><a href="#" class="menu-link hover:text-yellow-600">Học Tập</a></li>
-                ân thẻ này-->
-    
-                <li><a href="../pages-giaitri/giaitri.html" class="menu-link hover:text-yellow-600">Giải Trí</a></li>
-                <!-- <li class="relative group">
-                    <a href="#" class="menu-link hover:text-yellow-600 flex items-center">
-                        Tải xuống
-                        <i class="fas fa-chevron-down ml-2 text-xs"></i>
-                    </a>
-                    <ul class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 py-2 w-40 z-10 dropdown-menu">
-                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Rakuten</a></li>
-                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Seven</a></li>
-                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Baito</a></li>
-                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Sim thẻ</a></li>
-                    </ul>
-                </li> -->
-            </ul>
-        <!-- ================= MENU PC END ================= -->
+<!-- ================= MAIN ================= -->
 
-        <!-- ================= MENU MOBILE ================= -->
-            <div id="mobile-menu" class="hidden sm:hidden absolute left-0 w-full bg-white shadow-lg py-4">
-                <ul class="flex flex-col items-center space-y-4">
-                    <li><a href="../pages-baiviet/bai-viet-hd.html" class="menu-link">Bài viết HD</a></li>
-                    <li><a href="https://sites.google.com/view/rakutenchiase/video-hd" class="menu-link">Video hướng dẫn</a></li>
-                    <li><a href="https://sites.google.com/view/rakutenchiase/%E1%BB%A9ng-d%E1%BB%A5ng" class="menu-link">Tải Ứng Dụng</a></li>
-                    <li><a href="../pages-hoctap/hoctap.html" class="menu-link">Học tập</a></li>
-                    <li><a href="../pages-giaitri/giaitri.html" class="menu-link">Giải trí</a></li>
-                </ul>
-            </div>
-        <!-- =============== MENU MOBILE END =============== -->
-        </div>
-    </nav>
-<!-- ================= MENU END TRANG PHỤ 1 ================= --> 
-<!-- ================= NAVIGATION =================  ĐÂY LÀ MENU CỦ
-  <nav class="bg-white shadow-sm mt-4 sticky top-0 z-50">
-    <div class="container mx-auto px-4 py-2">
-      <ul class="hidden sm:flex justify-center sm:justify-between items-center space-x-4">
-        <li class="relative group">
-          <a href="./bai-viet-hd.html" class="menu-link hover:text-yellow-600 flex items-center">Bài viết HD<i class="fas fa-chevron-down ml-2 text-xs"></i></a>
-          <ul class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 py-2 w-40 z-10 dropdown-menu">
-            <li><a href="rakuten.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Rakuten</a></li>
-            <li><a href="seven.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Seven</a></li>
-            <li><a href="baito.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Baito</a></li>
-            <li><a href="sim.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Sim thẻ</a></li>
-          </ul>
-        </li>
-        <li><a href="#" class="menu-link hover:text-yellow-600">Video HD</a></li>    
-        <li><a href="#" class="menu-link hover:text-yellow-600">Tải Xuống</a></li>    
-        <li><a href="#" class="menu-link hover:text-yellow-600">Học Tập</a></li>    
-        <li><a href="../pages-giaitri/giaitri.html" class="menu-link hover:text-yellow-600">Giải Trí</a></li>
-      </ul>
-      <div id="mobile-menu" class="hidden sm:hidden absolute left-0 w-full bg-white shadow-lg py-4">
-        <ul class="flex flex-col items-center space-y-4">
-          <li><a href="bai-viet-hd.html" class="menu-link">Bài viết HD</a></li>
-          <li><a href="#" class="menu-link">Video hướng dẫn</a></li>
-          <li><a href="#" class="menu-link">Tải ứng dụng</a></li>
-          <li><a href="#" class="menu-link">Học tập</a></li>
-          <li><a href="../pages-giaitri/giaitri.html" class="menu-link">Giải trí</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
- KẾT THÚC MENU CỦ --> 
-  <!-- ================= MAIN ================= -->
   <main class="container mx-auto px-4 mt-8">
     <div class="mb-8">
       <h1 class="text-4xl font-bold text-gray-800 border-l-8 border-yellow-500 pl-4">HỌC TẬP</h1>
@@ -225,20 +132,12 @@
 
   <!-- ================= FOOTER ================= -->
   <footer class="bg-gray-800 text-white mt-12 py-8">
-    <div class="container mx-auto px-4 text-center">
-      <div class="flex justify-center space-x-6 mb-6">
-        <a href="http://fb.com/tqv2022" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fab fa-facebook"></i></a>
-        <a href="https://m.me/tqv2022" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fa-brands fa-facebook-messenger"></i></a>
-        <a href="https://www.tiktok.com/@tqv2020" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fab fa-tiktok"></i></a>
-        <a href="https://portal.mobile.rakuten.co.jp/my-rakuten-mobile" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fa-solid fa-r"></i></a>
-      </div>
-      <p class="text-gray-500 text-sm">&copy; 2025 Vinh ở Nhật. All rights reserved.</p>
-    </div>
+       <div id="footer-placeholder"></div>
   </footer>
 
   <!-- ================= SCRIPT ================= -->
-  <script src="../../js/script.js"></script> <!-- đồng hồ + menu -->
-  <script src="../../js/content.js"></script> <!-- dữ liệu bài viết -->
-  <script src="../overview-page.js"></script> <!-- logic hiển thị 2 bài + gợi ý -->
+  <script src="/js/script.js"></script> <!-- đồng hồ + menu -->
+  <script src="/js/content.js"></script> <!-- dữ liệu bài viết -->
+  <script src="/pages/overview-page.js"></script> <!-- logic hiển thị 2 bài + gợi ý -->
 </body>
 </html>
