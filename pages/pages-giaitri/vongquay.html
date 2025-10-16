@@ -3,17 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hướng dẫn về Rakuten | Vinh ở Nhật</title>
-    <link rel="icon" href="../../img/logoQV.png" type="image/x-icon"> 
-    <link rel="manifest" href="../../manifest.json">
-    <meta name="theme-color" content="#F6AD55">
-    <link rel="apple-touch-icon" href="../../img/logo.png">
+    <title>Vòng Quay Diệu Kỳ | Vinh ở Nhật</title>
+<!-- 🔹 Khai báo file manifest (dùng cho cài web thành app PWA) -->
+    <link rel="manifest" href="manifest.json"> 
+
+<!-- 🔹 Màu thanh trình duyệt khi lưu như ứng dụng -->
+    <meta name="theme-color" content="#F6AD55"> 
+
+<!-- 🔹 Icon khi thêm vào màn hình chính của iPhone -->
+    <link rel="apple-touch-icon" href="/img/logo1.png"> 
+    
+<!-- 🔹 Icon website (favicon) -->
+    <link rel="icon" href="/img/logoQV.png" type="image/x-icon"> 
+
+<!-- 🔹 Dùng Tailwind CSS qua CDN để tạo giao diện -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+<!-- 🔹 Kết nối font chữ Google: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../../css/style.css">
+
+    <!-- 🔹 Thư viện icon FontAwesome -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- 🔹 File CSS riêng của bạn -->
+    <link rel="stylesheet" href="/css/style.css">
+
+
     <style>
         /* PHẦN 1: CSS - ĐỊNH DẠNG GIAO DIỆN VÒNG QUAY */
         :root {
@@ -133,68 +150,11 @@
     </style>
 </head>
 <body class="bg-[#FBF7F0]">
-    <div id="popupOverlay" class="popup-overlay">
-        <div class="popup-content">
-            <button id="closePopupBtn" class="absolute top-2 right-4 text-2xl text-gray-400 hover:text-gray-600">&times;</button>
-            <img id="holidayImage" src="" alt="Hình ảnh ngày lễ" class="max-h-40 mx-auto mb-4 rounded-lg hidden">
-            <h2 id="popupTitle" class="text-2xl font-bold mb-2 text-gray-800"></h2>
-            <p id="popupText" class="text-gray-600 mb-6"></p>
-        </div>
-    </div>
 
-    <header class="bg-white shadow-sm py-4">
-        <div class="container mx-auto px-4 flex justify-between items-center">
-            <a href="/" class="flex items-center space-x-2">
-                <img src="../../img/logo.png" onerror="this.onerror=null; this.src='https://placehold.co/40x40/F6AD55/ffffff?text=V';" alt="Logo" class="h-12 w-12 rounded-full">
-                <span class="text-xl font-bold text-gray-800 hidden sm:block">Vinh ở Nhật</span>
-            </a>
-            <div class="flex items-center space-x-4">
-                <div class="text-right time-display">
-                    <div id="time" class="time text-3xl font-bold leading-none">00:00:00</div>
-                    <div id="date" class="date text-sm mt-1">...</div>
-                </div>
-                <div class="sm:hidden">
-                    <button id="menu-toggle" class="text-gray-700 hover:text-yellow-600"><i class="fas fa-bars text-2xl"></i></button>
-                </div>
-            </div>
-        </div>
-    </header>
+<!-- ================= HEADER ================= -->
+    <div id="header-placeholder"></div>
 
-    <nav class="bg-white shadow-sm mt-4 sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-2">
-            <ul class="hidden sm:flex justify-center sm:justify-between items-center space-x-4">
-                <li class="relative group">
-                    <a href="pages/pages-baiviet/bai-viet-hd.html" class="menu-link hover:text-yellow-600 flex items-center">
-                        Bài HD
-                        <i class="fas fa-chevron-down ml-2 text-xs"></i>
-                    </a>
-             <ul class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 py-2 w-40 z-10 dropdown-menu">
-                <li><a href="pages/pages-baiviet/rakuten.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Rakuten</a></li>
-                <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Seven</a></li>
-                <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Baito</a></li>
-                <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Sim thẻ</a></li>
-        </ul>
-    </li>
-    
-    <li><a href="https://sites.google.com/view/rakutenchiase/video-hd" class="menu-link hover:text-yellow-600">Video HD</a></li>
-    
-    <li><a href="https://sites.google.com/view/rakutenchiase/%E1%BB%A9ng-d%E1%BB%A5ng" class="menu-link hover:text-yellow-600">Tải Xuống</a></li>
-    
-    <li><a href="#" class="menu-link hover:text-yellow-600">Học Tập</a></li>
-    
-    <li><a href="pages/pages-giaitri/giaitri.html" class="menu-link hover:text-yellow-600">Giải Trí</a></li>
-</ul>
-            <div id="mobile-menu" class="hidden sm:hidden absolute left-0 w-full bg-white shadow-lg py-4">
-                <ul class="flex flex-col items-center space-y-4">
-                    <li><a href="pages/pages-baiviet/bai-viet-hd.html" class="menu-link">Bài viết HD</a></li>
-                    <li><a href="https://sites.google.com/view/rakutenchiase/video-hd" class="menu-link">Video hướng dẫn</a></li>
-                    <li><a href="https://sites.google.com/view/rakutenchiase/%E1%BB%A9ng-d%E1%BB%A5ng" class="menu-link">Tải ứng dụng</a></li>
-                    <li><a href="#" class="menu-link">Học tập</a></li>
-                    <li><a href="pages/pages-giaitri/giaitri.html" class="menu-link">Giải trí</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+<!-- ================= MAIN ================= -->
     
     <main class="container mx-auto px-4 mt-8">
         <div class="vongquay-body">
@@ -237,24 +197,16 @@
         </div>
     </main>
     
-    <footer class="bg-gray-800 text-white mt-12 py-8">
-        <div class="container mx-auto px-4 text-center">
-            <div class="flex justify-center space-x-6 mb-6">
-                <a href="http://fb.com/tqv2022" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fab fa-facebook"></i></a>
-                <a href="https://m.me/tqv2022" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fa-brands fa-facebook-messenger"></i></a>
-                <a href="https://www.tiktok.com/@tqv2020" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fab fa-tiktok"></i></a>
-                <a href="https://portal.mobile.rakuten.co.jp/my-rakuten-mobile" class="social-icon text-gray-400 hover:text-white text-2xl"><i class="fa-solid fa-r"></i></a>
-            </div>
-            <p class="text-gray-400 max-w-2xl mx-auto mb-6">
-                Đây là nơi chia sẻ kiến thức, kinh nghiệm về học tập, giải trí và các hướng dẫn hữu ích. Mục tiêu của chúng tôi là mang đến những thông tin chất lượng và bổ ích cho cộng đồng.
-            </p>
-            <p class="text-gray-500 text-sm">&copy; 2025 Vinh ở Nhật. All rights reserved.</p>
-        </div>
+ <!-- ================= FOODER ================= -->   
+  
+    <div id="footer-placeholder"></div>
 
-    <script src="../../js/script.js"></script>
-    <script src="../../js/content.js"></script>
+    <script src="/js/script.js"></script>
+    <script src="/js/content.js"></script>
     
-    <script src="../page-logic.js"></script>
+    <script src="/pages/page-logic.js"></script>
+
+
     <script>
     /* PHẦN 3: JAVASCRIPT - LOGIC VÀ TÍNH NĂNG VÒNG QUAY */
 
