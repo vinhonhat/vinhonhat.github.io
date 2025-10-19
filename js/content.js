@@ -157,7 +157,7 @@ const allContent = [
         featured: true,
         title: "Cách đăng ký tài khoản trực tuyến của Seven Bank",
         summary: "Hướng dẫn chi tiết từng bước để tạo tài khoản trực tuyến của Seven Bank 1 cách đơn giản nhất để dùng thanh toán tiền sim.... .",
-        imageUrl: "https://img.favpng.com/21/10/7/logo-remittance-city-express-money-transfer-japan-co-ltd-brand-png-favpng-K39it6YWHKeAJm0NwUKpjnpJv.jpg",
+        imageUrl: "https://placehold.co/120x80/FBF7F0/718096?text=Seven account",
         link: "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/711/create-account-711?authuser=0"
     },
     {
