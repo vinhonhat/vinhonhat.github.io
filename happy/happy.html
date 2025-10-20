@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lời Chúc Bí Mật</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="login-container">
+    <h2>Mở Lời Chúc Bí Mật</h2>
+    
+    <div id="main-input">
+        <p>Vui lòng nhập **Ngày/Tháng/Năm Sinh** của bạn để xem lời chúc riêng.</p>
+        <input type="text" id="dob-input" placeholder="Ngày/Tháng/Năm (vd: 20/10/1990)" maxlength="10">
+        <br>
+        <button onclick="checkData()">Mở Khóa</button>
+        <p id="error-message" style="color: red; margin-top: 15px;"></p>
+    </div>
+
+    <div id="small-confirm" style="display: none;">
+        <p class="question">Ngày sinh của bạn là:</p>
+        <p id="dob-display" class="dob-text"></p>
+        <button onclick="handleConfirm(true)" class="confirm-btn ok">Xác nhận</button>
+        <button onclick="handleConfirm(false)" class="confirm-btn cancel">Hủy bỏ</button>
+        <p id="temp-message" style="color: red; margin-top: 10px;"></p>
+    </div>
+</div>
+
+<div id="popup-overlay">
+    <div id="wish-popup">
+        <h3 id="popup-title">Chào mừng ngày Ngày Phụ nữ Việt Nam! 💐</h3>
+        
+        <div class="card-image-placeholder">
+             <p id="wish-message"></p>
+        </div>
+        
+        <p class="countdown">Trang sẽ tự động chuyển về trang chủ sau <strong id="timer">20</strong> giây.</p>
+    </div>
+</div>
+
+<script src="script.js"></script> 
+</body>
+</html>
