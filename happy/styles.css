@@ -1,0 +1,168 @@
+/* styles.css */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    /* Nền chung: Màu trắng kem nhạt */
+    background-color: #fcfcfc; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+#login-container {
+    padding: 40px;
+    background: white; 
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+input[type="text"] {
+    padding: 12px;
+    margin: 10px 0;
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+button {
+    padding: 12px 25px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* ------------------------------------------- */
+/* Hộp thoại Xác Nhận Nhỏ (giữ nguyên) */
+/* ------------------------------------------- */
+#small-confirm {
+    margin-top: 20px;
+    border: 1px dashed #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+.question {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+.dob-text {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #007bff;
+    margin-top: 0;
+}
+.confirm-btn.ok {
+    background-color: #28a745;
+    margin-right: 10px;
+}
+.confirm-btn.cancel {
+    background-color: #dc3545;
+}
+
+
+/* ------------------------------------------- */
+/* POPUP LỜI CHÚC (Tái tạo phong cách nền mờ/sáng) */
+/* ------------------------------------------- */
+#popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Nền mờ tối nhẹ nhàng */
+    background-color: rgba(0, 0, 0, 0.4); 
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+#wish-popup {
+    background: white; /* Nền trắng sáng */
+    padding: 20px 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* Bóng đổ mạnh hơn */
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    
+    /* BỎ VIỀN NHẤP NHÁY, DÙNG VIỀN THANH LỊCH HƠN */
+    border: 1px solid #eee;
+    animation: popin 0.5s forwards;
+}
+
+/* Tiêu đề Popup (Màu xanh/tím nổi bật) */
+#popup-title {
+    font-size: 1.6em;
+    font-weight: bold;
+    /* Dùng màu xanh/tím như phong cách trang bạn */
+    color: #8a2be2; 
+    text-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
+    margin-bottom: 20px;
+}
+
+/* Phần Mô Phỏng Thiệp */
+.card-image-placeholder {
+    /* Tạo khung viền mờ tối mờ mờ cho phần thiệp */
+    background: linear-gradient(145deg, #f0f0ff, #fff0f0);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+
+/* ------------------------------------------- */
+/* LỜI CHÚC: Hiệu ứng Chữ Cầu Vồng Dịch Chuyển (Áp dụng cho ID #wish-message) */
+/* ------------------------------------------- */
+#wish-message {
+    font-size: 1.2em; /* Kích thước nhỏ hơn vì nó nằm trong khung thiệp */
+    margin: 0;
+    font-weight: 700;
+    line-height: 1.4;
+    
+    /* Hiệu ứng Chữ Cầu Vồng Nhấp Nháy Ngược Xuôi */
+    background: linear-gradient(90deg, #ff0000, #ff8c00, #ffff00, #00ff00, #00ced1, #0000ff, #8a2be2);
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent; 
+    background-size: 400% 100%; 
+    
+    animation: 
+        rainbow-shift 4s infinite linear, /* Dịch chuyển màu */
+        text-shadow-flash 1.5s infinite alternate; /* Hiệu ứng sáng tối */
+
+    /* Quan trọng: Điều chỉnh màu bóng cho nền sáng */
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.2); 
+}
+
+/* Hiệu ứng dịch chuyển màu cầu vồng (Ngược Xuôi) */
+@keyframes rainbow-shift {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+/* Hiệu ứng bóng chữ nhấp nháy (Giảm độ chói để phù hợp với nền sáng) */
+@keyframes text-shadow-flash {
+    0% { text-shadow: 0 0 1px rgba(0, 0, 0, 0.2); }
+    100% { text-shadow: 0 0 2px rgba(0, 0, 0, 0.4); }
+}
+
+.countdown {
+    font-size: 1em;
+    color: #555;
+    margin-top: 15px;
+}
