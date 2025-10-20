@@ -40,11 +40,15 @@
       "dob": "18/02/2004",
       "wish": "Chúc em bé Quyên, có ngày lễ 20-10 thật vui vẻ hạnh phúc xinh đẹp, và nhiều hoa nhé! 🥂"
     },
-    
     {
-      "name": "emily",
+      "name": "Na",
+      "dob": "26/05/2006",
+      "wish": "Chúc em bé Na, có ngày lễ 20-10 thật vui vẻ hạnh phúc xinh đẹp, và nhiều hoa nhé! 🥂"
+    },
+    {
+      "name": "vanthuy",
       "dob": "02/02/2006",
-      "wish": "Chúc em bé Quyên, có ngày lễ 20-10 thật vui vẻ hạnh phúc xinh đẹp, và nhiều hoa nhé! 🥂"
+      "wish": "Chúc Vân Thuỳ, có ngày lễ 20-10 thật vui vẻ hạnh phúc xinh đẹp, và nhiều hoa nhé! 🥂"
     }
   ],
   "defaultWish": "Xin chúc bạn một ngày thật tuyệt vời, luôn mạnh khỏe và hạnh phúc! 😊",
