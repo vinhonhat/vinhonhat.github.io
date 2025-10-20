@@ -1,0 +1,59 @@
+{
+  "users": [
+    {
+      "name": "bo",
+      "dob": "25/10/1970",
+      "wish": "Ba là người hùng vĩ đại nhất của con. Chúc Ba luôn mạnh khỏe, vui vẻ và an yên! ❤️"
+    },
+    {
+      "name": "me",
+      "dob": "20/09/1972",
+      "wish": "Mẹ yêu dấu, con chúc Mẹ luôn trẻ đẹp, hạnh phúc và cười thật nhiều mỗi ngày. Cảm ơn Mẹ vì tất cả! 🌹"
+    },
+    {
+      "name": "em gai",
+      "dob": "03/08/1995",
+      "wish": "Em gái nhỏ của anh/chị, chúc em luôn thành công, xinh đẹp và tìm thấy niềm vui trong mọi điều. Yêu em! 🥰"
+    },
+    {
+      "name": "em ut",
+      "dob": "02/11/1998",
+      "wish": "Em O Duyên luôn thành công, xinh đẹp và tìm thấy niềm vui trong mọi điều. Yêu em! 🥰"
+    },
+    {
+      "name": "vk",
+      "dob": "10/04/1997",
+      "wish": "Vợ yêu, mỗi ngày bên em là một món quà. Chúc em mọi điều tốt đẹp nhất, và chúng ta sẽ cùng nhau tạo nên thật nhiều kỷ niệm! 🥂"
+    },
+    {
+      "name": "hang",
+      "dob": "21/04/1997",
+      "wish": "Chúc em Hằng, có ngày lễ 20-10 thật vui vẻ hạnh phúc xinh đẹp, và nhiều hoa nhé! 🥂"
+    },
+    {
+      "name": "emily",
+      "dob": "14/04/1994",
+      "wish": "Chúc Emily, có ngày lễ 20-10 thật vui vẻ hạnh phúc xinh đẹp, và nhiều sức khoẻ để chăm sóc ciu cho anh nhé! 🥂"
+    }
+  ],
+  "defaultWish": "Xin chúc bạn một ngày thật tuyệt vời, luôn mạnh khỏe và hạnh phúc! 😊",
+  "holidays": [
+    {
+      "date": "01/01",
+      "wish": "Chúc mừng Năm Mới! 🎉 Cầu mong một năm mới an khang, thịnh vượng đến với bạn."
+    },
+    {
+      "date": "08/03",
+      "wish": "Chúc mừng Ngày Quốc tế Phụ nữ! 🌸 Chúc bạn luôn rạng rỡ và hạnh phúc."
+    },
+    {
+      "date": "20/10",
+      "wish": "Chúc mừng Ngày Phụ nữ Việt Nam! 💐 Chúc Cô/gì/bạn/em luôn xinh đẹp, tự tin và thành công."
+    },
+    {
+      "date": "20/11",
+      "wish": "Chúc mừng Ngày Nhà giáo Việt Nam! 📚 Kính chúc Thầy/Cô và những người làm công tác giáo dục luôn mạnh khỏe và hạnh phúc."
+    }
+  ],
+  "birthdayWish": "CHÚC MỪNG SINH NHẬT! 🥳 Chúc bạn tuổi mới thật nhiều niềm vui, sức khỏe và đạt được mọi ước mơ!"
+}
