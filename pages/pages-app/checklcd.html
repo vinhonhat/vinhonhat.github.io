@@ -217,13 +217,35 @@
             <div id="keyboard-tester" class="mt-12">
                 <h3 class="text-2xl font-semibold mb-6 flex items-center"><i class="fas fa-keyboard mr-3 text-yellow-600"></i>Kiểm Tra Bàn Phím (Keyboard Test)</h3>
                 <p class="text-center text-lg mb-4" id="keyboard-status">Nhấn bất kỳ phím nào trên bàn phím của bạn để kiểm tra phản hồi.</p>
-
+                
                 <div id="keyboard-layout-container" class="bg-gray-900 p-6 rounded-lg shadow-xl overflow-x-auto">
                     </div>
                 
+                </div> <div id="trackpad-area" class="mt-4 p-4 flex justify-center items-center gap-2" style="user-select: none;">
+                    <div id="mouse-left-display" class="w-28 h-16 border-2 border-gray-500 rounded text-gray-400 flex justify-center items-center transition-all duration-100">
+                        Trái
+                    </div>
+                    <div id="mouse-middle-display" class="w-20 h-16 border-2 border-gray-500 rounded text-gray-400 flex justify-center items-center transition-all duration-100">
+                        Giữa
+                    </div>
+                    <div id="mouse-right-display" class="w-28 h-16 border-2 border-gray-500 rounded text-gray-400 flex justify-center items-center transition-all duration-100">
+                        Phải
+                    </div>
+                </div>
+                <p class="text-center text-sm text-gray-500">Click bất cứ đâu trong khu vực bàn phím để kiểm tra</p>
+                <div class="mt-4 text-center text-sm text-gray-500"> <i class="fas fa-desktop mr-1"></i> Hệ điều hành: <span id="os-display" class="font-bold">Đang nhận diện...</span>
+                </div>
+
+
+
+
+
+<!--
                 <div class="mt-4 text-center text-sm text-gray-500">
                     <i class="fas fa-desktop mr-1"></i> Hệ điều hành: <span id="os-display" class="font-bold">Đang nhận diện...</span>
-                </div>
+                </div> -->
+                
+
             </div>
 
         </div>
@@ -531,19 +553,35 @@
             'Backspace': 'Delete', 'Backquote': '` ~', 'Minus': '- _', 'Equal': '= +',
             'BracketLeft': '[ {', 'BracketRight': '] }', 'Backslash': '\\ |', 'Semicolon': '; :',
             'Quote': `' "`, 'Comma': ', <', 'Period': '. >', 'Slash': '/ ?',
-            'Digit1': '1 !', 'Digit2': '2 @', /*... cứ thế cho các phím số ...*/
+            
+            /* ===== BẮT ĐẦU THAY ĐỔI A.1 ===== */
+            // ĐỊNH NGHĨA ĐẦY ĐỦ CÁC PHÍM SỐ (HÀNG NGANG)
+            'Digit1': '1', 'Digit2': '2', 'Digit3': '3', 'Digit4': '4', 'Digit5': '5',
+            'Digit6': '6 ', 'Digit7': '7 ', 'Digit8': '8 ', 'Digit9': '9', 'Digit0': '0',
+            /* ===== KẾT THÚC THAY ĐỔI A.1 ===== */
+
             'PrintScreen': 'PrtSc', 'ScrollLock': 'ScrLk', 'Pause': 'Pause', 'Insert': 'Ins', 'Delete': 'Del',
             'ArrowUp': '↑', 'ArrowDown': '↓', 'ArrowLeft': '←', 'ArrowRight': '→',
             'ContextMenu': 'Menu', 'NumpadDivide': '/', 'NumpadMultiply': '*', 'NumpadSubtract': '-',
             'NumpadAdd': '+', 'NumpadDecimal': '.', 'NumpadEnter': 'Enter',
+            
+            /* ===== BẮT ĐẦU THAY ĐỔI A.2 ===== */
+            // ĐỊNH NGHĨA ĐẦY ĐỦ CÁC PHÍM NUMPAD
+            'Numpad0': '0', 'Numpad1': '1', 'Numpad2': '2', 'Numpad3': '3', 'Numpad4': '4',
+            'Numpad5': '5', 'Numpad6': '6', 'Numpad7': '7', 'Numpad8': '8', 'Numpad9': '9',
+            /* ===== KẾT THÚC THAY ĐỔI A.2 ===== */
+
             // Nhãn đơn giản cho các phím chữ cái
             'KeyA': 'A', 'KeyB': 'B', 'KeyC': 'C', 'KeyD': 'D', 'KeyE': 'E', 'KeyF': 'F',
             // ... thêm tất cả các phím chữ cái khác
         };
-        // Tự động thêm nhãn cho các phím F và Digit còn lại (ví dụ)
+        // Tự động thêm nhãn cho các phím F
         for (let i = 1; i <= 12; i++) { KEY_LABELS[`F${i}`] = `F${i}`; }
-        for (let i = 0; i <= 9; i++) { KEY_LABELS[`Digit${i}`] = i; }
-        for (let i = 0; i <= 9; i++) { KEY_LABELS[`Numpad${i}`] = i; }
+        
+        /* ===== BẮT ĐẦU THAY ĐỔI A.3 (XÓA 2 DÒNG NÀY) ===== */
+        // XÓA DÒNG: for (let i = 0; i <= 9; i++) { KEY_LABELS[`Digit${i}`] = i; }
+        // XÓA DÒNG: for (let i = 0; i <= 9; i++) { KEY_LABELS[`Numpad${i}`] = i; }
+        /* ===== KẾT THÚC THAY ĐỔI A.3 ===== */
 
 
         // 1. Nhận diện Hệ điều hành
@@ -648,8 +686,92 @@
     }
 
     // 4. Sự kiện Reset
-    resetKeyboardBtn.addEventListener('click', resetKeyboard);
+    //resetKeyboardBtn.addEventListener('click', resetKeyboard);
 
+/* ===== BẮT ĐẦU LOGIC CHUỘT MỚI (TRACKPAD) ===== */
+// ================== F. MOUSE CHECKER LOGIC ==================
+(function() {
+    // Vùng nhận sự kiện: Toàn bộ khối 'keyboard-tester'
+    // Đây là div cha (dòng 231) chứa cả bàn phím và khu vực trackpad
+    const captureZone = document.getElementById('keyboard-tester'); 
+    
+    // Các ô hiển thị trạng thái
+    const leftDisplay = document.getElementById('mouse-left-display');
+    const rightDisplay = document.getElementById('mouse-right-display');
+    const middleDisplay = document.getElementById('mouse-middle-display');
+
+    if (!captureZone || !leftDisplay || !rightDisplay || !middleDisplay) {
+        console.error('Không tìm thấy các thành phần của trackpad.');
+        return;
+    }
+
+    // Định nghĩa màu sắc
+    const activeBorder = '#F6AD55'; // Màu cam
+    const activeBg = 'rgba(246, 173, 85, 0.2)';
+    const activeText = '#F6AD55';
+    const defaultBorder = '#6B7280'; // gray-500 (trong Tailwind)
+    const defaultText = '#9CA3AF'; // gray-400
+
+    // Hàm xử lý NHẤN chuột
+    function handleMouseDown(e) {
+        // Ngăn các hành vi mặc định (như kéo, bôi đen text)
+        e.preventDefault();
+
+        switch (e.button) {
+            case 0: // Trái
+                leftDisplay.style.borderColor = activeBorder;
+                leftDisplay.style.backgroundColor = activeBg;
+                leftDisplay.style.color = activeText;
+                break;
+            case 1: // Giữa (nhấn con lăn)
+                middleDisplay.style.borderColor = activeBorder;
+                middleDisplay.style.backgroundColor = activeBg;
+                middleDisplay.style.color = activeText;
+                break;
+            case 2: // Phải
+                rightDisplay.style.borderColor = activeBorder;
+                rightDisplay.style.backgroundColor = activeBg;
+                rightDisplay.style.color = activeText;
+                break;
+        }
+    }
+
+    // Hàm xử lý NHẢ chuột
+    function handleMouseUp(e) {
+        e.preventDefault();
+        
+        switch (e.button) {
+            case 0: // Trái
+                leftDisplay.style.borderColor = defaultBorder;
+                leftDisplay.style.backgroundColor = 'transparent';
+                leftDisplay.style.color = defaultText;
+                break;
+            case 1: // Giữa
+                middleDisplay.style.borderColor = defaultBorder;
+                middleDisplay.style.backgroundColor = 'transparent';
+                middleDisplay.style.color = defaultText;
+                break;
+            case 2: // Phải
+                rightDisplay.style.borderColor = defaultBorder;
+                rightDisplay.style.backgroundColor = 'transparent';
+                rightDisplay.style.color = defaultText;
+                break;
+        }
+    }
+
+    // Gán sự kiện cho toàn bộ vùng 'keyboard-tester'
+    captureZone.addEventListener('mousedown', handleMouseDown);
+    captureZone.addEventListener('mouseup', handleMouseUp);
+    
+    // Ngăn menu chuột phải hiện lên trong toàn bộ vùng này
+    captureZone.addEventListener('contextmenu', (e) => e.preventDefault());
+
+    // Thêm CSS để ngăn bôi đen chữ (user-select: none)
+    // (Đã thêm style inline trong HTML, nhưng thêm ở đây cho chắc chắn)
+    captureZone.style.userSelect = 'none';
+
+})();
+/* ===== KẾT THÚC LOGIC CHUỘT MỚI (TRACKPAD) ===== */
 
         // =========================================================================
         // 2. CODE CỦA BẠN (Dùng cho header/footer/logic phân trang)
