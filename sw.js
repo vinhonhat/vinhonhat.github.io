@@ -2,7 +2,7 @@
 // Tên của bộ nhớ cache. Rất quan trọng: MỖI KHI BẠN CẬP NHẬT WEBSITE,
 // BẠN PHẢI THAY ĐỔI TÊN NÀY 
 // GHI CHÚ 1: THAY ĐỔI TÊN CACHE MỖI KHI BẠN CẬP NHẬT WEBSITE (VÍ DỤ: TỪ v2 thành v3) ĐỂ KÍCH HOẠT CẬP NHẬT.
-const CACHE_NAME = 'vinh-o-nhat-cache-v25.10.1.test 1.5'; 
+const CACHE_NAME = 'vinh-o-nhat-cache-v25.10.23.test 0.1'; 
 
 // GHI CHÚ 2: DANH SÁCH FILE CẦN LƯU
 // Danh sách các file cốt lõi cần được lưu vào cache để chạy offline.
