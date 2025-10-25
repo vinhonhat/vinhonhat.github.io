@@ -215,6 +215,16 @@ const allContent = [
     {
         type: 'guide', // Loại nội dung: Hướng dẫn
         category: "other",
+        date: "2025-10-25", // Ngày mới nhất
+        featured: true,
+        title: "Check máy tính cơ bản",
+        summary: "trang hướng dẫn check màn hình, loa, míc, camera, và bàn phím máy tính dùng cho cả Windows và MacBook.",
+        imageUrl: "/img/posts/testpc.png",
+        link: "/pages/pages-app/checklcd.html"
+    },
+    {
+        type: 'guide', // Loại nội dung: Hướng dẫn
+        category: "other",
         date: "2025-09-29", // Ngày mới nhất
         featured: true,
         title: "Cách đăng ký tài khoản City Exxpress - chuyển tiền Nhật Việt",
