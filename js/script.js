@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const holidayImage = document.getElementById('holidayImage');
     const guidePostsContainer = document.getElementById('guide-posts-container');
     const videoGuidesContainer = document.getElementById('video-guides-container');
-
+    const scrollToTopBtn = document.getElementById('scrollToTopBtn'); // nút cuộn lên đầu
 
     // --- 3. CÁC HÀM CHỨC NĂNG ---
 
@@ -242,7 +242,24 @@ document.addEventListener('DOMContentLoaded', function() {
         guidePostsContainer.innerHTML = postsHtml;
     }
 
+// --- CÁC HÀM CHO NÚT CUỘN LÊN ĐẦU (THÊM MỚI) ---
+// Hàm kiểm tra vị trí cuộn để hiện/ẩn nút
+function handleScroll() {
+    if (!scrollToTopBtn) return;
+    // Hiện nút khi cuộn xuống 100px
+    if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+        scrollToTopBtn.classList.remove('opacity-0', 'pointer-events-none');
+        scrollToTopBtn.classList.add('opacity-100', 'pointer-events-auto');
+    } else {
+        scrollToTopBtn.classList.remove('opacity-100', 'pointer-events-auto');
+        scrollToTopBtn.classList.add('opacity-0', 'pointer-events-none');
+    }
+}
 
+// Hàm thực hiện cuộn lên đầu khi bấm nút
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
     // --- 3.4. Tải VIDEO hướng dẫn (NÂNG CẤP) ---
     function loadVideoGuides() {
         // Kiểm tra xem element và dữ liệu có tồn tại không
@@ -335,4 +352,19 @@ document.addEventListener('DOMContentLoaded', function() {
             closePopupBtn.addEventListener('click', () => popupOverlay.style.display = 'none');
         }
     }
-});
+    
+    // 6. GẮN SỰ KIỆN CHO NÚT CUỘN LÊN ĐẦU (ĐOẠN BẠN BỊ THIẾU)
+    // =========================================================
+    if (scrollToTopBtn) {
+        window.addEventListener('scroll', handleScroll); // Theo dõi sự kiện cuộn
+        scrollToTopBtn.addEventListener('click', scrollToTop); // Theo dõi sự kiện click
+    }
+
+
+
+
+
+
+
+
+}); // <-- Dòng này là dòng cuối cùng của file
