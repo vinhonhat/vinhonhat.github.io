@@ -70,6 +70,16 @@ const allContent = [
     {
         type: 'post',
         category: "game",
+        date: "2025-10-25",
+        featured: true, // Nổi bật
+        title: "Chơi Game xếp hình",
+        summary: "mini game xếp hình trên ứng dụng",
+        imageUrl: "https://placehold.co/400x250/FBD38D/ffffff?text=Block",
+        link: "/pages/pages-giaitri/block/block.html"
+    },
+    {
+        type: 'post',
+        category: "game",
         date: "2025-09-30",
         featured: true, // Nổi bật
         title: "Chơi Game rắn săn mồi",
