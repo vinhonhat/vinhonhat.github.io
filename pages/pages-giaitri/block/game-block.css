@@ -1,0 +1,296 @@
+/* --- cơ bản --- */
+:root {
+  --bg: #0b0b0b;
+  --panel: #111;
+  --accent: #f39c12;
+  --btn: #2d2d2d;
+  --btn-text: #fff;
+  --game-border: #666; /* MÀU VIỀN MỚI */
+}
+
+html,body { 
+  height:100%; 
+  margin:0; 
+  padding:0; 
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial; 
+  overflow:hidden; /* Luôn tắt cuộn */
+  touch-action:none; /* Ngăn cuộn khi chạm */
+}
+
+/* Main game layout - Luôn chiếm toàn bộ màn hình */
+.game-page {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  background: linear-gradient(180deg,#FBF7F0,#f7f1e6);
+  width: 100vw;
+  height: 100vh;
+  box-sizing: border-box; /* Quan trọng để bao gồm padding/border trong chiều cao/rộng */
+  padding: 10px; /* Thêm padding nhỏ để không quá sát mép */
+}
+
+/* Container chính cho game (HUD, Canvas, Controls) */
+.game-container {
+  display:flex;
+  flex-direction:row; /* Sắp xếp các phần tử theo hàng ngang */
+  gap: 10px;
+  max-width: 900px; /* Giới hạn chiều rộng tổng thể để dễ nhìn trên PC */
+  width: 100%; /* Đảm bảo sử dụng hết chiều rộng khả dụng */
+  height: 100%; /* Đảm bảo sử dụng hết chiều cao khả dụng trong game-page */
+  align-items:center; /* Căn giữa theo chiều dọc */
+  justify-content:center; /* Căn giữa theo chiều ngang */
+}
+
+.panel {
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between; /* Đẩy nội dung lên trên và xuống dưới */
+  align-items:center;
+  padding: 8px;
+  height: 100%; /* Chiếm toàn bộ chiều cao của game-container */
+  box-sizing: border-box;
+}
+
+#left-panel {
+  flex-basis: 150px; /* Chiều rộng cố định cho bảng điều khiển trái */
+  min-width: 120px;
+}
+
+#right-panel {
+  flex-basis: 180px; /* Chiều rộng cố định cho bảng điều khiển phải (chứa next piece và controls) */
+  min-width: 160px;
+}
+
+/* HUD (score/level + top buttons) */
+.hud {
+  width:100%;
+  display:flex;
+  flex-direction:column; /* Stack score, level, best-score dọc */
+  align-items:flex-start; /* Căn trái */
+  gap:4px;
+  padding:4px 0;
+  margin-bottom: 20px;
+}
+.hud #score, .hud #level, .hud #best-score { 
+  color:#333; 
+  font-weight:600; 
+  font-size: 1.1em;
+}
+
+#controls-top {
+  display: flex;
+  flex-direction: column; /* Các nút xếp dọc */
+  gap: 8px;
+  margin-top: 20px;
+  align-items: center;
+}
+
+.hud-btn {
+  background:var(--btn);
+  color:var(--btn-text);
+  border:none;
+  border-radius:8px;
+  padding:10px 12px; /* Tăng padding */
+  cursor:pointer;
+  width: 100%; /* Chiếm toàn bộ chiều rộng có thể */
+  font-size: 1.2em; /* Tăng kích thước chữ */
+}
+
+/* Game wrap + canvas */
+.game-wrap {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  /* flex-grow: 1; */ /* Cho phép chiếm không gian còn lại */
+  height: 100%;
+}
+
+/* Canvas - Fixed size, centered in its container */
+#game-canvas {
+  background:var(--bg);
+  border-radius:8px;
+  /* CHỈNH SỬA: Viền rõ ràng hơn */
+  border:6px solid var(--game-border); 
+  display:block;
+  width:320px;   
+  height:640px; 
+  touch-action: none; 
+  box-shadow: 0 0 15px rgba(0,0,0,0.3); /* Thêm bóng đổ để nổi bật */
+}
+
+/* Next Piece Display */
+#next-piece-container {
+  background: white;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  width: 128px; /* Đặt chiều rộng cố định */
+  height: 170px; /* Đặt chiều cao cố định */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #333;
+}
+#next-piece-container h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+#next-piece-canvas {
+  background: #333; /* Nền tối cho canvas preview */
+  border-radius: 4px;
+  border: 1px solid #555;
+}
+
+
+/* Mobile controls area - luôn hiển thị */
+.mobile-controls {
+  display:flex; /* CHỈNH SỬA: Dùng flexbox thay vì grid */
+  flex-direction:column;
+  gap: 10px;
+  width:100%;
+  max-width:200px; /* Giới hạn chiều rộng để các nút không quá to */
+  margin-top: auto; /* Đẩy xuống dưới cùng của #right-panel */
+  padding-bottom: 10px; /* Khoảng cách với mép dưới */
+}
+
+.mobile-controls .top-row-controls {
+  display:flex;
+  justify-content: space-around; /* Căn đều các nút */
+  gap: 8px;
+  width: 100%;
+}
+
+.mobile-controls .bottom-row-actions {
+  display:flex;
+  justify-content: space-around;
+  gap: 8px;
+  width: 100%;
+}
+
+.big-btn {
+  background:var(--btn);
+  color:var(--btn-text);
+  border:none;
+  border-radius:12px;
+  width:65px; /* Kích thước nút lớn hơn */
+  height:65px;
+  font-size:28px;
+  touch-action: manipulation;
+  user-select:none;
+  flex-shrink: 0; /* Ngăn nút co lại */
+}
+.big-btn.full-width {
+  width: 100%; /* Nút xuống chiếm toàn bộ chiều rộng */
+  height: 70px;
+}
+
+.small-btn {
+  padding:8px 12px;
+  border-radius:8px;
+  background:#333;
+  color:#fff;
+  border:none;
+  flex-grow: 1; /* Cho phép các nút chia sẻ không gian */
+  font-size: 1em;
+}
+
+/* Overlay */
+.overlay {
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,0.6);
+  z-index:999;
+}
+.overlay.hidden { display:none; }
+.overlay-box {
+  background:white;
+  color:#111;
+  padding:20px;
+  border-radius:12px;
+  text-align:center;
+  min-width:260px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+.overlay-actions button {
+  background:var(--accent);
+  color:white;
+  border:none;
+  padding:10px 15px;
+  border-radius:8px;
+  margin: 0 5px;
+  cursor:pointer;
+  font-size: 1.1em;
+  margin-top: 15px;
+}
+
+/* Điều chỉnh kích thước font và khoảng cách cho màn hình nhỏ hơn */
+@media (max-width: 600px) {
+  .game-container {
+    flex-direction: column; /* Chuyển sang stack dọc trên màn hình nhỏ */
+    gap: 5px;
+    padding: 5px;
+  }
+  .panel {
+    width: 100%;
+    height: auto;
+    flex-direction: row; /* Để HUD và controls-top cạnh nhau */
+    justify-content: space-between;
+    padding: 5px;
+  }
+  #left-panel, #right-panel {
+    flex-basis: auto;
+    min-width: unset;
+  }
+  .hud {
+    flex-direction: row;
+    gap: 10px;
+    margin-bottom: 0;
+  }
+  #controls-top {
+    flex-direction: row;
+    gap: 5px;
+    margin-top: 0;
+  }
+  .hud-btn {
+    padding: 8px 10px;
+    font-size: 1em;
+    width: auto;
+  }
+  #next-piece-container {
+    display: none; /* Ẩn phần xem trước mảnh ghép trên màn hình rất nhỏ để ưu tiên game */
+  }
+  .mobile-controls {
+    flex-direction: row; /* Chuyển các nút thành hàng ngang trên mobile */
+    flex-wrap: wrap; /* Cho phép xuống dòng nếu không đủ chỗ */
+    justify-content: center;
+    max-width: 100%;
+    margin-top: 10px;
+    padding-bottom: 0;
+    gap: 5px;
+  }
+  .mobile-controls .top-row-controls,
+  .mobile-controls .bottom-row-actions {
+    width: auto; /* Cho phép các nhóm nút tự co giãn */
+  }
+  .big-btn {
+    width: 55px;
+    height: 55px;
+    font-size: 24px;
+  }
+  .big-btn.full-width {
+    width: calc(100% - 10px); /* Lấp đầy chiều rộng, trừ khoảng cách */
+  }
+  .small-btn {
+    padding: 6px 10px;
+    font-size: 0.9em;
+  }
+}
