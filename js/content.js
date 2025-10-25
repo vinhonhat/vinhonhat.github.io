@@ -75,7 +75,7 @@ const allContent = [
         title: "Chơi Game xếp hình",
         summary: "mini game xếp hình trên ứng dụng",
         imageUrl: "https://placehold.co/400x250/FBD38D/ffffff?text=Block",
-        link: "/pages/pages-giaitri/block/block.html"
+        link: "/pages/pages-giaitri/block.html"
     },
     {
         type: 'post',
