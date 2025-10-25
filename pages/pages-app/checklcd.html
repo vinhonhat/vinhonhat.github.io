@@ -4,27 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test PC | Vinh ở Nhật</title>
- 
-<link rel="manifest" href="manifest.json"> 
 
-<meta name="theme-color" content="#F6AD55"> 
+    <!-- =========================
+         Manifests, theme & icons
+         (Dùng cho PWA / mobile) 
+         ========================= -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#F6AD55">
+    <link rel="apple-touch-icon" href="/img/logo1.png">
+    <link rel="icon" href="/img/logoQV.png" type="image/x-icon">
 
-<link rel="apple-touch-icon" href="/img/logo1.png"> 
-    
-<link rel="icon" href="/img/logoQV.png" type="image/x-icon"> 
-
-<script src="https://cdn.tailwindcss.com"></script>
-    
-<link rel="preconnect" href="https://fonts.googleapis.com">
+    <!-- Tailwind + font-awesome (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Inter font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+    <!-- Font Awesome (icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<link rel="stylesheet" href="/css/style.css">
+    <!-- Link đến stylesheet chính của project (GIỮ NGUYÊN) -->
+    <link rel="stylesheet" href="/css/style.css">
 
+    <!-- 
+      ===================================================
+      Inline CSS module (scoped style cho trang test)
+      - Mục tiêu: đảm bảo module hiển thị tự đủ khi fetch vào file chính
+      - Lưu ý: nếu project chính có CSS chung (ví dụ /css/style.css) có thể override 
+               một số class (ví dụ .key, .btn). Nếu thấy xung đột, chuyển đổi thành id-scoped
+               hoặc tiền tố class để tránh override.
+      ===================================================
+    -->
 	<style>
-        /* CSS cho công cụ kiểm tra */
+        /* Reset cơ bản + font mặc định */
         html, body {
             margin: 0;
             padding: 0;
@@ -33,22 +45,28 @@
             font-family: 'Inter', sans-serif;
         }
 
-        /* 1. KHU VỰC KIỂM TRA MÀN HÌNH (Mặc định thu nhỏ) */
+        /* ======================
+           1) KHU VỰC KIỂM TRA MÀN HÌNH (screen-tester)
+           - Hiển thị thu nhỏ (50vh) trong trang chính
+           - Khi vào fullscreen (sử dụng requestFullscreen trên body trong code),
+             :fullscreen #screen-tester được áp dụng để chiếm 100vh
+           - Lưu ý: khi fetch module vào trong checklcd.html, ensure id #screen-tester không trùng
+           ====================== */
         #screen-tester {
             width: 100%;
-            height: 50vh; /* Thu nhỏ ban đầu */
+            height: 50vh; /* Hiển thị thu nhỏ trong page (dễ cuộn) */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            cursor: pointer; 
-            transition: background-color 0.3s ease; 
-            background-color: #333; 
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            background-color: #333;
             position: relative;
-            margin-top: 0; 
+            margin-top: 0;
         }
-        
-        /* Chế độ Full Screen sẽ làm cho màn hình chiếm toàn bộ viewport */
+
+        /* Khi element (hoặc ancestor) ở chế độ fullscreen, áp style này */
         :fullscreen #screen-tester {
              height: 100vh !important;
              position: fixed !important;
@@ -57,6 +75,7 @@
              z-index: 9999 !important;
         }
 
+        /* Tên màu nằm giữa màn hình trong chế độ preview/full */
         #color-name {
             color: white;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
@@ -65,19 +84,23 @@
             text-align: center;
         }
 
+        /* Khi cần ẩn text (ví dụ phông đen/trắng/xám) */
         .hide-text #color-name {
             display: none;
         }
-        
-        /* CSS cho nút chuyển chế độ (KHÔNG DÙNG FIXED NỮA) */
+
+        /* ======================
+           Button chuyển chế độ (Màn hình <-> Thiết bị ngoại vi)
+           - Đặt dưới dạng block để hiển thị theo luồng
+           - Không dùng fixed để tránh chồng UI khi module được fetch vào trang chính
+           ====================== */
         #mode-switcher {
-            /* Loại bỏ position: fixed; */
-            margin: 20px auto; /* Căn giữa và tạo khoảng cách */
-            display: block; /* Đảm bảo nó là block để căn giữa */
+            margin: 20px auto;
+            display: block;
             max-width: 300px;
             z-index: 1000;
             padding: 10px 15px;
-            background: #F6AD55; /* Màu theme của bạn */
+            background: #F6AD55;
             color: white;
             border: none;
             border-radius: 5px;
@@ -86,11 +109,9 @@
             transition: background 0.3s;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        #mode-switcher:hover {
-            background: #d68e3e;
-        }
+        #mode-switcher:hover { background: #d68e3e; }
 
-        /* CSS còn lại của bạn */
+        /* Dùng cho cắt chữ 2 dòng */
         .truncate-2-lines {
              display: -webkit-box;
              -webkit-box-orient: vertical;
@@ -98,689 +119,782 @@
              overflow: hidden;
         }
 
-
-
-        /* CSS MỚI Tối ưu cho bàn phím */
+        /* ======================
+           2) CSS cho BÀN PHÍM (keyboard)
+           - .key-row: mỗi hàng phím là flex row
+           - .key: thiết kế thân phím (flex item) để co giãn
+           - Các class .active/.checked dùng để hiển thị trạng thái nhấn/đã nhấn
+           - Lưu ý: nếu bố cục hiển dọc khi fetch (trước đây bạn báo lỗi), nguyên nhân có thể là:
+             + CSS global override (ví dụ .key { display:block; }) từ /css/style.css
+             + flex-wrap hoặc container overflow bị ảnh hưởng -> nếu gặp lỗi, cân nhắc đặt id-prefix
+               (ví dụ #keyboard-layout-container .key { ... }) để tăng specificity.
+           ====================== */
         #keyboard-layout-container {
-            /* Loại bỏ overflow-x-auto */
-            overflow-x: hidden; 
+            overflow-x: hidden; /* ẩn scroll ngang mặc định */
         }
 
         .key-row {
             display: flex;
-            margin-bottom: 5px; /* Giảm khoảng cách giữa các hàng */
-            gap: 5px; /* Giảm khoảng cách giữa các phím */
+            margin-bottom: 5px; /* khoảng cách giữa các hàng */
+            gap: 5px; /* khoảng cách giữa các phím */
         }
 
         .key {
             background-color: #333;
             color: white;
             border: 1px solid #555;
-            padding: 2px 5px; /* Giảm padding */
+            padding: 2px 5px;
             border-radius: 4px;
             text-align: center;
-            font-size: 12px; /* Giảm kích thước chữ */
-            min-width: 0; /* Cho phép co lại */
-            flex-grow: 1; /* Rất quan trọng: cho phép tất cả các phím co giãn */
+            font-size: 12px;
+            min-width: 0;
+            flex-grow: 1; /* cho phép co giãn (quan trọng để layout đều) */
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 35px; /* Chiều cao cố định */
+            height: 35px;
             transition: background-color 0.1s, border-color 0.1s;
             cursor: default;
-            /* Dùng Flexbox để hiển thị nhãn phím trên 2 dòng (ví dụ: `~` và `1`) */
-            flex-direction: column; 
+            flex-direction: column;
             line-height: 1.1;
         }
 
-        /* Hiệu ứng khi phím được nhấn */
+        /* Hiệu ứng khi phím đang được NHẤN (keydown) */
         .key.active {
-            background-color: #F6AD55 !important; 
+            background-color: #F6AD55 !important;
             border-color: #FFD700 !important;
             color: #111 !important;
             box-shadow: 0 0 10px rgba(246, 173, 85, 0.8);
         }
 
-        /* Hiệu ứng sau khi phím đã được nhấn (màu xám) */
+        /* Hiệu ứng khi phím đã NHẢ (checked) - trạng thái được lưu */
         .key.checked {
-            background-color: #9b9a9a !important; 
+            background-color: #9b9a9a !important;
             border-color: #cc4e4e !important;
             color: rgb(38, 0, 255) !important;
         }
 
-        /* Điều chỉnh tỉ lệ cho các phím dài (sử dụng flex-grow) */
+        /* Tỉ lệ phím dài (sử dụng flex-grow thay width cố định cho responsive) */
         .key.key-tab { flex-grow: 1.5; }
         .key.key-caps { flex-grow: 1.75; }
         .key.key-shift-l { flex-grow: 2.25; }
         .key.key-shift-r { flex-grow: 2.75; }
         .key.key-enter { flex-grow: 2.25; }
         .key.key-backslash { flex-grow: 1.5; }
-        .key.key-space { flex-grow: 5; max-width: none; } /* Cho phép space chiếm nhiều không gian hơn */
+        .key.key-space { flex-grow: 5; max-width: none; }
 
-
-        /* CSS đặc biệt cho phím Ctrl/Alt */
-        .key.key-modifier {
-            min-width: 50px;
-        }
+        /* Phím modifier (Ctrl, Alt...) có min-width để không quá nhỏ */
+        .key.key-modifier { min-width: 50px; }
 	</style>
 </head>
-<body 
-    class="bg-[#FBF7F0]"
-    
->
+<body class="bg-[#FBF7F0]">
+    <!--
+      Header placeholder:
+      - Mục đích: khi bạn gộp module vào trang chính, header của site sẽ được chèn bằng script server-side
+      - Giữ nguyên để file tổng có thể load header external bằng script (như trước)
+    -->
 <div id="header-placeholder"></div>
 
 <main>
-        
-        <div id="screen-tester">
-            <h1 id="color-name">Nhấn phím Space để bắt đầu kiểm tra (Full Screen)</h1>
-            <p id="sub-text" class="text-white text-sm opacity-70">Nhấn ESC hoặc Q để thoát</p>
+    <!-- ===========================
+         SCREEN TESTER UI
+         - #screen-tester: vùng hiển thị (nhấn để chuyển màu / bắt đầu fullscreen)
+         - #color-name: hiển thị tên màu
+         - #sub-text: hướng dẫn thoát
+         =========================== -->
+    <div id="screen-tester">
+        <h1 id="color-name">Nhấn phím Space để bắt đầu kiểm tra (Full Screen)</h1>
+        <p id="sub-text" class="text-white text-sm opacity-70">Nhấn ESC hoặc Q để thoát</p>
+    </div>
+
+    <!--
+      mode-switcher:
+      - Nút chuyển giữa chế độ "kiểm tra màn" và "kiểm tra loa/mic/camera"
+      - Ban đầu ẩn (style display:none). Script sẽ hiển thị nó sau DOMContentLoaded.
+    -->
+    <button id="mode-switcher" style="display:none;">Kiểm tra Loa & Mic</button>
+
+    <!-- ===========================
+         PERIPHERAL (Loa / Camera+Mic / Keyboard+Mouse)
+         - #peripheral-tester chứa toàn bộ UI kiểm tra ngoại vi
+         - Mặc định ẩn (display:none) để ưu tiên màn hình test
+         - Khi fetch vào file tổng, module vẫn giữ class/tailwind (bg-white, rounded-lg...) để nhất quán
+         =========================== -->
+    <div id="peripheral-tester" style="display:none;" class="max-w-4xl mx-auto py-12 px-4">
+        <h2 class="text-3xl font-bold text-gray-800 text-center mb-10">Công cụ Kiểm tra Loa, Mic & Camera</h2>
+
+        <!-- -----------------------------
+             1) Speaker tester block
+             - #speaker-tester chứa nút START + audio element
+             - audio element id="audio-player" dùng để play mp3
+             - LƯU Ý: kiểm tra đường dẫn file (audioSources trong JS)
+             - nếu file không chạy, kiểm tra console & đường dẫn mp3 -->
+        <div id="speaker-tester" class="bg-white p-6 rounded-lg shadow-lg mb-8">
+            <h3 class="text-2xl font-semibold mb-4 flex items-center"><i class="fas fa-volume-up mr-3 text-blue-500"></i>Kiểm Tra Loa (Stereo Check)</h3>
+            <p class="text-center text-lg mb-4" id="speaker-status">Đảm bảo đã cắm tai nghe hoặc bật loa ngoài. Nhấn START.</p>
+            <div class="flex justify-center items-center space-x-6">
+                <button id="start-speaker-check" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded transition duration-300">
+                    <i class="fas fa-play mr-2"></i>BẮT ĐẦU
+                </button>
+                <!-- audio element: dùng để phát file mp3. -->
+                <audio id="audio-player"></audio>
+            </div>
         </div>
-        
-        <button id="mode-switcher" style="display:none;">Kiểm tra Loa & Mic</button>
-        
-        <div id="peripheral-tester" style="display:none;" class="max-w-4xl mx-auto py-12 px-4">
-            <h2 class="text-3xl font-bold text-gray-800 text-center mb-10">Công cụ Kiểm tra Loa, Mic & Camera</h2>
 
-            <div id="speaker-tester" class="bg-white p-6 rounded-lg shadow-lg mb-8">
-                <h3 class="text-2xl font-semibold mb-4 flex items-center"><i class="fas fa-volume-up mr-3 text-blue-500"></i>Kiểm Tra Loa (Stereo Check)</h3>
-                <p class="text-center text-lg mb-4" id="speaker-status">Đảm bảo đã cắm tai nghe hoặc bật loa ngoài. Nhấn START.</p>
-                <div class="flex justify-center items-center space-x-6">
-                    <button id="start-speaker-check" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded transition duration-300">
-                        <i class="fas fa-play mr-2"></i>BẮT ĐẦU
-                    </button>
-                    <audio id="audio-player"></audio>
+        <!-- -----------------------------
+             2) Camera + Mic tester block
+             - #camera-mic-tester chứa preview video và canvas mic-level
+             - Sử dụng getUserMedia() để lấy stream. Sau khi có stream:
+               + gán videoPreview.srcObject = stream
+               + tạo AudioContext + Analyser để vẽ mức mic lên canvas
+             - Lưu ý: phải xử lý lỗi (permission denied) và stop tracks khi cần
+           ----------------------------- -->
+        <div id="camera-mic-tester" class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-2xl font-semibold mb-4 flex items-center"><i class="fas fa-video mr-3 text-red-500"></i>Kiểm Tra Mic & Camera</h3>
+            <p class="text-center text-lg mb-4" id="camera-mic-status">Vui lòng cho phép dùng camera và mic để kiểm tra. Camera sẽ hiển thị, Mic sẽ hiển thị mức độ âm thanh.</p>
+            <div class="flex justify-center mb-6">
+                <button id="start-camera-mic-check" class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded transition duration-300">
+                    <i class="fas fa-camera mr-2"></i>KIỂM TRA
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Camera preview -->
+                <div>
+                    <p class="font-medium text-center mb-2">Camera Preview</p>
+                    <video id="video-preview" autoplay muted class="w-full bg-gray-200 rounded h-48"></video>
+                </div>
+                <!-- Mic level canvas -->
+                <div>
+                    <p class="font-medium text-center mb-2">Microphone Level</p>
+                    <canvas id="mic-level-canvas" class="w-full bg-gray-200 rounded h-48"></canvas>
                 </div>
             </div>
-            
-            <div id="camera-mic-tester" class="bg-white p-6 rounded-lg shadow-lg">
-                <h3 class="text-2xl font-semibold mb-4 flex items-center"><i class="fas fa-video mr-3 text-red-500"></i>Kiểm Tra Mic & Camera</h3>
-                <p class="text-center text-lg mb-4" id="camera-mic-status">Vui lòng cho phép dùng camera và mic để kiểm tra. Camera sẽ hiển thị, Mic sẽ hiển thị mức độ âm thanh.</p>
-                <div class="flex justify-center mb-6">
-                    <button id="start-camera-mic-check" class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded transition duration-300">
-                        <i class="fas fa-camera mr-2"></i>KIỂM TRA
-                    </button>
-                </div>
+        </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <p class="font-medium text-center mb-2">Camera Preview</p>
-                        <video id="video-preview" autoplay muted class="w-full bg-gray-200 rounded h-48"></video>
-                    </div>
-                    <div>
-                        <p class="font-medium text-center mb-2">Microphone Level</p>
-                        <canvas id="mic-level-canvas" class="w-full bg-gray-200 rounded h-48"></canvas>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="keyboard-tester" class="mt-12">
-                <h3 class="text-2xl font-semibold mb-6 flex items-center"><i class="fas fa-keyboard mr-3 text-yellow-600"></i>Kiểm Tra Bàn Phím (Keyboard Test)</h3>
-                <p class="text-center text-lg mb-4" id="keyboard-status">Nhấn bất kỳ phím nào trên bàn phím của bạn để kiểm tra phản hồi.</p>
-                
-                <div id="keyboard-layout-container" class="bg-gray-900 p-6 rounded-lg shadow-xl overflow-x-auto">
-                    </div>
-                
-                </div> <div id="trackpad-area" class="mt-4 p-4 flex justify-center items-center gap-2" style="user-select: none;">
-                    <div id="mouse-left-display" class="w-28 h-16 border-2 border-gray-500 rounded text-gray-400 flex justify-center items-center transition-all duration-100">
-                        Trái
-                    </div>
-                    <div id="mouse-middle-display" class="w-20 h-16 border-2 border-gray-500 rounded text-gray-400 flex justify-center items-center transition-all duration-100">
-                        Giữa
-                    </div>
-                    <div id="mouse-right-display" class="w-28 h-16 border-2 border-gray-500 rounded text-gray-400 flex justify-center items-center transition-all duration-100">
-                        Phải
-                    </div>
-                </div>
-                <p class="text-center text-sm text-gray-500">Click bất cứ đâu trong khu vực bàn phím để kiểm tra</p>
-                <div class="mt-4 text-center text-sm text-gray-500"> <i class="fas fa-desktop mr-1"></i> Hệ điều hành: <span id="os-display" class="font-bold">Đang nhận diện...</span>
-                </div>
+        <!-- -----------------------------
+             3) Keyboard tester block
+             - #keyboard-tester chứa keyboard layout (xây dựng bằng JS)
+             - Khi peripheralTester hiển thị (peripheralTester.style.display != 'none') thì
+               event keydown/keyup sẽ active các phím trong layout.
+             - KEY_LAYOUTS: định nghĩa layout theo e.code để độc lập với ngôn ngữ bàn phím.
+             - KEY_LABELS: ánh xạ code -> nhãn hiển thị.
+             - buildKeyboardLayout() tạo DOM phím, gán id cho từng phím: id = `key-${keyCode}`.
+             - Reset keyboard: hàm resetKeyboard() để xóa class 'checked'/'active'
+           ----------------------------- -->
+        <div id="keyboard-tester" class="mt-12">
+            <h3 class="text-2xl font-semibold mb-6 flex items-center"><i class="fas fa-keyboard mr-3 text-yellow-600"></i>Kiểm Tra Bàn Phím (Keyboard Test)</h3>
+            <p class="text-center text-lg mb-4" id="keyboard-status">Nhấn bất kỳ phím nào trên bàn phím của bạn để kiểm tra phản hồi.</p>
 
-
-
-
-
-<!--
-                <div class="mt-4 text-center text-sm text-gray-500">
-                    <i class="fas fa-desktop mr-1"></i> Hệ điều hành: <span id="os-display" class="font-bold">Đang nhận diện...</span>
-                </div> -->
-                
-
+            <!-- Container nơi layout phím được ghép vào (bằng JS) -->
+            <div id="keyboard-layout-container" class="bg-gray-900 p-6 rounded-lg shadow-xl overflow-x-auto">
             </div>
 
         </div>
-    </main>
-    
- <div id="footer-placeholder"></div>
 
-    <script>
-        // =========================================================================
-        // 1. JAVASCRIPT ĐƯỢC NHÚNG TRỰC TIẾP
-        // =========================================================================
-        
-        // ================== A. SCREEN CHECKER LOGIC ==================
+        <!-- -----------------------------
+             Trackpad / Mouse area:
+             - 3 ô hiển thị trạng thái: left/middle/right
+             - Events: mousedown -> thay đổi style, mouseup -> reset style
+             - Lưu ý: contextmenu bị prevent để dễ test nút phải
+           ----------------------------- -->
+        <div id="trackpad-area" class="mt-4 p-4 flex justify-center items-center gap-2" style="user-select: none;">
+            <div id="mouse-left-display" class="w-28 h-16 border-2 border-gray-500 rounded text-gray-400 flex justify-center items-center transition-all duration-100">
+                Trái
+            </div>
+            <div id="mouse-middle-display" class="w-20 h-16 border-2 border-gray-500 rounded text-gray-400 flex justify-center items-center transition-all duration-100">
+                Giữa
+            </div>
+            <div id="mouse-right-display" class="w-28 h-16 border-2 border-gray-500 rounded text-gray-400 flex justify-center items-center transition-all duration-100">
+                Phải
+            </div>
+        </div>
 
-        // --- KHAI BÁO BIẾN CHO MÀN HÌNH ---
-        const colors = [
-            { name: "ĐEN", hex: "#000000" },
-            { name: "TRẮNG", hex: "#FFFFFF" },
-            { name: "ĐỎ", hex: "#FF0000" },
-            { name: "XANH LÁ", hex: "#00FF00" },
-            { name: "XANH DƯƠNG", hex: "#0000FF" },
-            { name: "VÀNG", hex: "#FFFF00" },
-            { name: "TÍM", hex: "#FF00FF" },
-            { name: "XÁM", hex: "#808080" }
-        ];
+        <p class="text-center text-sm text-gray-500">Click bất cứ đâu trong khu vực bàn phím để kiểm tra</p>
 
-        let currentIndex = -1;
-        const screenTester = document.getElementById('screen-tester');
-        const colorNameDisplay = document.getElementById('color-name');
-        const subText = document.getElementById('sub-text');
-        let isFirstInteraction = true; 
+        <div class="mt-4 text-center text-sm text-gray-500">
+            <i class="fas fa-desktop mr-1"></i> Hệ điều hành: <span id="os-display" class="font-bold">Đang nhận diện...</span>
+        </div>
+    </div>
+</main>
 
+<!-- Footer placeholder (GIỮ NGUYÊN để chèn footer mặc định của site) -->
+<div id="footer-placeholder"></div>
 
-        // 1. HÀM THỰC HIỆN TOÀN MÀN HÌNH (toggleFullscreen)
-        function toggleFullscreen() {
-            const body = document.body;
-            if (!document.fullscreenElement) {
-                // Yêu cầu chế độ toàn màn hình cho phần tử body (bao trùm tất cả)
-                if (body.requestFullscreen) {
-                    body.requestFullscreen();
-                } else if (body.webkitRequestFullscreen) {
-                    body.webkitRequestFullscreen();
-                } else if (body.msRequestFullscreen) {
-                    body.msRequestFullscreen();
-                }
-                subText.style.display = 'block';
-                // Ẩn nút chuyển chế độ khi vào Fullscreen
-                modeSwitcher.style.display = 'none'; 
-            } else {
-                // Thoát chế độ toàn màn hình 
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                } else if (document.msExitFullscreen) {
-                    document.msExitFullscreen();
-                }
-                subText.style.display = 'none'; 
-                // Hiển thị lại nút chuyển chế độ khi thoát Fullscreen
-                modeSwitcher.style.display = 'block'; 
+<!-- ===========================
+     JAVASCRIPT (đã thêm comment chi tiết)
+     - Mục tiêu: giải thích từng bước logic để bạn dễ tách/gộp
+     - Tất cả script đặt ở cuối body để DOM đã sẵn sàng
+     =========================== -->
+<script>
+    // =========================================================================
+    // 1) SCREEN CHECKER LOGIC
+    // =========================================================================
+
+    // Danh sách màu mẫu để kiểm tra (sử dụng cho fullscreen test)
+    const colors = [
+        { name: "ĐEN", hex: "#000000" },
+        { name: "TRẮNG", hex: "#FFFFFF" },
+        { name: "ĐỎ", hex: "#FF0000" },
+        { name: "XANH LÁ", hex: "#00FF00" },
+        { name: "XANH DƯƠNG", hex: "#0000FF" },
+        { name: "VÀNG", hex: "#FFFF00" },
+        { name: "TÍM", hex: "#FF00FF" },
+        { name: "XÁM", hex: "#808080" }
+    ];
+
+    // Biến trạng thái
+    let currentIndex = -1;
+    const screenTester = document.getElementById('screen-tester');         // vùng hiển thị preview/fullscreen
+    const colorNameDisplay = document.getElementById('color-name');       // show tên màu
+    const subText = document.getElementById('sub-text');                  // text hướng dẫn (ESC/Q để thoát)
+    let isFirstInteraction = true;                                        // để kích hoạt fullscreen lần đầu
+
+    /**
+     * toggleFullscreen()
+     * - Khi gọi lần đầu sẽ requestFullscreen() lên body => overlay fullscreen (để hiển thị màu test)
+     * - Khi gọi lần 2 (nếu đang ở fullscreen) sẽ exitFullscreen()
+     * Lưu ý: một số trình duyệt dùng webkitRequestFullscreen hoặc msRequestFullscreen
+     */
+    function toggleFullscreen() {
+        const body = document.body;
+        if (!document.fullscreenElement) {
+            if (body.requestFullscreen) {
+                body.requestFullscreen();
+            } else if (body.webkitRequestFullscreen) {
+                body.webkitRequestFullscreen();
+            } else if (body.msRequestFullscreen) {
+                body.msRequestFullscreen();
             }
+            subText.style.display = 'block';
+            // Ẩn nút chuyển mode khi vào fullscreen (giao diện gọn)
+            modeSwitcher.style.display = 'none';
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+            subText.style.display = 'none';
+            modeSwitcher.style.display = 'block';
+        }
+    }
+
+    // Ban đầu ẩn subText (khi chưa bắt đầu)
+    subText.style.display = 'none';
+
+    // Nếu người dùng thoát fullscreen bằng ESC (hoặc trình duyệt), ta reset trạng thái UI
+    document.addEventListener('fullscreenchange', (event) => {
+        if (!document.fullscreenElement) {
+            // Khi thoát: phục hồi màu nền, reset text, cho phép bấm lại
+            screenTester.style.backgroundColor = '#333';
+            colorNameDisplay.textContent = 'Bấm hoặc nhấn Space để bắt đầu kiểm tra (Full Screen)';
+            screenTester.classList.remove('hide-text');
+            isFirstInteraction = true;
+            subText.style.display = 'none';
+            modeSwitcher.style.display = 'block';
+        }
+    });
+
+    /**
+     * changeColor()
+     * - Dùng khi user click vào vùng test (hoặc nhấn Space/Enter)
+     * - Lần đầu tiên sẽ kích hoạt fullscreen (isFirstInteraction = true)
+     * - Sau đó sẽ iterate qua mảng colors và cập nhật background + tên màu
+     * - Với màu trắng/đen/xám sẽ ẩn chữ (để tránh burn-in test bị che bởi text)
+     */
+    function changeColor() {
+        if (isFirstInteraction) {
+            toggleFullscreen();
+            isFirstInteraction = false;
         }
 
-        // Tự động ẩn subtext ban đầu
-        subText.style.display = 'none';
+        // Nếu đang ở chế độ khác thì bỏ qua
+        if (screenTester.style.display === 'none' && !document.fullscreenElement) return;
 
-        // Xử lý sự kiện khi Fullscreen thay đổi (dùng để đặt lại trạng thái)
-        document.addEventListener('fullscreenchange', (event) => {
-            if (!document.fullscreenElement) {
-                // Nếu thoát Fullscreen (bằng ESC), đưa màn hình về trạng thái ban đầu
-                screenTester.style.backgroundColor = '#333';
-                colorNameDisplay.textContent = 'Bấm hoặc nhấn Space để bắt đầu kiểm tra (Full Screen)';
-                screenTester.classList.remove('hide-text');
-                isFirstInteraction = true; // Cho phép vào lại Fullscreen
-                subText.style.display = 'none';
-                // Đảm bảo nút chuyển chế độ hiện ra sau khi ESC
-                modeSwitcher.style.display = 'block'; 
-            }
-        });
+        currentIndex = (currentIndex + 1) % colors.length;
+        const currentColor = colors[currentIndex];
 
+        // Cập nhật background và tên màu
+        screenTester.style.backgroundColor = currentColor.hex;
+        colorNameDisplay.textContent = currentColor.name;
 
-        // 2. HÀM CHUYỂN MÀU (changeColor)
-        function changeColor() {
-            // KÍCH HOẠT TOÀN MÀN HÌNH TẠI ĐÂY (Trong tương tác đầu tiên)
-            if (isFirstInteraction) {
-                toggleFullscreen();
-                isFirstInteraction = false;
-            }
-
-            // Đảm bảo chỉ thay đổi màu khi đang ở chế độ kiểm tra màn hình
-            if (screenTester.style.display === 'none' && !document.fullscreenElement) return;
-
-            currentIndex = (currentIndex + 1) % colors.length; 
-            const currentColor = colors[currentIndex];
-
-            // Cập nhật giao diện
-            screenTester.style.backgroundColor = currentColor.hex;
-            colorNameDisplay.textContent = currentColor.name;
-
-            // Điều chỉnh màu chữ
-            if (currentColor.hex === "#FFFFFF") {
-                colorNameDisplay.style.color = "black";
-            } else {
-                colorNameDisplay.style.color = "white";
-            }
-
-            // Ẩn chữ khi ở chế độ Đen, Trắng, Xám
-            if (currentColor.hex === "#000000" || currentColor.hex === "#FFFFFF" || currentColor.hex === "#808080") {
-                screenTester.classList.add('hide-text');
-                subText.style.display = 'none';
-            } else {
-                screenTester.classList.remove('hide-text');
-                subText.style.display = 'block';
-            }
+        // Chỉnh màu chữ cho nền trắng
+        if (currentColor.hex === "#FFFFFF") {
+            colorNameDisplay.style.color = "black";
+        } else {
+            colorNameDisplay.style.color = "white";
         }
 
-
-        // 3. SỰ KIỆN LẮNG NGHE (MÀN HÌNH)
-        screenTester.addEventListener('click', changeColor);
-
-        document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space' || e.code === 'Enter') {
-                e.preventDefault();
-                // Chỉ chuyển màu nếu đang ở chế độ kiểm tra màn hình
-                if (screenTester.style.display !== 'none') {
-                    changeColor();
-                }
-            }
-            // Dùng phím 'Q' để thoát Fullscreen thủ công (hoặc ESC tự động)
-            if (e.code === 'KeyQ' && document.fullscreenElement) {
-                toggleFullscreen();
-            }
-        });
-
-        // ================== B. SPEAKER CHECKER LOGIC ==================
-
-        // --- KHAI BÁO BIẾN CHO LOA ---
-        const peripheralTester = document.getElementById('peripheral-tester');
-        const audioPlayer = document.getElementById('audio-player');
-        const speakerStatus = document.getElementById('speaker-status');
-        const startSpeakerButton = document.getElementById('start-speaker-check');
-        const modeSwitcher = document.getElementById('mode-switcher');
-
-        // Danh sách các tệp âm thanh cần phát theo thứ tự
-        const audioSources = [
-            { src: '/file/mp3/left_speaker.mp3', status: 'Đang phát: LOA TRÁI (LEFT) - Nghe kỹ.' },
-            { src: '/file/mp3/right_speakermp3', status: 'Đang phát: LOA PHẢI (RIGHT) - Nghe kỹ.' }
-        ];
-
-        let audioIndex = 0;
-
-        // HÀM CHUYỂN CHẾ ĐỘ (Màu <-> Thiết bị ngoại vi)
-        modeSwitcher.addEventListener('click', () => {
-            if (screenTester.style.display !== 'none') {
-                // Chuyển sang chế độ Thiết bị ngoại vi
-                screenTester.style.display = 'none';
-                peripheralTester.style.display = 'block';
-                modeSwitcher.textContent = 'Chuyển sang Kiểm tra Màn hình';
-            } else {
-                // Chuyển sang chế độ Màn hình
-                peripheralTester.style.display = 'none';
-                screenTester.style.display = 'flex';
-                modeSwitcher.textContent = 'Chuyển sang Kiểm tra Loa & Mic';
-            }
-            
-            // Tắt fullscreen nếu đang mở
-            if (document.fullscreenElement) {
-                toggleFullscreen();
-            }
-        });
-
-        // Hiện nút chuyển chế độ sau khi trang tải xong
-        document.addEventListener('DOMContentLoaded', () => {
-             // Chỉ hiển thị nút chuyển chế độ nếu đang ở chế độ kiểm tra màn hình ban đầu
-            if (screenTester.style.display !== 'none') {
-                 modeSwitcher.style.display = 'block';
-            }
-        });
-
-        // HÀM PHÁT ÂM THANH THEO THỨ TỰ
-        function playNextAudio() {
-            if (audioIndex < audioSources.length) {
-                const currentAudio = audioSources[audioIndex];
-                
-                speakerStatus.textContent = currentAudio.status;
-                
-                audioPlayer.src = currentAudio.src;
-                audioPlayer.play().catch(error => {
-                    speakerStatus.textContent = 'BỊ CHẶN: Vui lòng click lại nút START (Trình duyệt chặn Auto-Play)';
-                    console.error("Lỗi phát âm thanh:", error);
-                });
-
-                audioIndex++;
-            } else {
-                speakerStatus.textContent = 'Đã hoàn thành kiểm tra loa. Vui lòng nhấn START để kiểm tra lại.';
-                startSpeakerButton.disabled = false; 
-                audioIndex = 0; 
-            }
+        // Ẩn chữ khi màu có nền tối/trắng/xám (tùy bạn muốn)
+        if (currentColor.hex === "#000000" || currentColor.hex === "#FFFFFF" || currentColor.hex === "#808080") {
+            screenTester.classList.add('hide-text');
+            subText.style.display = 'none';
+        } else {
+            screenTester.classList.remove('hide-text');
+            subText.style.display = 'block';
         }
+    }
 
-        // SỰ KIỆN KHI ÂM THANH KẾT THÚC
-        audioPlayer.addEventListener('ended', playNextAudio);
+    // Click vào vùng screen -> chuyển màu / kích hoạt fullscreen
+    screenTester.addEventListener('click', changeColor);
 
-        // SỰ KIỆN CLICK NÚT START
-        startSpeakerButton.addEventListener('click', () => {
-            startSpeakerButton.disabled = true; 
-            audioIndex = 0; 
-            playNextAudio();
-        });
-
-
-        // ================== C. CAMERA/MIC CHECKER LOGIC ==================
-
-        const startCameraMicButton = document.getElementById('start-camera-mic-check');
-        const videoPreview = document.getElementById('video-preview');
-        const micLevelCanvas = document.getElementById('mic-level-canvas');
-        const canvasCtx = micLevelCanvas.getContext('2d');
-        const cameraMicStatus = document.getElementById('camera-mic-status');
-        let animationFrame;
-
-        startCameraMicButton.addEventListener('click', () => {
-            startCameraMicButton.disabled = true;
-            cameraMicStatus.textContent = 'Đang yêu cầu cấp quyền...';
-            
-            // Yêu cầu truy cập Mic và Camera
-            navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-                .then(stream => {
-                    cameraMicStatus.textContent = 'Đã cấp quyền. Camera và Mic đang hoạt động.';
-
-                    // 1. Camera
-                    videoPreview.srcObject = stream;
-                    
-                    // 2. Microphone (Hiển thị mức độ âm thanh)
-                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    const analyser = audioContext.createAnalyser();
-                    const microphone = audioContext.createMediaStreamSource(stream);
-                    
-                    microphone.connect(analyser);
-                    analyser.fftSize = 256;
-                    const bufferLength = analyser.frequencyBinCount;
-                    const dataArray = new Uint8Array(bufferLength);
-                    
-                    function draw() {
-                        canvasCtx.clearRect(0, 0, micLevelCanvas.width, micLevelCanvas.height);
-                        
-                        analyser.getByteFrequencyData(dataArray);
-
-                        let sum = 0;
-                        for (let i = 0; i < bufferLength; i++) {
-                            sum += dataArray[i];
-                        }
-                        const average = sum / bufferLength;
-                        
-                        const barHeight = average * 1.5; 
-                        const finalHeight = Math.min(barHeight, micLevelCanvas.height);
-
-                        canvasCtx.fillStyle = '#C0392B'; 
-                        canvasCtx.fillRect(0, micLevelCanvas.height - finalHeight, micLevelCanvas.width, finalHeight);
-                        
-                        animationFrame = requestAnimationFrame(draw);
-                    }
-                    draw();
-                })
-                .catch(err => {
-                    cameraMicStatus.textContent = `LỖI TRUY CẬP: ${err.name}. Vui lòng kiểm tra quyền truy cập Camera/Mic.`;
-                    startCameraMicButton.disabled = false;
-                });
-        });
-        // ================== D. KEYBOARD CHECKER LOGIC ==================
-
-        const keyboardLayoutContainer = document.getElementById('keyboard-layout-container');
-        const osDisplay = document.getElementById('os-display');
-
-        
-        // Định nghĩa mã phím (key codes) và nhãn hiển thị cho 2 HĐH
-        // SỬ DỤNG MÃ `e.code` (Code) vì nó độc lập với layout ngôn ngữ
-        const KEY_LAYOUTS = {
-            // Layout cho Windows
-            windows: [
-                ['Escape', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', 'PrintScreen', 'ScrollLock', 'Pause', 'Home', 'End'],
-                ['Backquote', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus', 'Equal', 'Backspace', 'NumLock', 'NumpadDivide', 'NumpadMultiply', 'NumpadSubtract', 'NumpadAdd'],
-                ['Tab', 'KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'BracketLeft', 'BracketRight', 'Backslash', '','Numpad7', 'Numpad8', 'Numpad9'],
-                ['CapsLock', 'KeyA', 'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'Semicolon', 'Quote', 'Enter', '','Numpad4', 'Numpad5', 'Numpad6'],
-                ['ShiftLeft', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'Comma', 'Period', 'Slash', 'ShiftRight', '','Numpad1', 'Numpad2', 'Numpad3'],
-                ['ControlLeft', 'MetaLeft', 'AltLeft', 'Space', 'AltRight', 'ContextMenu', 'ControlRight', 'ArrowUp', '','Numpad0', 'NumpadDecimal', 'NumpadEnter'],
-                ['', '', '', '', '', '', '','', '','', '','', '', '', 'ArrowLeft', 'ArrowDown', 'ArrowRight','','', '','',''] // Hàng cuối cho các phím mũi tên
-            ],
-            // Layout cho macOS
-            macos: [
-                ['Escape', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', 'VolumeUp', 'VolumeDown', 'Mute', 'PlayPause', 'Eject'], // Giả định một số phím chức năng Mac
-                ['Backquote', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus', 'Equal', 'Backspace'],
-                ['Tab', 'KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'BracketLeft', 'BracketRight', 'Backslash'],
-                ['CapsLock', 'KeyA', 'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'Semicolon', 'Quote', 'Enter'],
-                ['ShiftLeft', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'Comma', 'Period', 'Slash', 'ShiftRight'],
-                ['ControlLeft', 'AltLeft', 'MetaLeft', 'Space', 'MetaRight', 'AltRight', 'ControlRight', 'ArrowUp', '', ''],
-                ['', '', '', '', '', '', '', '', '', '', '', '', '', '','','','','', 'ArrowLeft', 'ArrowDown', 'ArrowRight']
-            ]
-        };
-
-        // Ánh xạ Mã phím (e.code) sang Nhãn hiển thị (Label)
-        const KEY_LABELS = {
-            'Escape': 'Esc', 'Tab': 'Tab', 'CapsLock': 'Caps', 'ShiftLeft': 'Shift', 'ShiftRight': 'Shift',
-            'ControlLeft': 'Ctrl', 'ControlRight': 'Ctrl', 'AltLeft': 'Alt', 'AltRight': 'Alt',
-            'MetaLeft': '⌘/Win', 'MetaRight': '⌘/Win', 'Space': 'Space', 'Enter': 'Enter',
-            'Backspace': 'Delete', 'Backquote': '` ~', 'Minus': '- _', 'Equal': '= +',
-            'BracketLeft': '[ {', 'BracketRight': '] }', 'Backslash': '\\ |', 'Semicolon': '; :',
-            'Quote': `' "`, 'Comma': ', <', 'Period': '. >', 'Slash': '/ ?',
-            
-            /* ===== BẮT ĐẦU THAY ĐỔI A.1 ===== */
-            // ĐỊNH NGHĨA ĐẦY ĐỦ CÁC PHÍM SỐ (HÀNG NGANG)
-            'Digit1': '1', 'Digit2': '2', 'Digit3': '3', 'Digit4': '4', 'Digit5': '5',
-            'Digit6': '6 ', 'Digit7': '7 ', 'Digit8': '8 ', 'Digit9': '9', 'Digit0': '0',
-            /* ===== KẾT THÚC THAY ĐỔI A.1 ===== */
-
-            'PrintScreen': 'PrtSc', 'ScrollLock': 'ScrLk', 'Pause': 'Pause', 'Insert': 'Ins', 'Delete': 'Del',
-            'ArrowUp': '↑', 'ArrowDown': '↓', 'ArrowLeft': '←', 'ArrowRight': '→',
-            'ContextMenu': 'Menu', 'NumpadDivide': '/', 'NumpadMultiply': '*', 'NumpadSubtract': '-',
-            'NumpadAdd': '+', 'NumpadDecimal': '.', 'NumpadEnter': 'Enter',
-            
-            /* ===== BẮT ĐẦU THAY ĐỔI A.2 ===== */
-            // ĐỊNH NGHĨA ĐẦY ĐỦ CÁC PHÍM NUMPAD
-            'Numpad0': '0', 'Numpad1': '1', 'Numpad2': '2', 'Numpad3': '3', 'Numpad4': '4',
-            'Numpad5': '5', 'Numpad6': '6', 'Numpad7': '7', 'Numpad8': '8', 'Numpad9': '9',
-            /* ===== KẾT THÚC THAY ĐỔI A.2 ===== */
-
-            // Nhãn đơn giản cho các phím chữ cái
-            'KeyA': 'A', 'KeyB': 'B', 'KeyC': 'C', 'KeyD': 'D', 'KeyE': 'E', 'KeyF': 'F',
-            // ... thêm tất cả các phím chữ cái khác
-        };
-        // Tự động thêm nhãn cho các phím F
-        for (let i = 1; i <= 12; i++) { KEY_LABELS[`F${i}`] = `F${i}`; }
-        
-        /* ===== BẮT ĐẦU THAY ĐỔI A.3 (XÓA 2 DÒNG NÀY) ===== */
-        // XÓA DÒNG: for (let i = 0; i <= 9; i++) { KEY_LABELS[`Digit${i}`] = i; }
-        // XÓA DÒNG: for (let i = 0; i <= 9; i++) { KEY_LABELS[`Numpad${i}`] = i; }
-        /* ===== KẾT THÚC THAY ĐỔI A.3 ===== */
-
-
-        // 1. Nhận diện Hệ điều hành
-        function detectOS() {
-            const userAgent = window.navigator.userAgent.toLowerCase();
-            if (userAgent.indexOf('mac') > -1) {
-                return 'macos';
-            }
-            if (userAgent.indexOf('win') > -1) {
-                return 'windows';
-            }
-            return 'windows'; // Mặc định là windows nếu không nhận diện được
-        }
-        const currentOS = detectOS();
-        osDisplay.textContent = currentOS === 'macos' ? 'macOS (Apple)' : 'Windows';
-
-
-        // 2. Xây dựng Layout bàn phím dựa trên OS
-        function buildKeyboardLayout(os) {
-            const layout = KEY_LAYOUTS[os];
-            keyboardLayoutContainer.innerHTML = ''; // Xóa layout cũ
-
-            layout.forEach(row => {
-                const rowDiv = document.createElement('div');
-                rowDiv.className = 'key-row';
-                
-                row.forEach(keyCode => {
-                    if (!keyCode) { // Xử lý khoảng trống (nếu có)
-                        const spacer = document.createElement('div');
-                        spacer.style.width = '30px'; 
-                        rowDiv.appendChild(spacer);
-                        return;
-                    }
-
-                    const keyDiv = document.createElement('div');
-                    keyDiv.className = 'key';
-                    keyDiv.id = `key-${keyCode}`; // ID quan trọng để xử lý sự kiện
-                    keyDiv.textContent = KEY_LABELS[keyCode] || keyCode.replace('Key', ''); // Hiển thị nhãn
-
-                    // Thêm class đặc biệt cho các phím dài/đặc biệt
-                    if (keyCode === 'Tab') keyDiv.classList.add('key-tab');
-                    if (keyCode === 'CapsLock') keyDiv.classList.add('key-caps');
-                    if (keyCode === 'ShiftLeft') keyDiv.classList.add('key-shift-l');
-                    if (keyCode === 'ShiftRight') keyDiv.classList.add('key-shift-r');
-                    if (keyCode === 'Enter') keyDiv.classList.add('key-enter');
-                    if (keyCode === 'Space') keyDiv.classList.add('key-space');
-                    if (['ControlLeft', 'ControlRight', 'AltLeft', 'AltRight', 'MetaLeft', 'MetaRight'].includes(keyCode)) {
-                        keyDiv.classList.add('key-modifier');
-                    }
-                    
-                    rowDiv.appendChild(keyDiv);
-                });
-                
-                keyboardLayoutContainer.appendChild(rowDiv);
-            });
-        }
-
-        // Gọi hàm xây dựng layout khi tải trang
-        buildKeyboardLayout(currentOS);
-
-        // ... (Tiếp tục trong thẻ <script> của bạn)
-
-        // ================== E. KEYBOARD EVENT HANDLERS ==================
-
-        // Xử lý khi nhấn phím (KeyDown)
+    // Keydown global:
+    // - Space / Enter để chuyển màu (khi đang ở chế độ màn hình)
+    // - KeyQ để thoát fullscreen (nếu đang fullscreen)
     document.addEventListener('keydown', (e) => {
-        // ... (Logic chuyển màu giữ nguyên) ...
+        if (e.code === 'Space' || e.code === 'Enter') {
+            e.preventDefault();
+            if (screenTester.style.display !== 'none') {
+                changeColor();
+            }
+        }
+        if (e.code === 'KeyQ' && document.fullscreenElement) {
+            toggleFullscreen();
+        }
+    });
 
-        // 2. Logic cho Key Test (Nếu đang ở chế độ kiểm tra thiết bị)
+    // =========================================================================
+    // 2) SPEAKER (LOA) CHECKER LOGIC
+    // =========================================================================
+
+    // DOM references
+    const peripheralTester = document.getElementById('peripheral-tester'); // vùng kiểm tra ngoại vi
+    const audioPlayer = document.getElementById('audio-player');           // audio element dùng chung
+    const speakerStatus = document.getElementById('speaker-status');       // status text
+    const startSpeakerButton = document.getElementById('start-speaker-check'); // nút bắt đầu
+    const modeSwitcher = document.getElementById('mode-switcher');         // nút đổi chế độ (màn <-> ngoại vi)
+
+    // Danh sách audio files để phát tuần tự
+    // === LƯU Ý QUAN TRỌNG ===
+    // Kiểm tra đường dẫn và tên file ở đây. Trong phiên bản gốc bạn có:
+    //   '/file/mp3/left_speaker.mp3'  OK
+    //   '/file/mp3/right_speakermp3'  => KHÔNG CÓ DẤU '.' trước mp3 (có thể là lỗi/typo)
+    // Nếu bạn dùng file tên khác (ví dụ right_speaker.mp3), hãy sửa phần này tương ứng.
+    const audioSources = [
+        { src: '/file/mp3/left_speaker.mp3', status: 'Đang phát: LOA TRÁI (LEFT) - Nghe kỹ.' },
+        { src: '/file/mp3/right_speakermp3', status: 'Đang phát: LOA PHẢI (RIGHT) - Nghe kỹ.' }
+    ];
+
+    let audioIndex = 0;
+
+    /**
+     * Chuyển chế độ giữa "screen" và "peripheral"
+     * - Ẩn/hiện các vùng UI tương ứng
+     * - Nếu đang fullscreen, gọi toggleFullscreen() để thoát trước khi đổi
+     */
+    modeSwitcher.addEventListener('click', () => {
+        if (screenTester.style.display !== 'none') {
+            // Chuyển sang kiểm tra thiết bị ngoại vi
+            screenTester.style.display = 'none';
+            peripheralTester.style.display = 'block';
+            modeSwitcher.textContent = 'Chuyển sang Kiểm tra Màn hình';
+        } else {
+            // Quay lại kiểm tra màn hình
+            peripheralTester.style.display = 'none';
+            screenTester.style.display = 'flex';
+            modeSwitcher.textContent = 'Chuyển sang Kiểm tra Loa & Mic';
+        }
+
+        // Nếu đang ở fullscreen, chúng ta nên thoát fullscreen để tránh giao diện bị khóa
+        if (document.fullscreenElement) {
+            toggleFullscreen();
+        }
+    });
+
+    // Sau khi DOMContent loaded, hiển thị nút modeSwitcher (nút đổi chế độ)
+    document.addEventListener('DOMContentLoaded', () => {
+         if (screenTester.style.display !== 'none') {
+             modeSwitcher.style.display = 'block';
+         }
+    });
+
+    /**
+     * playNextAudio()
+     * - Phát tuần tự các audioSources
+     * - Khi audio ended sẽ gọi playNextAudio() để phát file tiếp theo
+     * - Nếu trình duyệt chặn autoplay, use catch() -> hiển thị message và người dùng cần click lại
+     */
+    function playNextAudio() {
+        if (audioIndex < audioSources.length) {
+            const currentAudio = audioSources[audioIndex];
+
+            speakerStatus.textContent = currentAudio.status;
+
+            audioPlayer.src = currentAudio.src;
+            audioPlayer.play().catch(error => {
+                // Thông báo nếu trình duyệt chặn autoplay
+                speakerStatus.textContent = 'BỊ CHẶN: Vui lòng click lại nút START (Trình duyệt chặn Auto-Play)';
+                console.error("Lỗi phát âm thanh:", error);
+            });
+
+            audioIndex++;
+        } else {
+            speakerStatus.textContent = 'Đã hoàn thành kiểm tra loa. Vui lòng nhấn START để kiểm tra lại.';
+            startSpeakerButton.disabled = false;
+            audioIndex = 0;
+        }
+    }
+
+    // Khi file audio kết thúc (ended) gọi playNextAudio để tiếp tục playlist
+    audioPlayer.addEventListener('ended', playNextAudio);
+
+    // Sự kiện click nút START: disable nút để tránh nhấn nhiều lần, reset index, gọi playNextAudio()
+    startSpeakerButton.addEventListener('click', () => {
+        startSpeakerButton.disabled = true;
+        audioIndex = 0;
+        playNextAudio();
+    });
+
+    // =========================================================================
+    // 3) CAMERA / MIC CHECKER LOGIC
+    // =========================================================================
+
+    // DOM references camera/mic
+    const startCameraMicButton = document.getElementById('start-camera-mic-check');
+    const videoPreview = document.getElementById('video-preview');
+    const micLevelCanvas = document.getElementById('mic-level-canvas');
+    const canvasCtx = micLevelCanvas.getContext('2d');
+    const cameraMicStatus = document.getElementById('camera-mic-status');
+    let animationFrame; // dùng để lưu requestAnimationFrame id (để cancel khi stop)
+
+    /**
+     * Click KIỂM TRA:
+     * - Request getUserMedia({video:true, audio:true})
+     * - Nếu thành công: hiển thị video stream và draw mức mic lên canvas liên tục
+     * - Nếu thất bại: hiển thị lỗi, unlock button để thử lại
+     */
+    startCameraMicButton.addEventListener('click', () => {
+        startCameraMicButton.disabled = true;
+        cameraMicStatus.textContent = 'Đang yêu cầu cấp quyền...';
+
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+            .then(stream => {
+                cameraMicStatus.textContent = 'Đã cấp quyền. Camera và Mic đang hoạt động.';
+
+                // 1) Camera: gán stream cho video element
+                videoPreview.srcObject = stream;
+
+                // 2) Microphone: tạo AudioContext, kết nối MediaStreamSource -> analyser
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const analyser = audioContext.createAnalyser();
+                const microphone = audioContext.createMediaStreamSource(stream);
+
+                microphone.connect(analyser);
+                analyser.fftSize = 256;
+                const bufferLength = analyser.frequencyBinCount;
+                const dataArray = new Uint8Array(bufferLength);
+
+                // Hàm draw: lấy data từ analyser, tính trung bình và vẽ thanh lên canvas
+                function draw() {
+                    canvasCtx.clearRect(0, 0, micLevelCanvas.width, micLevelCanvas.height);
+
+                    analyser.getByteFrequencyData(dataArray);
+
+                    let sum = 0;
+                    for (let i = 0; i < bufferLength; i++) {
+                        sum += dataArray[i];
+                    }
+                    const average = sum / bufferLength;
+
+                    // Tùy chỉnh scale (1.5) & clamp lên chiều cao canvas
+                    const barHeight = average * 1.5;
+                    const finalHeight = Math.min(barHeight, micLevelCanvas.height);
+
+                    canvasCtx.fillStyle = '#C0392B';
+                    canvasCtx.fillRect(0, micLevelCanvas.height - finalHeight, micLevelCanvas.width, finalHeight);
+
+                    // Lặp vô hạn -> animationFrame
+                    animationFrame = requestAnimationFrame(draw);
+                }
+                draw();
+            })
+            .catch(err => {
+                // Lỗi truy cập (ví dụ: user deny permission)
+                cameraMicStatus.textContent = `LỖI TRUY CẬP: ${err.name}. Vui lòng kiểm tra quyền truy cập Camera/Mic.`;
+                startCameraMicButton.disabled = false;
+            });
+    });
+
+    // =========================================================================
+    // 4) KEYBOARD (XÂY DỰNG LAYOUT + XỬ LÝ SỰ KIỆN)
+    // =========================================================================
+
+    // DOM refs
+    const keyboardLayoutContainer = document.getElementById('keyboard-layout-container');
+    const osDisplay = document.getElementById('os-display');
+
+    /**
+     * KEY_LAYOUTS:
+     * - Mỗi phần tử là một mảng các hàng
+     * - Sử dụng mã e.code (ví dụ 'KeyA', 'Digit1', 'Enter', 'Numpad1', ...)
+     * - Nếu phần tử rỗng '' -> ta thêm spacer (khoảng trống) để căn hàng cho numpad hoặc layout
+     * Lưu ý: bạn có thể tùy chỉnh KEY_LAYOUTS để phù hợp bàn phím riêng (ví dụ layout TKL, 60%...)
+     */
+    const KEY_LAYOUTS = {
+        windows: [
+            ['Escape', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', 'PrintScreen', 'ScrollLock', 'Pause', 'Home', 'End'],
+            ['Backquote', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus', 'Equal', 'Backspace', 'NumLock', 'NumpadDivide', 'NumpadMultiply', 'NumpadSubtract', 'NumpadAdd'],
+            ['Tab', 'KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'BracketLeft', 'BracketRight', 'Backslash', '','Numpad7', 'Numpad8', 'Numpad9'],
+            ['CapsLock', 'KeyA', 'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'Semicolon', 'Quote', 'Enter', '','Numpad4', 'Numpad5', 'Numpad6'],
+            ['ShiftLeft', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'Comma', 'Period', 'Slash', 'ShiftRight', '','Numpad1', 'Numpad2', 'Numpad3'],
+            ['ControlLeft', 'MetaLeft', 'AltLeft', 'Space', 'AltRight', 'ContextMenu', 'ControlRight', 'ArrowUp', '','Numpad0', 'NumpadDecimal', 'NumpadEnter'],
+            ['', '', '', '', '', '', '','', '','', '','', '', '', 'ArrowLeft', 'ArrowDown', 'ArrowRight','','', '','','']
+        ],
+        macos: [
+            ['Escape', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', 'VolumeUp', 'VolumeDown', 'Mute', 'PlayPause', 'Eject'],
+            ['Backquote', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus', 'Equal', 'Backspace'],
+            ['Tab', 'KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'BracketLeft', 'BracketRight', 'Backslash'],
+            ['CapsLock', 'KeyA', 'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'Semicolon', 'Quote', 'Enter'],
+            ['ShiftLeft', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'Comma', 'Period', 'Slash', 'ShiftRight'],
+            ['ControlLeft', 'AltLeft', 'MetaLeft', 'Space', 'MetaRight', 'AltRight', 'ControlRight', 'ArrowUp', '', ''],
+            ['', '', '', '', '', '', '', '', '', '', '', '', '', '','','','','', 'ArrowLeft', 'ArrowDown', 'ArrowRight']
+        ]
+    };
+
+    /**
+     * KEY_LABELS: ánh xạ e.code -> văn bản hiển thị trên phím
+     * - Nên điền đủ các key quan trọng: Digit*, Numpad*, KeyA..KeyZ, F1..F12, Arrow*, Enter, Space, Backspace...
+     * - Sau đó ta tự động thêm F1..F12
+     */
+    const KEY_LABELS = {
+        'Escape': 'Esc', 'Tab': 'Tab', 'CapsLock': 'Caps', 'ShiftLeft': 'Shift', 'ShiftRight': 'Shift',
+        'ControlLeft': 'Ctrl', 'ControlRight': 'Ctrl', 'AltLeft': 'Alt', 'AltRight': 'Alt',
+        'MetaLeft': '⌘/Win', 'MetaRight': '⌘/Win', 'Space': 'Space', 'Enter': 'Enter',
+        'Backspace': 'Delete', 'Backquote': '` ~', 'Minus': '- _', 'Equal': '= +',
+        'BracketLeft': '[ {', 'BracketRight': '] }', 'Backslash': '\\ |', 'Semicolon': '; :',
+        'Quote': `' "`, 'Comma': ', <', 'Period': '. >', 'Slash': '/ ?',
+        'Digit1': '1', 'Digit2': '2', 'Digit3': '3', 'Digit4': '4', 'Digit5': '5',
+        'Digit6': '6 ', 'Digit7': '7 ', 'Digit8': '8 ', 'Digit9': '9', 'Digit0': '0',
+        'PrintScreen': 'PrtSc', 'ScrollLock': 'ScrLk', 'Pause': 'Pause', 'Insert': 'Ins', 'Delete': 'Del',
+        'ArrowUp': '↑', 'ArrowDown': '↓', 'ArrowLeft': '←', 'ArrowRight': '→',
+        'ContextMenu': 'Menu', 'NumpadDivide': '/', 'NumpadMultiply': '*', 'NumpadSubtract': '-',
+        'NumpadAdd': '+', 'NumpadDecimal': '.', 'NumpadEnter': 'Enter',
+        'Numpad0': '0', 'Numpad1': '1', 'Numpad2': '2', 'Numpad3': '3', 'Numpad4': '4',
+        'Numpad5': '5', 'Numpad6': '6', 'Numpad7': '7', 'Numpad8': '8', 'Numpad9': '9',
+        // chữ cái cơ bản, nếu thiếu JS sẽ dùng fallback keyCode replace
+        'KeyA': 'A', 'KeyB': 'B', 'KeyC': 'C', 'KeyD': 'D', 'KeyE': 'E', 'KeyF': 'F',
+        // ... bạn có thể thêm đủ A..Z để hiển thị hoàn chỉnh
+    };
+    // Thêm tự động nhãn F1..F12
+    for (let i = 1; i <= 12; i++) { KEY_LABELS[`F${i}`] = `F${i}`; }
+
+    /**
+     * detectOS()
+     * - Dò userAgent để xác định windows hay macOS để build layout tương ứng
+     * - Lưu ý: userAgent không phải lúc nào cũng chính xác (ví dụ user agent changer)
+     */
+    function detectOS() {
+        const userAgent = window.navigator.userAgent.toLowerCase();
+        if (userAgent.indexOf('mac') > -1) {
+            return 'macos';
+        }
+        if (userAgent.indexOf('win') > -1) {
+            return 'windows';
+        }
+        return 'windows'; // mặc định fallback
+    }
+    const currentOS = detectOS();
+    osDisplay.textContent = currentOS === 'macos' ? 'macOS' : 'Windows OS';
+
+    /**
+     * buildKeyboardLayout(os)
+     * - Xây DOM bàn phím theo KEY_LAYOUTS[os]
+     * - Mỗi key tạo 1 div .key với id = key-<code> để dễ tìm khi xử lý sự kiện
+     * - Nếu phần tử layout là '' -> tạo spacer (div rỗng có width)
+     */
+    function buildKeyboardLayout(os) {
+        const layout = KEY_LAYOUTS[os];
+        keyboardLayoutContainer.innerHTML = ''; // xóa layout cũ (nếu có)
+
+        layout.forEach(row => {
+            const rowDiv = document.createElement('div');
+            rowDiv.className = 'key-row';
+
+            row.forEach(keyCode => {
+                if (!keyCode) { // khoảng trống (spacer)
+                    const spacer = document.createElement('div');
+                    spacer.style.width = '30px';
+                    rowDiv.appendChild(spacer);
+                    return;
+                }
+
+                const keyDiv = document.createElement('div');
+                keyDiv.className = 'key';
+                keyDiv.id = `key-${keyCode}`; // id dùng để biding event
+                keyDiv.textContent = KEY_LABELS[keyCode] || keyCode.replace('Key', '');
+
+                // Thêm class special cho key dài/đặc biệt để CSS scale
+                if (keyCode === 'Tab') keyDiv.classList.add('key-tab');
+                if (keyCode === 'CapsLock') keyDiv.classList.add('key-caps');
+                if (keyCode === 'ShiftLeft') keyDiv.classList.add('key-shift-l');
+                if (keyCode === 'ShiftRight') keyDiv.classList.add('key-shift-r');
+                if (keyCode === 'Enter') keyDiv.classList.add('key-enter');
+                if (keyCode === 'Space') keyDiv.classList.add('key-space');
+                if (['ControlLeft', 'ControlRight', 'AltLeft', 'AltRight', 'MetaLeft', 'MetaRight'].includes(keyCode)) {
+                    keyDiv.classList.add('key-modifier');
+                }
+
+                rowDiv.appendChild(keyDiv);
+            });
+
+            keyboardLayoutContainer.appendChild(rowDiv);
+        });
+    }
+
+    // Gọi build khi script chạy (sẽ render keyboard trong module)
+    buildKeyboardLayout(currentOS);
+
+    // ==========================
+    // Keyboard event handlers
+    // - Khi peripheralTester đang hiển thị (đang test thiết bị), mới active keys
+    // - Nếu bạn muốn keyboard test hoạt động mọi lúc trong file chính (không cần bật peripheral),
+    //   bỏ điều kiện peripheralTester.style.display !== 'none'
+    // ==========================
+    document.addEventListener('keydown', (e) => {
+        // Nếu đang test ngoại vi thì highlight phím
         if (peripheralTester.style.display !== 'none') {
             const targetKey = document.getElementById(`key-${e.code}`);
             if (targetKey) {
-                e.preventDefault(); 
-                // 💡 1. Khi nhấn: BẬT màu active (CAM)
+                e.preventDefault();
+                // Khi nhấn: bật active (màu cam)
                 targetKey.classList.add('active');
-                targetKey.classList.remove('checked'); // Đảm bảo lớp checked bị xóa
+                targetKey.classList.remove('checked'); // bỏ class checked nếu có (đảm bảo chuẩn)
             }
         }
     });
 
-    // Xử lý khi nhả phím (KeyUp)
     document.addEventListener('keyup', (e) => {
         if (peripheralTester.style.display !== 'none') {
             const targetKey = document.getElementById(`key-${e.code}`);
             if (targetKey) {
-                // 💡 2. Khi nhả: TẮT active và BẬT checked (XÁM)
+                // Khi nhả: tắt active, bật checked (lưu trạng thái)
                 targetKey.classList.remove('active');
                 targetKey.classList.add('checked');
             }
         }
     });
 
-
-    // 3. Hàm Reset Bàn phím
+    /**
+     * resetKeyboard()
+     * - Xóa mọi trạng thái active / checked
+     * - Cập nhật lại text status (nếu bạn có element button reset)
+     */
     function resetKeyboard() {
         const checkedKeys = keyboardLayoutContainer.querySelectorAll('.key.checked, .key.active');
         checkedKeys.forEach(key => {
             key.classList.remove('checked');
             key.classList.remove('active');
         });
-        document.getElementById('keyboard-status').textContent = 'Nhấn bất kỳ phím nào trên bàn phím của bạn để kiểm tra phản hồi.';
-    }
-
-    // 4. Sự kiện Reset
-    //resetKeyboardBtn.addEventListener('click', resetKeyboard);
-
-/* ===== BẮT ĐẦU LOGIC CHUỘT MỚI (TRACKPAD) ===== */
-// ================== F. MOUSE CHECKER LOGIC ==================
-(function() {
-    // Vùng nhận sự kiện: Toàn bộ khối 'keyboard-tester'
-    // Đây là div cha (dòng 231) chứa cả bàn phím và khu vực trackpad
-    const captureZone = document.getElementById('keyboard-tester'); 
-    
-    // Các ô hiển thị trạng thái
-    const leftDisplay = document.getElementById('mouse-left-display');
-    const rightDisplay = document.getElementById('mouse-right-display');
-    const middleDisplay = document.getElementById('mouse-middle-display');
-
-    if (!captureZone || !leftDisplay || !rightDisplay || !middleDisplay) {
-        console.error('Không tìm thấy các thành phần của trackpad.');
-        return;
-    }
-
-    // Định nghĩa màu sắc
-    const activeBorder = '#F6AD55'; // Màu cam
-    const activeBg = 'rgba(246, 173, 85, 0.2)';
-    const activeText = '#F6AD55';
-    const defaultBorder = '#6B7280'; // gray-500 (trong Tailwind)
-    const defaultText = '#9CA3AF'; // gray-400
-
-    // Hàm xử lý NHẤN chuột
-    function handleMouseDown(e) {
-        // Ngăn các hành vi mặc định (như kéo, bôi đen text)
-        e.preventDefault();
-
-        switch (e.button) {
-            case 0: // Trái
-                leftDisplay.style.borderColor = activeBorder;
-                leftDisplay.style.backgroundColor = activeBg;
-                leftDisplay.style.color = activeText;
-                break;
-            case 1: // Giữa (nhấn con lăn)
-                middleDisplay.style.borderColor = activeBorder;
-                middleDisplay.style.backgroundColor = activeBg;
-                middleDisplay.style.color = activeText;
-                break;
-            case 2: // Phải
-                rightDisplay.style.borderColor = activeBorder;
-                rightDisplay.style.backgroundColor = activeBg;
-                rightDisplay.style.color = activeText;
-                break;
+        const statusEl = document.getElementById('keyboard-status');
+        if (statusEl) {
+            statusEl.textContent = 'Nhấn bất kỳ phím nào trên bàn phím của bạn để kiểm tra phản hồi.';
         }
     }
 
-    // Hàm xử lý NHẢ chuột
-    function handleMouseUp(e) {
-        e.preventDefault();
-        
-        switch (e.button) {
-            case 0: // Trái
-                leftDisplay.style.borderColor = defaultBorder;
-                leftDisplay.style.backgroundColor = 'transparent';
-                leftDisplay.style.color = defaultText;
-                break;
-            case 1: // Giữa
-                middleDisplay.style.borderColor = defaultBorder;
-                middleDisplay.style.backgroundColor = 'transparent';
-                middleDisplay.style.color = defaultText;
-                break;
-            case 2: // Phải
-                rightDisplay.style.borderColor = defaultBorder;
-                rightDisplay.style.backgroundColor = 'transparent';
-                rightDisplay.style.color = defaultText;
-                break;
+    // Nếu bạn muốn thêm nút Reset trong UI, uncomment và gán id cho nút đó, ví dụ:
+    // document.getElementById('resetKeyboardBtn').addEventListener('click', resetKeyboard);
+
+    // =========================================================================
+    // 5) MOUSE / TRACKPAD CHECKER LOGIC
+    // =========================================================================
+
+    /* 
+       Phần này bọc trong IIFE để scope các biến riêng.
+       - captureZone: vùng sẽ lắng nghe sự kiện chuột (ở đây là #keyboard-tester)
+       - leftDisplay / middleDisplay / rightDisplay: 3 ô phản hồi trạng thái
+       - handleMouseDown: set style active khi nhấn
+       - handleMouseUp: reset style khi nhả
+       - contextmenu: prevent để tiện test nút phải
+    */
+    (function() {
+        const captureZone = document.getElementById('keyboard-tester'); // vùng bắt sự kiện chuột
+        const leftDisplay = document.getElementById('mouse-left-display');
+        const rightDisplay = document.getElementById('mouse-right-display');
+        const middleDisplay = document.getElementById('mouse-middle-display');
+
+        // Nếu bất kỳ element không tồn tại, log và dừng (tránh lỗi JS)
+        if (!captureZone || !leftDisplay || !rightDisplay || !middleDisplay) {
+            console.error('Không tìm thấy các thành phần của trackpad.');
+            return;
         }
-    }
 
-    // Gán sự kiện cho toàn bộ vùng 'keyboard-tester'
-    captureZone.addEventListener('mousedown', handleMouseDown);
-    captureZone.addEventListener('mouseup', handleMouseUp);
-    
-    // Ngăn menu chuột phải hiện lên trong toàn bộ vùng này
-    captureZone.addEventListener('contextmenu', (e) => e.preventDefault());
+        // Màu & style dùng khi active/normal
+        const activeBorder = '#F6AD55'; // cam
+        const activeBg = 'rgba(246, 173, 85, 0.2)';
+        const activeText = '#F6AD55';
+        const defaultBorder = '#6B7280'; // gray-500
+        const defaultText = '#9CA3AF'; // gray-400
 
-    // Thêm CSS để ngăn bôi đen chữ (user-select: none)
-    // (Đã thêm style inline trong HTML, nhưng thêm ở đây cho chắc chắn)
-    captureZone.style.userSelect = 'none';
+        function handleMouseDown(e) {
+            e.preventDefault(); // tránh drag selection
+            switch (e.button) {
+                case 0: // left
+                    leftDisplay.style.borderColor = activeBorder;
+                    leftDisplay.style.backgroundColor = activeBg;
+                    leftDisplay.style.color = activeText;
+                    break;
+                case 1: // middle
+                    middleDisplay.style.borderColor = activeBorder;
+                    middleDisplay.style.backgroundColor = activeBg;
+                    middleDisplay.style.color = activeText;
+                    break;
+                case 2: // right
+                    rightDisplay.style.borderColor = activeBorder;
+                    rightDisplay.style.backgroundColor = activeBg;
+                    rightDisplay.style.color = activeText;
+                    break;
+            }
+        }
 
-})();
-/* ===== KẾT THÚC LOGIC CHUỘT MỚI (TRACKPAD) ===== */
+        function handleMouseUp(e) {
+            e.preventDefault();
+            switch (e.button) {
+                case 0:
+                    leftDisplay.style.borderColor = defaultBorder;
+                    leftDisplay.style.backgroundColor = 'transparent';
+                    leftDisplay.style.color = defaultText;
+                    break;
+                case 1:
+                    middleDisplay.style.borderColor = defaultBorder;
+                    middleDisplay.style.backgroundColor = 'transparent';
+                    middleDisplay.style.color = defaultText;
+                    break;
+                case 2:
+                    rightDisplay.style.borderColor = defaultBorder;
+                    rightDisplay.style.backgroundColor = 'transparent';
+                    rightDisplay.style.color = defaultText;
+                    break;
+            }
+        }
 
-        // =========================================================================
-        // 2. CODE CỦA BẠN (Dùng cho header/footer/logic phân trang)
-        // (Giữ lại các thẻ script src cũ để đảm bảo logic header/footer hoạt động)
-        // =========================================================================
+        // Gán sự kiện cho vùng captureZone
+        captureZone.addEventListener('mousedown', handleMouseDown);
+        captureZone.addEventListener('mouseup', handleMouseUp);
 
-    </script>
-    <script src="/js/script.js"></script>
-    <script src="/js/content.js"></script>
-    <script src="/pages/page-logic.js"></script>
+        // Ngăn menu chuột phải hiện lên trong vùng test để tránh che UI
+        captureZone.addEventListener('contextmenu', (e) => e.preventDefault());
+
+        // Ngăn selection text trong vùng test (nếu cần)
+        captureZone.style.userSelect = 'none';
+    })();
+
+    // =========================================================================
+    // 6) KẾT LUẬN: các script khác (header/footer) được giữ bằng file import ở dưới
+    //    Nếu file tổng (checklcd.html) fetch các module, script trong module cũng sẽ
+    //    được append và thực thi. Để tránh xung đột, nên scope CSS/JS trong module (đã làm).
+    // =========================================================================
+
+</script>
+
+<!--
+    Các script của site (giữ nguyên để đảm bảo header/footer/page-logic hoạt động)
+    Nếu bạn gộp module vào file chính và không cần các file này, có thể xóa.
+-->
+<script src="/js/script.js"></script>
+<script src="/js/content.js"></script>
+<script src="/pages/page-logic.js"></script>
 </body>
 </html>
