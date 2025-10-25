@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Game Xếp Hình Block | Vinh ở Nhật</title>
+
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#F6AD55">
+  <link rel="apple-touch-icon" href="/img/logo apple.jpg">
+  <link rel="icon" href="/img/logoQV.png" type="image/x-icon">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/style.css">
+
+  <link rel="stylesheet" href="/pages/pages-giaitri/block/game-block.css">
+</head>
+<body class="bg-[#FBF7F0]">
+  <div id="header-placeholder"></div>
+
+  <main id="game-page" class="game-page">
+    <div id="game-container" class="game-container">
+      <div id="left-panel" class="panel">
+        <div id="hud" class="hud">
+          <div id="score">Điểm: 0</div>
+          <div id="level">Mức: 1</div>
+          <div id="best-score">Cao nhất: 0</div>
+        </div>
+        <div id="controls-top">
+          <button id="btn-fullscreen" class="hud-btn" title="Toàn màn hình">⤢</button>
+          <button id="btn-sound" class="hud-btn" title="Bật/Tắt âm thanh">🔊</button>
+          <button id="btn-exit" class="hud-btn" title="Thoát">←</button>
+        </div>
+      </div>
+
+      <div id="game-wrap" class="game-wrap">
+        <canvas id="game-canvas"></canvas>
+      </div>
+
+      <div id="right-panel" class="panel">
+        <div id="next-piece-container">
+          <h3>Tiếp theo:</h3>
+          <canvas id="next-piece-canvas" width="128" height="128"></canvas>
+        </div>
+        
+        <div id="mobile-controls" class="mobile-controls" role="group" aria-label="Điều khiển">
+          <div class="top-row-controls">
+            <button id="btn-left" class="big-btn">◀</button>
+            <button id="btn-rotate" class="big-btn">🔄</button>
+            <button id="btn-right" class="big-btn">▶</button>
+          </div>
+          <button id="btn-down" class="big-btn full-width">▼</button>
+          <div class="bottom-row-actions">
+            <button id="btn-reset" class="small-btn">⟳ Reset</button>
+            <button id="btn-pause" class="small-btn">⏯️ Tạm dừng</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="overlay" class="overlay hidden">
+      <div class="overlay-box">
+        <h2 id="overlay-title">Game Over</h2>
+        <p id="overlay-score">Điểm: 0</p>
+        <p id="overlay-best-score">Cao nhất: 0</p>
+        <div class="overlay-actions">
+          <button id="overlay-restart">Chơi lại</button>
+          <button id="overlay-back">Quay lại</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="/js/lunar-calendar.js"></script>
+  <script src="/js/holidays.js"></script>
+  <script src="/js/proverbs.js"></script>
+  <script src="/js/content.js"></script>
+  <script src="/js/script.js"></script>
+
+  <script src="/pages/pages-giaitri/block/game-block.js"></script>
+</body>
+</html>
