@@ -24,7 +24,7 @@
             margin: 0;
             padding: 0;
             width: 100%;
-            height: 100%;
+            /* height: 100%; */ /* <-- XÓA DÒNG NÀY */
             font-family: 'Inter', sans-serif; /* Font chữ chung */
         }
 
@@ -146,22 +146,53 @@
 
         /* Phím modifier (Ctrl, Alt...) có độ rộng tối thiểu */
         .key.key-modifier { min-width: 50px; }
+
+        /* [CSS MỚI] Dành cho nút chuột */
+        .mouse-btn-display {
+            width: 112px; /* w-28 */
+            height: 64px; /* h-16 */
+            border: 2px solid #6B7280; /* border-gray-500 */
+            border-radius: 0.25rem; /* rounded */
+            color: #9CA3AF; /* text-gray-400 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.1s;
+            user-select: none;
+        }
+        .mouse-btn-display.middle {
+            width: 80px; /* w-20 */
+        }
+        /* Trạng thái đang nhấn (giống bàn phím) */
+        .mouse-btn-display.active {
+            border-color: #0011ff !important;
+            background-color: rgba(255, 196, 3, 0.2) !important;
+            color: #ff0000 !important;
+        }
+        /* Trạng thái đã nhấn (giống bàn phím) */
+        .mouse-btn-display.checked {
+            background-color: #9b9a9a !important; 
+            border-color: #cc4e4e !important; 
+            color: rgb(38, 0, 255) !important;
+        }
+
+
 	</style>
 </head>
 <body class="bg-[#FBF7F0]">
     
-<div id="header-placeholder"></div>
+<div id="header-placeholder" class="sticky top-0 z-50 bg-white shadow-md"></div>
 
 <main>
-    <h2 class="text-3xl font-bold text-gray-800 text-center mb-10"></h2>
-    <h3 class="text-3xl font-bold text-gray-800 text-center mb-10">Công cụ Kiểm tra Màn hình, Loa, Mic & Camera</h2>
-    <div id="screen-tester">
-        <h1 id="color-name">Nhấn vào đây hoặc phím Space để bắt đầu kiểm tra (Full Screen)</h1>
-        <p id="sub-text" class="text-white text-sm opacity-70">Nhấn ESC hoặc Q để thoát</p>
-    </div>
-    
+        
     <div class="max-w-4xl mx-auto py-12 px-4">
         
+        <h3 class="text-2xl font-bold text-gray-800 text-center mb-10">Công cụ Kiểm tra Màn hình, Loa, Mic & Camera</h2>
+    
+        <div id="screen-tester"tabindex="0">
+            <h1 id="color-name">Nhấn vào đây hoặc phím Space để bắt đầu kiểm tra (Full Screen)</h1>
+            <p id="sub-text" class="text-white text-sm opacity-70">Nhấn ESC hoặc Q để thoát</p>
+        </div>
 
         <div id="speaker-tester" class="bg-white p-6 rounded-lg shadow-lg mb-8">
             <h3 class="text-2xl font-semibold mb-4 flex items-center"><i class="fas fa-volume-up mr-3 text-blue-500"></i>Kiểm Tra Loa (Stereo Check)</h3>
@@ -213,23 +244,33 @@
 
         </div>
 
-        <div id="trackpad-area" class="mt-4 p-4 flex justify-center items-center gap-2" style="user-select: none;">
-            <div id="mouse-left-display" class="w-28 h-16 border-2 border-gray-500 rounded text-gray-400 flex justify-center items-center transition-all duration-100">
+        <div id="trackpad-area" class="mt-4 p-4 flex justify-center items-center gap-2">
+            <div id="mouse-left" class="mouse-btn-display">
                 Trái
             </div>
-            <div id="mouse-middle-display" class="w-20 h-16 border-2 border-gray-500 rounded text-gray-400 flex justify-center items-center transition-all duration-100">
+            <div id="mouse-middle" class="mouse-btn-display middle">
                 Giữa
             </div>
-            <div id="mouse-right-display" class="w-28 h-16 border-2 border-gray-500 rounded text-gray-400 flex justify-center items-center transition-all duration-100">
+            <div id="mouse-right" class="mouse-btn-display">
                 Phải
             </div>
         </div>
 
         <p class="text-center text-sm text-gray-500">Click bất cứ đâu trong khu vực bàn phím để kiểm tra</p>
 
+        <div class="text-center mt-6">
+            <button id="reset-all-btn" class="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-5 rounded">
+                <i class="fas fa-redo mr-2"></i>Reset Phím & Chuột
+            </button>
+        </div>
+
         <div class="mt-4 text-center text-sm text-gray-500">
             <i class="fas fa-desktop mr-1"></i> Hệ điều hành: <span id="os-display" class="font-bold">Đang nhận diện...</span>
         </div>
+        <button id="scrollToTopBtn" class="fixed bottom-6 right-6 bg-yellow-600 text-white w-16 h-16 rounded-lg shadow-lg flex flex-col justify-center items-center text-xs transition-opacity duration-300 hover:bg-yellow-700 opacity-0 pointer-events-none z-40">
+            <i class="fas fa-arrow-up text-lg mb-1"></i>
+            <span class="font-semibold">Lên đầu</span>
+        </button>
     </div>
 </main>
 
@@ -258,6 +299,7 @@
     const colorNameDisplay = document.getElementById('color-name');       // Thẻ <h1> tên màu
     const subText = document.getElementById('sub-text');                  // Thẻ <p> hướng dẫn thoát
     let isFirstInteraction = true;                                        // Cờ (flag) để biết đây là lần nhấn đầu (để bật fullscreen)
+    let textHideTimer = null; // Biến lưu timer ẩn chữ
 
     /**
      * [LOGIC ĐỂ PORT]: Hàm Bật/Tắt Fullscreen (Đã xóa code của modeSwitcher)
@@ -334,13 +376,25 @@
             colorNameDisplay.style.color = "white";
         }
 
+        // Hủy timer cũ (nếu có) phòng khi người dùng click quá nhanh
+        clearTimeout(textHideTimer);
+
         // Ẩn chữ và hướng dẫn khi test nền ĐEN, TRẮNG, XÁM (để dễ soi điểm chết)
         if (currentColor.hex === "#000000" || currentColor.hex === "#FFFFFF" || currentColor.hex === "#808080") {
-            screenTester.classList.add('hide-text'); // Thêm class CSS đã định nghĩa
+            // Với Đen, Trắng, Xám: Ẩn chữ ngay lập tức
+            screenTester.classList.add('hide-text'); 
             subText.style.display = 'none';
         } else {
-            screenTester.classList.remove('hide-text'); // Bỏ class
+            // Với các màu khác (Đỏ, Lục, Lam...):
+            // 1. Hiện text lên
+            screenTester.classList.remove('hide-text'); 
             subText.style.display = 'block';
+
+            // 2. Đặt hẹn giờ để tự động ẩn text sau 1.5 giây
+            textHideTimer = setTimeout(() => {
+                screenTester.classList.add('hide-text');
+                subText.style.display = 'none';
+            }, 500); // 1500ms = 1.5 giây (bạn có thể đổi số này)
         }
     }
 
@@ -351,18 +405,23 @@
     document.addEventListener('keydown', (e) => {
         // Nếu nhấn Space hoặc Enter
         if (e.code === 'Space' || e.code === 'Enter') {
-            e.preventDefault(); // Ngăn hành vi mặc định (như cuộn trang)
-            
-            // Chỉ đổi màu nếu đang ở chế độ test màn hình (hoặc sắp vào)
-            // (Logic cũ 'screenTester.style.display !== 'none'' vẫn đúng)
-            if (screenTester.style.display !== 'none') {
-                // Kiểm tra xem focus có đang ở trong 1 input/button khác không
-                // Nếu là body hoặc screenTester thì mới chạy
-                if(document.activeElement === document.body || document.activeElement === screenTester) {
-                     changeColor();
-                }
+
+            if (document.fullscreenElement) {
+                // 1. NẾU ĐÃ Ở FULLSCREEN:
+                // Phím Space/Enter LUÔN LUÔN dùng để đổi màu.
+                e.preventDefault();
+                changeColor();
+
+            } else if (document.activeElement === screenTester) {
+                // 2. NẾU CHƯA Ở FULLSCREEN:
+                // Chỉ bắt đầu test nếu người dùng đã click vào hộp test (focus).
+                e.preventDefault();
+                changeColor();
             }
+            // 3. TRƯỜNG HỢP CÒN LẠI (ví dụ: focus ở body, nút reset...):
+            // Không làm gì cả. Để cho listener của bàn phím xử lý phím Space.
         }
+
         // Nếu nhấn phím 'Q' VÀ đang ở fullscreen -> thoát
         if (e.code === 'KeyQ' && document.fullscreenElement) {
             toggleFullscreen();
@@ -608,8 +667,10 @@
      * (Đã xóa logic kiểm tra 'peripheralTester.style.display')
      */
     document.addEventListener('keydown', (e) => {
-        // CHỈ xử lý khi KHÔNG ở fullscreen (tránh xung đột với phím Space đổi màu)
-        if (!document.fullscreenElement) {
+        // CHỈ xử lý khi:
+        // 1. KHÔNG ở fullscreen (tránh xung đột với phím Space đổi màu)
+        // 2. Focus KHÔNG nằm trên hộp test màn hình (screenTester)
+        if (!document.fullscreenElement && document.activeElement !== screenTester) {
             const targetKey = document.getElementById(`key-${e.code}`);
             if (targetKey) { // Nếu tìm thấy phím
                 e.preventDefault(); // Ngăn hành vi mặc định (vd: gõ chữ)
@@ -617,7 +678,7 @@
                 targetKey.classList.remove('checked'); // Xóa class 'checked' (nếu có)
             }
         }
-    });
+    }); 
 
     /**
      * [LOGIC ĐỂ PORT]: Bắt sự kiện phím được THẢ RA (keyup)
@@ -650,85 +711,93 @@
             statusEl.textContent = 'Nhấn bất kỳ phím nào trên bàn phím của bạn để kiểm tra phản hồi.';
         }
     }
+
+    /**
+     * [LOGIC MỚI]: Hàm Reset Chuột
+     */
+    function resetMouse() {
+        document.querySelectorAll('.mouse-btn-display.checked, .mouse-btn-display.active').forEach(btn => {
+            btn.classList.remove('checked');
+            btn.classList.remove('active');
+        });
+    }
+
+    // [LOGIC MỚI] Gán sự kiện cho nút Reset All
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('reset-all-btn').addEventListener('click', () => {
+            resetKeyboard();
+            resetMouse();
+        });
+    });
     
     // =========================================================================
-    // [JS] CHUỘT / TRACKPAD (GIỮ NGUYÊN TỪ BẢN CHÍNH)
-    // =========================================================================
-    (function() {
-        const captureZone = document.getElementById('keyboard-tester'); 
-        const leftDisplay = document.getElementById('mouse-left-display');
-        const rightDisplay = document.getElementById('mouse-right-display');
-        const middleDisplay = document.getElementById('mouse-middle-display');
+// [JS] CHUỘT / TRACKPAD (ĐÃ CẬP NHẬT LOGIC)
+// =========================================================================
+(function() {
+    // Vùng bắt sự kiện chuột (vẫn dùng vùng bàn phím)
+    const captureZone = document.getElementById('keyboard-tester'); 
+    // 3 ô hiển thị trạng thái (lấy bằng ID mới)
+    const leftDisplay = document.getElementById('mouse-left');
+    const rightDisplay = document.getElementById('mouse-right');
+    const middleDisplay = document.getElementById('mouse-middle');
 
-        if (!captureZone || !leftDisplay || !rightDisplay || !middleDisplay) {
-            console.error('Không tìm thấy các thành phần của trackpad.');
-            return;
+    if (!captureZone || !leftDisplay || !rightDisplay || !middleDisplay) {
+        console.error('Không tìm thấy các thành phần của trackpad.');
+        return;
+    }
+
+    /**
+     * [LOGIC ĐÃ SỬA]: Hàm xử lý khi NHẤN chuột (mousedown)
+     * Dùng classList thay vì inline style
+     */
+    function handleMouseDown(e) {
+        e.preventDefault(); // Ngăn chọn (select) text
+        switch (e.button) {
+            case 0: // 0 = Chuột TRÁI
+                leftDisplay.classList.add('active');
+                leftDisplay.classList.remove('checked');
+                break;
+            case 1: // 1 = Chuột GIỮA (con lăn)
+                middleDisplay.classList.add('active');
+                middleDisplay.classList.remove('checked');
+                break;
+            case 2: // 2 = Chuột PHẢI
+                rightDisplay.classList.add('active');
+                rightDisplay.classList.remove('checked');
+                break;
         }
+    }
 
-        const activeBorder = '#F6AD55'; 
-        const activeBg = 'rgba(246, 173, 85, 0.2)';
-        const activeText = '#F6AD55';
-        const defaultBorder = '#6B7280'; // gray-500
-        const defaultText = '#9CA3AF'; // gray-400
-
-        /**
-         * [LOGIC ĐỂ PORT]: Hàm xử lý khi NHẤN chuột (mousedown)
-         */
-        function handleMouseDown(e) {
-            e.preventDefault(); // Ngăn chọn (select) text
-            switch (e.button) {
-                case 0: // 0 = Chuột TRÁI
-                    leftDisplay.style.borderColor = activeBorder;
-                    leftDisplay.style.backgroundColor = activeBg;
-                    leftDisplay.style.color = activeText;
-                    break;
-                case 1: // 1 = Chuột GIỮA (con lăn)
-                    middleDisplay.style.borderColor = activeBorder;
-                    middleDisplay.style.backgroundColor = activeBg;
-                    middleDisplay.style.color = activeText;
-                    break;
-                case 2: // 2 = Chuột PHẢI
-                    rightDisplay.style.borderColor = activeBorder;
-                    rightDisplay.style.backgroundColor = activeBg;
-                    rightDisplay.style.color = activeText;
-                    break;
-            }
+    /**
+     * [LOGIC ĐÃ SỬA]: Hàm xử lý khi THẢ chuột (mouseup)
+     * Xóa 'active' và thêm 'checked'
+     */
+    function handleMouseUp(e) {
+        e.preventDefault();
+        switch (e.button) {
+            case 0: // Trái
+                leftDisplay.classList.remove('active');
+                leftDisplay.classList.add('checked');
+                break;
+            case 1: // Giữa
+                middleDisplay.classList.remove('active');
+                middleDisplay.classList.add('checked');
+                break;
+            case 2: // Phải
+                rightDisplay.classList.remove('active');
+                rightDisplay.classList.add('checked');
+                break;
         }
+    }
 
-        /**
-         * [LOGIC ĐỂ PORT]: Hàm xử lý khi THẢ chuột (mouseup)
-         */
-        function handleMouseUp(e) {
-            e.preventDefault();
-            switch (e.button) {
-                case 0: // Trái
-                    leftDisplay.style.borderColor = defaultBorder;
-                    leftDisplay.style.backgroundColor = 'transparent';
-                    leftDisplay.style.color = defaultText;
-                    break;
-                case 1: // Giữa
-                    middleDisplay.style.borderColor = defaultBorder;
-                    middleDisplay.style.backgroundColor = 'transparent';
-                    middleDisplay.style.color = defaultText;
-                    break;
-                case 2: // Phải
-                    rightDisplay.style.borderColor = defaultBorder;
-                    rightDisplay.style.backgroundColor = 'transparent';
-                    rightDisplay.style.color = defaultText;
-                    break;
-            }
-        }
+    // Gán sự kiện cho vùng captureZone
+    captureZone.addEventListener('mousedown', handleMouseDown);
+    captureZone.addEventListener('mouseup', handleMouseUp);
 
-        // Gán sự kiện cho vùng captureZone
-        captureZone.addEventListener('mousedown', handleMouseDown);
-        captureZone.addEventListener('mouseup', handleMouseUp);
+    // Ngăn menu chuột phải hiện lên trong vùng test
+    captureZone.addEventListener('contextmenu', (e) => e.preventDefault());
 
-        // Ngăn menu chuột phải hiện lên trong vùng test
-        captureZone.addEventListener('contextmenu', (e) => e.preventDefault());
-
-        // Ngăn chọn text
-        captureZone.style.userSelect = 'none';
-    })();
+})();
 
 </script>
 
