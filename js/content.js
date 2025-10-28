@@ -75,7 +75,7 @@ const allContent = [
         title: "Chơi Game xếp hình",
         summary: "mini game xếp hình trên ứng dụng",
         imageUrl: "https://placehold.co/400x250/FBD38D/ffffff?text=Block",
-        link: "/pages/pages-giaitri/block.html"
+        link: "/pages/pages-giaitri/bloks.html"
     },
     {
         type: 'post',
@@ -212,16 +212,6 @@ const allContent = [
     }, 
 
     // --- BÀI VIẾT HƯỚNG DẪN (GUIDES) ---
-    {
-        type: 'guide', // Loại nội dung: Hướng dẫn
-        category: "other",
-        date: "2025-10-25", // Ngày mới nhất
-        featured: true,
-        title: "Check máy tính cơ bản",
-        summary: "trang hướng dẫn check màn hình, loa, míc, camera, và bàn phím máy tính dùng cho cả Windows và MacBook.",
-        imageUrl: "/img/posts/testpc.png",
-        link: "/pages/pages-app/checklcd.html"
-    },
     {
         type: 'guide', // Loại nội dung: Hướng dẫn
         category: "other",
