@@ -200,13 +200,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     
     // === HÀM XỬ LÝ CUỘN TRANG (NÚT LÊN ĐẦU & ẨN MENU) ===
+    // === HÀM XỬ LÝ CUỘN TRANG (ĐÃ SỬA LỖI NHÁY) ===
     function handleScroll() {
-        // Lấy vị trí cuộn
-        const isScrolled = document.body.scrollTop > 100 || document.documentElement.scrollTop > 100;
+        // Lấy vị trí cuộn hiện tại
+        const scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+
+        // ĐỊNH NGHĨA 2 MỐC (MỐC ẨN VÀ MỐC HIỆN)
+        const HIDE_THRESHOLD = 200; // Mốc để ẩn menu / hiện nút
+        const SHOW_THRESHOLD = 100;  // Mốc để hiện menu / ẩn nút
 
         // --- 1. Điều khiển nút "Lên đầu" ---
         if (scrollToTopBtn) { 
-            if (isScrolled) {
+            // Logic của nút thì đơn giản, có thể dùng 1 mốc HIDE_THRESHOLD
+            if (scrollTop > HIDE_THRESHOLD) {
                 scrollToTopBtn.classList.remove('opacity-0', 'pointer-events-none');
                 scrollToTopBtn.classList.add('opacity-100', 'pointer-events-auto');
             } else {
@@ -215,14 +221,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // --- 2. Điều khiển ẩn/hiện Menu Nav ---
+        // --- 2. Điều khiển ẩn/hiện Menu Nav (Dùng 2 mốc) ---
         const navContent = document.getElementById('nav-content');
         if (navContent) {
-            if (isScrolled) {
+            if (scrollTop > HIDE_THRESHOLD) {
+                // Khi cuộn XUỐNG qua 100px -> ẨN menu
                 navContent.classList.add('max-h-0', 'opacity-0', 'py-0', 'overflow-hidden');
-            } else {
+            } else if (scrollTop < SHOW_THRESHOLD) {
+                // Khi cuộn LÊN qua 50px -> HIỆN menu
                 navContent.classList.remove('max-h-0', 'opacity-0', 'py-0', 'overflow-hidden');
             }
+            // *** QUAN TRỌNG: ***
+            // Nếu vị trí cuộn nằm TRONG KHOẢNG (ví dụ 70px), hàm sẽ không làm gì cả.
+            // Nó giữ nguyên trạng thái (đang ẩn), vì vậy sẽ không bị nháy.
         }
     }
 
