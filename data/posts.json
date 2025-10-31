@@ -379,7 +379,7 @@
   {
     "id": "migrated-video-rakuten-wifi-20251005",
     "type": "video",
-    "category": "video",
+    "category": ["video", "rakuten"],
     "tags": ["video", "rakuten"],
     "date": "2025-10-05",
     "featured": false,
