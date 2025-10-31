@@ -50,7 +50,7 @@
     data-perpage="6"
 >
 <!-- ================= HEADER ================= -->
-    <div id="header-placeholder"></div>
+    <div id="header-placeholder" class="sticky top-0 z-50 bg-white shadow-md"></div>
 
 <!-- ================= MAIN ================= -->
     
@@ -78,14 +78,16 @@
     </main>
     
 <!-- ================= FOOTER ================= -->
-  <footer class="bg-gray-800 text-white mt-12 py-8">
-       <div id="footer-placeholder"></div>
-  </footer>
+    <div id="footer-placeholder"></div>
+
+    <!-- ================= nút lên đầu trang ================= -->
+    <button id="scrollToTopBtn" class="fixed bottom-6 right-6 bg-yellow-600 text-white w-14 h-12 rounded-lg shadow-lg flex flex-col justify-center items-center text-xs transition-opacity duration-300 hover:bg-yellow-700 opacity-0 pointer-events-none z-40">
+        <i class="fas fa-arrow-up text-lg mb-1"></i>
+        <span class="font-semibold">Lên đầu</span>
+    </button>
 
   <!-- ================= SCRIPT ================= -->
-    <script src="/js/script.js"></script> <!-- đồng hồ + menu -->
-    <script src="/js/content.js"></script> <!-- dữ liệu bài viết -->
-    
-    <script src="/pages/page-logic.js"></script>
+    <script src="/js/script.js"></script> <!-- đồng hồ + menu --> 
+    <script src="/pages/page-leve2.js"></script>
 </body>
 </html>
