@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{POST_TITLE}}</title> <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/style.css"> <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Đảm bảo nền và font chữ giống trang thật */
+        body {
+            background-color: #FBF7F0;
+            font-family: 'Inter', sans-serif;
+        }
+        /* Đây là class giả định cho nội dung bài viết */
+        .article-content {
+            /* Tùy chỉnh hiển thị H2, H3, p, ul, li... bên trong bài viết */
+            prose-lg: auto; /* Dùng @tailwindcss/typography nếu có */
+        }
+        .article-content h1, .article-content h2, .article-content h3 {
+            font-weight: 700;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+        .article-content h1 { font-size: 2.25rem; }
+        .article-content h2 { font-size: 1.875rem; }
+        .article-content h3 { font-size: 1.5rem; }
+        .article-content p {
+            line-height: 1.75;
+            margin-bottom: 1.25em;
+        }
+        .article-content ul, .article-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1.25em;
+            list-style-position: outside;
+        }
+        .article-content ul { list-style-type: disc; }
+        .article-content ol { list-style-type: decimal; }
+        .article-content li { margin-bottom: 0.5em; }
+        .article-content a {
+            color: #D97706; /* text-yellow-600 */
+            text-decoration: underline;
+        }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem; /* rounded-lg */
+            margin-top: 1em;
+            margin-bottom: 1em;
+        }
+        .article-content iframe {
+            max-width: 100%;
+            margin: 1.5em auto;
+            display: block;
+            aspect-ratio: 16 / 9;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-[#FBF7F0]">
+    
+    <main class="container mx-auto px-4 mt-8">
+        <article class="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6 md:p-10">
+            
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+                {{ARTICLE_TITLE}}
+            </h1>
+            
+            <p class="text-gray-500 text-sm mb-6">
+                {{ARTICLE_DATE}}
+            </p>
+            
+            <div class="article-content text-gray-700">
+                {{ARTICLE_CONTENT}}
+            </div>
+
+        </article>
+    </main>
+    
+</body>
+</html>
