@@ -2,7 +2,7 @@
 // Phiên bản dành cho các trang "trống bài chính" nhưng vẫn hoạt động bình thường
 // + Có chức năng thêm bài viết thủ công bằng form nhập liệu
 
-function initializeFlexiblePage() {
+function initializeFlexiblePage(allContent) {
     console.log('[LOGIC-CUSTOM] Khởi tạo trang linh hoạt (phiên bản trống bài chính).');
 
     const el = {
@@ -73,10 +73,10 @@ function initializeFlexiblePage() {
 
         show.forEach(post => {
             let img = post.imageUrl || "https://placehold.co/80x80/ccc/fff?text=IMG";
-            if (!img.startsWith("http")) img = "../../" + img;
+            if (!img.startsWith("http")) img = "/" + img;
             let link = post.link || "#";
-            if (!link.startsWith("http") && !link.startsWith("../") && !link.startsWith("../../"))
-                link = "../../" + link;
+            if (!link.startsWith("http") && !link.startsWith("/"))
+                link = "/" + link;
 
             el.suggestions.innerHTML += `
                 <a href="${link}" 
