@@ -1,9 +1,8 @@
-// page-logic-custom.js
-// Phiên bản dành cho các trang "trống bài chính" nhưng vẫn hoạt động bình thường
-// + Có chức năng thêm bài viết thủ công bằng form nhập liệu
+// page-logic-custom.js (ĐÃ SỬA LỖI CRASH)
+// Phiên bản dành cho các trang "trống bài chính" VÀ các trang bài viết chi tiết.
 
 function initializeFlexiblePage(allContent) {
-    console.log('[LOGIC-CUSTOM] Khởi tạo trang linh hoạt (phiên bản trống bài chính).');
+    console.log('[LOGIC-CUSTOM] Khởi tạo trang linh hoạt.');
 
     const el = {
         body: document.body,
@@ -20,38 +19,29 @@ function initializeFlexiblePage(allContent) {
         desc: el.body.dataset.description || "",
     };
 
-    el.title.textContent = cfg.title;
-    el.desc.textContent = cfg.desc;
+    // === SỬA LỖI 1, 2, 3 ===
+    // Chỉ chạy nếu tìm thấy các ID này
+    if (el.title) {
+        el.title.textContent = cfg.title;
+    }
+    if (el.desc) {
+        el.desc.textContent = cfg.desc;
+    }
+    if (el.main) {
+        el.main.innerHTML = `
+    		<div class="bg-white p-8 rounded-lg shadow text-center text-gray-600">
+    			<p class="mb-4">Hiện chưa có bài viết nào trong mục này.</p>
+    		</div>
+    	`;
+    }
+    // === KẾT THÚC SỬA LỖI 1, 2, 3 ===
 
-    // ============= 1️⃣ ẨN PHẦN BÀI VIẾT CHÍNH =============
-	el.main.innerHTML = `
-		<div class="bg-white p-8 rounded-lg shadow text-center text-gray-600">
-			<p class="mb-4">Hiện chưa có bài viết nào trong mục này.</p>
-			
-		</div>
-	`;
-	// đây phần nhấn để quản lý của trang admin.html
-	//<a href="/admin.html" class="inline-block bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md">Quản lý bài viết (Admin)</a>
-    /* phần này là phần ng dùng thêm bài viết bằng from nhập liệu nên bị ẩn
-	el.main.innerHTML = `
-        <div id="manual-add-section" class="bg-white p-6 rounded-lg shadow text-center text-gray-600">
-            <p class="mb-4">Hiện chưa có bài viết nào trong mục này.</p>
-            <button id="toggle-add-form" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md">
-                ➕ Thêm bài viết mới
-            </button>
-            <form id="add-form" class="hidden mt-6 text-left space-y-3">
-                <input id="post-title" type="text" placeholder="Tiêu đề bài viết" class="w-full p-2 border rounded" />
-                <input id="post-image" type="text" placeholder="Link ảnh (có thể để trống)" class="w-full p-2 border rounded" />
-                <input id="post-link" type="text" placeholder="Đường dẫn bài viết hoặc URL" class="w-full p-2 border rounded" />
-                <textarea id="post-summary" placeholder="Mô tả ngắn gọn" class="w-full p-2 border rounded"></textarea>
-                <button type="button" id="add-post-btn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md">Thêm bài viết</button>
-            </form>
-            <div id="manual-posts" class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6"></div>
-        </div>
-    `;*/
 
     // ============= 2️⃣ HIỂN THỊ BÀI VIẾT GỢI Ý =============
+    // Hàm này bây giờ sẽ luôn luôn chạy được
     function renderSuggestions() {
+        // (Toàn bộ code của hàm renderSuggestions giữ nguyên, không thay đổi)
+        
         el.suggestions.innerHTML = "";
 
         const sixMonthsAgo = new Date();
@@ -73,7 +63,7 @@ function initializeFlexiblePage(allContent) {
 
         show.forEach(post => {
             let img = post.imageUrl || "https://placehold.co/80x80/ccc/fff?text=IMG";
-            if (!img.startsWith("http")) img = "/" + img;
+            if (!img.startsWith("http") && !img.startsWith("/")) img = "/" + img;
             let link = post.link || "#";
             if (!link.startsWith("http") && !link.startsWith("/"))
                 link = "/" + link;
@@ -105,46 +95,53 @@ function initializeFlexiblePage(allContent) {
     renderSuggestions();
 
     // ============= 3️⃣ FORM THÊM BÀI VIẾT =============
+    
+    // === SỬA LỖI 4 ===
+    // Toàn bộ logic form chỉ chạy NẾU tìm thấy nút 'toggle-add-form'
     const toggleBtn = document.getElementById("toggle-add-form");
-    const form = document.getElementById("add-form");
-    const addBtn = document.getElementById("add-post-btn");
-    const list = document.getElementById("manual-posts");
+    if (toggleBtn) {
+        const form = document.getElementById("add-form");
+        const addBtn = document.getElementById("add-post-btn");
+        const list = document.getElementById("manual-posts");
 
-    toggleBtn.addEventListener("click", () => {
-        form.classList.toggle("hidden");
-    });
+        toggleBtn.addEventListener("click", () => {
+            form.classList.toggle("hidden");
+        });
 
-    addBtn.addEventListener("click", () => {
-        const title = document.getElementById("post-title").value.trim();
-        const image = document.getElementById("post-image").value.trim() || "https://placehold.co/400x250/ccc/fff?text=Ảnh";
-        const link = document.getElementById("post-link").value.trim() || "#";
-        const summary = document.getElementById("post-summary").value.trim() || "Không có mô tả.";
+        addBtn.addEventListener("click", () => {
+            const title = document.getElementById("post-title").value.trim();
+            const image = document.getElementById("post-image").value.trim() || "https://placehold.co/400x250/ccc/fff?text=Ảnh";
+            const link = document.getElementById("post-link").value.trim() || "#";
+            const summary = document.getElementById("post-summary").value.trim() || "Không có mô tả.";
 
-        if (!title) {
-            alert("Vui lòng nhập tiêu đề bài viết!");
-            return;
-        }
+            if (!title) {
+                alert("Vui lòng nhập tiêu đề bài viết!");
+                return;
+            }
 
-        const html = `
-            <div class="bg-white rounded-lg shadow overflow-hidden hover:shadow-lg transition">
-                <a href="${link}" target="_blank">
-                    <img src="${image}" alt="${title}" class="w-full h-48 object-cover">
-                </a>
-                <div class="p-4">
-                    <h3 class="font-bold text-lg mb-1 text-gray-800">${title}</h3>
-                    <p class="text-gray-600 text-sm mb-3">${summary}</p>
-                    <a href="${link}" target="_blank" class="text-yellow-600 hover:underline">Xem chi tiết →</a>
+            const html = `
+                <div class="bg-white rounded-lg shadow overflow-hidden hover:shadow-lg transition">
+                    <a href="${link}" target="_blank">
+                        <img src="${image}" alt="${title}" class="w-full h-48 object-cover">
+                    </a>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-1 text-gray-800">${title}</h3>
+                        <p class="text-gray-600 text-sm mb-3">${summary}</p>
+                        <a href="${link}" target="_blank" class="text-yellow-600 hover:underline">Xem chi tiết →</a>
+                    </div>
                 </div>
-            </div>
-        `;
-        list.insertAdjacentHTML("afterbegin", html);
+            `;
+            list.insertAdjacentHTML("afterbegin", html);
 
-        form.reset();
-        form.classList.add("hidden");
-    });
+            form.reset();
+            form.classList.add("hidden");
+        });
+    }
+    // === KẾT THÚC SỬA LỖI 4 ===
 }
 
 // ============= 4️⃣ TẢI DỮ LIỆU TỪ JSON =============
+// (Phần này đã đúng, giữ nguyên)
 document.addEventListener('DOMContentLoaded', () => {
     fetch('/data/posts.json')
         .then(response => {
@@ -157,7 +154,8 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => {
             console.error('[LỖI] Không thể tải dữ liệu JSON cho page-logic-custom:', error);
-            const mainContainer = document.getElementById('main-content-container');
-            if (mainContainer) mainContainer.innerHTML = '<p>Lỗi: Không thể tải dữ liệu bài viết.</p>';
+            // Bạn có thể thêm 1 thông báo lỗi vào phần gợi ý nếu muốn
+            const suggestionsContainer = document.getElementById('suggested-posts-container');
+            if (suggestionsContainer) suggestionsContainer.innerHTML = "<p>Lỗi tải gợi ý.</p>";
         });
 });
