@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
         for (const slide of bannerSlides) {
             bannerHtml += `
                 <a href="${slide.link}" class="w-full flex-shrink-0">
-                    <img src="${slide.imageUrl}" alt="Banner" class="w-full h-64 sm:h-80 lg:h-96 rounded-lg object-fill">
+                    <img src="${slide.imageUrl}" alt="Banner" class="w-full rounded-lg object-cover">
                 </a>
             `;
         }
