@@ -11,7 +11,15 @@ function renderPostsForCategory(category, containerId, allContent, maxPosts = 2)
     const section = container.closest("section"); // lấy thẻ <section> bao quanh
 
     // Lọc bài theo category
-    const categoryPosts = allContent.filter(post => post.category === category);
+    const categoryPosts = allContent.filter(post => {
+        if (Array.isArray(post.category)) {
+            // Nếu là array, kiểm tra xem nó CÓ CHỨA category của mục này không
+            return post.category.includes(category);
+        } else {
+            // Nếu là string cũ, so sánh bình thường
+            return post.category === category;
+        }
+    });
 
     if (categoryPosts.length === 0) {
         if (section) section.style.display = "none"; // ẩn luôn cả section
@@ -25,12 +33,12 @@ function renderPostsForCategory(category, containerId, allContent, maxPosts = 2)
     container.innerHTML = postsToShow.map(post => {
         let imageUrl = post.imageUrl || 'https://placehold.co/400x250/ccc/ffffff?text=No+Image';
         if (imageUrl && !imageUrl.startsWith('http')) {
-            imageUrl = "../../" + imageUrl;
+            imageUrl = "/" + imageUrl;
         }
 
         let postLink = post.link || '#';
-        if (postLink && !postLink.startsWith('http') && !postLink.startsWith('../') && !postLink.startsWith('../../')) {
-            postLink = "../../" + postLink;
+        if (postLink && !postLink.startsWith('http') && !postLink.startsWith('/')) {
+            postLink = "/" + postLink;
         }
 
         const summary = post.summary || '';
@@ -92,12 +100,12 @@ function renderSuggestions(containerId, allContent) {
     suggestions.forEach(post => {
         let imageUrl = post.imageUrl || 'https://placehold.co/64x64/ccc/ffffff?text=...';
         if (imageUrl && !imageUrl.startsWith('http')) {
-            imageUrl = "../../" + imageUrl;
+            imageUrl = "/" + imageUrl;
         }
 
         let postLink = post.link || '#';
-        if (postLink && !postLink.startsWith('http') && !postLink.startsWith('../') && !postLink.startsWith('../../')) {
-            postLink = "../../" + postLink;
+        if (postLink && !postLink.startsWith('http') && !postLink.startsWith('/')) {
+            postLink = "/" + postLink;
         }
 
         container.innerHTML += `
