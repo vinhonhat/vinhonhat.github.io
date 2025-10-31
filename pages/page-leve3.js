@@ -144,21 +144,20 @@ function initializeFlexiblePage(allContent) {
     });
 }
 
-// ============= 4️⃣ CHỜ DỮ LIỆU TỪ content.js =============
-function waitForDataFlexible() {
-    let tries = 0, maxTries = 100;
-    const timer = setInterval(() => {
-        if (typeof allContent !== "undefined" && allContent.length > 0) {
-            clearInterval(timer);
-            initializeFlexiblePage();
-        }
-        tries++;
-        if (tries > maxTries) {
-            clearInterval(timer);
-            console.error("[LỖI] Không thể tải dữ liệu allContent sau 5 giây.");
-            document.getElementById("main-content-container").innerHTML = "<p>Lỗi tải dữ liệu.</p>";
-        }
-    }, 50);
-}
-
-waitForDataFlexible();
+// ============= 4️⃣ TẢI DỮ LIỆU TỪ JSON =============
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('/data/posts.json')
+        .then(response => {
+            if (!response.ok) throw new Error("Không thể tải /data/posts.json");
+            return response.json();
+        })
+        .then(allContent => {
+            // Dữ liệu đã sẵn sàng, gọi hàm khởi tạo chính
+            initializeFlexiblePage(allContent);
+        })
+        .catch(error => {
+            console.error('[LỖI] Không thể tải dữ liệu JSON cho page-logic-custom:', error);
+            const mainContainer = document.getElementById('main-content-container');
+            if (mainContainer) mainContainer.innerHTML = '<p>Lỗi: Không thể tải dữ liệu bài viết.</p>';
+        });
+});
