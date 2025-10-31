@@ -148,9 +148,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 	    // --- 3.2. Tải bài viết ĐỀ XUẤT (THEO KÍCH THƯỚC MÀN HÌNH) ---
-    function loadFeaturedPosts() {
+        function loadFeaturedPosts(allContent) {
         // Kiểm tra xem element và dữ liệu có tồn tại không
-        if (!postsContainer || typeof allContent === 'undefined') return;
+            if (!postsContainer || !allContent) return;
+        // if (!postsContainer || typeof allContent === 'undefined') return; sau khi đổi qua json
+
 
         // BƯỚC 1: Lọc ra tất cả các bài có thuộc tính `featured: true`
         const featuredItems = allContent.filter(item => item.featured === true);
@@ -252,9 +254,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     // --- 3.3. Tải bài viết HƯỚNG DẪN (NÂNG CẤP) ---
-    function loadGuidePosts() {
-        // Kiểm tra xem element và dữ liệu có tồn tại không
-        if (!guidePostsContainer || typeof allContent === 'undefined') return;
+    function loadGuidePosts(allContent) {
+    // Kiểm tra xem element và dữ liệu có tồn tại không
+        if (!guidePostsContainer || !allContent) return;
+        // if (!guidePostsContainer || typeof allContent === 'undefined') return; đã đổi qua json
 
         // BƯỚC 1: Lọc ra các bài có `type: 'guide'`
         const guides = allContent.filter(item => item.type === 'guide');
@@ -295,9 +298,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- 3.4. Tải VIDEO hướng dẫn (NÂNG CẤP) ---
-    function loadVideoGuides() {
+    function loadVideoGuides(allContent) {
         // Kiểm tra xem element và dữ liệu có tồn tại không
-        if (!videoGuidesContainer || typeof allContent === 'undefined') return;
+        if (!videoGuidesContainer || !allContent) return;
+        // if (!videoGuidesContainer || typeof allContent === 'undefined') return;
 
         // Logic tương tự như loadGuidePosts, chỉ khác là lọc theo `type: 'video'`
         // BƯỚC 1: Lọc ra các video có `type: 'video'`
@@ -365,20 +369,49 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	
 	
-    // Tải nội dung động (CẬP NHẬT)
-    loadBanner();
-    loadFeaturedPosts(); // <-- THAY ĐỔI: Gọi hàm mới thay cho loadLatestPosts()
-	// Khi thay đổi kích thước cửa sổ (PC <-> iPad <-> Mobile) thì load lại danh sách bài viết
-	window.addEventListener('resize', () => {
-    loadFeaturedPosts();
-	});
-    loadGuidePosts();
-    loadVideoGuides();
+    // 3. Tải nội dung động (CẬP NHẬT)
+    loadBanner(); // Tải banner (từ banner.js)
+    initBannerSlider(); // Khởi chạy banner slider
 
-    // Khởi chạy các thành phần sau khi nội dung đã được tải (Giữ nguyên)
-    initBannerSlider();
 
-    // Hẹn giờ cho Popup (Giữ nguyên)
+    // THAY ĐỔI: Tải nội dung chính từ file posts.json
+fetch('/data/posts.json') // Tải file JSON
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Không thể tải /data/posts.json: " + response.statusText);
+        }
+        return response.json(); // Chuyển đổi phản hồi thành JSON
+    })
+    .then(allContent => {
+        // Khi tải dữ liệu thành công, 'allContent' là mảng dữ liệu
+
+        // 1. Gọi các hàm để hiển thị bài viết, truyền 'allContent' vào
+        loadFeaturedPosts(allContent);
+        loadGuidePosts(allContent);
+        loadVideoGuides(allContent);
+
+        // 2. Gắn sự kiện resize để tải lại bài viết đề xuất
+        //    Sự kiện này phải ở BÊN TRONG .then() để đảm bảo 'allContent' tồn tại
+        window.addEventListener('resize', () => {
+            loadFeaturedPosts(allContent);
+        });
+    })
+    .catch(error => {
+        // Xử lý nếu có lỗi khi tải file JSON
+        console.error("Lỗi nghiêm trọng khi tải nội dung bài viết:", error);
+        if (postsContainer) postsContainer.innerHTML = "<p class='text-center col-span-full text-red-500'>Không thể tải được nội dung bài viết. Vui lòng thử lại sau.</p>";
+        if (guidePostsContainer) guidePostsContainer.innerHTML = "<p class='text-red-500'>Không thể tải hướng dẫn.</p>";
+        if (videoGuidesContainer) videoGuidesContainer.innerHTML = "<p class='text-red-500'>Không thể tải video.</p>";
+    });
+
+
+
+
+
+
+
+
+    //4.  Hẹn giờ cho Popup (Giữ nguyên)
     if (window.location.pathname.endsWith('/') || window.location.pathname.endsWith('/index.html')) {
         setTimeout(checkAndShowPopup, 500);
         setTimeout(() => { if (popupOverlay) popupOverlay.style.display = 'none'; }, 7000);
