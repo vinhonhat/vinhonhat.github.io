@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>{{POST_TITLE}} | Vinh ở Nhật</title>
+    <meta name="description" content="{{META_DESCRIPTION}}">
+    <meta property="og:title" content="{{POST_TITLE}}">
+    <meta property="og:description" content="{{META_DESCRIPTION}}">
+    <meta property="og:image" content="{{META_IMAGE_URL}}">
+    <meta property="og:url" content="{{POST_LINK}}">
+    <meta property="og:type" content="article">
+    
+    <link rel="manifest" href="/manifest.json"> 
+    <meta name="theme-color" content="#F6AD55"> 
+    <link rel="apple-touch-icon" href="/img/logo1.png"> 
+    
+    <link rel="icon" href="/img/logoQV.png" type="image/x-icon"> 
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+
+</head>
+
+<body class="bg-[#FBF7F0]">
+    
+<!-- ================= HEADER ================= -->
+    <div id="header-placeholder" class="sticky top-0 z-50 bg-white shadow-md"></div>
+
+<!-- ================= MAIN ================= -->
+
+<main class="container mx-auto px-4 mt-8">
+        
+        <div class="flex flex-col lg:flex-row lg:space-x-8">
+            
+            <article class="lg:w-2/3 bg-white p-6 md:p-8 rounded-lg shadow-md">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">{{ARTICLE_TITLE}}</h1>
+                <p class="text-gray-500 mb-6 border-b pb-4">Ngày đăng: {{ARTICLE_DATE}}</p>
+                <div id="article-content" class="prose max-w-none prose-img:rounded-lg prose-img:shadow-md prose-img:mx-auto prose-h2:border-l-4 prose-h2:border-yellow-500 prose-h2:pl-3 prose-a:text-yellow-600 hover:prose-a:underline">
+                    {{ARTICLE_CONTENT}}
+                </div>
+            </article>
+
+            <aside class="lg:w-1/3 mt-10 lg:mt-0">
+                <div class="sticky top-24 bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-xl font-bold text-gray-800 border-l-4 border-yellow-500 pl-3 mb-4">Bài viết gợi ý</h2>
+                    <div id="suggested-posts-container" class="grid grid-cols-2 gap-4 lg:grid-cols-1">
+                        </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+    
+ <!-- ================= FOODER ================= -->   
+    <div id="footer-placeholder"></div>
+
+    <!-- ================= nút lên đầu trang ================= -->
+    <button id="scrollToTopBtn" class="fixed bottom-6 right-6 bg-yellow-600 text-white w-14 h-12 rounded-lg shadow-lg flex flex-col justify-center items-center text-xs transition-opacity duration-300 hover:bg-yellow-700 opacity-0 pointer-events-none z-40">
+        <i class="fas fa-arrow-up text-lg mb-1"></i>
+        <span class="font-semibold">Lên đầu</span>
+    </button>
+    
+    <script src="/js/script.js"></script>
+    <script src="/pages/page-leve3.js"></script>
+
+    </body>
+</html>
