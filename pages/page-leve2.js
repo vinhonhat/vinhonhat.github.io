@@ -25,7 +25,16 @@ function initializePage(allContent) {
     }
 
     // --- Lọc bài viết theo category ---
-    const categoryPosts = allContent.filter(post => post.category === config.category);
+    const categoryPosts = allContent.filter(post => {
+        if (Array.isArray(post.category)) {
+            // Nếu category là một danh sách (array), kiểm tra xem nó CÓ CHỨA category của trang không
+            return post.category.includes(config.category);
+        } else {
+            // Nếu là code cũ (string), so sánh như bình thường
+            return post.category === config.category;
+        }
+    });
+
     let currentPage = 1;
 
     // --- Hiển thị nội dung chính ---
@@ -42,14 +51,14 @@ function initializePage(allContent) {
         postsToShow.forEach(post => {
             let imageUrl = post.imageUrl || 'https://placehold.co/400x250/ccc/ffffff?text=No+Image';
             if (imageUrl && !imageUrl.startsWith('http')) {
-                imageUrl = "../../" + imageUrl;
+                imageUrl = "/" + imageUrl;
             }
             const summary = post.summary || 'Không có mô tả.';
             const postDate = post.date || '';
 
             let postLink = post.link || '#';
-            if (postLink && !postLink.startsWith('http') && !postLink.startsWith('../') && !postLink.startsWith('../../')) {
-                postLink = "../../" + postLink;
+            if (postLink && !postLink.startsWith('http') && !postLink.startsWith('/')) {
+                postLink = "/" + postLink;
             }
 
             elements.mainContainer.innerHTML += `
@@ -137,12 +146,12 @@ function initializePage(allContent) {
         suggestions.forEach(post => {
             let imageUrl = post.imageUrl || 'https://placehold.co/64x64/ccc/ffffff?text=...';
             if (imageUrl && !imageUrl.startsWith('http')) {
-                imageUrl = "../../" + imageUrl;
+                imageUrl = "/" + imageUrl;
             }
 
             let postLink = post.link || '#';
-            if (postLink && !postLink.startsWith('http') && !postLink.startsWith('../') && !postLink.startsWith('../../')) {
-                postLink = "../../" + postLink;
+            if (postLink && !postLink.startsWith('http') && !postLink.startsWith('/')) {
+                postLink = "/" + postLink;
             }
 
             elements.suggestionsContainer.innerHTML += `
