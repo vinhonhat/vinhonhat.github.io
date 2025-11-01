@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Quản Trị Bài Viết | Vinh ở Nhật</title>
+    
+    <!-- Tải CSS từ trang chính để đồng bộ giao diện -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/style.css"> <!-- Đường dẫn CSS chính của bạn -->
+    <!-- 🔹 Icon website (favicon) -->
+    <link rel="icon" href="/img/logoQV.png" type="image/x-icon"> 
+    <!-- Tải TinyMCE (BẮT BUỘC: Bạn phải tải về và đặt vào thư mục /admin/tinymce/) -->
+    <script src="/admin/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <style>
+        body { background-color: #FBF7F0; font-family: 'Inter', sans-serif; }
+        .tox-tinymce { min-height: 500px !important; border-radius: 0.375rem; }
+        #previewModal { background-color: rgba(0, 0, 0, 0.5); }
+    </style>
+</head>
+<body class="bg-[#FBF7F0]">
+    
+    <main class="max-w-6xl mx-auto px-4 mt-8">
+        <h1 class="text-3xl font-bold text-gray-800 border-l-4 border-yellow-600 pl-4 mb-6">CMS - Quản Trị</h1>
+
+        <div class="grid grid-cols-1 gap-8">
+            
+            <!-- FORM CHỈNH SỬA (Đã chuyển ra giữa) -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                
+                <!-- 1. CHỌN BÀI VIẾT -->
+                <div class="mb-6">
+                    <label for="postSelector" class="block text-sm font-medium text-gray-700 mb-2">Chọn bài viết để chỉnh sửa:</label>
+                    <select id="postSelector" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500">
+                        <option value="">-- Vui lòng chọn một bài viết --</option>
+                        <option value="__NEW__" class="font-bold text-green-600">-- TẠO BÀI VIẾT MỚI --</option>
+                    </select>
+                </div>
+
+                <!-- 2. FORM METADATA (ẨN KHI CHƯA CHỌN BÀI) -->
+                <form id="editForm" class="space-y-4" style="display: none;">
+                    
+                    <!-- *** CẬP NHẬT: Thêm chọn đường dẫn *** -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="basePathSelector" class="block text-sm font-medium text-gray-700">Chọn thư mục lưu</label>
+                            <select id="basePathSelector" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
+                                <option value="/pages/pages-baiviet/">Bài viết [/pages/pages-baiviet/]</option>
+                                <option value="/pages/pages-video/">Video [/pages/pages-video/]</option>
+                                <option value="/pages/pages-app/">Ứng Dụng [/pages/pages-app/]</option>
+                                <option value="/pages/pages-giaitri/">Giải Trí [/pages/pages-giaitri/]</option>
+                                <option value="/pages/pages-hoctap/">Học Tập [/pages/pages-hoctap/]</option>
+                                <!-- Thêm các thư mục khác của bạn ở đây nếu cần -->
+                            </select>
+                        </div>
+                        <div>
+                            <!-- *** CẬP NHẬT: Đổi từ "Đường dẫn file" sang "Tên file" *** -->
+                            <label for="postFilename" class="block text-sm font-medium text-gray-700">Tên file (ví dụ: ten-bai-viet.html)</label>
+                            <input type="text" id="postFilename" placeholder="ten-bai-viet.html" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="postId" class="block text-sm font-medium text-gray-700">ID Bài Viết (Tự động, duy nhất)</label>
+                            <input type="text" id="postId" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required>
+                        </div>
+                        <div>
+                            <label for="postDate" class="block text-sm font-medium text-gray-700">Ngày đăng (YYYY-MM-DD)</label>
+                            <input type="date" id="postDate" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="postTitle" class="block text-sm font-medium text-gray-700">Tiêu đề</label>
+                        <input type="text" id="postTitle" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required>
+                    </div>
+
+                    <div>
+                        <label for="postSummary" class="block text-sm font-medium text-gray-700">Tóm tắt (Summary) (Dùng cho SEO)</label>
+                        <textarea id="postSummary" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"></textarea>
+                    </div>
+
+                    <div>
+                        <label for="postImageUrl" class="block text-sm font-medium text-gray-700">Link ảnh bìa (ImageUrl) (Dùng cho SEO)</label>
+                        <input type="text" id="postImageUrl" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label for="postType" class="block text-sm font-medium text-gray-700">Loại (type)</label>
+                            <input type="text" id="postType" placeholder="guide, review, video" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        <div>
+                            <label for="postCategory" class="block text-sm font-medium text-gray-700">Danh mục (category)</label>
+                            <input type="text" id="postCategory" placeholder="sim, bank, life" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        <div>
+                            <label for="postTags" class="block text-sm font-medium text-gray-700">Tags (cách nhau bằng dấu phẩy)</label>
+                            <input type="text" id="postTags" placeholder="tag1, tag2, tag3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
+                        </div>
+                    </div>
+                    
+                     <div>
+                        <label for="postFeatured" class="block text-sm font-medium text-gray-700">Nổi bật (featured)</label>
+                        <select id="postFeatured" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
+                            <option value="false">Không</option>
+                            <option value="true">Có</option>
+                        </select>
+                    </div>
+
+                    <!-- 3. TRÌNH SOẠN THẢO TINYMCE -->
+                    <div class="mt-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nội dung chi tiết (contentHtml)</label>
+                        <textarea id="contentEditor"></textarea>
+                    </div>
+
+                    <!-- 4. NÚT BẤM -->
+                    <div class="flex flex-wrap justify-end gap-4 pt-4">
+                        <button type="button" id="previewButton" class="bg-blue-600 text-white font-semibold py-2 px-6 rounded-full transition-all duration-300 hover:bg-blue-700 shadow-md">
+                            Xem trước (Full)
+                        </button>
+                        <button type="button" id="saveButton" class="bg-yellow-600 text-white font-semibold py-2 px-6 rounded-full transition-all duration-300 hover:bg-yellow-700 shadow-md">
+                            Cập nhật JSON
+                        </button>
+                        <button type="button" id="generateHtmlButton" class="bg-green-600 text-white font-semibold py-2 px-6 rounded-full transition-all duration-300 hover:bg-green-700 shadow-md">
+                            Tạo & Tải File HTML
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- HƯỚNG DẪN & OUTPUT (Nằm bên dưới) -->
+            <div class="space-y-6">
+                
+                <div id="guideBox" class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-xl font-bold text-gray-800 border-l-4 border-yellow-600 pl-4 mb-4">Hướng dẫn & Giải đáp</h2>
+                    <dl class="space-y-4 text-gray-700">
+                        <div>
+                            <dt class="font-semibold">Q: Tại sao phải "Cập nhật JSON"?</dt>
+                            <dd class="text-sm pl-2 border-l-2 border-gray-200 ml-2 mt-1">
+                                A: Vì website của bạn là <strong>web tĩnh</strong> (trên GitHub Pages), trình duyệt không thể tự động ghi file. Nút này tạo ra nội dung file <code>data/posts.json</code> mới. Bạn phải <strong>sao chép</strong> và <strong>dán đè</strong> nội dung đó vào file trong code của mình.
+                            </dd>
+                        </div>
+                        <div>
+                            <dt class="font-semibold">Q: Làm sao để thêm nhiều "Tags"?</dt>
+                            <dd class="text-sm pl-2 border-l-2 border-gray-200 ml-2 mt-1">
+                                A: Bạn chỉ cần nhập vào ô <strong>"Tags"</strong>, các tag khác nhau được ngăn cách bằng <strong>dấu phẩy</strong> (ví dụ: <code>sim, linemo, huong-dan</code>).
+                            </dd>
+                        </div>
+                        <div>
+                            <dt class="font-semibold">Q: "Đường dẫn file" hoạt động thế nào?</dt>
+                            <dd class="text-sm pl-2 border-l-2 border-gray-200 ml-2 mt-1">
+                                A: Giờ đây bạn chỉ cần <strong>chọn thư mục</strong> và <strong>gõ tên file</strong>. Hệ thống sẽ tự ghép lại. Khi nhấn <strong>"Tải File HTML"</strong>, file sẽ được tải về với đúng tên đó. Bạn cần <strong>tự tay di chuyển file</strong> vào đúng thư mục đã chọn trong dự án của mình khi cửa sổ "Save As" hiện ra.
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+
+                <!-- Nơi hiển thị link tải file HTML -->
+                <div id="htmlOutputContainer" class="bg-white p-6 rounded-lg shadow-md" style="display: none;">
+                    <h2 class="text-xl font-bold text-gray-800 border-l-4 border-green-600 pl-4 mb-4">File HTML đã sẵn sàng</h2>
+                    <p class="text-gray-700 mb-3">Nhấn vào link bên dưới để tải file về:</p>
+                    <a id="downloadHtmlLink" class="text-lg font-bold text-green-700 underline hover:text-green-800"></a>
+                    <p class="text-xs text-gray-500 mt-2">Hãy lưu file này vào đúng đường dẫn bạn đã khai báo (ví dụ: <code>pages/bai-viet/</code>).</p>
+                </div>
+                
+                <!-- Nơi hiển thị JSON -->
+                <div id="jsonOutputContainer" class="bg-white p-6 rounded-lg shadow-md" style="display: none;">
+                    <h2 class="text-xl font-bold text-gray-800 border-l-4 border-red-600 pl-4 mb-4">Dữ liệu JSON để lưu</h2>
+                    <p class="text-sm text-red-600 mb-2">Sao chép nội dung này và dán đè vào file <code>data/posts.json</code>.</p>
+                    <textarea id="jsonOutput" rows="15" class="w-full p-2 border border-gray-300 rounded-md bg-gray-50 font-mono text-sm" readonly></textarea>
+                </div>
+            </div>
+
+        </div>
+    </main>
+    
+    <!-- MODAL XEM TRƯỚC (Không đổi) -->
+    <div id="previewModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
+    <div class="bg-white w-full max-w-6xl h-[90vh] rounded-lg shadow-xl flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b">
+                <h2 class="text-xl font-bold">Bản xem trước nội dung</h2>
+                <button id="closePreview" class="text-2xl text-gray-500 hover:text-gray-800">&times;</button>
+            </div>
+            <div class="flex-1 overflow-y-auto">
+                <iframe id="previewIframe" class="w-full h-full border-0"></iframe>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- JAVASCRIPT CỦA TRANG CMS -->
+    <script src="/js/config.js" type="module"></script>
+
+    <script type="module">
+        import { SITE_CONFIG } from '/js/config.js';
+
+        // Cập nhật tiêu đề trang
+        document.title = `Trang Quản Trị | ${SITE_CONFIG.titleSuffix || 'Vinh ở Nhật'}`;
+
+        // --- HÀM CHUYỂN TIÊU ĐỀ THÀNH KHÔNG DẤU & KÝ TỰ HỢP LỆ ---
+        // (MỚI: Di chuyển hàm này lên đầu để dễ sử dụng)
+        function toSlug(str) {
+            return str
+                .normalize('NFD') // tách dấu
+                .replace(/[\u0300-\u036f]/g, '') // xoá dấu
+                .toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, '') // bỏ ký tự đặc biệt
+                .trim()
+                .replace(/\s+/g, '-'); // khoảng trắng → gạch nối
+        }
+
+        // --- CÁC BIẾN TOÀN CỤC ---
+        let allPostsData = []; 
+        let postTemplateHtml = ''; // Lưu trữ file template.html
+        const postSelector = document.getElementById('postSelector');
+        const editForm = document.getElementById('editForm');
+        
+        // Form fields
+        const basePathSelector = document.getElementById('basePathSelector');
+        const postFilename = document.getElementById('postFilename');
+        const postId = document.getElementById('postId');
+        const postDate = document.getElementById('postDate');
+        const postTitle = document.getElementById('postTitle');
+        const postSummary = document.getElementById('postSummary');
+        const postImageUrl = document.getElementById('postImageUrl');
+        const postType = document.getElementById('postType');
+        const postCategory = document.getElementById('postCategory');
+        const postTags = document.getElementById('postTags');
+        const postFeatured = document.getElementById('postFeatured');
+
+        // Buttons
+        const saveButton = document.getElementById('saveButton');
+        const previewButton = document.getElementById('previewButton');
+        const generateHtmlButton = document.getElementById('generateHtmlButton');
+        
+        // Output
+        const jsonOutputContainer = document.getElementById('jsonOutputContainer');
+        const jsonOutput = document.getElementById('jsonOutput');
+        const htmlOutputContainer = document.getElementById('htmlOutputContainer');
+        const downloadHtmlLink = document.getElementById('downloadHtmlLink');
+
+        // Preview Modal
+        const previewModal = document.getElementById('previewModal');
+        const closePreview = document.getElementById('closePreview');
+        const previewIframe = document.getElementById('previewIframe');
+
+        const guideBox = document.getElementById('guideBox');
+
+        // MỚI: Biến cờ để theo dõi việc sửa tên file
+        let isFilenameManuallyEdited = false;
+
+
+        // --- KIỂM TRA TINYMCE ---
+        if (typeof tinymce === 'undefined') {
+            alert('LỖI: Không thể tải TinyMCE. Hãy đảm bảo bạn đã tải về và đặt vào thư mục /admin/tinymce/ theo hướng dẫn.');
+            throw new Error('TinyMCE not found.'); 
+        }
+        // MỚI: Thêm danh sách ảnh gợi ý thủ công
+        // Bạn có thể thêm/sửa/xóa các ảnh trong danh sách này
+        const myImageList = [
+            { title: 'Ảnh SEO Mặc Định (Placeholder)', value: 'https://placehold.co/1200x630/FBF7F0/718096?text=Anh+SEO' },
+            { title: 'Logo QV (Trong /img)', value: '/img/logoQV.png' },
+            { title: 'Logo 1 (Trong /img)', value: '/img/logo1.png' },
+            // Thêm các ảnh khác của bạn ở đây
+            { title: 'Ảnh bài viết: Sim Linemo', value: '/img/bai-viet/linemo-guide.jpg' },
+            { title: 'Ảnh bài viết: Sim Rakuten', value: '/img/bai-viet/rakuten-sim.png' }
+            // Ví dụ: { title: 'Tên gợi nhớ', value: '/img/ten-file-anh.jpg' }
+        ];
+
+        // --- KHỞI TẠO TINYMCE ---
+        tinymce.init({
+            selector: '#contentEditor',
+            plugins: 'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons',
+            menubar: 'file edit view insert format tools table help',
+            toolbar: 'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
+            image_advtab: true,
+            image_list: myImageList, // <-- MỚI: THÊM DÒNG NÀY
+            relative_urls: false, // <-- MỚI: THÊM DÒNG NÀY ĐỂ TẮT CHUYỂN ĐỔI
+            importcss_append: true,
+            content_css: ['https://cdn.tailwindcss.com', '/css/style.css'], 
+            height: 600,
+            image_caption: true,
+            quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+            toolbar_mode: 'sliding',
+            contextmenu: 'link image table',
+            skin: 'oxide',
+            content_style: 'body { font-family:Inter,Helvetica,Arial,sans-serif; font-size:16px }',
+            
+            setup: (editor) => {
+                editor.on('init', () => {
+                    loadInitialData();
+                });
+            }
+        });
+
+        // --- TẢI DỮ LIỆU BAN ĐẦU (Data và Template) ---
+        async function loadInitialData() {
+            try {
+                // Tải song song 2 file
+                const [postsResponse, templateResponse] = await Promise.all([
+                    fetch('/data/posts.json?t=' + new Date().getTime()),
+                    fetch('/admin/post-template.html?t=' + new Date().getTime()) // Tải file template mới
+                ]);
+
+                if (!postsResponse.ok) throw new Error(`Không thể tải posts.json: ${postsResponse.statusText}`);
+                if (!templateResponse.ok) throw new Error(`Không thể tải post-template.html: ${templateResponse.statusText}`);
+
+                allPostsData = await postsResponse.json();
+                postTemplateHtml = await templateResponse.text(); // Lưu file template vào biến
+                
+                allPostsData.sort((a, b) => new Date(b.date) - new Date(a.date));
+                populateSelector();
+                
+                console.log('CMS đã tải xong data và template.');
+
+            } catch (error) {
+                console.error('Lỗi khi tải dữ liệu:', error);
+                alert('Không thể tải dữ liệu bài viết hoặc file template. Vui lòng kiểm tra console.');
+            }
+        }
+
+        // --- ĐƯA DỮ LIỆU VÀO DROPDOWN ---
+        function populateSelector() {
+            while (postSelector.options.length > 2) postSelector.remove(2);
+            allPostsData.forEach(post => {
+                const option = document.createElement('option');
+                option.value = post.id;
+                option.textContent = `${post.title} (${post.date})`;
+                postSelector.appendChild(option);
+            });
+        }
+
+        // --- XỬ LÝ KHI CHỌN BÀI VIẾT ---
+        postSelector.addEventListener('change', () => {
+            const selectedId = postSelector.value;
+            
+            if (!selectedId) {
+                editForm.style.display = 'none';
+                guideBox.style.display = 'block'; 
+                return;
+            }
+
+            const postData = (selectedId === '__NEW__') ? null : allPostsData.find(p => p.id === selectedId);
+            loadPostData(postData); // Hàm này giờ sẽ set cờ isFilenameManuallyEdited
+            
+            editForm.style.display = 'block'; 
+            guideBox.style.display = 'none'; 
+            jsonOutputContainer.style.display = 'none';
+            htmlOutputContainer.style.display = 'none';
+        });
+
+        // --- TẢI DỮ LIỆU BÀI VIẾT LÊN FORM ---
+        function loadPostData(post) {
+            if (post) {
+                // Chế độ chỉnh sửa
+                postId.value = post.id;
+                postId.readOnly = true;
+                postDate.value = post.date;
+                postTitle.value = post.title;
+                postSummary.value = post.summary;
+                postImageUrl.value = post.imageUrl;
+                postType.value = post.type;
+                postCategory.value = post.category;
+                postTags.value = post.tags.join(', ');
+                postFeatured.value = post.featured.toString();
+                tinymce.get('contentEditor').setContent(post.contentHtml || '');
+
+                // *** CẬP NHẬT: Tách link thành base path và filename ***
+                const lastSlashIndex = post.link.lastIndexOf('/');
+                if (lastSlashIndex > -1) {
+                    basePathSelector.value = post.link.substring(0, lastSlashIndex + 1);
+                    postFilename.value = post.link.substring(lastSlashIndex + 1);
+                } else {
+                    basePathSelector.value = '/pages/bai-viet/'; // Mặc định
+                    postFilename.value = post.link; // Trường hợp cũ không có /
+                }
+                
+                // MỚI: Đặt cờ là "đã sửa" vì bài này đã có tên file
+                isFilenameManuallyEdited = true;
+
+            } else {
+                // Chế độ tạo mới
+                const now = new Date();
+                const dateSlug = now.toISOString().slice(0, 10).replace(/-/g, ''); // YYYYMMDD
+                const timeSlug = now.toTimeString().slice(0, 5).replace(':', ''); // HHMM
+                
+                postId.value = `post-${dateSlug}-${timeSlug}`; 
+                postId.readOnly = false;
+                postDate.value = now.toISOString().slice(0, 10);
+                postTitle.value = 'Tiêu đề bài viết mới'; // MỚI: Đặt tiêu đề trước
+                postSummary.value = 'Tóm tắt bài viết mới (dùng cho SEO)';
+                postImageUrl.value = 'https://placehold.co/1200x630/FBF7F0/718096?text=Anh+SEO';
+                postType.value = 'guide';
+                postCategory.value = 'sim';
+                postTags.value = '';
+                postFeatured.value = 'false';
+                tinymce.get('contentEditor').setContent('<p>Bắt đầu viết nội dung ở đây...</p>');
+                
+                basePathSelector.value = '/pages/bai-viet/'; // Mặc định
+                
+                // MỚI: Tự động tạo tên file từ tiêu đề mặc định
+                const slug = toSlug(postTitle.value);
+                postFilename.value = `${slug}-${dateSlug}.html`; // Gợi ý tên file
+                
+                // MỚI: Đặt cờ là "chưa sửa" để cho phép tự động cập nhật
+                isFilenameManuallyEdited = false; 
+            }
+        }
+
+        // --- HÀM LẤY DỮ LIỆU TỪ FORM ---
+        function getPostObjectFromForm() {
+            if (!validateForm()) {
+                alert('Vui lòng điền đầy đủ các trường bắt buộc (ID, Ngày, Tiêu đề, Tên file).');
+                return null;
+            }
+            
+            // *** CẬP NHẬT: Ghép base path và filename để tạo link ***
+            const basePath = basePathSelector.value;
+            const filename = postFilename.value.trim();
+            const fullLink = basePath + filename;
+
+            return {
+                id: postId.value.trim(),
+                date: postDate.value,
+                title: postTitle.value.trim(),
+                summary: postSummary.value.trim(),
+                imageUrl: postImageUrl.value.trim(),
+                type: postType.value.trim(),
+                category: postCategory.value.trim(),
+                tags: postTags.value.split(',').map(tag => tag.trim()).filter(Boolean),
+                link: fullLink, // Dùng link đã ghép
+                featured: postFeatured.value === 'true',
+                contentHtml: tinymce.get('contentEditor').getContent()
+            };
+        }
+        
+        function validateForm() {
+            // *** CẬP NHẬT: Kiểm tra postFilename thay vì postLink ***
+            return postId.value.trim() && postDate.value && postTitle.value.trim() && postFilename.value.trim();
+        }
+        
+        // --- HÀM TẠO NỘI DUNG HTML HOÀN CHỈNH (Dùng cho cả Preview và Tải về) ---
+        function generateFullHtml(post) {
+            if (!postTemplateHtml) {
+                alert('Lỗi: Chưa tải được file template. Vui lòng thử tải lại trang.');
+                return null;
+            }
+
+            const formattedDate = new Date(post.date).toLocaleString('vi-VN', {
+                day: 'numeric', month: 'long', year: 'numeric'
+            });
+            
+            let finalHtml = postTemplateHtml;
+            finalHtml = finalHtml.replace(/{{POST_TITLE}}/g, post.title);
+            finalHtml = finalHtml.replace(/{{META_DESCRIPTION}}/g, post.summary.replace(/"/g, '&quot;'));
+            finalHtml = finalHtml.replace(/{{META_IMAGE_URL}}/g, post.imageUrl);
+            finalHtml = finalHtml.replace(/{{POST_LINK}}/g, post.link);
+            finalHtml = finalHtml.replace(/{{ARTICLE_TITLE}}/g, post.title);
+            finalHtml = finalHtml.replace(/{{ARTICLE_DATE}}/g, formattedDate);
+            finalHtml = finalHtml.replace(/{{ARTICLE_CONTENT}}/g, post.contentHtml);
+            
+            return finalHtml;
+        }
+
+
+        // --- XỬ LÝ NÚT "CẬP NHẬT JSON" ---
+        // (Sử dụng code ghi đè ở cuối file)
+
+        
+        // --- XỬ LÝ NÚT "TẠO & TẢI FILE HTML" ---
+        generateHtmlButton.addEventListener('click', () => {
+            const post = getPostObjectFromForm();
+            if (!post) return;
+
+            const finalHtml = generateFullHtml(post);
+            if (!finalHtml) return;
+            
+            const blob = new Blob([finalHtml], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            
+            // *** CẬP NHẬT: Dùng postFilename làm tên file ***
+            const fileName = postFilename.value.trim() || 'bai-viet.html';
+            
+            downloadHtmlLink.href = url;
+            downloadHtmlLink.download = fileName; 
+            downloadHtmlLink.textContent = `Tải về: ${fileName}`;
+            htmlOutputContainer.style.display = 'block';
+            
+            alert('Đã tạo file HTML! Nhấn vào link vừa xuất hiện để tải về.');
+        });
+
+        // --- *** SỬA LỖI: XỬ LÝ XEM TRƯỚC (Preview) *** ---
+        // Sử dụng lại file template đã tải, không inject script
+        previewButton.addEventListener('click', () => {
+            const post = getPostObjectFromForm();
+            if (!post) return;
+            
+            // 1. Tạo HTML từ template
+            let finalHtml = generateFullHtml(post);
+            if (!finalHtml) return;
+
+            // 2. Tải nội dung vào iframe
+            // Không cần chèn script nữa vì post-template.html đã có sẵn
+            previewIframe.srcdoc = finalHtml;
+            previewModal.style.display = 'flex';
+        });
+
+        closePreview.addEventListener('click', () => {
+            previewModal.style.display = 'none';
+            previewIframe.srcdoc = '';
+        });
+
+        // --- MỚI: LẮNG NGHE SỰ KIỆN NHẬP TIÊU ĐỀ VÀ TÊN FILE ---
+        postTitle.addEventListener('input', () => {
+            if (!isFilenameManuallyEdited) {
+                const slug = toSlug(postTitle.value);
+                const dateSlug = postDate.value.replace(/-/g, ''); // Lấy ngày từ ô input
+                postFilename.value = slug ? `${slug}-${dateSlug}.html` : '';
+            }
+        });
+
+        postFilename.addEventListener('input', () => {
+            // Khi người dùng tự gõ vào ô tên file, đặt cờ
+            if (postFilename.value.trim() !== '') {
+                isFilenameManuallyEdited = true;
+            }
+        });
+
+
+        // --- HÀM CHỈ TẠO JSON CHO 1 BÀI VIẾT ---
+        function generateSinglePostJson(post) {
+            // chỉ format vừa đủ để tags nằm 1 dòng
+            const jsonString = JSON.stringify(post, null, 2)
+                .replace(/\n\s+"tags": \[\s+/g, ' "tags": [')
+                .replace(/\s+\],/g, '],');
+            return jsonString;
+        }
+
+        // --- GHI ĐÈ NÚT "CẬP NHẬT JSON" ---
+        // (Đây là code gốc của bạn, nó đã bao gồm logic fallback, rất tốt)
+        saveButton.addEventListener('click', () => {
+            const savedPost = getPostObjectFromForm();
+            if (!savedPost) return;
+
+            // ✅ Tự tạo tên file nếu để trống (fallback)
+            if (!postFilename.value.trim()) {
+                const dateSlug = savedPost.date.replace(/-/g, '');
+                const slug = toSlug(savedPost.title);
+                savedPost.link = basePathSelector.value + `${slug}-${dateSlug}.html`;
+                postFilename.value = `${slug}-${dateSlug}.html`;
+            }
+
+            // ✅ Nếu bài cũ và ngày chưa chỉnh → giữ nguyên
+            const existing = allPostsData.find(p => p.id === savedPost.id);
+            if (existing) {
+                // Sửa lỗi: giữ nguyên ngày nếu không đổi
+                const originalDate = allPostsData.find(p => p.id === savedPost.id)?.date;
+                if (postDate.value === originalDate) {
+                    savedPost.date = originalDate;
+                }
+                Object.assign(existing, savedPost);
+            } else {
+                // bài mới → tự động ngày hôm nay (nếu chưa có)
+                if (!savedPost.date) {
+                    savedPost.date = new Date().toISOString().slice(0, 10);
+                }
+                allPostsData.push(savedPost);
+            }
+
+            // --- Xuất JSON rút gọn chỉ cho bài này ---
+            const shortJson = generateSinglePostJson(savedPost);
+            jsonOutput.value = shortJson;
+            jsonOutputContainer.style.display = 'block';
+            htmlOutputContainer.style.display = 'none';
+            populateSelector();
+            postSelector.value = savedPost.id;
+
+            alert('✅ Đã tạo JSON cho bài hiện tại! Hãy copy phần này và dán vào data/posts.json.');
+        });
+
+    </script>
+    
+</body>
+</html>
+
