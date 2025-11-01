@@ -261,14 +261,16 @@
         }
         // MỚI: Thêm danh sách ảnh gợi ý thủ công
         // Bạn có thể thêm/sửa/xóa các ảnh trong danh sách này
-        const myImageList = [
-            { title: 'Ảnh SEO Mặc Định (Placeholder)', value: 'https://placehold.co/1200x630/FBF7F0/718096?text=Anh+SEO' },
-            { title: 'Logo QV (Trong /img)', value: '/img/logoQV.png' },
-            { title: 'Logo 1 (Trong /img)', value: '/img/logo1.png' },
-            // Thêm các ảnh khác của bạn ở đây
-            { title: 'Ảnh bài viết: Sim Linemo', value: '/img/bai-viet/linemo-guide.jpg' },
-            { title: 'Ảnh bài viết: Sim Rakuten', value: '/img/bai-viet/rakuten-sim.png' }
-            // Ví dụ: { title: 'Tên gợi nhớ', value: '/img/ten-file-anh.jpg' }
+        const myPathList = [
+            { title: '--- Chọn thư mục ---', value: '' }, // Tùy chọn rỗng
+            { title: 'Thư mục Gốc ', value: '/img/' },
+            //{ title: 'Ảnh bài viết (/img/posts/)', value: '/img/posts/' },
+            { title: 'Ảnh giải trí', value: '/img/posts/giaitri/' },
+            { title: 'Ảnh rakuten ', value: '/img/posts/rakuten/' },
+            { title: 'Ảnh seven', value: '/img/posts/seven/' },
+            { title: 'Ảnh yucho ', value: '/img/posts/ycbk/' },
+            // Thêm bất kỳ đường dẫn thư mục nào bạn muốn ở đây
+            { title: 'Ảnh baito ', value: '/img/baito/' }
         ];
 
         // --- KHỞI TẠO TINYMCE ---
@@ -278,7 +280,8 @@
             menubar: 'file edit view insert format tools table help',
             toolbar: 'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
             image_advtab: true,
-            image_list: myImageList, // <-- MỚI: THÊM DÒNG NÀY
+            image_list: myPathList, // <-- Trỏ đến danh sách thư mục MỚI
+            image_list_label: 'Gợi ý thư mục', // <-- Đổi tên menu cho dễ hiểu
             relative_urls: false, // <-- MỚI: THÊM DÒNG NÀY ĐỂ TẮT CHUYỂN ĐỔI
             importcss_append: true,
             content_css: ['https://cdn.tailwindcss.com', '/css/style.css'], 
