@@ -201,6 +201,18 @@
         // Cập nhật tiêu đề trang
         document.title = `Trang Quản Trị | ${SITE_CONFIG.titleSuffix || 'Vinh ở Nhật'}`;
 
+        // --- HÀM CHUYỂN TIÊU ĐỀ THÀNH KHÔNG DẤU & KÝ TỰ HỢP LỆ ---
+        // (MỚI: Di chuyển hàm này lên đầu để dễ sử dụng)
+        function toSlug(str) {
+            return str
+                .normalize('NFD') // tách dấu
+                .replace(/[\u0300-\u036f]/g, '') // xoá dấu
+                .toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, '') // bỏ ký tự đặc biệt
+                .trim()
+                .replace(/\s+/g, '-'); // khoảng trắng → gạch nối
+        }
+
         // --- CÁC BIẾN TOÀN CỤC ---
         let allPostsData = []; 
         let postTemplateHtml = ''; // Lưu trữ file template.html
@@ -237,6 +249,9 @@
         const previewIframe = document.getElementById('previewIframe');
 
         const guideBox = document.getElementById('guideBox');
+
+        // MỚI: Biến cờ để theo dõi việc sửa tên file
+        let isFilenameManuallyEdited = false;
 
 
         // --- KIỂM TRA TINYMCE ---
@@ -317,7 +332,7 @@
             }
 
             const postData = (selectedId === '__NEW__') ? null : allPostsData.find(p => p.id === selectedId);
-            loadPostData(postData);
+            loadPostData(postData); // Hàm này giờ sẽ set cờ isFilenameManuallyEdited
             
             editForm.style.display = 'block'; 
             guideBox.style.display = 'none'; 
@@ -350,6 +365,9 @@
                     basePathSelector.value = '/pages/bai-viet/'; // Mặc định
                     postFilename.value = post.link; // Trường hợp cũ không có /
                 }
+                
+                // MỚI: Đặt cờ là "đã sửa" vì bài này đã có tên file
+                isFilenameManuallyEdited = true;
 
             } else {
                 // Chế độ tạo mới
@@ -360,7 +378,7 @@
                 postId.value = `post-${dateSlug}-${timeSlug}`; 
                 postId.readOnly = false;
                 postDate.value = now.toISOString().slice(0, 10);
-                postTitle.value = 'Tiêu đề bài viết mới';
+                postTitle.value = 'Tiêu đề bài viết mới'; // MỚI: Đặt tiêu đề trước
                 postSummary.value = 'Tóm tắt bài viết mới (dùng cho SEO)';
                 postImageUrl.value = 'https://placehold.co/1200x630/FBF7F0/718096?text=Anh+SEO';
                 postType.value = 'guide';
@@ -369,9 +387,14 @@
                 postFeatured.value = 'false';
                 tinymce.get('contentEditor').setContent('<p>Bắt đầu viết nội dung ở đây...</p>');
                 
-                // *** CẬP NHẬT: Đặt giá trị mặc định cho 2 ô mới ***
                 basePathSelector.value = '/pages/bai-viet/'; // Mặc định
-                postFilename.value = `ten-bai-viet-${dateSlug}-${timeSlug}.html`; // Gợi ý tên file
+                
+                // MỚI: Tự động tạo tên file từ tiêu đề mặc định
+                const slug = toSlug(postTitle.value);
+                postFilename.value = `${slug}-${dateSlug}.html`; // Gợi ý tên file
+                
+                // MỚI: Đặt cờ là "chưa sửa" để cho phép tự động cập nhật
+                isFilenameManuallyEdited = false; 
             }
         }
 
@@ -432,26 +455,8 @@
 
 
         // --- XỬ LÝ NÚT "CẬP NHẬT JSON" ---
-        saveButton.addEventListener('click', () => {
-            const savedPost = getPostObjectFromForm();
-            if (!savedPost) return;
+        // (Sử dụng code ghi đè ở cuối file)
 
-            const existingPostIndex = allPostsData.findIndex(p => p.id === savedPost.id);
-            if (existingPostIndex > -1) {
-                allPostsData[existingPostIndex] = savedPost;
-            } else {
-                allPostsData.push(savedPost);
-            }
-            allPostsData.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-            jsonOutput.value = JSON.stringify(allPostsData, null, 2); 
-            jsonOutputContainer.style.display = 'block';
-            
-            populateSelector();
-            postSelector.value = savedPost.id;
-
-            alert('Đã tạo xong JSON! Vui lòng sao chép nội dung và dán vào file data/posts.json.');
-        });
         
         // --- XỬ LÝ NÚT "TẠO & TẢI FILE HTML" ---
         generateHtmlButton.addEventListener('click', () => {
@@ -495,62 +500,74 @@
             previewModal.style.display = 'none';
             previewIframe.srcdoc = '';
         });
-        // --- HÀM CHUYỂN TIÊU ĐỀ THÀNH KHÔNG DẤU & KÝ TỰ HỢP LỆ ---
-function toSlug(str) {
-    return str
-        .normalize('NFD') // tách dấu
-        .replace(/[\u0300-\u036f]/g, '') // xoá dấu
-        .toLowerCase()
-        .replace(/[^a-z0-9\s-]/g, '') // bỏ ký tự đặc biệt
-        .trim()
-        .replace(/\s+/g, '-'); // khoảng trắng → gạch nối
-}
 
-// --- HÀM CHỈ TẠO JSON CHO 1 BÀI VIẾT ---
-function generateSinglePostJson(post) {
-    // chỉ format vừa đủ để tags nằm 1 dòng
-    const jsonString = JSON.stringify(post, null, 2)
-        .replace(/\n\s+"tags": \[\s+/g, ' "tags": [')
-        .replace(/\s+\],/g, '],');
-    return jsonString;
-}
+        // --- MỚI: LẮNG NGHE SỰ KIỆN NHẬP TIÊU ĐỀ VÀ TÊN FILE ---
+        postTitle.addEventListener('input', () => {
+            if (!isFilenameManuallyEdited) {
+                const slug = toSlug(postTitle.value);
+                const dateSlug = postDate.value.replace(/-/g, ''); // Lấy ngày từ ô input
+                postFilename.value = slug ? `${slug}-${dateSlug}.html` : '';
+            }
+        });
 
-// --- GHI ĐÈ NÚT "CẬP NHẬT JSON" ---
-saveButton.addEventListener('click', () => {
-    const savedPost = getPostObjectFromForm();
-    if (!savedPost) return;
+        postFilename.addEventListener('input', () => {
+            // Khi người dùng tự gõ vào ô tên file, đặt cờ
+            if (postFilename.value.trim() !== '') {
+                isFilenameManuallyEdited = true;
+            }
+        });
 
-    // ✅ Tự tạo tên file nếu để trống
-    if (!postFilename.value.trim()) {
-        const dateSlug = savedPost.date.replace(/-/g, '');
-        const slug = toSlug(savedPost.title);
-        savedPost.link = basePathSelector.value + `${slug}-${dateSlug}.html`;
-        postFilename.value = `${slug}-${dateSlug}.html`;
-    }
 
-    // ✅ Nếu bài cũ và ngày chưa chỉnh → giữ nguyên
-    const existing = allPostsData.find(p => p.id === savedPost.id);
-    if (existing) {
-        if (existing.date && existing.date === postDate.defaultValue) {
-            savedPost.date = existing.date;
+        // --- HÀM CHỈ TẠO JSON CHO 1 BÀI VIẾT ---
+        function generateSinglePostJson(post) {
+            // chỉ format vừa đủ để tags nằm 1 dòng
+            const jsonString = JSON.stringify(post, null, 2)
+                .replace(/\n\s+"tags": \[\s+/g, ' "tags": [')
+                .replace(/\s+\],/g, '],');
+            return jsonString;
         }
-        Object.assign(existing, savedPost);
-    } else {
-        // bài mới → tự động ngày hôm nay
-        savedPost.date = new Date().toISOString().slice(0, 10);
-        allPostsData.push(savedPost);
-    }
 
-    // --- Xuất JSON rút gọn chỉ cho bài này ---
-    const shortJson = generateSinglePostJson(savedPost);
-    jsonOutput.value = shortJson;
-    jsonOutputContainer.style.display = 'block';
-    htmlOutputContainer.style.display = 'none';
-    populateSelector();
-    postSelector.value = savedPost.id;
+        // --- GHI ĐÈ NÚT "CẬP NHẬT JSON" ---
+        // (Đây là code gốc của bạn, nó đã bao gồm logic fallback, rất tốt)
+        saveButton.addEventListener('click', () => {
+            const savedPost = getPostObjectFromForm();
+            if (!savedPost) return;
 
-    alert('✅ Đã tạo JSON cho bài hiện tại! Hãy copy phần này và dán vào data/posts.json.');
-});
+            // ✅ Tự tạo tên file nếu để trống (fallback)
+            if (!postFilename.value.trim()) {
+                const dateSlug = savedPost.date.replace(/-/g, '');
+                const slug = toSlug(savedPost.title);
+                savedPost.link = basePathSelector.value + `${slug}-${dateSlug}.html`;
+                postFilename.value = `${slug}-${dateSlug}.html`;
+            }
+
+            // ✅ Nếu bài cũ và ngày chưa chỉnh → giữ nguyên
+            const existing = allPostsData.find(p => p.id === savedPost.id);
+            if (existing) {
+                // Sửa lỗi: giữ nguyên ngày nếu không đổi
+                const originalDate = allPostsData.find(p => p.id === savedPost.id)?.date;
+                if (postDate.value === originalDate) {
+                    savedPost.date = originalDate;
+                }
+                Object.assign(existing, savedPost);
+            } else {
+                // bài mới → tự động ngày hôm nay (nếu chưa có)
+                if (!savedPost.date) {
+                    savedPost.date = new Date().toISOString().slice(0, 10);
+                }
+                allPostsData.push(savedPost);
+            }
+
+            // --- Xuất JSON rút gọn chỉ cho bài này ---
+            const shortJson = generateSinglePostJson(savedPost);
+            jsonOutput.value = shortJson;
+            jsonOutputContainer.style.display = 'block';
+            htmlOutputContainer.style.display = 'none';
+            populateSelector();
+            postSelector.value = savedPost.id;
+
+            alert('✅ Đã tạo JSON cho bài hiện tại! Hãy copy phần này và dán vào data/posts.json.');
+        });
 
     </script>
     
