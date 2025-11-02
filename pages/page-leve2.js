@@ -50,7 +50,7 @@ function initializePage(allContent) {
 
         postsToShow.forEach(post => {
             let imageUrl = post.imageUrl || 'https://placehold.co/400x250/ccc/ffffff?text=No+Image';
-            if (imageUrl && !imageUrl.startsWith('http')) {
+            if (imageUrl && !imageUrl.startsWith('http') && !imageUrl.startsWith('/')) { // <--- SỬA LẠI ĐÂY
                 imageUrl = "/" + imageUrl;
             }
             const summary = post.summary || 'Không có mô tả.';
@@ -145,10 +145,9 @@ function initializePage(allContent) {
 
         suggestions.forEach(post => {
             let imageUrl = post.imageUrl || 'https://placehold.co/64x64/ccc/ffffff?text=...';
-            if (imageUrl && !imageUrl.startsWith('http')) {
+            if (imageUrl && !imageUrl.startsWith('http') && !imageUrl.startsWith('/')) {
                 imageUrl = "/" + imageUrl;
             }
-
             let postLink = post.link || '#';
             if (postLink && !postLink.startsWith('http') && !postLink.startsWith('/')) {
                 postLink = "/" + postLink;
