@@ -43,13 +43,12 @@
     <!-- =========================================== -->
     <!-- ===== KHỐI TIÊU ĐỀ MỚI ĐƯỢC THÊM VÀO ===== -->
     <!-- =========================================== -->
-    <div class="mb-8">
+    <div class="mb-4">
         <!-- Tiêu đề này sẽ lấy từ ô "Tiêu đề" trong admin -->
         <h1 id="page-title" class="text-4xl font-bold text-gray-800 border-l-8 border-yellow-500 pl-4">{{ARTICLE_TITLE}}</h1>
-        <!-- Mô tả này sẽ lấy từ ô "Tóm tắt (Summary)" trong admin -->
-        <p id="page-description" class="mt-2 text-lg text-gray-600">{{META_DESCRIPTION}}</p>
+        <!-- Chỉ giữ lại ngày tháng ở đây (thêm class "italic") -->
+        <p class="text-gray-500 italic pl-6">Ngày đăng: {{ARTICLE_DATE}}</p>
     </div>
-    <!-- =========================================== -->
     <!-- =========================================== -->
 
     <div class="flex flex-col lg:flex-row lg:space-x-8">
@@ -58,9 +57,7 @@
             
             <!-- Tiêu đề h1 và ngày tháng cũ đã bị xóa khỏi đây, vì ta đã đưa lên trên -->
             
-            <!-- Chỉ giữ lại ngày tháng ở đây (thêm class "italic") -->
-            <p class="text-gray-500 mb-6 border-b pb-4 italic">Ngày đăng: {{ARTICLE_DATE}}</p>
-
+            
             <!-- Nội dung chính từ admin sẽ được chèn vào đây -->
             <div id="article-content" class="prose max-w-none prose-img:rounded-lg prose-img:shadow-md prose-img:mx-auto prose-h2:border-l-4 prose-h2:border-yellow-500 prose-h2:pl-3 prose-a:text-yellow-600 hover:prose-a:underline">
                 {{ARTICLE_CONTENT}}
