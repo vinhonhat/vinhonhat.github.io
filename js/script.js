@@ -431,6 +431,30 @@ fetch('/data/posts.json') // Tải file JSON
 
 
 
+    /* ============================================= */
+    /* ===== HIỆU ỨNG CHUYỂN ĐỘNG TIÊU ĐỀ TAB ===== */
+    /* ============================================= */
 
+    function startTitleAnimation() {
+        // Lấy tiêu đề gốc của trang
+        const originalTitle = document.title;
+        
+        // Thêm một khoảng đệm vào cuối tiêu đề để cuộn đẹp hơn
+        let animatedTitle = originalTitle + " ... "; 
+        
+        // Bắt đầu một vòng lặp
+        setInterval(() => {
+            // Lấy ký tự đầu tiên và chuyển nó xuống cuối chuỗi
+            animatedTitle = animatedTitle.substring(1) + animatedTitle.substring(0, 1);
+            
+            // Cập nhật tiêu đề của tab trình duyệt
+            document.title = animatedTitle;
+
+        }, 300); // Tốc độ cuộn: 300ms. Bạn có thể thay đổi số này (số nhỏ hơn = cuộn nhanh hơn)
+    }
+
+    // Chỉ chạy hiệu ứng này sau khi trang đã tải xong
+    // (Chúng ta thêm vào 'DOMContentLoaded' để đảm bảo nó không chạy quá sớm)
+    document.addEventListener('DOMContentLoaded', startTitleAnimation);
 
 }); // <-- Dòng này là dòng cuối cùng của file
