@@ -32,7 +32,7 @@ function renderPostsForCategory(category, containerId, allContent, maxPosts = 2)
 
     container.innerHTML = postsToShow.map(post => {
         let imageUrl = post.imageUrl || 'https://placehold.co/400x250/ccc/ffffff?text=No+Image';
-        if (imageUrl && !imageUrl.startsWith('http')) {
+        if (imageUrl && !imageUrl.startsWith('http') && !imageUrl.startsWith('/')) { // <--- SỬA LẠI ĐÂY
             imageUrl = "/" + imageUrl;
         }
 
@@ -99,7 +99,7 @@ function renderSuggestions(containerId, allContent) {
 
     suggestions.forEach(post => {
         let imageUrl = post.imageUrl || 'https://placehold.co/64x64/ccc/ffffff?text=...';
-        if (imageUrl && !imageUrl.startsWith('http')) {
+        if (imageUrl && !imageUrl.startsWith('http') && !imageUrl.startsWith('/')) {
             imageUrl = "/" + imageUrl;
         }
 
