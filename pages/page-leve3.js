@@ -1,4 +1,4 @@
-// page-logic-custom.js (ĐÃ SỬA LỖI CRASH)
+// page-logic-custom.js (ĐÃ SỬA LỖI CRASH VÀ LỖI GHI ĐÈ TIÊU ĐỀ)
 // Phiên bản dành cho các trang "trống bài chính" VÀ các trang bài viết chi tiết.
 
 function initializeFlexiblePage(allContent) {
@@ -19,28 +19,45 @@ function initializeFlexiblePage(allContent) {
         desc: el.body.dataset.description || "",
     };
 
-    // === SỬA LỖI 1, 2, 3 ===
-    // Chỉ chạy nếu tìm thấy các ID này
-    if (el.title) {
-        el.title.textContent = cfg.title;
+    // === SỬA LỖI GHI ĐÈ TIÊU ĐỀ BÀI VIẾT (FIX v2) ===
+    // Logic này (đặt tiêu đề, mô tả, nội dung trống) 
+    // CHỈ nên chạy trên CÁC TRANG DANH MỤC (có data-category)
+    // hoặc các trang trống đặc biệt (có el.main).
+    // Nó KHÔNG được chạy trên trang bài viết chi tiết (vì tiêu đề/mô tả đã do CMS điền).
+    
+    if (el.body.dataset.category || el.main) {
+        console.log('[LOGIC-CUSTOM] Phát hiện trang danh mục, đang đặt tiêu đề/mô tả.');
+        // Chỉ chạy nếu tìm thấy các ID này
+        if (el.title) {
+            el.title.textContent = cfg.title;
+        }
+        if (el.desc) {
+            el.desc.textContent = cfg.desc;
+        }
+        
+        // Chỉ chạy nếu tìm thấy el.main (trang trống)
+        if (el.main) {
+            el.main.innerHTML = `
+        		<div class="bg-white p-8 rounded-lg shadow text-center text-gray-600">
+        			<p class="mb-4">Hiện chưa có bài viết nào trong mục này.</p>
+        		</div>
+        	`;
+        }
+    } else {
+         console.log('[LOGIC-CUSTOM] Phát hiện trang bài viết chi tiết, bỏ qua đặt tiêu đề.');
     }
-    if (el.desc) {
-        el.desc.textContent = cfg.desc;
-    }
-    if (el.main) {
-        el.main.innerHTML = `
-    		<div class="bg-white p-8 rounded-lg shadow text-center text-gray-600">
-    			<p class="mb-4">Hiện chưa có bài viết nào trong mục này.</p>
-    		</div>
-    	`;
-    }
-    // === KẾT THÚC SỬA LỖI 1, 2, 3 ===
+    // === KẾT THÚC SỬA LỖI ===
 
 
     // ============= 2️⃣ HIỂN THỊ BÀI VIẾT GỢI Ý =============
     // Hàm này bây giờ sẽ luôn luôn chạy được
     function renderSuggestions() {
-        // (Toàn bộ code của hàm renderSuggestions giữ nguyên, không thay đổi)
+        
+        // SỬA LỖI NHỎ: Phải kiểm tra el.suggestions trước khi dùng
+        if (!el.suggestions) {
+             console.log('[LOGIC-CUSTOM] Không tìm thấy "suggested-posts-container", bỏ qua gợi ý.');
+             return;
+        }
         
         el.suggestions.innerHTML = "";
 
