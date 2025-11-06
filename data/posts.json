@@ -43,10 +43,12 @@
     "link": "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/khac/l%E1%BA%A5y-m%C3%A3-mnp-auuq?authuser=0",
     "contentHtml": ""
   },
+
+
   {
     "id": "migrated-tokutei-nhahang-20251008",
     "type": "post",
-    "category": "tokutei",
+    "category": ["tokutei", "nhahang"],
     "tags": ["tokutei"],
     "date": "2025-10-08",
     "featured": true,
@@ -56,15 +58,68 @@
     "link": "/pages/pages-hoctap/nhahang.html",
     "contentHtml": ""
   },
+
   {
     "id": "migrated-tokutei-thucpham-20251008",
     "type": "post",
-    "category": "tokutei",
+    "category": ["tokutei", "thucpham"],
     "tags": ["tokutei"],
-    "date": "2025-10-08",
+    "date": "2025-11-06",
     "featured": true,
-    "title": "Tài liệu ôn thi thực phẩm ",
-    "summary": "tổng hợp tài liệu ôn thi tokutei thực phẩm ",
+    "title": "Tổng hợp kiến thức ôn thi thực phẩm QUAN TRỌNG",
+    "summary": "Tổng hợp kiến thức ôn thi thực phẩm sưu tầm ",
+    "imageUrl": "https://placehold.co/400x250/FBD38D/ffffff?text=tokutei thực phẩm",
+    "link": "/pages/pages-hoctap/thucpham.html",
+    "contentHtml": ""
+  },
+  {
+    "id": "migrated-tokutei-thucpham-20251008",
+    "type": "post",
+    "category": ["tokutei", "thucpham"],
+    "tags": ["tokutei"],
+    "date": "2025-11-06",
+    "featured": true,
+    "title": "Tài liệu ôn thi thực hành thực phẩm tiếng nhật",
+    "summary": "Tài liệu ôn thi thực hành tokutei thực phẩm ",
+    "imageUrl": "https://placehold.co/400x250/FBD38D/ffffff?text=tokutei thực phẩm",
+    "link": "/pages/pages-hoctap/thucpham.html",
+    "contentHtml": ""
+  },
+  {
+    "id": "migrated-tokutei-thucpham-20251008",
+    "type": "post",
+    "category": ["tokutei", "thucpham"],
+    "tags": ["tokutei"],
+    "date": "2025-11-06",
+    "featured": true,
+    "title": "Tài liệu ôn thi thực hành thực phẩm tiếng Việt",
+    "summary": "Tài liệu ôn thi thực hành tokutei thực phẩm ",
+    "imageUrl": "https://placehold.co/400x250/FBD38D/ffffff?text=tokutei thực phẩm",
+    "link": "/pages/pages-hoctap/thucpham.html",
+    "contentHtml": ""
+  },
+  {
+    "id": "migrated-tokutei-thucpham-20251008",
+    "type": "post",
+    "category": ["tokutei", "thucpham"],
+    "tags": ["tokutei"],
+    "date": "2025-11-06",
+    "featured": true,
+    "title": "Tài liệu ôn thi thực phẩm bản mới tiếng nhật ",
+    "summary": "tổng hợp tài liệu ôn thi tokutei thực phẩm bản mới tiếng nhật ",
+    "imageUrl": "https://placehold.co/400x250/FBD38D/ffffff?text=tokutei thực phẩm",
+    "link": "/pages/pages-hoctap/thucpham.html",
+    "contentHtml": ""
+  },
+  {
+    "id": "migrated-tokutei-thucpham-20251008",
+    "type": "post",
+    "category": ["tokutei", "thucpham"],
+    "tags": ["tokutei"],
+    "date": "2025-11-06",
+    "featured": true,
+    "title": "Tài liệu ôn thi thực phẩm bản mới tiếng Việt ",
+    "summary": "tổng hợp tài liệu ôn thi tokutei thực phẩm bản mới tiếng Việt ",
     "imageUrl": "https://placehold.co/400x250/FBD38D/ffffff?text=tokutei thực phẩm",
     "link": "/pages/pages-hoctap/thucpham.html",
     "contentHtml": ""
@@ -72,7 +127,7 @@
   {
     "id": "migrated-tokutei-kaigo-20251009",
     "type": "post",
-    "category": "tokutei",
+    "category": ["tokutei", "kaigo"],
     "tags": ["tokutei"],
     "date": "2025-10-09",
     "featured": false,
@@ -85,7 +140,7 @@
   {
     "id": "migrated-tokutei-khachsan-20251004",
     "type": "post",
-    "category": "tokutei",
+    "category": ["tokutei", "hotel"],
     "tags": ["tokutei"],
     "date": "2025-10-04",
     "featured": true,
@@ -95,6 +150,9 @@
     "link": "/pages/pages-hoctap/hoctap.html.html",
     "contentHtml": ""
   },
+
+
+
   {
     "id": "migrated-game-xephinh-20251025",
     "type": "post",
