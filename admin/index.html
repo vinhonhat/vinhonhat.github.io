@@ -429,7 +429,7 @@
             const fullLink = basePath + filename;
 
             return {
-                id: postId.value.trim(),
+                id: postId.value.trim(), //mã id
                 type: postType.value.trim(),
                 category: postCategory.value.trim(),
                 tags: postTags.value.split(',').map(tag => tag.trim()).filter(Boolean),
