@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(allContent => {
                 // Dữ liệu đã sẵn sàng, gọi các hàm và truyền 'allContent' vào
                 
-                // dành cho trang bài viết HD
+                // dành cho trang bài viết HD cần thêm ID vào để cập nhật mõi khi có trang cấp 1 thêm
                 renderPostsForCategory('rakuten', 'rakuten-posts', allContent);
                 renderPostsForCategory('seven', 'seven-posts', allContent);
                 renderPostsForCategory('baito', 'baito-posts', allContent);
