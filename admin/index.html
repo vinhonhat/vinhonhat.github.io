@@ -72,21 +72,6 @@
                         </div>
                     </div>
                     
-                    <div>
-                        <label for="postTitle" class="block text-sm font-medium text-gray-700">Tiêu đề</label>
-                        <input type="text" id="postTitle" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required>
-                    </div>
-
-                    <div>
-                        <label for="postSummary" class="block text-sm font-medium text-gray-700">Tóm tắt (Summary) (Dùng cho SEO)</label>
-                        <textarea id="postSummary" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"></textarea>
-                    </div>
-
-                    <div>
-                        <label for="postImageUrl" class="block text-sm font-medium text-gray-700">Link ảnh bìa (ImageUrl) (Dùng cho SEO)</label>
-                        <input type="text" id="postImageUrl" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
-                    </div>
-
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                             <label for="postType" class="block text-sm font-medium text-gray-700">Loại (type)</label>
@@ -109,6 +94,22 @@
                             <option value="true">Có</option>
                         </select>
                     </div>
+                    <div>
+                        <label for="postTitle" class="block text-sm font-medium text-gray-700">Tiêu đề</label>
+                        <input type="text" id="postTitle" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required>
+                    </div>
+
+                    <div>
+                        <label for="postSummary" class="block text-sm font-medium text-gray-700">Tóm tắt (Summary) (Dùng cho SEO)</label>
+                        <textarea id="postSummary" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"></textarea>
+                    </div>
+
+                    <div>
+                        <label for="postImageUrl" class="block text-sm font-medium text-gray-700">Link ảnh bìa (ImageUrl) (Dùng cho SEO)</label>
+                        <input type="text" id="postImageUrl" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
+                    </div>
+
+                    
 
                     <!-- 3. TRÌNH SOẠN THẢO TINYMCE -->
                     <div class="mt-6">
@@ -429,15 +430,15 @@
 
             return {
                 id: postId.value.trim(),
-                date: postDate.value,
-                title: postTitle.value.trim(),
-                summary: postSummary.value.trim(),
-                imageUrl: postImageUrl.value.trim(),
                 type: postType.value.trim(),
                 category: postCategory.value.trim(),
                 tags: postTags.value.split(',').map(tag => tag.trim()).filter(Boolean),
-                link: fullLink, // Dùng link đã ghép
+                date: postDate.value,
                 featured: postFeatured.value === 'true',
+                title: postTitle.value.trim(),
+                summary: postSummary.value.trim(),
+                imageUrl: postImageUrl.value.trim(),                             
+                link: fullLink, // Dùng link đã ghép                
                 contentHtml: tinymce.get('contentEditor').getContent()
             };
         }
