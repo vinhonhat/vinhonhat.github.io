@@ -131,10 +131,23 @@
     "tags": ["tokutei"],
     "date": "2025-10-09",
     "featured": false,
-    "title": "Tài liệu ôn thi kaigo",
+    "title": "Tài liệu ôn thi kaigo tiếng Việt",
     "summary": "tổng hợp tài liệu ôn thi tokutei kaigo",
     "imageUrl": "https://placehold.co/400x250/FBD38D/ffffff?text=tokutei kaigo",
-    "link": "/pages/pages-hoctap/kaigo.html",
+    "link": "https://drive.google.com/file/d/1kexk0siuQ8Wc-_k7z5GQDoUYlSSKViFm/preview",
+    "contentHtml": ""
+  },
+  {
+    "id": "migrated-tokutei-kaigo-20251009",
+    "type": "post",
+    "category": ["tokutei", "kaigo"],
+    "tags": ["tokutei"],
+    "date": "2025-10-09",
+    "featured": false,
+    "title": "Tài liệu ôn thi kaigo tiếng nhật",
+    "summary": "tổng hợp tài liệu ôn thi tokutei kaigo",
+    "imageUrl": "https://placehold.co/400x250/FBD38D/ffffff?text=tokutei kaigo",
+    "link": "https://drive.google.com/file/d/18Bw3xnGKxshToQWtJOaeCeCoxcEq8J7k/preview",
     "contentHtml": ""
   },
   {
