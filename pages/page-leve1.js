@@ -153,6 +153,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 renderPostsForCategory('baito', 'baito-posts', allContent);
                 renderPostsForCategory('sim', 'sim-posts', allContent);
                 renderPostsForCategory('tokutei', 'tokutei-posts', allContent);
+                renderPostsForCategory('thucpham', 'thucpham-posts', allContent);
+                renderPostsForCategory('hotel', 'hotel-posts', allContent);
+                renderPostsForCategory('kaigo', 'kaigo-posts', allContent);
+                renderPostsForCategory('nhahang', 'nhahang-posts', allContent);
                 renderPostsForCategory('nihongo', 'nihongo-posts', allContent);
                 renderPostsForCategory('jlpt', 'jlpt-posts', allContent);
                 renderPostsForCategory('windows', 'windows-posts', allContent);
