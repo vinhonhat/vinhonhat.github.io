@@ -25,14 +25,26 @@ function initializePage(allContent) {
     }
 
     // --- Lọc bài viết theo category ---
+    // SỬA THÀNH ĐOẠN NÀY (đã thêm logic "status" và đơn giản hóa "category"):
     const categoryPosts = allContent.filter(post => {
+        // 1. Ẩn bài nếu status là 0
+        if (post.status === 0) return false;
+
+        // 2. Lọc theo category (chỉ kiểm tra array)
         if (Array.isArray(post.category)) {
-            // Nếu category là một danh sách (array), kiểm tra xem nó CÓ CHỨA category của trang không
             return post.category.includes(config.category);
-        } else {
-            // Nếu là code cũ (string), so sánh như bình thường
-            return post.category === config.category;
         }
+        return false; // Bỏ qua nếu category không phải là mảng
+        }).sort((a, b) => {
+        // Ưu tiên 1: "featured" = true luôn lên đầu
+        // (b.featured ? 1 : 0) - (a.featured ? 1 : 0)
+        // Nếu b là featured (1) và a không (0) -> b lên trước (1 - 0 = 1)
+        if (a.featured !== b.featured) {
+            return b.featured ? 1 : -1;
+        }
+
+        // Ưu tiên 2: Sắp xếp theo ngày mới nhất (nếu featured bằng nhau)
+        return new Date(b.date) - new Date(a.date);
     });
 
     let currentPage = 1;
@@ -127,7 +139,12 @@ function initializePage(allContent) {
         const sixMonthsAgo = new Date();
         sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
+        // SỬA THÀNH ĐOẠN NÀY (đã thêm logic "status"):
         const recentPosts = allContent.filter(post => {
+            // 1. Ẩn bài nếu status là 0
+            if (post.status === 0) return false;
+
+            // 2. Lọc theo ngày
             if (!post.date) return false;
             const postDate = new Date(post.date);
             return postDate >= sixMonthsAgo;
