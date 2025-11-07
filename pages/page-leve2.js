@@ -1,5 +1,36 @@
 // page-logic.js
 // dùng cho trang con hiện thị đầy đủ từng mục con như rakuten, sim, hoc tập
+
+// Hàm này dùng để đổi định dạng ngày sang kiểu "ngày 07 tháng 11 năm 2025"
+function formatDate(dateString) {
+    if (!dateString) return ""; 
+    try {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const monthName = date.toLocaleDateString('vi-VN', { month: 'long' });
+        const year = date.getFullYear();
+        if (!day || !monthName || isNaN(year)) return dateString;
+        return `ngày ${day} ${monthName} năm ${year}`;
+    } catch (e) {
+        return dateString;
+    }
+}
+
+// Hàm này dùng để đổi định dạng ngày sang kiểu "07-11-2025" (ngắn gọn)
+function formatDateSimple(dateString) {
+    if (!dateString) return ""; 
+    try {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        if (isNaN(day) || isNaN(month) || isNaN(year)) return dateString;
+        return `${day}-${month}-${year}`; // Định dạng DD-MM-YYYY
+    } catch (e) {
+        return dateString;
+    }
+}
+
 function initializePage(allContent) {
     console.log('[LOGIC] Dữ liệu `allContent` đã sẵn sàng. Bắt đầu hiển thị trang.');
 
@@ -66,7 +97,7 @@ function initializePage(allContent) {
                 imageUrl = "/" + imageUrl;
             }
             const summary = post.summary || 'Không có mô tả.';
-            const postDate = post.date || '';
+            const postDate = formatDate(post.date);
 
             let postLink = post.link || '#';
             if (postLink && !postLink.startsWith('http') && !postLink.startsWith('/')) {
@@ -180,7 +211,7 @@ function initializePage(allContent) {
                     <h4 class="font-semibold text-gray-800 group-hover:text-yellow-700">${post.title}</h4>
                     <div class="text-xs text-gray-500 mt-1 flex items-center">
                         <i class="far fa-calendar-alt mr-1"></i>
-                        <span>${post.date || ''}</span>
+                        <span>${formatDateSimple(post.date)}</span>
                     </div>
                 </div>
             </a>
@@ -193,7 +224,7 @@ function initializePage(allContent) {
                 <h4 class="font-semibold text-gray-800 group-hover:text-yellow-700 truncate-2-lines">${post.title}</h4>
                 <div class="text-xs text-gray-500 mt-1 flex justify-center items-center">
                     <i class="far fa-calendar-alt mr-1"></i>
-                    <span>${post.date || ''}</span>
+                    <span>${formatDateSimple(post.date)}</span>
                 </div>
             </a>
     `;

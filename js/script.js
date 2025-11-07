@@ -58,14 +58,35 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- 3.1. Chức năng không đổi (Đồng hồ, Banner, Popup...) (Giữ nguyên) ---
     // HÀM MỚI: Dùng để định dạng ngày tháng cho đẹp
+    // Hàm này dùng để đổi định dạng ngày sang kiểu "ngày 07 tháng 11 năm 2025"
     function formatDate(dateString) {
-        // Tạo một đối tượng ngày tháng từ chuỗi đầu vào
-        const date = new Date(dateString);
-        // Tạo một đối tượng tùy chọn để định dạng theo kiểu Việt Nam
-        const options = { day: 'numeric', month: 'long', year: 'numeric' };
-        // Trả về chuỗi đã được định dạng
-        return date.toLocaleDateString('vi-VN', options);
-    }      
+        // Nếu không có dateString (hoặc là null/undefined), trả về chuỗi rỗng
+        if (!dateString) return ""; 
+
+        try {
+            const date = new Date(dateString);
+            
+            // 1. Lấy ngày và thêm '0' vào trước nếu là 1 ký tự (e.g., "07")
+            const day = String(date.getDate()).padStart(2, '0');
+            
+            // 2. Lấy tên tháng theo tiếng Việt (e.g., "tháng 11")
+            const monthName = date.toLocaleDateString('vi-VN', { month: 'long' });
+            
+            // 3. Lấy năm
+            const year = date.getFullYear();
+
+            // Kiểm tra xem ngày có hợp lệ không
+            if (!day || !monthName || isNaN(year)) {
+                return dateString; // Trả về ngày gốc nếu không parse được
+            }
+
+            // 4. Ghép chuỗi lại
+            return `ngày ${day} ${monthName} năm ${year}`;
+            
+        } catch (e) {
+            return dateString; // Trả về ngày gốc nếu có lỗi
+        }
+    }    
     
     // Cập nhật đồng hồ
     function updateClock() {
