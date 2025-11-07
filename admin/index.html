@@ -72,7 +72,7 @@
                         </div>
                     </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 flex items-center">
                         <div>
                             <label for="postType" class="block text-sm font-medium text-gray-700">Loại (type)</label>
                             <input type="text" id="postType" placeholder="guide, review, video" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
@@ -87,13 +87,14 @@
                         </div>
                     </div>
                     
-                     <div>
-                        <label for="postFeatured" class="block text-sm font-medium text-gray-700">Nổi bật (featured)</label>
-                        <select id="postFeatured" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
-                            <option value="false">Không</option>
-                            <option value="true">Có</option>
-                        </select>
+                    <div class="flex items-center">
+                        <input id="postFeatured" name="postFeatured" type="checkbox" class="h-4 w-4 text-yellow-600 border-gray-300 rounded focus:ring-yellow-500">
+                        <label for="postFeatured" class="ml-3 block text-sm font-medium text-gray-700">Nổi bật (Featured)</label>
+        
+                        <input id="postStatus" name="postStatus" type="checkbox" class="h-4 w-4 text-yellow-600 border-gray-300 rounded focus:ring-yellow-500 ml-6">
+                        <label for="postStatus" class="ml-3 block text-sm font-medium text-gray-700">Hiển thị (Status)</label>
                     </div>
+
                     <div>
                         <label for="postTitle" class="block text-sm font-medium text-gray-700">Tiêu đề</label>
                         <input type="text" id="postTitle" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required>
@@ -232,6 +233,7 @@
         const postCategory = document.getElementById('postCategory');
         const postTags = document.getElementById('postTags');
         const postFeatured = document.getElementById('postFeatured');
+        const postStatus = document.getElementById('postStatus');
 
         // Buttons
         const saveButton = document.getElementById('saveButton');
@@ -294,7 +296,7 @@
             contextmenu: 'link image table',
             skin: 'oxide',
             content_style: 'body { font-family:Inter,Helvetica,Arial,sans-serif; font-size:16px }',
-            
+            placeholder: 'Bắt đầu viết nội dung ở đây...', // <-- THÊM DÒNG NÀY
             setup: (editor) => {
                 editor.on('init', () => {
                     loadInitialData();
@@ -359,9 +361,10 @@
         });
 
         // --- TẢI DỮ LIỆU BÀI VIẾT LÊN FORM ---
+        // THAY THẾ TOÀN BỘ HÀM (trong <script>):
         function loadPostData(post) {
             if (post) {
-                // Chế độ chỉnh sửa
+                // --- Chế độ chỉnh sửa ---
                 postId.value = post.id;
                 postId.readOnly = true;
                 postDate.value = post.date;
@@ -369,76 +372,92 @@
                 postSummary.value = post.summary;
                 postImageUrl.value = post.imageUrl;
                 postType.value = post.type;
-                postCategory.value = post.category;
-                postTags.value = post.tags.join(', ');
-                postFeatured.value = post.featured.toString();
+                
+                // Yêu cầu 1 & 3: Hiển thị category từ mảng (hoặc chuỗi cũ)
+                postCategory.value = Array.isArray(post.category) ? post.category.join(', ') : post.category;
+                postCategory.placeholder = 'sim, bank, life'; // Giữ placeholder
+                
+                postTags.value = Array.isArray(post.tags) ? post.tags.join(', ') : post.tags; // Sửa tags tương tự
+                postFeatured.checked = post.featured === true; // Set checkbox
+                if (postStatus) {
+                    postStatus.checked = post.status !== 0; // Set checkbox (Hiển thị = checked)
+                }
+
                 tinymce.get('contentEditor').setContent(post.contentHtml || '');
 
-                // *** CẬP NHẬT: Tách link thành base path và filename ***
+                // Tách link (giữ nguyên logic của bạn)
                 const lastSlashIndex = post.link.lastIndexOf('/');
                 if (lastSlashIndex > -1) {
                     basePathSelector.value = post.link.substring(0, lastSlashIndex + 1);
                     postFilename.value = post.link.substring(lastSlashIndex + 1);
                 } else {
-                    basePathSelector.value = '/pages/bai-viet/'; // Mặc định
-                    postFilename.value = post.link; // Trường hợp cũ không có /
+                    basePathSelector.value = '/pages/bai-viet/'; 
+                    postFilename.value = post.link;
                 }
-                
-                // MỚI: Đặt cờ là "đã sửa" vì bài này đã có tên file
                 isFilenameManuallyEdited = true;
 
             } else {
-                // Chế độ tạo mới
+                // --- Chế độ tạo mới ---
                 const now = new Date();
-                const dateSlug = now.toISOString().slice(0, 10).replace(/-/g, ''); // YYYYMMDD
-                const timeSlug = now.toTimeString().slice(0, 5).replace(':', ''); // HHMM
+                const dateSlug = now.toISOString().slice(0, 10).replace(/-/g, ''); 
+                const timeSlug = now.toTimeString().slice(0, 5).replace(':', ''); 
                 
                 postId.value = `post-${dateSlug}-${timeSlug}`; 
                 postId.readOnly = false;
                 postDate.value = now.toISOString().slice(0, 10);
-                postTitle.value = 'Tiêu đề bài viết mới'; // MỚI: Đặt tiêu đề trước
-                postSummary.value = 'Tóm tắt bài viết mới (dùng cho SEO)';
+                postTitle.value = 'Tiêu đề bài viết mới'; 
+                postSummary.value = 'Tóm tắt bài viết mới';
                 postImageUrl.value = 'https://placehold.co/1200x630/FBF7F0/718096?text=Anh+SEO';
-                postType.value = 'guide';
-                postCategory.value = 'sim';
+                postType.value = 'post';
+                
+                //Để trống category và hiện placeholder
+                postCategory.value = '';
+                postCategory.placeholder = 'sim, bank, life'; // Gợi ý mờ
+
                 postTags.value = '';
-                postFeatured.value = 'false';
-                tinymce.get('contentEditor').setContent('<p>Bắt đầu viết nội dung ở đây...</p>');
+                postFeatured.checked = true; // <-- SỬA LẠI: Dùng .checked
                 
-                basePathSelector.value = '/pages/bai-viet/'; // Mặc định
+                // Mặc định là '1' (Hiển thị) khi tạo mới
+                if (postStatus) { 
+                    postStatus.checked = true; // <-- SỬA LẠI: Dùng .checked
+                }
+
+                //Placeholder cho TinyMCE (đã có)
+                tinymce.get('contentEditor').setContent(''); // <-- SỬA THÀNH CHUỖI RỖNG
                 
-                // MỚI: Tự động tạo tên file từ tiêu đề mặc định
+                basePathSelector.value = '/pages/bai-viet/';
                 const slug = toSlug(postTitle.value);
-                postFilename.value = `${slug}-${dateSlug}.html`; // Gợi ý tên file
-                
-                // MỚI: Đặt cờ là "chưa sửa" để cho phép tự động cập nhật
+                postFilename.value = `${slug}-${dateSlug}.html`;
                 isFilenameManuallyEdited = false; 
             }
         }
 
         // --- HÀM LẤY DỮ LIỆU TỪ FORM ---
+        // THAY THẾ TOÀN BỘ HÀM (trong <script>):
         function getPostObjectFromForm() {
             if (!validateForm()) {
                 alert('Vui lòng điền đầy đủ các trường bắt buộc (ID, Ngày, Tiêu đề, Tên file).');
                 return null;
             }
             
-            // *** CẬP NHẬT: Ghép base path và filename để tạo link ***
             const basePath = basePathSelector.value;
             const filename = postFilename.value.trim();
             const fullLink = basePath + filename;
 
             return {
-                id: postId.value.trim(), //mã id
+                id: postId.value.trim(), 
                 type: postType.value.trim(),
-                category: postCategory.value.trim(),
+                //Thêm status (đọc từ checkbox)
+                status: postStatus.checked ? 1 : 0, // <-- SỬA LẠI
+                //Chuyển category thành mảng
+                category: postCategory.value.split(',').map(cat => cat.trim()).filter(Boolean),
                 tags: postTags.value.split(',').map(tag => tag.trim()).filter(Boolean),
                 date: postDate.value,
-                featured: postFeatured.value === 'true',
+                featured: postFeatured.checked, // <-- SỬA LẠI
                 title: postTitle.value.trim(),
                 summary: postSummary.value.trim(),
                 imageUrl: postImageUrl.value.trim(),                             
-                link: fullLink, // Dùng link đã ghép                
+                link: fullLink,                
                 contentHtml: tinymce.get('contentEditor').getContent()
             };
         }
@@ -538,10 +557,26 @@
 
         // --- HÀM CHỈ TẠO JSON CHO 1 BÀI VIẾT ---
         function generateSinglePostJson(post) {
-            // chỉ format vừa đủ để tags nằm 1 dòng
-            const jsonString = JSON.stringify(post, null, 2)
-                .replace(/\n\s+"tags": \[\s+/g, ' "tags": [')
-                .replace(/\s+\],/g, '],');
+            // 1. Stringify RIÊNG các mảng. 
+            //    Hàm JSON.stringify không có 'null, 2' sẽ tạo ra chuỗi trên 1 dòng.
+            const categoryString = JSON.stringify(post.category);
+            const tagsString = JSON.stringify(post.tags);
+
+            // 2. Tạo một bản sao tạm thời của bài viết
+            const tempPost = { ...post };
+            
+            // 3. Thay thế các mảng bằng chuỗi placeholder (để đánh lừa)
+            tempPost.category = "__CATEGORY_PLACEHOLDER__";
+            tempPost.tags = "__TAGS_PLACEHOLDER__";
+
+            // 4. Stringify đối tượng chính với 'null, 2' (để các trường khác thụt đầu dòng)
+            let jsonString = JSON.stringify(tempPost, null, 2);
+
+            // 5. Thay thế các placeholder (nay đã bị stringify thành chuỗi)
+            //    bằng các chuỗi mảng 1 dòng mà chúng ta đã tạo ở bước 1.
+            jsonString = jsonString.replace('"__CATEGORY_PLACEHOLDER__"', categoryString);
+            jsonString = jsonString.replace('"__TAGS_PLACEHOLDER__"', tagsString);
+
             return jsonString;
         }
 
