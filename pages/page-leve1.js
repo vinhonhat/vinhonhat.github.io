@@ -11,14 +11,15 @@ function renderPostsForCategory(category, containerId, allContent, maxPosts = 2)
     const section = container.closest("section"); // lấy thẻ <section> bao quanh
 
     // Lọc bài theo category
+    // SỬA THÀNH ĐOẠN NÀY (đã thêm logic "status" và đơn giản hóa "category"):
     const categoryPosts = allContent.filter(post => {
+        // 1. Ẩn bài nếu status là 0
+        if (post.status === 0) return false;
+        // 2. Lọc theo category (chỉ kiểm tra array)
         if (Array.isArray(post.category)) {
-            // Nếu là array, kiểm tra xem nó CÓ CHỨA category của mục này không
             return post.category.includes(category);
-        } else {
-            // Nếu là string cũ, so sánh bình thường
-            return post.category === category;
         }
+        return false; // Bỏ qua nếu category không phải là mảng
     });
 
     if (categoryPosts.length === 0) {
@@ -86,7 +87,12 @@ function renderSuggestions(containerId, allContent) {
     const sixMonthsAgo = new Date();
     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
+    // SỬA THÀNH ĐOẠN NÀY (đã thêm logic "status"):
     const recentPosts = allContent.filter(post => {
+        // 1. Ẩn bài nếu status là 0
+        if (post.status === 0) return false;
+
+        // 2. Lọc theo ngày
         if (!post.date) return false;
         const postDate = new Date(post.date);
         return postDate >= sixMonthsAgo;
