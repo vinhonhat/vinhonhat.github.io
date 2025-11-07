@@ -65,7 +65,7 @@
   "id": "post-20251107-1420",
   "type": "post",
   "status": 1,
-  "category": "sim",
+  "category": ["sim"],
   "tags": ["smartpit"],
   "date": "2025-11-07",
   "featured": true,
