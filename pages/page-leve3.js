@@ -64,7 +64,12 @@ function initializeFlexiblePage(allContent) {
         const sixMonthsAgo = new Date();
         sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
+        // SỬA THÀNH ĐOẠN NÀY (đã thêm logic "status"):
         let recent = allContent.filter(p => {
+            // 1. Ẩn bài nếu status là 0
+            if (p.status === 0) return false;
+
+            // 2. Lọc theo ngày
             if (!p.date) return false;
             const d = new Date(p.date);
             return d >= sixMonthsAgo;
