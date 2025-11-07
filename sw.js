@@ -2,11 +2,11 @@
 // Tên của bộ nhớ cache. Rất quan trọng: MỖI KHI BẠN CẬP NHẬT WEBSITE,
 // BẠN PHẢI THAY ĐỔI TÊN NÀY 
 // GHI CHÚ 1: THAY ĐỔI TÊN CACHE MỖI KHI BẠN CẬP NHẬT WEBSITE (VÍ DỤ: TỪ v2 thành v3) ĐỂ KÍCH HOẠT CẬP NHẬT.
-const CACHE_NAME = 'vinh-o-nhat-cache-v25.11 test 0.1'; 
+const CACHE_NAME = 'vinh-o-nhat-cache-v25.11.7'; 
 
 // GHI CHÚ 2: DANH SÁCH FILE CẦN LƯU
 // Danh sách các file cốt lõi cần được lưu vào cache để chạy offline.
-/*const urlsToCache = [
+const urlsToCache = [
   
   '/',
   '/index.html',
@@ -18,7 +18,7 @@ const CACHE_NAME = 'vinh-o-nhat-cache-v25.11 test 0.1';
   '/img/logo.png',
   '/pages/rakuten.html'
 ]; 
-*/
+
 
 // GHI CHÚ 3: CÀI ĐẶT VÀ KÍCH HOẠT NGAY
 // --- SỰ KIỆN 1: CÀI ĐẶT (install) ---
