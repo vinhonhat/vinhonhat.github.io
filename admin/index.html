@@ -565,7 +565,7 @@
                 id: postId.value.trim(), 
                 type: postType.value.trim(),
                 status: postStatus.checked ? 1 : 0, 
-                category: categoryInput.length <= 1 ? (categoryInput[0] || '') : categoryInput,
+                category: categoryInput,
                 tags: postTags.value.split(',').map(tag => tag.trim()).filter(Boolean),
                 date: postDate.value,
                 featured: postFeatured.checked, 
