@@ -23,7 +23,7 @@
     
     <main class="max-w-6xl mx-auto px-4 mt-8">
         <h1 class="text-3xl font-bold text-gray-800 border-l-4 border-yellow-600 pl-4 mb-6">CMS - Quản Trị</h1>
-        <p class="text-xs text-gray-500 ml-5 mb-6">Phiên bản: V25.11 (071300)</p>
+        <p class="text-xs text-gray-500 ml-5 mb-6">Phiên bản: V25.11 (071418)</p>
         <div class="grid grid-cols-1 gap-8">
             
             <!-- FORM CHỈNH SỬA (Đã chuyển ra giữa) -->
@@ -295,8 +295,128 @@
             toolbar_mode: 'sliding',
             contextmenu: 'link image table',
             skin: 'oxide',
+            
+            // === BẮT ĐẦU SỬA ĐỔI ===
+            
+            placeholder: 'Bắt đầu viết nội dung ở đây...', // <-- ĐÃ THÊM
+
+            // Khối mã này định nghĩa các mẫu bạn có thể chèn
+            templates: [
+              // --- MẪU 1: 2 TABS ---
+              {
+                title: 'Mẫu 2 Tab (iPhone/Android)',
+                description: 'Chèn một khối 2 tab để so sánh iPhone và Android.',
+                content: `
+                  <div class="tab-container my-6 border rounded-lg overflow-hidden bg-white shadow-sm">
+                    <!-- Nút bấm -->
+                    <div class="tab-buttons flex border-b bg-gray-50">
+                      <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-yellow-500 text-yellow-600" data-tab-id="tab1">
+                        iPhone
+                      </button>
+                      <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700" data-tab-id="tab2">
+                        Android
+                      </button>
+                    </div>
+                    <!-- Nội dung -->
+                    <div class="p-4 md:p-6">
+                      <div class="tab-panel" data-panel-id="tab1">
+                        <h3 class="text-2xl font-bold mb-3">Hướng dẫn cho iPhone</h3>
+                        <p>Nội dung cho iPhone...</p>
+                      </div>
+                      <div class="tab-panel hidden" data-panel-id="tab2">
+                        <h3 class="text-2xl font-bold mb-3">Hướng dẫn cho Android</h3>
+                        <p>Nội dung cho Android...</p>
+                      </div>
+                    </div>
+                  </div>
+                `
+              },
+              
+              // --- MẪU 2: 3 TABS ---
+              {
+                title: 'Mẫu 3 Tab (iPhone/Android/Windows)',
+                description: 'Chèn một khối 3 tab.',
+                content: `
+                  <div class="tab-container my-6 border rounded-lg overflow-hidden bg-white shadow-sm">
+                    <!-- Nút bấm -->
+                    <div class="tab-buttons flex border-b bg-gray-50">
+                      <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-yellow-500 text-yellow-600" data-tab-id="tab1">
+                        iPhone
+                      </button>
+                      <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700" data-tab-id="tab2">
+                        Android
+                      </button>
+                      <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700" data-tab-id="tab3">
+                        Windows
+                      </button>
+                    </div>
+                    <!-- Nội dung -->
+                    <div class="p-4 md:p-6">
+                      <div class="tab-panel" data-panel-id="tab1">
+                        <h3 class="text-2xl font-bold mb-3">Hướng dẫn cho iPhone</h3>
+                        <p>Nội dung cho iPhone...</p>
+                      </div>
+                      <div class="tab-panel hidden" data-panel-id="tab2">
+                        <h3 class="text-2xl font-bold mb-3">Hướng dẫn cho Android</h3>
+                        <p>Nội dung cho Android...</p>
+                      </div>
+                      <div class="tab-panel hidden" data-panel-id="tab3">
+                        <h3 class="text-2xl font-bold mb-3">Hướng dẫn cho Windows</h3>
+                        <p>Nội dung cho Windows...</p>
+                      </div>
+                    </div>
+                  </div>
+                `
+              },
+              
+              // --- MẪU 3: 4 TABS ---
+              {
+                title: 'Mẫu 4 Tab (Chung)',
+                description: 'Chèn một khối 4 tab chung.',
+                content: `
+                  <div class="tab-container my-6 border rounded-lg overflow-hidden bg-white shadow-sm">
+                    <!-- Nút bấm -->
+                    <div class="tab-buttons flex border-b bg-gray-50">
+                      <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-yellow-500 text-yellow-600" data-tab-id="tab1">
+                        Tab 1
+                      </button>
+                      <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700" data-tab-id="tab2">
+                        Tab 2
+                      </button>
+                      <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700" data-tab-id="tab3">
+                        Tab 3
+                      </button>
+                      <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700" data-tab-id="tab4">
+                        Tab 4
+                      </button>
+                    </div>
+                    <!-- Nội dung -->
+                    <div class="p-4 md:p-6">
+                      <div class="tab-panel" data-panel-id="tab1">
+                        <h3 class="text-2xl font-bold mb-3">Nội dung Tab 1</h3>
+                        <p>Nội dung cho Tab 1...</p>
+                      </div>
+                      <div class="tab-panel hidden" data-panel-id="tab2">
+                        <h3 class="text-2xl font-bold mb-3">Nội dung Tab 2</h3>
+                        <p>Nội dung cho Tab 2...</p>
+                      </div>
+                      <div class="tab-panel hidden" data-panel-id="tab3">
+                        <h3 class="text-2xl font-bold mb-3">Nội dung Tab 3</h3>
+                        <p>Nội dung cho Tab 3...</p>
+                      </div>
+                      <div class="tab-panel hidden" data-panel-id="tab4">
+                        <h3 class="text-2xl font-bold mb-3">Nội dung Tab 4</h3>
+                        <p>Nội dung cho Tab 4...</p>
+                      </div>
+                    </div>
+                  </div>
+                `
+              }
+            ],
+            // === KẾT THÚC SỬA ĐỔI ===
+
             content_style: 'body { font-family:Inter,Helvetica,Arial,sans-serif; font-size:16px }',
-            placeholder: 'Bắt đầu viết nội dung ở đây...', // <-- THÊM DÒNG NÀY
+            
             setup: (editor) => {
                 editor.on('init', () => {
                     loadInitialData();
@@ -361,7 +481,7 @@
         });
 
         // --- TẢI DỮ LIỆU BÀI VIẾT LÊN FORM ---
-        // THAY THẾ TOÀN BỘ HÀM (trong <script>):
+        // (Hàm này đã được sửa để xử lý category array và checkbox)
         function loadPostData(post) {
             if (post) {
                 // --- Chế độ chỉnh sửa ---
@@ -373,19 +493,17 @@
                 postImageUrl.value = post.imageUrl;
                 postType.value = post.type;
                 
-                // Yêu cầu 1 & 3: Hiển thị category từ mảng (hoặc chuỗi cũ)
                 postCategory.value = Array.isArray(post.category) ? post.category.join(', ') : post.category;
-                postCategory.placeholder = 'sim, bank, life'; // Giữ placeholder
+                postCategory.placeholder = 'sim, bank, life'; 
                 
-                postTags.value = Array.isArray(post.tags) ? post.tags.join(', ') : post.tags; // Sửa tags tương tự
-                postFeatured.checked = post.featured === true; // Set checkbox
+                postTags.value = Array.isArray(post.tags) ? post.tags.join(', ') : (post.tags || '');
+                postFeatured.checked = post.featured === true; 
                 if (postStatus) {
-                    postStatus.checked = post.status !== 0; // Set checkbox (Hiển thị = checked)
+                    postStatus.checked = post.status !== 0; // Hiển thị = checked
                 }
 
                 tinymce.get('contentEditor').setContent(post.contentHtml || '');
 
-                // Tách link (giữ nguyên logic của bạn)
                 const lastSlashIndex = post.link.lastIndexOf('/');
                 if (lastSlashIndex > -1) {
                     basePathSelector.value = post.link.substring(0, lastSlashIndex + 1);
@@ -410,20 +528,17 @@
                 postImageUrl.value = 'https://placehold.co/1200x630/FBF7F0/718096?text=Anh+SEO';
                 postType.value = 'post';
                 
-                //Để trống category và hiện placeholder
                 postCategory.value = '';
-                postCategory.placeholder = 'sim, bank, life'; // Gợi ý mờ
+                postCategory.placeholder = 'sim, bank, life'; 
 
                 postTags.value = '';
-                postFeatured.checked = true; // <-- SỬA LẠI: Dùng .checked
+                postFeatured.checked = true; 
                 
-                // Mặc định là '1' (Hiển thị) khi tạo mới
                 if (postStatus) { 
-                    postStatus.checked = true; // <-- SỬA LẠI: Dùng .checked
+                    postStatus.checked = true; 
                 }
 
-                //Placeholder cho TinyMCE (đã có)
-                tinymce.get('contentEditor').setContent(''); // <-- SỬA THÀNH CHUỖI RỖNG
+                tinymce.get('contentEditor').setContent(''); 
                 
                 basePathSelector.value = '/pages/bai-viet/';
                 const slug = toSlug(postTitle.value);
@@ -433,7 +548,7 @@
         }
 
         // --- HÀM LẤY DỮ LIỆU TỪ FORM ---
-        // THAY THẾ TOÀN BỘ HÀM (trong <script>):
+        // (Hàm này đã được sửa để xử lý category array và checkbox)
         function getPostObjectFromForm() {
             if (!validateForm()) {
                 alert('Vui lòng điền đầy đủ các trường bắt buộc (ID, Ngày, Tiêu đề, Tên file).');
@@ -443,17 +558,17 @@
             const basePath = basePathSelector.value;
             const filename = postFilename.value.trim();
             const fullLink = basePath + filename;
+            
+            const categoryInput = postCategory.value.split(',').map(cat => cat.trim()).filter(Boolean);
 
             return {
                 id: postId.value.trim(), 
                 type: postType.value.trim(),
-                //Thêm status (đọc từ checkbox)
-                status: postStatus.checked ? 1 : 0, // <-- SỬA LẠI
-                //Chuyển category thành mảng
-                category: postCategory.value.split(',').map(cat => cat.trim()).filter(Boolean),
+                status: postStatus.checked ? 1 : 0, 
+                category: categoryInput.length <= 1 ? (categoryInput[0] || '') : categoryInput,
                 tags: postTags.value.split(',').map(tag => tag.trim()).filter(Boolean),
                 date: postDate.value,
-                featured: postFeatured.checked, // <-- SỬA LẠI
+                featured: postFeatured.checked, 
                 title: postTitle.value.trim(),
                 summary: postSummary.value.trim(),
                 imageUrl: postImageUrl.value.trim(),                             
@@ -468,14 +583,17 @@
         }
         
         // --- HÀM TẠO NỘI DUNG HTML HOÀN CHỈNH (Dùng cho cả Preview và Tải về) ---
+        // (Hàm này đã được sửa để xử lý ngày tháng)
         function generateFullHtml(post) {
             if (!postTemplateHtml) {
                 alert('Lỗi: Chưa tải được file template. Vui lòng thử tải lại trang.');
                 return null;
             }
 
-            const formattedDate = new Date(post.date).toLocaleString('vi-VN', {
-                day: 'numeric', month: 'long', year: 'numeric'
+            const dateObj = new Date(post.date + 'T00:00:00'); 
+            const formattedDate = dateObj.toLocaleDateString('vi-VN', {
+                day: 'numeric', month: 'long', year: 'numeric',
+                timeZone: 'UTC' 
             });
             
             let finalHtml = postTemplateHtml;
@@ -506,7 +624,6 @@
             const blob = new Blob([finalHtml], { type: 'text/html' });
             const url = URL.createObjectURL(blob);
             
-            // *** CẬP NHẬT: Dùng postFilename làm tên file ***
             const fileName = postFilename.value.trim() || 'bai-viet.html';
             
             downloadHtmlLink.href = url;
@@ -518,17 +635,13 @@
         });
 
         // --- *** SỬA LỖI: XỬ LÝ XEM TRƯỚC (Preview) *** ---
-        // Sử dụng lại file template đã tải, không inject script
         previewButton.addEventListener('click', () => {
             const post = getPostObjectFromForm();
             if (!post) return;
             
-            // 1. Tạo HTML từ template
             let finalHtml = generateFullHtml(post);
             if (!finalHtml) return;
 
-            // 2. Tải nội dung vào iframe
-            // Không cần chèn script nữa vì post-template.html đã có sẵn
             previewIframe.srcdoc = finalHtml;
             previewModal.style.display = 'flex';
         });
@@ -548,7 +661,6 @@
         });
 
         postFilename.addEventListener('input', () => {
-            // Khi người dùng tự gõ vào ô tên file, đặt cờ
             if (postFilename.value.trim() !== '') {
                 isFilenameManuallyEdited = true;
             }
@@ -556,24 +668,18 @@
 
 
         // --- HÀM CHỈ TẠO JSON CHO 1 BÀI VIẾT ---
+        // (Đã sửa để xử lý category array)
         function generateSinglePostJson(post) {
-            // 1. Stringify RIÊNG các mảng. 
-            //    Hàm JSON.stringify không có 'null, 2' sẽ tạo ra chuỗi trên 1 dòng.
             const categoryString = JSON.stringify(post.category);
             const tagsString = JSON.stringify(post.tags);
 
-            // 2. Tạo một bản sao tạm thời của bài viết
             const tempPost = { ...post };
             
-            // 3. Thay thế các mảng bằng chuỗi placeholder (để đánh lừa)
             tempPost.category = "__CATEGORY_PLACEHOLDER__";
             tempPost.tags = "__TAGS_PLACEHOLDER__";
 
-            // 4. Stringify đối tượng chính với 'null, 2' (để các trường khác thụt đầu dòng)
             let jsonString = JSON.stringify(tempPost, null, 2);
 
-            // 5. Thay thế các placeholder (nay đã bị stringify thành chuỗi)
-            //    bằng các chuỗi mảng 1 dòng mà chúng ta đã tạo ở bước 1.
             jsonString = jsonString.replace('"__CATEGORY_PLACEHOLDER__"', categoryString);
             jsonString = jsonString.replace('"__TAGS_PLACEHOLDER__"', tagsString);
 
@@ -581,12 +687,11 @@
         }
 
         // --- GHI ĐÈ NÚT "CẬP NHẬT JSON" ---
-        // (Đây là code gốc của bạn, nó đã bao gồm logic fallback, rất tốt)
+        // (Đã sửa để xử lý category array)
         saveButton.addEventListener('click', () => {
             const savedPost = getPostObjectFromForm();
             if (!savedPost) return;
 
-            // ✅ Tự tạo tên file nếu để trống (fallback)
             if (!postFilename.value.trim()) {
                 const dateSlug = savedPost.date.replace(/-/g, '');
                 const slug = toSlug(savedPost.title);
@@ -594,24 +699,22 @@
                 postFilename.value = `${slug}-${dateSlug}.html`;
             }
 
-            // ✅ Nếu bài cũ và ngày chưa chỉnh → giữ nguyên
             const existing = allPostsData.find(p => p.id === savedPost.id);
             if (existing) {
-                // Sửa lỗi: giữ nguyên ngày nếu không đổi
                 const originalDate = allPostsData.find(p => p.id === savedPost.id)?.date;
-                if (postDate.value === originalDate) {
+                if (postDate.value === originalDate) { 
                     savedPost.date = originalDate;
                 }
                 Object.assign(existing, savedPost);
             } else {
-                // bài mới → tự động ngày hôm nay (nếu chưa có)
                 if (!savedPost.date) {
                     savedPost.date = new Date().toISOString().slice(0, 10);
                 }
                 allPostsData.push(savedPost);
             }
+            
+            allPostsData.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-            // --- Xuất JSON rút gọn chỉ cho bài này ---
             const shortJson = generateSinglePostJson(savedPost);
             jsonOutput.value = shortJson;
             jsonOutputContainer.style.display = 'block';
@@ -626,4 +729,3 @@
     
 </body>
 </html>
-

@@ -71,7 +71,55 @@
         </aside>
     </div>
 </main>
-    
+
+<!-- =========================================== -->
+    <!--  MÃ JAVASCRIPT ĐIỀU KHIỂN TAB (MỚI)        -->
+    <!-- =========================================== -->
+    <script>
+        // Mã này sẽ tìm các tab-container và làm cho chúng hoạt động
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tìm tất cả các container tab trên trang
+            const tabContainers = document.querySelectorAll('.tab-container');
+            
+            tabContainers.forEach(container => {
+                const tabButtons = container.querySelectorAll('.tab-btn');
+                const tabPanels = container.querySelectorAll('.tab-panel');
+
+                // Kiểm tra xem số lượng nút và panel có khớp không
+                if (tabButtons.length === 0 || tabButtons.length !== tabPanels.length) {
+                    console.warn('Lỗi cấu trúc Tab: Số lượng nút bấm và nội dung không khớp.');
+                    return; // Bỏ qua nếu cấu trúc bị lỗi
+                }
+
+                tabButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        // Lấy ID của tab mục tiêu từ nút bấm
+                        const targetTabId = button.getAttribute('data-tab-id');
+
+                        // 1. Cập nhật giao diện nút bấm
+                        tabButtons.forEach(btn => {
+                            const isSelected = (btn === button);
+                            btn.classList.toggle('border-yellow-500', isSelected);
+                            btn.classList.toggle('text-yellow-600', isSelected);
+                            btn.classList.toggle('border-transparent', !isSelected);
+                            btn.classList.toggle('text-gray-500', !isSelected);
+                            btn.classList.toggle('hover:text-gray-700', !isSelected);
+                        });
+
+                        // 2. Ẩn/Hiện nội dung
+                        tabPanels.forEach(panel => {
+                            const panelId = panel.getAttribute('data-panel-id');
+                            panel.classList.toggle('hidden', panelId !== targetTabId);
+                        });
+                    });
+                });
+            });
+        });
+    </script>
+
+
+
+
  <!-- ================= FOODER ================= -->   
     <div id="footer-placeholder"></div>
 

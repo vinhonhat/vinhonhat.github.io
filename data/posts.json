@@ -61,22 +61,22 @@
     "link": "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/khac/l%E1%BA%A5y-m%C3%A3-mnp-auuq?authuser=0",
     "contentHtml": ""
   },
-  {
-    "id": "smart pit",
-    "status": 1,
-    "type": "guide",
-    "category": ["sim"],
-    "tags": ["sim"],
-    "date": "2025-11-07",
-    "featured": true,
-    "title": "Hướng dẫn cách đóng cước bằng SMart Pit tại combini",
-    "summary": "Các cách nạp tiền tiện lợi và nhanh chóng cho sim Softbank data tại combini FAMILY.",
-    "imageUrl": "https://placehold.co/120x80/FBF7F0/718096?text=SmartPit",
-    "link": "#guide-3",
-    "contentHtml": "",
-    "_comment": "=============================================== NHÓM BÀI SIM (KẾT THÚC) ==============================================="
-  },
 
+  {
+  "id": "post-20251107-1420",
+  "type": "post",
+  "status": 1,
+  "category": ["sim","other"],
+  "tags": ["smartpit"],
+  "date": "2025-11-07",
+  "featured": true,
+  "title": "Hướng dẫn cách đóng cước sim data bằng SmartPit tại combini",
+  "summary": "Các cách nạp tiền tiện lợi và nhanh chóng cho sim Softbank data tại combini FAMILY.",
+  "imageUrl": "https://placehold.co/1200x630/FBF7F0/718096?text=SmartPit",
+  "link": "/pages/pages-baiviet/cuoc-sim-data-softbank-smartpit-tai-combini-20251107.html",
+  "contentHtml": "",
+  "_comment": "=============================================== NHÓM BÀI SIM (KẾT THÚC) ==============================================="
+  },
 
 
 
