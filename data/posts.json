@@ -374,7 +374,7 @@
   },
   {
     "id": "migrated-seven-update-20250920",
-    "status": 1,
+    "status": 0,
     "type": "guide",
     "category": ["seven"],
     "tags": ["seven"],
