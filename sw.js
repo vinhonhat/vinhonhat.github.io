@@ -7,7 +7,7 @@ const CACHE_NAME = 'vinh-o-nhat-cache-v25.11.7.0';
 // GHI CHÚ 2: DANH SÁCH FILE CẦN LƯU
 // Danh sách các file cốt lõi cần được lưu vào cache để chạy offline.
 const urlsToCache = [
-  
+/*  
   '/',
   '/index.html',
   '/css/style.css',
@@ -18,7 +18,7 @@ const urlsToCache = [
   '/img/logo.png',
   '/pages/rakuten.html'
 ]; 
-
+*/
 
 // GHI CHÚ 3: CÀI ĐẶT VÀ KÍCH HOẠT NGAY
 // --- SỰ KIỆN 1: CÀI ĐẶT (install) ---
