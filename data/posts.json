@@ -37,7 +37,7 @@
   {
     "_comment": "========================== NHÓM BÀI SIM (BẮT ĐẦU) ===============================================",
     "id": "migrated-apn-20250929",
-    "status": 1,
+    "status": 0,
     "type": "post",
     "category": ["sim"],
     "tags": ["sim"],
