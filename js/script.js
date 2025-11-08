@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         // BƯỚC 1: Lọc ra tất cả các bài có thuộc tính `featured: true`
-        const featuredItems = allContent.filter(item => item.featured === true);
+        const featuredItems = allContent.filter(item => item.featured === true && (item.status !== 0));
 
         // BƯỚC 2: SẮP XẾP các bài vừa lọc theo ngày mới nhất lên đầu
         const sortedItems = featuredItems.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -281,7 +281,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // if (!guidePostsContainer || typeof allContent === 'undefined') return; đã đổi qua json
 
         // BƯỚC 1: Lọc ra các bài có `type: 'guide'`
-        const guides = allContent.filter(item => item.type === 'guide');
+        const guides = allContent.filter(item => item.type === 'guide' && (item.status !== 0));
 
         // BƯỚC 2: Sắp xếp các bài vừa lọc theo ngày tháng, bài mới nhất lên đầu
         // new Date(b.date) - new Date(a.date) sẽ sắp xếp từ mới đến cũ
@@ -326,7 +326,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Logic tương tự như loadGuidePosts, chỉ khác là lọc theo `type: 'video'`
         // BƯỚC 1: Lọc ra các video có `type: 'video'`
-        const videos = allContent.filter(item => item.type === 'video');
+        const videos = allContent.filter(item => item.type === 'video' && (item.status !== 0));
 
         // BƯỚC 2: Sắp xếp các video theo ngày tháng, mới nhất lên đầu
         const sortedVideos = videos.sort((a, b) => new Date(b.date) - new Date(a.date));
