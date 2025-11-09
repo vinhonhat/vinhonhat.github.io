@@ -9,13 +9,13 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/img/logoQV.png",
+      "src": "/img/122.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/img/logo1.png",
+      "src": "/img/qvn.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
