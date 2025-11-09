@@ -359,25 +359,23 @@
      * [LOGIC ĐỂ PORT]: Hàm chính xử lý đổi màu (Đã xóa code của modeSwitcher)
      */
     function changeColor() {
-        // [LOGIC MỚI v4] Kiểm tra bằng KÍCH THƯỚC MÀN HÌNH (Theo gợi ý của bạn)
+        // [LOGIC MỚI v5] Kiểm tra bằng khả năng "hover" (di chuột)
+        // PC (kể cả PC cảm ứng) SẼ có khả năng hover (từ chuột/trackpad).
+        // Điện thoại / Máy tính bảng SẼ KHÔNG có khả năng hover.
         
-        // Lấy kích thước vật lý của màn hình
-        const screenW = screen.width;
-        const screenH = screen.height;
+        // window.matchMedia("(hover: hover)").matches
+        // Sẽ là 'true' trên PC (vì có chuột/trackpad)
+        // Sẽ là 'false' trên hầu hết điện thoại/tablet
         
-        // Tìm kích thước chiều NGẮN HƠN (bất kể xoay dọc hay ngang)
-        const smallerDimension = Math.min(screenW, screenH);
+        const canHover = window.matchMedia("(hover: hover)").matches;
 
-        // Đặt ngưỡng. 768px là kích thước chiều ngắn của iPad/tablet nhỏ.
-        // Bất cứ gì nhỏ hơn 768px gần như chắc chắn là điện thoại.
-        const isPhoneSized = smallerDimension < 768;
-
-        if (isPhoneSized) {
-            alert("Tính năng này không được hỗ trợ trên điện thoại di động. Vui lòng sử dụng trên máy tính.");
+        if (!canHover) {
+            // Nếu KHÔNG thể hover -> Đây là di động/tablet
+            alert("Tính năng này không được hỗ trợ trên di động. Vui lòng sử dụng trên máy tính.");
             return; // Dừng hàm
         }
 
-        // [LOGIC CŨ] - Chỉ chạy nếu không phải di động
+        // [LOGIC CŨ] - Chỉ chạy nếu không phải di động/tablet
         // Nếu là lần nhấn đầu tiên, gọi hàm bật fullscreen
         if (isFirstInteraction) {
             toggleFullscreen();
