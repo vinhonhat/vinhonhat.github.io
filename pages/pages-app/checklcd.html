@@ -181,24 +181,36 @@
 </head>
 <body class="bg-[#FBF7F0]">
     <script>
-    // Kiểm tra thiết bị có khả năng "hover" (di chuột) hay không.
-    // Điện thoại/Tablet sẽ KHÔNG có, trả về "true"
-    const isMobile = window.matchMedia("(hover: none)").matches;
+        // 1. Dùng cách phát hiện "mạnh" nhất (hover: none)
+        const isMobile = window.matchMedia("(hover: none)").matches;
 
-    if (isMobile) {
-        // 1. Dừng tải bất cứ thứ gì khác trên trang (CSS, ảnh, script...)
-        window.stop();
+        if (isMobile) {
+            // 2. Dừng tải tài nguyên ngay lập tức
+            window.stop(); 
 
-        // 2. Xóa sạch nội dung trang (để trang trắng)
-        document.documentElement.innerHTML = '';
-
-        // 3. Thông báo cho người dùng
-        alert("Tính năng này chỉ dành cho máy tính (PC/Laptop). Vui lòng quay lại.");
-
-        // 4. Tự động đưa người dùng quay lại trang trước đó
-        window.history.back();
-    }
-</script>
+            // 3. Hiển thị giao diện HTML đẹp (của bạn)
+            // (Tôi dùng document.documentElement để xóa sạch cả <head> và <title>)
+            document.documentElement.innerHTML = `
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Không hỗ trợ</title>
+                </head>
+                <body style="margin:0;">
+                    <div style="display:flex;flex-direction:column;justify-content:center;align-items:center;
+                                height:100vh;text-align:center;font-family:sans-serif;padding:20px;box-sizing:border-box;">
+                        <h2 style="color:#d32f2f;font-size:22px;margin-bottom:10px;">⚠️ Thiết bị không được hỗ trợ</h2>
+                        <p style="font-size:18px;color:#333;">Vui lòng mở trang này bằng máy tính (PC hoặc MacBook) để sử dụng công cụ kiểm tra.</p>
+                        <button onclick="window.history.back()" 
+                                style="margin-top:20px;background:#f6ad55;color:#000;padding:10px 20px;
+                                    border:none;border-radius:8px;cursor:pointer;font-weight:600;">
+                            ← Quay lại
+                        </button>
+                    </div>
+                </body>
+            `;
+        }
+    </script>
 <div id="header-placeholder" class="sticky top-0 z-50 bg-white shadow-md"></div>
 
 <main>
@@ -293,7 +305,7 @@
         <br>
 
         <p class="font-style: italic text-center text-gray-600 mb-8">
-            đây là công cụ được tổng hợp để kiểm tra nhanh máy tính của bạn. Phiên bản cập nhật V25.11.09.gemini
+            đây là công cụ được tổng hợp để kiểm tra nhanh máy tính của bạn. Phiên bản cập nhật V25.11.09.1gemini
         </p>
     </div>
 </main>
