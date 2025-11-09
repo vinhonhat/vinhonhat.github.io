@@ -180,92 +180,97 @@
 	</style>
 </head>
 <body class="bg-[#FBF7F0]">
-<script>
-    // 1. Kiểm tra Lớp 1 (User Agent)
-    const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    <script>
+        // 1. Kiểm tra Lớp 1 (User Agent)
+        const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-    // 2. Kiểm tra Lớp 2 (Khả năng phần cứng)
-    const hasNoHover = window.matchMedia("(hover: none)").matches;
-    const isWindowsPC = /Windows NT/i.test(navigator.userAgent);
-    const isMobileHardware = (hasNoHover && !isWindowsPC);
+        // 2. Kiểm tra Lớp 2 (Khả năng phần cứng)
+        const hasNoHover = window.matchMedia("(hover: none)").matches;
+        const isWindowsPC = /Windows NT/i.test(navigator.userAgent);
+        const isMobileHardware = (hasNoHover && !isWindowsPC);
 
-    // 3. Nếu là mobile → chặn trang
-    if (isMobileUA || isMobileHardware) {
+        // 3. Nếu là mobile → chặn trang
+        if (isMobileUA || isMobileHardware) {
 
-        // Ẩn nội dung chính
-        document.write(`
-            <style id="mobile-block-style">
-                #header-placeholder, main, #footer-placeholder {
-                    display: none !important;
-                }
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: scale(0.97); }
-                    to { opacity: 1; transform: scale(1); }
-                }
-            </style>
-        `);
-
-        // Hiển thị lớp phủ chặn
-        document.write(`
-            <div id="mobile-block-overlay" 
-                 style="position:fixed;top:0;left:0;width:100%;height:100%;
-                        background:rgba(251,247,240,0.97);backdrop-filter:blur(6px);
-                        z-index:9999;display:flex;flex-direction:column;
-                        justify-content:center;align-items:center;
-                        text-align:center;font-family:'Inter',sans-serif;
-                        padding:20px;box-sizing:border-box;animation:fadeIn 0.4s ease;">
-                
-                <!-- Logo nhẹ -->
-                <img src="/img/logoQV.png" alt="Logo" 
-                     style="width:80px;height:80px;opacity:0.6;margin-bottom:20px;">
-
-                <h2 style="color:#d32f2f;font-size:22px;margin-bottom:10px;">
-                    ⚠️ Thiết bị không được hỗ trợ
-                </h2>
-                
-                <p style="font-size:18px;color:#333;max-width:600px;line-height:1.5;">
-                    Vui lòng mở trang này bằng máy tính (PC hoặc MacBook) để sử dụng công cụ kiểm tra.
-                </p>
-
-                <!-- Hàng nút -->
-                <div style="margin-top:25px;display:flex;gap:15px;flex-wrap:wrap;justify-content:center;align-items:center;">
-                    <!-- Nút Quay lại -->
-                    <button onclick="window.history.back()" 
-                            style="background:#999;color:#fff;padding:10px 20px;
-                                   border:none;border-radius:8px;cursor:pointer;
-                                   font-weight:600;font-size:16px;">
-                        ← Quay lại
-                    </button>
-
-                    <!-- Nút Tiếp tục -->
-                    <button id="continueBtn"
-                            style="background:#f6ad55;color:#000;padding:10px 20px;
-                                   border:none;border-radius:8px;cursor:pointer;
-                                   font-weight:600;font-size:16px;
-                                   opacity:0.5;transition:opacity 0.2s;">
-                        Vẫn tiếp tục →
-                    </button>
-                </div>
-            </div>
-        `);
-
-        // Thêm sự kiện cho nút Tiếp tục (sau khi DOM load)
-        window.addEventListener('load', () => {
-            const continueBtn = document.getElementById('continueBtn');
-            if (continueBtn) {
-                continueBtn.addEventListener('click', () => {
-                    const confirmContinue = confirm(
-                        "⚠️ Chế độ di động (hoặc Samsung DeX) có thể hoạt động không chính xác.\n\nMột số tính năng kiểm tra màn hình, bàn phím, loa hoặc mic có thể không hoạt động như mong đợi.\n\nBạn có chắc chắn muốn tiếp tục?"
-                    );
-                    if (confirmContinue) {
-                        document.getElementById('mobile-block-overlay').remove();
-                        document.getElementById('mobile-block-style').remove();
+            // Ẩn nội dung chính
+            document.write(`
+                <style id="mobile-block-style">
+                    #header-placeholder, main, #footer-placeholder {
+                        display: none !important;
                     }
-                });
-            }
-        });
-    }
-</script>
+                    @keyframes fadeIn {
+                        from { opacity: 0; transform: scale(0.97); }
+                        to { opacity: 1; transform: scale(1); }
+                    }
+                </style>
+            `);
+
+            // Hiển thị lớp phủ
+            document.write(`
+                <div id="mobile-block-overlay" 
+                    style="position:fixed;top:0;left:0;width:100%;height:100%;
+                            background:rgba(251,247,240,0.97);backdrop-filter:blur(6px);
+                            z-index:9999;display:flex;flex-direction:column;
+                            justify-content:center;align-items:center;
+                            text-align:center;font-family:'Inter',sans-serif;
+                            padding:20px;box-sizing:border-box;animation:fadeIn 0.4s ease;">
+                    
+                    <!-- Logo nhẹ -->
+                    <img src="/img/logoQV.png" alt="Logo" 
+                        style="width:80px;height:80px;opacity:0.6;margin-bottom:20px;">
+
+                    <h2 style="color:#d32f2f;font-size:22px;margin-bottom:10px;">
+                        ⚠️ Thiết bị không được hỗ trợ
+                    </h2>
+                    
+                    <p style="font-size:18px;color:#333;max-width:600px;line-height:1.5;">
+                        Vui lòng mở trang này bằng máy tính (PC hoặc MacBook) để sử dụng công cụ kiểm tra.
+                    </p>
+
+                    <!-- Hàng nút -->
+                    <div style="margin-top:25px;display:flex;gap:15px;flex-wrap:wrap;justify-content:center;align-items:center;">
+                        
+                        <!-- Nút Quay lại (vàng nổi bật) -->
+                        <button onclick="window.history.back()" 
+                                style="background:#f6ad55;color:#000;padding:10px 22px;
+                                    border:none;border-radius:8px;cursor:pointer;
+                                    font-weight:600;font-size:16px;
+                                    box-shadow:0 2px 6px rgba(0,0,0,0.15);
+                                    transition:transform 0.15s, box-shadow 0.15s;">
+                            ← Quay lại
+                        </button>
+
+                        <!-- Nút Tiếp tục (xám trắng rất mờ) -->
+                        <button id="continueBtn"
+                                style="background:#e0e0e0;color:#666;padding:10px 22px;
+                                    border:none;border-radius:8px;cursor:pointer;
+                                    font-weight:600;font-size:16px;
+                                    opacity:0.25;filter:grayscale(0.8);
+                                    transition:opacity 0.3s ease;">
+                            Vẫn tiếp tục →
+                        </button>
+                    </div>
+                </div>
+            `);
+
+            // Thêm sự kiện cho nút Tiếp tục
+            window.addEventListener('load', () => {
+                const continueBtn = document.getElementById('continueBtn');
+                if (continueBtn) {
+                    continueBtn.addEventListener('click', () => {
+                        const confirmContinue = confirm(
+                            "⚠️ Chế độ di động (hoặc Samsung DeX) có thể hoạt động không chính xác.\n\nMột số chức năng như kiểm tra màn hình, bàn phím, loa hoặc mic có thể không phản hồi đúng.\n\nBạn có chắc chắn muốn tiếp tục?"
+                        );
+                        if (confirmContinue) {
+                            document.getElementById('mobile-block-overlay').remove();
+                            document.getElementById('mobile-block-style').remove();
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+
 
 <div id="header-placeholder" class="sticky top-0 z-50 bg-white shadow-md"></div>
 
@@ -361,7 +366,7 @@
         <br>
 
         <p class="font-style: italic text-center text-gray-600 mb-8">
-            đây là công cụ được tổng hợp để kiểm tra nhanh máy tính của bạn. Phiên bản cập nhật V25.11.09.1gemini
+            đây là công cụ được tổng hợp để kiểm tra nhanh máy tính của bạn. Phiên bản cập nhật V25.11.10
         </p>
     </div>
 </main>
