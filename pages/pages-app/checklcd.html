@@ -181,27 +181,24 @@
 </head>
 <body class="bg-[#FBF7F0]">
     <script>
-    // Kiểm tra thiết bị di động
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    // Kiểm tra thiết bị có khả năng "hover" (di chuột) hay không.
+    // Điện thoại/Tablet sẽ KHÔNG có, trả về "true"
+    const isMobile = window.matchMedia("(hover: none)").matches;
 
-        if (isMobile) {
-            // Hiển thị thông báo và chặn toàn bộ nội dung
-            document.body.innerHTML = `
-                <div style="display:flex;flex-direction:column;justify-content:center;align-items:center;
-                            height:100vh;text-align:center;font-family:sans-serif;padding:20px;">
-                    <h2 style="color:#d32f2f;font-size:22px;margin-bottom:10px;">⚠️ Thiết bị không được hỗ trợ</h2>
-                    <p style="font-size:18px;color:#333;">Vui lòng mở trang này bằng máy tính (PC hoặc MacBook) để sử dụng công cụ kiểm tra.</p>
-                    <button onclick="window.history.back()" 
-                            style="margin-top:20px;background:#f6ad55;color:#000;padding:10px 20px;
-                                border:none;border-radius:8px;cursor:pointer;font-weight:600;">
-                        ← Quay lại
-                    </button>
-                </div>
-            `;
-            // Dừng chạy các script khác
-            throw new Error("Dừng thực thi trên thiết bị di động");
-        }
-    </script>
+    if (isMobile) {
+        // 1. Dừng tải bất cứ thứ gì khác trên trang (CSS, ảnh, script...)
+        window.stop();
+
+        // 2. Xóa sạch nội dung trang (để trang trắng)
+        document.documentElement.innerHTML = '';
+
+        // 3. Thông báo cho người dùng
+        alert("Tính năng này chỉ dành cho máy tính (PC/Laptop). Vui lòng quay lại.");
+
+        // 4. Tự động đưa người dùng quay lại trang trước đó
+        window.history.back();
+    }
+</script>
 <div id="header-placeholder" class="sticky top-0 z-50 bg-white shadow-md"></div>
 
 <main>
