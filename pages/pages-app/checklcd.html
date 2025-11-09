@@ -359,13 +359,20 @@
      * [LOGIC ĐỂ PORT]: Hàm chính xử lý đổi màu (Đã xóa code của modeSwitcher)
      */
     function changeColor() {
+        // [LOGIC MỚI] Kiểm tra nếu là di động
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            // Hiển thị thông báo
+            alert("Tính năng này không được hỗ trợ trên di động. Vui lòng quay lại.");
+            // Dừng hàm, không chạy phần test
+            return;
+        }
         // Nếu là lần nhấn đầu tiên, gọi hàm bật fullscreen
         if (isFirstInteraction) {
             toggleFullscreen();
             isFirstInteraction = false;
         }
 
-        // (ĐÃ XÓA: Logic kiểm tra screenTester.style.display === 'none')
+
 
         // Tăng index, dùng phép % (chia lấy dư) để lặp vòng mảng
         currentIndex = (currentIndex + 1) % colors.length;
