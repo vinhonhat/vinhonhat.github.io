@@ -30,11 +30,7 @@ const urlsToCache = [
     '/hf/footer.html',       
 
     // 3. HÌNH ẢNH ICON
-    '/img/122.png',          // Icon 192x192
-    '/img/qvn.png',          // Icon 512x512 maskable
-    '/img/logoQV.png',       // Favicon
-    '/img/logo.png',         // Logo
-    
+
     // 4. CÁC THƯ VIỆN BÊN NGOÀI (CDN - BẮT BUỘC ĐỂ OFFLINE)
     'https://cdn.tailwindcss.com', 
     'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css', 
