@@ -2,7 +2,7 @@
 // Tên của bộ nhớ cache. Rất quan trọng: MỖI KHI BẠN CẬP NHẬT WEBSITE,
 // BẠN PHẢI THAY ĐỔI TÊN NÀY 
 // GHI CHÚ 1: THAY ĐỔI TÊN CACHE MỖI KHI BẠN CẬP NHẬT WEBSITE (VÍ DỤ: TỪ v2 thành v3) ĐỂ KÍCH HOẠT CẬP NHẬT.
-const CACHE_NAME = 'vinh-o-nhat-cache-v25.11.21 beta1'; 
+const CACHE_NAME = 'vinh-o-nhat-cache-v25.11.24 beta1'; 
 
 // GHI CHÚ 2: DANH SÁCH FILE CẦN LƯU
 // Danh sách các file cốt lõi cần được lưu vào cache để chạy offline.
@@ -23,11 +23,7 @@ const urlsToCache = [
     // 3. HÌNH ẢNH ICON
 
     // 4. CÁC THƯ VIỆN BÊN NGOÀI (CDN - BẮT BUỘC ĐỂ OFFLINE)
-    'https://cdn.tailwindcss.com', 
-    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css', 
-    'https://fonts.googleapis.com', 
-    'https://fonts.gstatic.com', 
-    'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap' 
+
 ];
 
 
