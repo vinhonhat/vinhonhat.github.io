@@ -7,27 +7,18 @@ const CACHE_NAME = 'vinh-o-nhat-cache-v25.11.21 beta1';
 // GHI CHÚ 2: DANH SÁCH FILE CẦN LƯU
 // Danh sách các file cốt lõi cần được lưu vào cache để chạy offline.
 const urlsToCache = [
-    // 1. CÁC FILE CỦA WEBSITE
-    '/',
-    '/index.html',
-    '/css/style.css',
-    '/js/script.js',
-    '/manifest.json',
-    '/pages/rakuten.html',
-    
-    // 2. CÁC FILE DỮ LIỆU/NỘI DUNG PHỤ TRỢ
-    // 🟢 THÊM FILE DỮ LIỆU MỚI
-    '/data/posts.json',      
-    
-    // 🔴 XÓA /js/content.js (Không dùng nữa)
+    // 1. CÁC FILE CHÍNH CỦA WEBSITE
+    '/',                  // 1
+    '/index.html',        // 2
+    '/css/style.css',     // 3
+    '/js/script.js',      // 4
+    '/manifest.json',     // 5
+    '/data/posts.json',   // 6  
+    '/data/banner.js',    // 7    
+    '/hf/header.html',    // 8     
+    '/hf/footer.html',    // 9
 
     // Các file khác (Giữ nguyên)
-    '/js/proverbs.js',       
-    '/js/lunar-calendar.js', 
-    '/js/holidays.js',       
-    '/data/banner.js',       
-    '/hf/header.html',       
-    '/hf/footer.html',       
 
     // 3. HÌNH ẢNH ICON
 
