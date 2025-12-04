@@ -2,107 +2,110 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>OK Card App</title>
     <style>
         body {
             margin: 0;
             padding: 0;
-            background-color: #222; /* Màu nền ngoài rìa */
+            /* YÊU CẦU 4: MÀU NỀN NGOÀI CÙNG */
+            /* Bạn chỉnh mã màu #... dưới đây cho trùng với rìa ảnh của bạn */
+            background-color: #6e6e6e; 
             display: flex;
             justify-content: center;
             height: 100vh;
-            overflow: hidden;
-            font-family: "Roboto", Helvetica, Arial, sans-serif; /* Font chuẩn Android/iOS */
+            /* Ngăn cuộn trang để giống app thật */
+            overflow: hidden; 
+            font-family: "Roboto", Helvetica, Arial, sans-serif;
         }
 
         .phone-container {
             position: relative;
             height: 100%;
-            width: 100%;
-            max-width: 500px; /* Giới hạn chiều rộng để không bị vỡ trên PC */
+            width: auto;
+            /* Giữ tỉ lệ khung hình điện thoại để ảnh không bị bẹt */
+            aspect-ratio: 9/19.5; 
         }
 
         .bg-image {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            /* 'cover': Lấp đầy màn hình (có thể bị cắt nhẹ rìa để đẹp nhất) */
+            /* Nếu muốn thấy toàn bộ ảnh kể cả viền đen thì đổi thành 'contain' */
+            object-fit: cover; 
             display: block;
         }
 
-        /* --- 1. CHỈNH ĐỒNG HỒ TẠI ĐÂY --- */
+        /* --- 1. CHỈNH ĐỒNG HỒ --- */
         .clock-overlay {
             position: absolute;
             
-            /* A. CHỈNH VỊ TRÍ LÊN / XUỐNG */
-            top: 15%;  /* <-- Tăng số này thì tụt xuống, giảm thì bay lên */
+            /* Chỉnh lên xuống */
+            top: 12.5%; 
             
-            /* B. CĂN GIỮA (Không cần sửa) */
-            left: 50%;
+            /* YÊU CẦU 3: DỊCH QUA PHẢI */
+            /* Tăng số % lên để dịch sang phải, giảm đi để về trái */
+            left: 54%; 
             transform: translateX(-50%);
             
-            /* C. CHỈNH CỠ CHỮ */
-            font-size: 20px; /* <-- Tăng giảm số này để chữ to/nhỏ */
-            font-weight: 800; /* Độ đậm của chữ */
+            /* Cỡ chữ */
+            font-size: 25px; 
+            font-weight: 700;
             
-            /* D. MÀU SẮC & KHÔNG NỀN */
-            color: #2b2b2b;   /* Màu đen xám (giống màu mực in hơn màu đen tuyền #000) */
-            background-color: transparent; /* Trong suốt, không có nền */
+            /* Màu chữ */
+            color: #2b2b2b;   
+            background-color: transparent;
             
-            letter-spacing: 1px; /* Khoảng cách giữa các số */
-            font-variant-numeric: tabular-nums; /* Giúp số đứng yên không bị giật khi giây nhảy */
+            letter-spacing: 1px;
+            font-variant-numeric: tabular-nums;
             z-index: 20;
+            white-space: nowrap; /* Ngăn xuống dòng */
         }
 
-        /* --- 2. CHỈNH HÀNG CHẤM TẠI ĐÂY --- */
+        /* --- 2. CHỈNH HÀNG CHẤM --- */
         .dots-wrapper {
             position: absolute;
             
-            /* A. CHỈNH VỊ TRÍ LÊN / XUỐNG */
-            top: 36%;    /* <-- Tăng số này thì tụt xuống, giảm thì bay lên */
+            /* Chỉnh lên xuống */
+            top: 36%; 
             
             left: 50%;
             transform: translateX(-50%);
             
-            /* B. CHỈNH ĐỘ RỘNG HÀNG CHẤM */
-            width: 65%; /* <-- Tăng số này thì các chấm xa nhau ra */
+            /* Chỉnh độ rộng của cả hàng chấm */
+            width: 70%; 
             
             display: flex;
             align-items: center;
             justify-content: space-between;
             z-index: 20;
-            padding: 0 10px;
         }
 
         .gray-dot {
-            width: 4px;      /* Kích thước chấm nhỏ */
+            width: 4px;
             height: 4px;
-            background-color: #b0b0b0; /* Màu xám nhạt */
+            background-color: #b0b0b0; /* Màu xám của chấm tĩnh */
             border-radius: 50%;
         }
 
-        /* Chấm cam chạy (Animation) */
+        /* Chấm cam chạy */
         .orange-dot-mover {
             position: absolute;
             top: 50%;
             left: 0;
-            
-            width: 10px;    /* Kích thước chấm cam */
+            width: 10px;
             height: 10px;
-            
-            background-color: #e65100; /* Màu cam chuẩn */
+            background-color: #e65100;
             border-radius: 50%;
             transform: translateY(-50%);
-            
-            /* Tốc độ chạy: 2s (càng nhỏ chạy càng nhanh) */
             animation: slide-right 1.5s linear infinite; 
         }
 
         @keyframes slide-right {
-            0% { left: 10%; opacity: 0; }
+            0% { left: 5%; opacity: 0; }
             10% { opacity: 1; }
             90% { opacity: 1; }
-            100% { left: 90%; opacity: 0; }
+            100% { left: 95%; opacity: 0; }
         }
 
     </style>
@@ -115,6 +118,10 @@
         <div class="clock-overlay" id="clock">--:--:--</div>
 
         <div class="dots-wrapper">
+            <div class="gray-dot"></div>
+            <div class="gray-dot"></div>
+            <div class="gray-dot"></div>
+            <div class="gray-dot"></div>
             <div class="gray-dot"></div>
             <div class="gray-dot"></div>
             <div class="gray-dot"></div>
