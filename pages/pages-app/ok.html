@@ -3,274 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OK CLUB | Vinh ở Nhật</title>
-
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#F6AD55">
-    <link rel="apple-touch-icon" href="/img/logo1.png">
-    <link rel="icon" href="/img/logoQV.png" type="image/x-icon">
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <link rel="stylesheet" href="/css/style.css">
-
-
+    <title>OK Card App</title>
     <style>
-        /* 1. PHẦN CẤU TRÚC GIAO DIỆN (CSS) */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f0f0f0;
             margin: 0;
+            padding: 0;
+            background-color: #333;
             display: flex;
             justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .phone-screen {
-            width: 100%;
-            max-width: 400px;
-            background-color: #fff;
             height: 100vh;
-            display: flex;
-            flex-direction: column;
-            position: relative;
             overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
-        /* Header cam */
-        .header-bg {
-            background-color: #f39c12; /* Màu cam OK Store */
-            padding: 15px;
-            text-align: center;
-            color: #333;
+        /* Khung chứa giả lập điện thoại */
+        .phone-container {
+            position: relative;
+            height: 100%;
+            max-width: 100%;
+            aspect-ratio: 9/19.5; /* Tỉ lệ màn hình điện thoại thông thường */
         }
 
-        /* Đồng hồ */
-        .clock-container {
-            background-color: #f1a94e; /* Màu cam nhạt hơn chút cho nền đồng hồ */
-            padding: 10px;
-            border-radius: 4px;
-            display: inline-block;
-            width: 80%;
-            margin: 0 auto;
+        /* Ảnh nền (Ảnh chụp màn hình của bạn) */
+        .bg-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Đảm bảo ảnh không bị méo */
+            display: block;
         }
 
-        #realtime-clock {
-            font-size: 28px;
-            font-weight: 800;
-            color: #222;
+        /* --- 1. PHẦN ĐỒNG HỒ --- */
+        .clock-overlay {
+            position: absolute;
+            /* CĂN CHỈNH VỊ TRÍ ĐỒNG HỒ Ở ĐÂY */
+            top: 15.5%;  /* Thay đổi số này để dịch lên/xuống */
+            left: 50%;
+            transform: translateX(-50%);
+            
+            /* Style cho chữ */
+            font-size: 26px; /* Cỡ chữ */
+            font-weight: 800; /* Độ đậm */
+            color: #1a1a1a;   /* Màu chữ đen đậm */
             letter-spacing: 1px;
-            /* Icon đồng hồ giả lập */
+            font-variant-numeric: tabular-nums; /* Giúp số không bị nhảy khi thay đổi */
+            
+            /* Nền che đi giờ cũ trong ảnh (nếu cần) */
+            background-color: #f6aa48; /* Màu cam nền trùng màu app */
+            padding: 2px 10px;
+            border-radius: 4px;
+            z-index: 10;
+        }
+
+        /* --- 2. PHẦN CHẤM CHUYỂN ĐỘNG --- */
+        .dots-wrapper {
+            position: absolute;
+            /* CĂN CHỈNH VỊ TRÍ HÀNG CHẤM Ở ĐÂY */
+            top: 35%;    /* Thay đổi số này để dịch lên/xuống */
+            left: 50%;
+            transform: translateX(-50%);
+            
+            width: 200px; /* Độ rộng vùng chấm chạy */
+            height: 20px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
+            justify-content: space-between;
+            z-index: 10;
         }
-        
-        /* Icon đồng hồ nhỏ */
-        .clock-icon {
-            width: 20px;
-            height: 20px;
-            border: 2px solid #333;
+
+        /* Các chấm xám tĩnh nằm dưới */
+        .gray-dot {
+            width: 4px;
+            height: 4px;
+            background-color: #aaa;
             border-radius: 50%;
-            position: relative;
         }
-        .clock-icon::after {
-            content: '';
+
+        /* Chấm cam chạy đè lên trên */
+        .orange-dot-mover {
             position: absolute;
             top: 50%;
-            left: 50%;
-            width: 6px;
-            height: 2px;
-            background: #333;
-            transform-origin: left;
-            transform: translate(0, -50%) rotate(-45deg);
-        }
-
-        /* Khu vực Mã vạch */
-        .barcode-section {
-            background-color: white;
-            padding: 20px 10px;
-            text-align: center;
-        }
-
-        .barcode-img {
-            width: 90%;
-            height: 80px;
-            /* Giả lập mã vạch bằng CSS (Bạn thay bằng ảnh thật nhé) */
-            background: repeating-linear-gradient(
-                90deg,
-                #000 0px,
-                #000 2px,
-                #fff 2px,
-                #fff 4px,
-                #000 4px,
-                #000 8px,
-                #fff 8px,
-                #fff 10px
-            );
-            margin: 0 auto;
-        }
-
-        .instruction-text {
-            font-size: 14px;
-            margin-top: 10px;
-            color: #333;
-        }
-
-        /* 2. HIỆU ỨNG HÀNG CHẤM (CSS ANIMATION) */
-        .dots-container {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin: 15px 0;
-        }
-
-        .dot {
-            width: 6px;
-            height: 6px;
-            background-color: #ccc;
-            border-radius: 50%;
-            /* Animation chạy */
-            animation: dot-move 1.5s infinite ease-in-out;
-        }
-
-        .dot.active {
-            background-color: #e67e22; /* Màu cam của chấm đang chạy */
+            left: 0;
             width: 10px;
             height: 10px;
-            transform: translateY(-2px);
+            background-color: #e65100; /* Màu cam đậm của app */
+            border-radius: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 0 2px rgba(0,0,0,0.2);
+            
+            /* Hiệu ứng chạy qua lại */
+            animation: slide-right 2s linear infinite;
         }
 
-        /* Tạo hiệu ứng sóng cho các chấm */
-        @keyframes dot-move {
-            0%, 100% { transform: scale(1); background-color: #ccc; }
-            50% { transform: scale(1.5); background-color: #e67e22; }
-        }
-        
-        /* Tinh chỉnh delay để tạo hiệu ứng chạy từ trái qua phải */
-        .dot:nth-child(1) { animation-delay: 0s; }
-        .dot:nth-child(2) { animation-delay: 0.1s; }
-        .dot:nth-child(3) { animation-delay: 0.2s; }
-        .dot:nth-child(4) { animation-delay: 0.3s; }
-        .dot:nth-child(5) { animation-delay: 0.4s; }
-        .dot:nth-child(6) { animation-delay: 0.5s; }
-
-
-        /* Thẻ thành viên */
-        .card-container {
-            background-color: #f58f29;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: start;
-            padding-top: 20px;
-        }
-
-        .member-card {
-            width: 85%;
-            aspect-ratio: 1.6; /* Tỉ lệ thẻ ATM */
-            background: linear-gradient(135deg, #000, #333);
-            border-radius: 10px;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            position: relative;
-        }
-
-        .member-id {
-            margin-top: 15px;
-            font-size: 20px;
-            font-weight: bold;
-            color: #333;
-        }
-        
-        /* Nút dưới cùng */
-        .footer-check {
-            background: white;
-            padding: 15px;
-            margin: 20px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-weight: bold;
-            color: #333;
+        @keyframes slide-right {
+            0% { left: 10%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { left: 90%; opacity: 0; }
         }
 
     </style>
 </head>
 <body>
 
-    <div class="phone-screen">
-        <div class="header-bg">
-            <div class="clock-container">
-                <div id="realtime-clock">
-                    <div class="clock-icon"></div>
-                    <span id="time-text">--:--:--</span>
-                </div>
-            </div>
-        </div>
+    <div class="phone-container">
+        <img src="/img/posts/other/ok/ok.jpg" class="bg-image" alt="App Screen">
 
-        <div class="barcode-section">
-            <div class="barcode-img"></div> <div class="instruction-text">バーコードをレジにご提示ください</div>
-            
-            <div class="dots-container">
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-            </div>
-        </div>
+        <div class="clock-overlay" id="clock">13:10:40</div>
 
-        <div class="card-container">
-            <div class="member-card">
-                <h3>OK CLUB CARD IMAGE</h3>
-            </div>
-            <div class="member-id">会員番号 : 2911210256355</div>
+        <div class="dots-wrapper">
+            <div class="gray-dot"></div>
+            <div class="gray-dot"></div>
+            <div class="gray-dot"></div>
+            <div class="gray-dot"></div>
+            <div class="gray-dot"></div>
+            <div class="gray-dot"></div>
+            <div class="gray-dot"></div>
+            <div class="gray-dot"></div>
 
-            <div class="footer-check">
-                <input type="checkbox" checked>
-                <span>起動時に会員カードを表示する</span>
-            </div>
+            <div class="orange-dot-mover"></div>
         </div>
     </div>
 
     <script>
         function updateClock() {
             const now = new Date();
-            
-            // Lấy giờ, phút, giây
             let h = now.getHours();
             let m = now.getMinutes();
             let s = now.getSeconds();
 
-            // Thêm số 0 đằng trước nếu nhỏ hơn 10 (ví dụ: 9 -> 09)
+            // Thêm số 0 nếu nhỏ hơn 10
             h = h < 10 ? "0" + h : h;
             m = m < 10 ? "0" + m : m;
             s = s < 10 ? "0" + s : s;
 
-            // Cập nhật nội dung lên màn hình
-            const timeString = h + ":" + m + ":" + s;
-            document.getElementById('time-text').innerText = timeString;
+            // Cập nhật giờ
+            document.getElementById('clock').innerText = h + ":" + m + ":" + s;
         }
-
-        // Chạy hàm updateClock mỗi 1000ms (1 giây)
         setInterval(updateClock, 1000);
-
-        // Chạy ngay lập tức khi mở trang để không bị delay 1 giây đầu
         updateClock();
     </script>
+
 </body>
 </html>
