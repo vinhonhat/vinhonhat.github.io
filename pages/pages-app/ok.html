@@ -8,30 +8,28 @@
         body {
             margin: 0;
             padding: 0;
-            /* YÊU CẦU 4: MÀU NỀN NGOÀI CÙNG */
-            /* Bạn chỉnh mã màu #... dưới đây cho trùng với rìa ảnh của bạn */
+            /* Đây là màu mặc định ban đầu (Màu của Code1) */
             background-color: #757575; 
             display: flex;
             justify-content: center;
             height: 100vh;
-            /* Ngăn cuộn trang để giống app thật */
-            overflow: hidden; 
+            overflow: hidden;
             font-family: "Roboto", Helvetica, Arial, sans-serif;
+            
+            /* Thêm hiệu ứng chuyển màu nền mượt mà */
+            transition: background-color 0.3s ease;
         }
 
         .phone-container {
             position: relative;
             height: 100%;
             width: auto;
-            /* Giữ tỉ lệ khung hình điện thoại để ảnh không bị bẹt */
-            aspect-ratio: 9/19.5; 
+            aspect-ratio: 9/19.5;
         }
 
         .bg-image {
             width: 100%;
             height: 100%;
-            /* 'cover': Lấp đầy màn hình (có thể bị cắt nhẹ rìa để đẹp nhất) */
-            /* Nếu muốn thấy toàn bộ ảnh kể cả viền đen thì đổi thành 'contain' */
             object-fit: cover; 
             display: block;
         }
@@ -39,62 +37,40 @@
         /* --- 1. CHỈNH ĐỒNG HỒ --- */
         .clock-overlay {
             position: absolute;
-            
-            /* Chỉnh lên xuống */
-            top: 12%; 
-            
-            /* YÊU CẦU 3: DỊCH QUA PHẢI */
-            /* Tăng số % lên để dịch sang phải, giảm đi để về trái */
-            left: 54%; 
+            top: 12%;       
+            left: 54%;      
             transform: translateX(-50%);
             
-            /* Cỡ chữ */
             font-size: 25px; 
             font-weight: 900;
-            
-            /* Màu chữ */
             color: #2b2b2b;   
             background-color: transparent;
-            
             letter-spacing: 1px;
             font-variant-numeric: tabular-nums;
             z-index: 20;
-            white-space: nowrap; /* Ngăn xuống dòng */
+            white-space: nowrap;
+            transition: top 0.3s ease;
         }
 
         /* --- 2. CHỈNH HÀNG CHẤM --- */
         .dots-wrapper {
             position: absolute;
-            
-            /* Chỉnh lên xuống */
-            top: 36%; 
-            
+            top: 36%;       
             left: 50%;
             transform: translateX(-50%);
-            
-            /* Chỉnh độ rộng của cả hàng chấm */
             width: 70%; 
-            
             display: flex;
             align-items: center;
             justify-content: space-between;
             z-index: 20;
+            transition: top 0.3s ease;
         }
 
-        .gray-dot {
-            width: 4px;
-            height: 4px;
-            background-color: #b0b0b0; /* Màu xám của chấm tĩnh */
-            border-radius: 50%;
-        }
-
-        /* Chấm cam chạy */
+        .gray-dot { width: 4px; height: 4px; background-color: #b0b0b0; border-radius: 50%; }
+        
         .orange-dot-mover {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            width: 10px;
-            height: 10px;
+            position: absolute; top: 50%; left: 0;
+            width: 10px; height: 10px;
             background-color: #e65100;
             border-radius: 50%;
             transform: translateY(-50%);
@@ -103,49 +79,128 @@
 
         @keyframes slide-right {
             0% { left: 5%; opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { left: 95%; opacity: 0; }
+            10% { opacity: 1; } 90% { opacity: 1; } 100% { left: 95%; opacity: 0; }
         }
+
+        /* --- 3. VỊ TRÍ KHI BẤM GÓC (Code2) --- */
+        .moved-down .clock-overlay {
+            top: 45%; /* Vị trí đồng hồ khi ở Code2 */
+        }
+        .moved-down .dots-wrapper {
+            top: 60%; /* Vị trí chấm khi ở Code2 */
+        }
+
+        /* --- 4. CÁC NÚT BẤM (HOTSPOTS) --- */
+        .hotspot {
+            position: absolute;
+            z-index: 100;
+            cursor: pointer;
+            /* background-color: rgba(255, 0, 0, 0.3); */ /* Bỏ comment để chỉnh vị trí */
+        }
+
+        /* Nút Góc Phải */
+        #btn-corner { top: 0; right: 0; width: 25%; height: 10%; }
+
+        /* Nút Dưới Cùng (X / Mở lại) */
+        #btn-bottom { bottom: 5%; left: 50%; transform: translateX(-50%); width: 80%; height: 12%; }
 
     </style>
 </head>
 <body>
 
-    <div class="phone-container">
-        <img src="/img/posts/other/ok/ok.jpg" class="bg-image" alt="App Screen">
+    <div class="phone-container" id="main-container">
+        <img src="Code1.jpg" class="bg-image" id="app-bg" alt="App Screen">
 
         <div class="clock-overlay" id="clock">--:--:--</div>
 
-        <div class="dots-wrapper">
-            <div class="gray-dot"></div>
-            <div class="gray-dot"></div>
-            <div class="gray-dot"></div>
-            <div class="gray-dot"></div>
-            <div class="gray-dot"></div>
-            <div class="gray-dot"></div>
-            <div class="gray-dot"></div>
-            <div class="gray-dot"></div>
-            <div class="gray-dot"></div>
-            <div class="gray-dot"></div>
-            <div class="gray-dot"></div>
-            <div class="gray-dot"></div>
-
+        <div class="dots-wrapper" id="dots">
+            <div class="gray-dot"></div><div class="gray-dot"></div><div class="gray-dot"></div>
+            <div class="gray-dot"></div><div class="gray-dot"></div><div class="gray-dot"></div>
+            <div class="gray-dot"></div><div class="gray-dot"></div><div class="gray-dot"></div>
+            <div class="gray-dot"></div><div class="gray-dot"></div><div class="gray-dot"></div>
             <div class="orange-dot-mover"></div>
         </div>
+
+        <div class="hotspot" id="btn-corner" onclick="handleCornerClick()"></div>
+        <div class="hotspot" id="btn-bottom" onclick="handleBottomClick()"></div>
     </div>
 
     <script>
+        // --- 1. CẤU HÌNH ẢNH ---
+        const imgPopup1 = "/img/posts/other/ok/code1.jpg"; 
+        const imgPopup2 = "/img/posts/other/ok/code2.jpg"; 
+        const imgHome   = "/img/posts/other/ok/home.jpg"; 
+
+        // --- 2. CẤU HÌNH MÀU NỀN ---
+        // Màu xám đậm khi hiện mã vạch (Code1, Code2)
+        const colorPopup = "#757575"; 
+        // Màu khi về màn hình chính (bạn thay màu này cho khớp với ảnh home.jpg)
+        const colorHome  = "#ffffff"; // Ví dụ để trắng, bạn có thể thay thành #f0f0f0
+
+        // Các biến hệ thống
+        const bgElement = document.getElementById('app-bg');
+        const container = document.getElementById('main-container');
+        const clock = document.getElementById('clock');
+        const dots = document.getElementById('dots');
+        let currentState = 'popup1'; 
+
+        // Hàm đổi màu nền
+        function setBackgroundColor(color) {
+            document.body.style.backgroundColor = color;
+        }
+
+        // Bấm góc phải (Đổi Code1 <-> Code2)
+        function handleCornerClick() {
+            if (currentState === 'home') return; 
+
+            if (currentState === 'popup1') {
+                bgElement.src = imgPopup2;
+                container.classList.add('moved-down');
+                setBackgroundColor(colorPopup); // Vẫn giữ màu xám
+                currentState = 'popup2';
+            } else if (currentState === 'popup2') {
+                bgElement.src = imgPopup1;
+                container.classList.remove('moved-down');
+                setBackgroundColor(colorPopup); // Vẫn giữ màu xám
+                currentState = 'popup1';
+            }
+        }
+
+        // Bấm dưới cùng (Đóng / Mở lại)
+        function handleBottomClick() {
+            if (currentState === 'popup1' || currentState === 'popup2') {
+                // -> Về Home
+                bgElement.src = imgHome;
+                clock.style.display = 'none';
+                dots.style.display = 'none';
+                container.classList.remove('moved-down');
+                
+                // ĐỔI MÀU NỀN SANG MÀU CỦA TRANG HOME
+                setBackgroundColor(colorHome);
+                
+                currentState = 'home';
+            } else {
+                // -> Mở lại Code1
+                bgElement.src = imgPopup1;
+                clock.style.display = 'block';
+                dots.style.display = 'flex';
+                
+                // ĐỔI MÀU NỀN VỀ MÀU XÁM TỐI
+                setBackgroundColor(colorPopup);
+                
+                currentState = 'popup1';
+            }
+        }
+
+        // Đồng hồ
         function updateClock() {
             const now = new Date();
             let h = now.getHours();
             let m = now.getMinutes();
             let s = now.getSeconds();
-
             h = h < 10 ? "0" + h : h;
             m = m < 10 ? "0" + m : m;
             s = s < 10 ? "0" + s : s;
-
             document.getElementById('clock').innerText = h + ":" + m + ":" + s;
         }
         setInterval(updateClock, 1000);
