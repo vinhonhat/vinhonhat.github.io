@@ -35,15 +35,15 @@
             position: absolute;
             
             /* A. CHỈNH VỊ TRÍ LÊN / XUỐNG */
-            top: 15.5%;  /* <-- Tăng số này thì tụt xuống, giảm thì bay lên */
+            top: 15%;  /* <-- Tăng số này thì tụt xuống, giảm thì bay lên */
             
             /* B. CĂN GIỮA (Không cần sửa) */
             left: 50%;
             transform: translateX(-50%);
             
             /* C. CHỈNH CỠ CHỮ */
-            font-size: 27px; /* <-- Tăng giảm số này để chữ to/nhỏ */
-            font-weight: 700; /* Độ đậm của chữ */
+            font-size: 20px; /* <-- Tăng giảm số này để chữ to/nhỏ */
+            font-weight: 800; /* Độ đậm của chữ */
             
             /* D. MÀU SẮC & KHÔNG NỀN */
             color: #2b2b2b;   /* Màu đen xám (giống màu mực in hơn màu đen tuyền #000) */
@@ -95,7 +95,7 @@
             transform: translateY(-50%);
             
             /* Tốc độ chạy: 2s (càng nhỏ chạy càng nhanh) */
-            animation: slide-right 2s linear infinite; 
+            animation: slide-right 1.5s linear infinite; 
         }
 
         @keyframes slide-right {
@@ -110,7 +110,7 @@
 <body>
 
     <div class="phone-container">
-        <img src="ok.jpg" class="bg-image" alt="App Screen">
+        <img src="/img/posts/other/ok/ok.jpg" class="bg-image" alt="App Screen">
 
         <div class="clock-overlay" id="clock">--:--:--</div>
 
