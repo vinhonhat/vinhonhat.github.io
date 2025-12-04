@@ -8,90 +8,94 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: #333;
+            background-color: #222; /* Màu nền ngoài rìa */
             display: flex;
             justify-content: center;
             height: 100vh;
             overflow: hidden;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: "Roboto", Helvetica, Arial, sans-serif; /* Font chuẩn Android/iOS */
         }
 
-        /* Khung chứa giả lập điện thoại */
         .phone-container {
             position: relative;
             height: 100%;
-            max-width: 100%;
-            aspect-ratio: 9/19.5; /* Tỉ lệ màn hình điện thoại thông thường */
+            width: 100%;
+            max-width: 500px; /* Giới hạn chiều rộng để không bị vỡ trên PC */
         }
 
-        /* Ảnh nền (Ảnh chụp màn hình của bạn) */
         .bg-image {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Đảm bảo ảnh không bị méo */
+            object-fit: contain;
             display: block;
         }
 
-        /* --- 1. PHẦN ĐỒNG HỒ --- */
+        /* --- 1. CHỈNH ĐỒNG HỒ TẠI ĐÂY --- */
         .clock-overlay {
             position: absolute;
-            /* CĂN CHỈNH VỊ TRÍ ĐỒNG HỒ Ở ĐÂY */
-            top: 15.5%;  /* Thay đổi số này để dịch lên/xuống */
+            
+            /* A. CHỈNH VỊ TRÍ LÊN / XUỐNG */
+            top: 15.5%;  /* <-- Tăng số này thì tụt xuống, giảm thì bay lên */
+            
+            /* B. CĂN GIỮA (Không cần sửa) */
             left: 50%;
             transform: translateX(-50%);
             
-            /* Style cho chữ */
-            font-size: 26px; /* Cỡ chữ */
-            font-weight: 800; /* Độ đậm */
-            color: #1a1a1a;   /* Màu chữ đen đậm */
-            letter-spacing: 1px;
-            font-variant-numeric: tabular-nums; /* Giúp số không bị nhảy khi thay đổi */
+            /* C. CHỈNH CỠ CHỮ */
+            font-size: 27px; /* <-- Tăng giảm số này để chữ to/nhỏ */
+            font-weight: 700; /* Độ đậm của chữ */
             
-            /* Nền che đi giờ cũ trong ảnh (nếu cần) */
-            background-color: #f6aa48; /* Màu cam nền trùng màu app */
-            padding: 2px 10px;
-            border-radius: 4px;
-            z-index: 10;
+            /* D. MÀU SẮC & KHÔNG NỀN */
+            color: #2b2b2b;   /* Màu đen xám (giống màu mực in hơn màu đen tuyền #000) */
+            background-color: transparent; /* Trong suốt, không có nền */
+            
+            letter-spacing: 1px; /* Khoảng cách giữa các số */
+            font-variant-numeric: tabular-nums; /* Giúp số đứng yên không bị giật khi giây nhảy */
+            z-index: 20;
         }
 
-        /* --- 2. PHẦN CHẤM CHUYỂN ĐỘNG --- */
+        /* --- 2. CHỈNH HÀNG CHẤM TẠI ĐÂY --- */
         .dots-wrapper {
             position: absolute;
-            /* CĂN CHỈNH VỊ TRÍ HÀNG CHẤM Ở ĐÂY */
-            top: 35%;    /* Thay đổi số này để dịch lên/xuống */
+            
+            /* A. CHỈNH VỊ TRÍ LÊN / XUỐNG */
+            top: 36%;    /* <-- Tăng số này thì tụt xuống, giảm thì bay lên */
+            
             left: 50%;
             transform: translateX(-50%);
             
-            width: 200px; /* Độ rộng vùng chấm chạy */
-            height: 20px;
+            /* B. CHỈNH ĐỘ RỘNG HÀNG CHẤM */
+            width: 65%; /* <-- Tăng số này thì các chấm xa nhau ra */
+            
             display: flex;
             align-items: center;
             justify-content: space-between;
-            z-index: 10;
+            z-index: 20;
+            padding: 0 10px;
         }
 
-        /* Các chấm xám tĩnh nằm dưới */
         .gray-dot {
-            width: 4px;
+            width: 4px;      /* Kích thước chấm nhỏ */
             height: 4px;
-            background-color: #aaa;
+            background-color: #b0b0b0; /* Màu xám nhạt */
             border-radius: 50%;
         }
 
-        /* Chấm cam chạy đè lên trên */
+        /* Chấm cam chạy (Animation) */
         .orange-dot-mover {
             position: absolute;
             top: 50%;
             left: 0;
-            width: 10px;
+            
+            width: 10px;    /* Kích thước chấm cam */
             height: 10px;
-            background-color: #e65100; /* Màu cam đậm của app */
+            
+            background-color: #e65100; /* Màu cam chuẩn */
             border-radius: 50%;
             transform: translateY(-50%);
-            box-shadow: 0 0 2px rgba(0,0,0,0.2);
             
-            /* Hiệu ứng chạy qua lại */
-            animation: slide-right 2s linear infinite;
+            /* Tốc độ chạy: 2s (càng nhỏ chạy càng nhanh) */
+            animation: slide-right 2s linear infinite; 
         }
 
         @keyframes slide-right {
@@ -106,9 +110,9 @@
 <body>
 
     <div class="phone-container">
-        <img src="/img/posts/other/ok/ok.jpg" class="bg-image" alt="App Screen">
+        <img src="ok.jpg" class="bg-image" alt="App Screen">
 
-        <div class="clock-overlay" id="clock">13:10:40</div>
+        <div class="clock-overlay" id="clock">--:--:--</div>
 
         <div class="dots-wrapper">
             <div class="gray-dot"></div>
@@ -131,12 +135,10 @@
             let m = now.getMinutes();
             let s = now.getSeconds();
 
-            // Thêm số 0 nếu nhỏ hơn 10
             h = h < 10 ? "0" + h : h;
             m = m < 10 ? "0" + m : m;
             s = s < 10 ? "0" + s : s;
 
-            // Cập nhật giờ
             document.getElementById('clock').innerText = h + ":" + m + ":" + s;
         }
         setInterval(updateClock, 1000);
