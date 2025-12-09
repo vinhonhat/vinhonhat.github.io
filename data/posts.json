@@ -87,6 +87,7 @@
   "_comment": "============== NHÓM BÀI TOKUTEI (BẮT ĐẦU) ===============================================",
   "id": "migrated-tokutei-nhahang-20251008",
   "type": "post",
+  "status": 1,
   "category": ["tokutei", "nhahang"],
   "tags": ["tokutei"],
   "date": "2025-10-08",
@@ -100,6 +101,7 @@
 {
   "id": "migrated-tokutei-thucpham-20251008",
   "type": "post",
+  "status": 1,
   "category": ["tokutei", "thucpham"],
   "tags": ["tokutei"],
   "date": "2025-11-06",
@@ -113,6 +115,7 @@
 {
   "id": "migrated-tokutei-thucpham-20251008",
   "type": "post",
+  "status": 1,
   "category": ["tokutei", "thucpham"],
   "tags": ["tokutei"],
   "date": "2025-11-06",
@@ -126,6 +129,7 @@
 {
   "id": "migrated-tokutei-thucpham-20251008",
   "type": "post",
+  "status": 1,
   "category": ["tokutei", "thucpham"],
   "tags": ["tokutei"],
   "date": "2025-11-06",
@@ -139,6 +143,7 @@
 {
   "id": "migrated-tokutei-thucpham-20251008",
   "type": "post",
+  "status": 1,
   "category": ["tokutei", "thucpham"],
   "tags": ["tokutei"],
   "date": "2025-11-06",
@@ -152,6 +157,7 @@
 {
   "id": "migrated-tokutei-thucpham-20251008",
   "type": "post",
+  "status": 1,
   "category": ["tokutei", "thucpham"],
   "tags": ["tokutei"],
   "date": "2025-11-06",
@@ -165,6 +171,7 @@
 {
   "id": "migrated-tokutei-kaigo-20251009",
   "type": "post",
+  "status": 1,
   "category": ["tokutei", "kaigo"],
   "tags": ["tokutei"],
   "date": "2025-11-05",
@@ -178,6 +185,7 @@
 {
   "id": "migrated-tokutei-kaigo-20251009",
   "type": "post",
+  "status": 1,
   "category": ["tokutei", "kaigo"],
   "tags": ["tokutei"],
   "date": "2025-11-05",
@@ -191,7 +199,8 @@
 {
   "id": "migrated-tokutei-channuoi",
   "type": "post",
-  "category": ["tokutei", "channuoi"],
+  "status": 1,
+  "category": ["tokutei", "nongnghiep"],
   "tags": ["tokutei"],
   "date": "2025-12-09",
   "featured": true,
@@ -204,7 +213,22 @@
 {
   "id": "migrated-tokutei-trongtrot",
   "type": "post",
-  "category": ["tokutei", "trongtrot"],
+  "status": 1,
+  "category": ["tokutei", "nongnghiep"],
+  "tags": ["tokutei"],
+  "date": "2025-12-09",
+  "featured": true,
+  "title": "Tài liệu tokutei Trồng trọt",
+  "summary": "tổng hợp tài liệu ôn thi tokutei Trồng trọt",
+  "imageUrl": "https://placehold.co/400x250/FBD38D/ffffff?text=tokutei Trồng trọt",
+  "link": "https://drive.google.com/file/d/1CibrI7TFGe4ZqfASKH4lfU6beNL041n3/view?usp=sharing",
+  "contentHtml": ""
+},
+{
+  "id": "migrated-tokutei-khac",
+  "type": "post",
+  "status": 0,
+  "category": ["tokutei", "tokuteikhac"],
   "tags": ["tokutei"],
   "date": "2025-12-09",
   "featured": true,
@@ -217,6 +241,7 @@
 {
   "id": "migrated-tokutei-khachsan",
   "type": "post",
+  "status": 1,
   "category": ["tokutei", "hotel"],
   "tags": ["tokutei"],
   "date": "2025-12-09",
