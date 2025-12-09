@@ -189,7 +189,7 @@
   "contentHtml": ""
 },
 {
-  "id": "migrated-tokutei-khachsan-20251004",
+  "id": "migrated-tokutei-channuoi",
   "type": "post",
   "category": ["tokutei", "channuoi"],
   "tags": ["tokutei"],
@@ -202,7 +202,7 @@
   "contentHtml": ""
 },
 {
-  "id": "migrated-tokutei-khachsan-20251004",
+  "id": "migrated-tokutei-trongtrot",
   "type": "post",
   "category": ["tokutei", "trongtrot"],
   "tags": ["tokutei"],
@@ -215,11 +215,11 @@
   "contentHtml": ""
 },
 {
-  "id": "migrated-tokutei-khachsan-20251004",
+  "id": "migrated-tokutei-khachsan",
   "type": "post",
   "category": ["tokutei", "hotel"],
   "tags": ["tokutei"],
-  "date": "2025-10-04",
+  "date": "2025-12-09",
   "featured": true,
   "title": "Tài liệu tokutei khách sạn",
   "summary": "tổng hợp tài liệu ôn thi tokutei khách sạn",
