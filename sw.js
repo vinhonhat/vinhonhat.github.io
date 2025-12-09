@@ -21,7 +21,7 @@ const urlsToCache = [
     // Các file khác (Giữ nguyên)
 
     // 3. HÌNH ẢNH ICON
-
+    '/img/footer.html',
     // 4. CÁC THƯ VIỆN BÊN NGOÀI (CDN - BẮT BUỘC ĐỂ OFFLINE)
 
 ];
