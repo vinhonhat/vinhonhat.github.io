@@ -182,20 +182,30 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Dữ liệu đã sẵn sàng, gọi các hàm và truyền 'allContent' vào
                 
                 // dành cho trang bài viết HD cần thêm ID vào để cập nhật mõi khi có trang cấp 1 thêm
+                //BÀI VIẾT HD
                 renderPostsForCategory('rakuten', 'rakuten-posts', allContent);
                 renderPostsForCategory('seven', 'seven-posts', allContent);
                 renderPostsForCategory('baito', 'baito-posts', allContent);
                 renderPostsForCategory('sim', 'sim-posts', allContent);
+                renderPostsForCategory('other', 'other-posts', allContent);
+                
+                // HỌC TẬP
+                //tokutei
                 renderPostsForCategory('tokutei', 'tokutei-posts', allContent);
                 renderPostsForCategory('thucpham', 'thucpham-posts', allContent);
                 renderPostsForCategory('hotel', 'hotel-posts', allContent);
                 renderPostsForCategory('kaigo', 'kaigo-posts', allContent);
                 renderPostsForCategory('nhahang', 'nhahang-posts', allContent);
+                renderPostsForCategory('nongnghiep', 'nongnghiep-posts', allContent);
+                renderPostsForCategory('tokuteikhac', 'tokuteikhac-posts', allContent);
+                //tiếng nhật
                 renderPostsForCategory('nihongo', 'nihongo-posts', allContent);
                 renderPostsForCategory('jlpt', 'jlpt-posts', allContent);
+                
+                //ỨNG DỤNG
                 renderPostsForCategory('windows', 'windows-posts', allContent);
                 renderPostsForCategory('dohoa', 'dohoa-posts', allContent);
-                renderPostsForCategory('other', 'other-posts', allContent);
+                
                 
                 
                 renderSuggestions('suggested-posts-container', allContent);
