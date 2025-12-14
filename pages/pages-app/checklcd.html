@@ -278,7 +278,7 @@
         
     <div class="max-w-4xl mx-auto pt-12 pb-0 px-4">
         
-        <h2 class="text-2xl font-bold text-gray-800 text-center">Công cụ Kiểm tra Màn hình, Loa, Mic & Camera
+        <h2 class="text-2xl font-bold text-gray-800 text-center">KIỂM TRA MÁY TÍNH CƠ BẢN
         </h2>
     
         <div id="screen-tester"tabindex="0">
@@ -291,16 +291,19 @@
             <p class="text-center text-lg mb-4" id="speaker-status">Chọn một nút để kiểm tra loa trái, phải, hoặc cả hai (stereo).</p>
             <div class="flex justify-center items-center flex-wrap gap-4">
                 <button id="left-speaker" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded transition duration-300">
-                    <i class="fas fa-volume-up mr-2"></i>LOA TRÁI
+                    <i class="fas fa-volume-up mr-2"></i>TRÁI
                 </button>
                 <button id="stereo-speaker" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded transition duration-300">
-                    <i class="fas fa-volume-up mr-2"></i>GIỮA (STEREO)
+                    <i class="fas fa-volume-up mr-2"></i>GIỮA
                 </button>
                  <button id="right-speaker" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded transition duration-300">
-                    <i class="fas fa-volume-up mr-2"></i>LOA PHẢI
+                    <i class="fas fa-volume-up mr-2"></i>PHẢI
                 </button>
-                <button id="stop-speaker" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded transition duration-300">
-                    <i class="fas fa-stop mr-2"></i>DỪNG
+                <button id="pause-speaker" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded transition duration-300">
+                    <i class="fas fa-pause mr-2"></i>TẠM DỪNG
+                </button>
+                <button id="stop-speaker" class="bg-red-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded transition duration-300">
+                    <i class="fas fa-stop mr-2"></i>STOP
                 </button>
             </div>
             <audio id="audio-player"></audio>
@@ -366,7 +369,7 @@
         <br>
 
         <p class="font-style: italic text-center text-gray-600 mb-8">
-            đây là công cụ được tổng hợp để kiểm tra nhanh máy tính của bạn. Phiên bản cập nhật V25.11.10
+            đây là công cụ được tổng hợp để kiểm tra nhanh máy tính của bạn. Phiên bản cập nhật V25.12.15
         </p>
     </div>
 </main>
@@ -533,7 +536,7 @@
     const audioPlayer = document.getElementById('audio-player');           // Thẻ <audio>
     const speakerStatus = document.getElementById('speaker-status');       // Thẻ <p> trạng thái loa
 
-    // Gán sự kiện cho các nút loa
+    // Gán sự kiện cho các nút loa trái
     document.getElementById('left-speaker').addEventListener('click', () => {
         // Đường dẫn từ file 1
         audioPlayer.src = '/file/mp3/left_speaker.mp3'; 
@@ -544,6 +547,7 @@
         speakerStatus.textContent = 'Đang phát: LOA TRÁI';
     });
 
+    // --- LOA PHẢI  ---
     document.getElementById('right-speaker').addEventListener('click', () => {
         // Đường dẫn từ file 1 (ĐÃ SỬA LỖI TYPO 'right_speakermp3')
         audioPlayer.src = '/file/mp3/right_speaker.mp3'; 
@@ -554,20 +558,68 @@
         speakerStatus.textContent = 'Đang phát: LOA PHẢI';
     });
 
+    // --- LOA STEREO  ---
     document.getElementById('stereo-speaker').addEventListener('click', () => {
-        // Giả định đường dẫn từ file 2 ('stereo.mp3')
-        audioPlayer.src = '/file/mp3/stereo.mp3'; 
+        // 1. Danh sách nhạc (Bạn thêm bao nhiêu bài tuỳ thích vào đây)
+        const stereoList = [
+            '/file/mp3/tet nay con se ve.mp3',       // Bài 1 tết này con sẽ về
+            '/file/mp3/tinh than VietNam.mp3',  // Bài 2 "Tinh Thần Việt Nam" của Liêu Phong
+            '/file/mp3/stereo 3.mp3',  // Bài 3 (Ví dụ)
+            // '/file/mp3/bai_khac.mp3',  // Cứ thêm dấu phẩy và dòng mới
+        ];
+
+        // 2. Chọn ngẫu nhiên 1 bài trong danh sách trên
+        const randomSong = stereoList[Math.floor(Math.random() * stereoList.length)];
+
+        // 3. Phát nhạc
+        audioPlayer.src = randomSong; 
         audioPlayer.play().catch(e => { 
             speakerStatus.textContent = 'Lỗi phát âm thanh. Vui lòng click lại.'; 
             console.error(e); 
         });
-        speakerStatus.textContent = 'Đang phát: STEREO (Cả hai loa)';
+
+        // Hiển thị thông báo (có thể hiện tên bài nếu muốn)
+        speakerStatus.textContent = `Đang phát Stereo: ${randomSong.split('/').pop()}`;
     });
 
+    // Lấy nút Pause ra để thao tác đổi tên/icon
+    const pauseBtn = document.getElementById('pause-speaker');
+
+    // Hàm phụ: Reset nút Pause về trạng thái mặc định (Dùng khi bấm Loa khác hoặc Stop)
+    function resetPauseButton() {
+        pauseBtn.innerHTML = '<i class="fas fa-pause mr-2"></i>TẠM DỪNG';
+        pauseBtn.classList.remove('bg-green-500', 'hover:bg-green-600'); // (Tuỳ chọn) Trả về màu gốc
+        pauseBtn.classList.add('bg-yellow-500', 'hover:bg-yellow-600');
+    }
+
+    // --- XỬ LÝ NÚT TẠM DỪNG / TIẾP TỤC ---
+    pauseBtn.addEventListener('click', () => {
+        // Kiểm tra: Nếu nhạc chưa có hoặc chưa chạy giây nào thì không làm gì
+        if (!audioPlayer.src || audioPlayer.duration === 0) return;
+
+        if (audioPlayer.paused) {
+            // TRƯỜNG HỢP 1: Nhạc đang dừng -> Bấm để PHÁT TIẾP
+            audioPlayer.play();
+            speakerStatus.textContent = 'Đang tiếp tục phát...';
+            
+            // Đổi giao diện nút về "Tạm dừng"
+            pauseBtn.innerHTML = '<i class="fas fa-pause mr-2"></i>TẠM DỪNG';
+        } else {
+            // TRƯỜNG HỢP 2: Nhạc đang hát -> Bấm để TẠM DỪNG
+            audioPlayer.pause();
+            speakerStatus.textContent = 'Đã tạm dừng. Nhấn nút này lần nữa để tiếp tục.';
+            
+            // Đổi giao diện nút thành "Tiếp tục" (Icon Play)
+            pauseBtn.innerHTML = '<i class="fas fa-play mr-2"></i>TIẾP TỤC';
+        }
+    });
+    
+    // --- DỪNG  ---
     document.getElementById('stop-speaker').addEventListener('click', () => {
         audioPlayer.pause();
         audioPlayer.currentTime = 0;
         speakerStatus.textContent = 'Đã dừng. Chọn loa để kiểm tra.';
+        resetPauseButton(); // Reset nút Pause về bình thường
     });
 
     // =========================================================================
@@ -649,7 +701,7 @@
             ['Escape', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', 'PrintScreen', 'ScrollLock', 'Pause', 'Home', 'End'],
             ['Backquote', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus', 'Equal', 'Backspace', 'NumLock', 'NumpadDivide', 'NumpadMultiply', 'NumpadSubtract', 'NumpadAdd'],
             ['Tab', 'KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'BracketLeft', 'BracketRight', 'Backslash', '','Numpad7', 'Numpad8', 'Numpad9'],
-            ['CapsLock', 'KeyA', 'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'Semicolon', 'Quote', 'Enter', '','Numpad4', 'Numpad5', 'Numpad6'],
+            ['CapsLock', 'KeyA', 'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'Semicolon', 'Quote', 'Enter', 'Delete','Numpad4', 'Numpad5', 'Numpad6'],
             ['ShiftLeft', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'Comma', 'Period', 'Slash', 'ShiftRight', '','Numpad1', 'Numpad2', 'Numpad3'],
             ['ControlLeft', 'MetaLeft', 'AltLeft', 'Space', 'AltRight', 'ContextMenu', 'ControlRight', 'ArrowUp', '','Numpad0', 'NumpadDecimal', 'NumpadEnter'],
             ['', '', '', '', '', '', '','', '','', '','', '', '', 'ArrowLeft', 'ArrowDown', 'ArrowRight','','', '','','']
