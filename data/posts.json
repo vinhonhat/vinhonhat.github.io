@@ -82,7 +82,7 @@
 
 {
   "_comment": "============== NHÓM BÀI TIẾNG NHẬT (BẮT ĐẦU) ===============================================",
-  "id": "migrated-tokutei-nhahang-20251008",
+  "id": "migrated-nihongo-kanji",
   "type": "post",
   "status": 1,
   "category": ["n0", "nihongo"],
@@ -97,7 +97,7 @@
 },
 
 {
-  "id": "post-20251107-1420",
+  "id": "post--",
   "type": "post",
   "status": 0,
   "category": ["sim"],
