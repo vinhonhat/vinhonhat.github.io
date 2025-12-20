@@ -290,19 +290,25 @@
     </p>
 
     <div style="display: flex; gap: 15px;">
-        <button onclick="window.history.back()" style="
-            background: #4a5568; color: white; border: none;
-            padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600;
-        ">
-            Quay lại
+         <!-- Nút Quay lại (vàng nổi bật) -->
+        <button onclick="window.history.back()"
+            style="background:#f6ad55;color:#000;padding:10px 22px;
+            border:none;border-radius:8px;cursor:pointer;
+            font-weight:600;font-size:16px;
+            box-shadow:0 2px 6px rgba(0,0,0,0.15);
+            transition:transform 0.15s, box-shadow 0.15s;">
+            ← Quay lại
         </button>
-
-        <button id="btn-force-continue" style="
-            background: #f6ad55; color: white; border: none;
-            padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600;
-        ">
-            Vẫn tiếp tục
+       <!-- Nút Tiếp tục (xám trắng rất mờ) -->
+        <button id="btn-force-continue" 
+            style="background:#e0e0e0;color:#666;padding:10px 22px;
+            border:none;border-radius:8px;cursor:pointer;
+            font-weight:600;font-size:16px;
+            opacity:0.25;filter:grayscale(0.8);
+            transition:opacity 0.3s ease;">
+            Vẫn tiếp tục →
         </button>
+        
     </div>
 </div>
 
