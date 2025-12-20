@@ -264,6 +264,99 @@
             </div>
         </div>
     </main>
+ </script>
+    <div id="mobile-warning-overlay" style="
+    display: none; /* Mặc định ẩn */
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(251, 247, 240, 0.98);
+    backdrop-filter: blur(8px);
+    z-index: 99999;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    padding: 20px;
+">
+    <img src="/img/logoQV.png" alt="Logo" style="width: 80px; height: 80px; margin-bottom: 20px; opacity: 0.8;">
+    
+    <h2 style="color: #d32f2f; font-size: 20px; font-weight: bold; margin-bottom: 10px;">
+        ⚠️ Màn hình chưa tối ưu
+    </h2>
+    
+    <p style="color: #4a5568; margin-bottom: 25px; max-width: 500px; line-height: 1.5;">
+        Trang web này hoạt động tốt nhất trên <b>Máy tính</b> hoặc <b>iPad xoay ngang</b>.<br>
+        Vui lòng xoay ngang thiết bị hoặc mở trên màn hình lớn hơn.
+    </p>
+
+    <div style="display: flex; gap: 15px;">
+        <button onclick="window.history.back()" style="
+            background: #4a5568; color: white; border: none;
+            padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600;
+        ">
+            Quay lại
+        </button>
+
+        <button id="btn-force-continue" style="
+            background: #f6ad55; color: white; border: none;
+            padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600;
+        ">
+            Vẫn tiếp tục
+        </button>
+    </div>
+</div>
+
+
+    <div id="mobile-warning-overlay" style="
+    display: none; /* Mặc định ẩn */
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(251, 247, 240, 0.98);
+    backdrop-filter: blur(8px);
+    z-index: 99999;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    padding: 20px;
+">
+    <img src="/img/logoQV.png" alt="Logo" style="width: 80px; height: 80px; margin-bottom: 20px; opacity: 0.8;">
+    
+    <h2 style="color: #d32f2f; font-size: 20px; font-weight: bold; margin-bottom: 10px;">
+        ⚠️ Màn hình chưa tối ưu
+    </h2>
+    
+    <p style="color: #4a5568; margin-bottom: 25px; max-width: 500px; line-height: 1.5;">
+        Trang web này hoạt động tốt nhất trên <b>Máy tính</b> hoặc <b>iPad xoay ngang</b>.<br>
+        Vui lòng xoay ngang thiết bị hoặc mở trên màn hình lớn hơn.
+    </p>
+
+    <div style="display: flex; gap: 15px;">
+        <button onclick="window.history.back()" style="
+            background: #4a5568; color: white; border: none;
+            padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600;
+        ">
+            Quay lại
+        </button>
+
+        <button id="btn-force-continue" style="
+            background: #f6ad55; color: white; border: none;
+            padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600;
+        ">
+            Vẫn tiếp tục
+        </button>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
 
     <div id="footer-placeholder"></div>
     <button id="scrollToTopBtn" class="fixed bottom-6 right-6 bg-yellow-600 text-white w-14 h-12 rounded-lg shadow-lg flex flex-col justify-center items-center text-xs transition-opacity duration-300 hover:bg-yellow-700 opacity-0 pointer-events-none z-40">
@@ -490,6 +583,47 @@
             </div>
             `;
         }
-    </script>
+   
+    (function() {
+        const overlay = document.getElementById('mobile-warning-overlay');
+        const continueBtn = document.getElementById('btn-force-continue');
+        let userIgnoredWarning = false; // Biến nhớ xem user đã bấm Tiếp tục chưa
+
+        function checkScreenSize() {
+            // Nếu user đã bấm "Vẫn tiếp tục" thì không hiện lại nữa
+            if (userIgnoredWarning) return;
+
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            // ĐIỀU KIỆN HIỆN CẢNH BÁO:
+            // 1. Chiều rộng < 768px (Điện thoại)
+            // 2. HOẶC (Tablet dọc): Chiều rộng < 1200px VÀ Chiều cao > Chiều rộng
+            const isMobile = width < 1000;
+            const isTabletPortrait = (width < 1200 && height > width);
+
+            if (isMobile || isTabletPortrait) {
+                overlay.style.display = 'flex';
+                document.body.style.overflow = 'hidden'; // Khóa cuộn trang web bên dưới
+            } else {
+                overlay.style.display = 'none';
+                document.body.style.overflow = ''; // Mở lại cuộn
+            }
+        }
+
+        // Xử lý khi bấm nút "Vẫn tiếp tục"
+        continueBtn.addEventListener('click', function() {
+            userIgnoredWarning = true; // Ghi nhớ lựa chọn
+            overlay.style.display = 'none'; // Ẩn overlay
+            document.body.style.overflow = ''; // Mở khóa cuộn
+        });
+
+        // Kiểm tra ngay khi tải trang
+        window.addEventListener('load', checkScreenSize);
+        
+        // Kiểm tra lại mỗi khi xoay màn hình hoặc đổi kích thước
+        window.addEventListener('resize', checkScreenSize);
+    })();
+</script>
 </body>
 </html>
