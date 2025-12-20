@@ -190,6 +190,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 renderPostsForCategory('other', 'other-posts', allContent);
                 
                 // HỌC TẬP
+
+                //tiếng nhật
+                renderPostsForCategory('nihongo', 'nihongo-posts', allContent);
+                renderPostsForCategory('jlpt', 'jlpt-posts', allContent);
+                renderPostsForCategory('n0', 'n0-posts', allContent);
+                renderPostsForCategory('n5', 'n5-posts', allContent);
+                renderPostsForCategory('n4', 'n4-posts', allContent);
+                renderPostsForCategory('n3', 'n3-posts', allContent);
+                renderPostsForCategory('n2', 'n2-posts', allContent);
+                renderPostsForCategory('n1', 'n1-posts', allContent);
+
                 //tokutei
                 renderPostsForCategory('tokutei', 'tokutei-posts', allContent);
                 renderPostsForCategory('thucpham', 'thucpham-posts', allContent);
@@ -198,9 +209,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 renderPostsForCategory('nhahang', 'nhahang-posts', allContent);
                 renderPostsForCategory('nongnghiep', 'nongnghiep-posts', allContent);
                 renderPostsForCategory('tokuteikhac', 'tokuteikhac-posts', allContent);
-                //tiếng nhật
-                renderPostsForCategory('nihongo', 'nihongo-posts', allContent);
-                renderPostsForCategory('jlpt', 'jlpt-posts', allContent);
+                
                 
                 //ỨNG DỤNG
                 renderPostsForCategory('windows', 'windows-posts', allContent);
