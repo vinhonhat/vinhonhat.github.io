@@ -85,14 +85,14 @@
   "id": "migrated-tokutei-nhahang-20251008",
   "type": "post",
   "status": 1,
-  "category": ["tiengnhat", "nihongo"],
+  "category": ["n0", "nihongo"],
   "tags": ["tokutei"],
   "date": "2025-12-20",
   "featured": true,
   "title": "Tạo file luyện viết kanji.",
   "summary": "Website tạo file luyện viết kanji mọi cấp độ",
   "imageUrl": "https://placehold.co/400x250/FBD38D/ffffff?text=tokutei Kanji",
-  "link": "/pages/pages-hoctap/hoctap/nhahangluyen_kanji_A4_fixed.html.html",
+  "link": "/pages/pages-hoctap/hoctap/luyen_kanji_A4_fixed.html",
   "contentHtml": ""
 },
 

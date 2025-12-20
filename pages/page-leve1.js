@@ -193,7 +193,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 //tiếng nhật
                 renderPostsForCategory('nihongo', 'nihongo-posts', allContent);
-                renderPostsForCategory('jlpt', 'jlpt-posts', allContent);
                 renderPostsForCategory('n0', 'n0-posts', allContent);
                 renderPostsForCategory('n5', 'n5-posts', allContent);
                 renderPostsForCategory('n4', 'n4-posts', allContent);
