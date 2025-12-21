@@ -619,16 +619,25 @@
         }
 
         // Xử lý khi bấm nút "Vẫn tiếp tục"
-        continueBtn.addEventListener('click', function() {
-            // Hiện hộp thoại xác nhận trình duyệt
-                const confirmContinue = confirm(
-                    "⚠️ Nếu tiếp tục có thể hoạt động không chính xác.\n\nMột số chức năng như in ấn sẽ không hoạt động đúng.\n\nBạn có chắc chắn muốn tiếp tục?"
-                );
-            userIgnoredWarning = true; // Ghi nhớ lựa chọn
-            overlay.style.display = 'none'; // Ẩn overlay
-            document.body.style.overflow = ''; // Mở khóa cuộn
-        });
-
+        if (continueBtn) {
+                continueBtn.addEventListener('click', function() {
+                    // 1. Hiện hộp thoại xác nhận
+                    const confirmContinue = confirm(
+                        "⚠️ Nếu tiếp tục, trang web có thể hoạt động không chính xác.\n\nMột số chức năng như in ấn sẽ không hoạt động đúng.\n\nBạn có chắc chắn muốn tiếp tục?"
+                    );
+                    
+                    // 2. Kiểm tra kết quả bấm
+                    if (confirmContinue) {
+                        // NẾU CHỌN OK -> MỞ KHÓA
+                        userIgnoredWarning = true;     
+                        overlay.style.display = 'none'; 
+                        document.body.style.overflow = ''; 
+                    } else {
+                        // NẾU CHỌN CANCEL -> QUAY LẠI
+                        window.history.back();
+                    }
+                });
+            }
         // Kiểm tra ngay khi tải trang
         window.addEventListener('load', checkScreenSize);
         
