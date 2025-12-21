@@ -169,7 +169,7 @@
         
         <div class="flex flex-col lg:flex-row gap-8 items-start justify-center">
             
-            <div class="control-panel w-full lg:w-[320px] flex-shrink-0 bg-white rounded-lg shadow-md p-5 sticky top-24 border border-gray-100 lg:ml-4">
+            <div class="control-panel w-full lg:w-[320px] flex-shrink-0 bg-white rounded-lg shadow-md p-5 sticky top-24 border border-gray-100 lg:ml-32">
                 
                 <div class="flex items-center justify-between border-b pb-2 mb-1">
                     <h3 class="text-lg font-bold text-blue-600 flex items-center gap-2">
@@ -192,15 +192,20 @@
                             <label class="block text-xs font-bold text-gray-600 mb-1">Tiêu đề Trang:</label>
                             <input list="titleOptions" id="cfgTitle" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500" placeholder="VD: Luyện tập N3..." oninput="updateUI()">
                             <datalist id="titleOptions">
-                                <option value="LUYỆN TẬP KANJI">
+                                <option value="LUYỆN TẬP VỞ SẠCH CHỮ ĐẸP">
                                 <option value="LUYỆN TẬP KANJI N5">
+                                <option value="LUYỆN TẬP KANJI N4">
+                                <option value="LUYỆN TẬP KANJI N3">
+                                <option value="LUYỆN TẬP KANJI N2">
+                                <option value="LUYỆN TẬP KANJI N1">
                             </datalist>
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-600 mb-1">Người soạn:</label>
                             <input list="authorOptions" id="cfgAuthor" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500" placeholder="Tên của bạn..." oninput="updateUI()">
                             <datalist id="authorOptions">
-                                <option value="Biên soạn: Thầy Vinh">
+                                <option value="Biên soạn: Vinh Sempai">
+                                <option value="Biên soạn: Thảo Sensei">
                             </datalist>
                         </div>
                     </div>
@@ -229,7 +234,8 @@
                         <i class="fas fa-print"></i> IN
                     </button>
                     
-                    <div class="text-[11px] text-gray-400 italic mt-1 text-center">* Nhập Kanji & Enter để tự động điền.</div>
+                    <div class="text-[11px] text-gray-400 italic mt-1">* Nhập Kanji & Enter để tự động điền nghĩa, âm on và âm kun. nếu không đúng bạn hãy chỉnh sửa lại trước khi thêm</div>
+                    
                 </div>
             </div>
 
@@ -259,7 +265,7 @@
 
                     <div class="paper-header">
                         <div class="ph-left">
-                            <h1 id="displayTitle">LUYỆN TẬP KANJI</h1>
+                            <h1 id="displayTitle">LUYỆN VIẾT </h1>
                             <p class="slogan">Kiên trì là chìa khóa thành công</p>
                         </div>
                         <div class="ph-right">
