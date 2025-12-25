@@ -13,6 +13,6 @@ const holidays = [
     { day: 20, month: 10, isLunar: false, name: "Phụ nữ Việt Nam", imagePrefix: "1020" },
     { day: 20, month: 11, isLunar: false, name: "Nhà giáo Việt Nam", imagePrefix: "1120" },
     { day: 22, month: 12, isLunar: false, name: "Thành Lập Quân Đội Nhân Dân Việt Nam", imagePrefix: "1222" },
-    { day: 25, month: 12, isLunar: false, name: "Lễ Giáng Sinh", imagePrefix: "1225" },
+    { day: 24, month: 12, isLunar: false, name: "Lễ Giáng Sinh", imagePrefix: "1224" },
 
 ];
