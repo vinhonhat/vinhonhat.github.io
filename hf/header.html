@@ -2,7 +2,7 @@
 <canvas id="seasonEffect" class="fixed top-0 left-0 w-full h-full pointer-events-none z-50"></canvas>
     <header class="py-4">
         <div class="flex justify-between items-center">
-            <a href="/" class="flex items-center space-x-2">
+            <a href="/" onclick="event.preventDefault(); window.location.href='/?reset=' + new Date().getTime();" class="flex items-center space-x-2" title="Nhấn để làm mới trang (Xóa Cache)">
                 <img src="/img/logoQV.png" onerror="this.onerror=null; this.src='https://placehold.co/40x40/F6AD55/ffffff?text=V';" alt="Logo" class="h-12 w-12 rounded-full">
                 <span class="text-xl font-bold text-gray-800 hidden sm:block">Vinh ở Nhật</span>
             </a>
