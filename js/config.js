@@ -1,9 +1,9 @@
 /*
- * FILE CẤU HÌNH CHUNG (config.js)
+ * FILE CẤU HÌNH CHUNG DÀNH CHO TRANG ADMIN (config.js)
  * * Đây là nơi bạn định nghĩa các thông tin chung cho toàn bộ website.
  * Thay vì sửa ở nhiều file HTML hoặc JS, bạn chỉ cần sửa ở đây.
  hiện tại không được dùng nữa có thể xoá
-
+*/
 export const SITE_CONFIG = {
     // Tiêu đề website (sẽ được thêm vào sau tiêu đề mỗi trang)
     // Trả lời câu hỏi của bạn: "Tiêu đề thì sau tiêu đề sẽ có I Vinh ở Nhật"
@@ -26,9 +26,7 @@ export const SITE_CONFIG = {
 
 
 
-HIỆN TẠI FILE NÀY KHÔNG CẦN TỚI
 
 
 
 
-*/
