@@ -474,9 +474,15 @@
                 return null;
             }
 
-            const formattedDate = new Date(post.date).toLocaleString('vi-VN', {
-                day: 'numeric', month: 'long', year: 'numeric'
-            });
+            //const formattedDate = new Date(post.date).toLocaleString('vi-VN', {
+            //    day: 'numeric', month: 'long', year: 'numeric'
+            //});
+            // Xử lý ngày dạng chuỗi để tránh lệch múi giờ
+            const d = post.date.split('-'); // Tách chuỗi 2026-01-05
+            // Ghép lại thành: Ngày 05 tháng 01 năm 2026 (hoặc format tùy ý)
+            const formattedDate = `Ngày ${d[2]} tháng ${d[1]} năm ${d[0]}`;
+
+            
             
             let finalHtml = postTemplateHtml;
             finalHtml = finalHtml.replace(/{{POST_TITLE}}/g, post.title);
