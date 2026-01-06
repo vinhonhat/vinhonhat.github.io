@@ -125,6 +125,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function checkAndShowPopup() {
+        // THÊM DÒNG NÀY: Nếu pháo hoa đang chạy thì thôi, không hiện popup thường
+        if (window.isFireworksPlaying) return;
         // ... (Toàn bộ code của hàm này được giữ nguyên, không thay đổi)
         if (!popupOverlay) return;
         popupText.className = 'text-gray-600 mb-6'; // Reset style
