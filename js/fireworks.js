@@ -331,7 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 👉 TRẢ VỀ NORMAL để tránh loạn màu
-    ctx.globalCompositeOperation = isMobile ? 'source-over' : 'screen';
+    ctx.globalCompositeOperation = 'source-over';
 
     animationId = requestAnimationFrame(animate);
 }
