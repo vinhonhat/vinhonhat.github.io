@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     // =================================================================
-    // MỤC LỤC
+    // MỤC LỤC  phiên bản V26.1.6
     // =================================================================
     // 1. ĐĂNG KÝ SERVICE WORKER (PWA)
     // 2. LẤY CÁC THÀNH PHẦN HTML (ELEMENTS)

@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
-    // ....PHẦN PHÁO HOA CHÀO MỪNG CỦA TẾT ......
+    //     PHÁO HOA CHÀO MỪNG CỦA TẾT V26.1.6
     // ==========================================
     // 1. TỰ ĐỘNG CHÈN CSS
     // ==========================================
