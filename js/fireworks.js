@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
-    //     PHÁO HOA CHÀO MỪNG (TANK VECTOR) V26.1.7.6
+    //     PHÁO HOA CHÀO MỪNG (TANK VECTOR) V26.1.7.7
     // ==========================================
 
     // 0. CẤU HÌNH: DANH SÁCH NGÀY ĐƯỢC BẮN PHÁO HOA
@@ -540,7 +540,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const y = today.getFullYear();
         
         const urlParams = new URLSearchParams(window.location.search);
-        const testId = urlParams.get('test'); 
+        let testId = urlParams.get('test'); 
+
+        // --- BỘ DỊCH MÃ (THÊM ĐOẠN NÀY) ---
+        // Nếu gõ 3004 thì tự hiểu là 0430
+        if (testId === '3004') testId = '0430';
+        // Nếu gõ 0209 thì tự hiểu là 0902
+        if (testId === '0209') testId = '0902';
+        // ----------------------------------
 
         if (testId) {
             const testEvent = holidays.find(h => h.imagePrefix === testId);
