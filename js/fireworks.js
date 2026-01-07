@@ -1,11 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
-    //     PHÁO HOA CHÀO MỪNG CỦA TẾT V26.1.6
+    //     PHÁO HOA CHÀO MỪNG CỦA TẾT V26.1.7.1
     // ==========================================
     // 1. TỰ ĐỘNG CHÈN CSS
     // ==========================================
     const style = document.createElement('style');
     style.innerHTML = `
+        /* Import font Dancing Script (Nét cọ đậm, số đẹp) */
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
+
         #ny-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 9999999;
@@ -19,20 +22,36 @@ document.addEventListener('DOMContentLoaded', () => {
         #ny-message-container {
             position: relative; z-index: 2; text-align: center; color: #fff;
             opacity: 0; transition: opacity 1s ease-in; transform: translateY(20px);
-            /* Font chữ đẹp hơn cho lời chúc cuối */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            width: 100%; /* Đảm bảo container rộng để căn giữa */
         }
         #ny-message-container.show { opacity: 1; transform: translateY(0); }
+        
         #ny-text-secondary { 
-            font-size: 1.8rem; margin-top: 10px; color: #FFD700; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;
+            /* Font Nét cọ đậm */
+            font-family: 'Dancing Script', cursive; 
+            color: #FFD700; 
+            font-weight: 700; /* Nét đậm như ảnh */
+            text-shadow: 2px 2px 0px #FF4500, 0 0 30px rgba(255, 215, 0, 0.5); /* Viền bóng cam */
+            
+            /* PC: Chữ cực đại */
+            font-size: 6rem; 
+            margin-top: 10px; 
+            line-height: 1.3;
         }
+
         #ny-year-image {
             max-width: 200px; margin-top: 20px; border-radius: 15px;
             box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
             border: 2px solid #FFD700;
         }
+
+        /* MOBILE */
         @media (max-width: 768px) {
-            #ny-text-secondary { font-size: 1.2rem; }
+            #ny-text-secondary { 
+                font-size: 3.8rem; /* Mobile to rõ */
+                line-height: 1.4;  /* Giãn dòng để chữ không dính nhau khi xuống dòng */
+                padding: 0 10px;
+            }
             #ny-year-image { max-width: 150px; }
         }
     `;
@@ -74,12 +93,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const maxWidth = isMobile ? w * 0.88 : w * 0.75;
 
     let fontSize = baseFontSize;
-    tCtx.font = `900 ${fontSize}px Arial, sans-serif`;
+    // Đổi 900 thành "bold" hoặc "normal" để chữ mảnh hơn
+    tCtx.font = `bold ${fontSize}px Arial Narrow, sans-serif`;
 
     // 2. Auto scale chữ nếu quá rộng
     while (tCtx.measureText(text).width > maxWidth && fontSize > 24) {
         fontSize -= 2;
-        tCtx.font = `900 ${fontSize}px Arial, sans-serif`;
+        tCtx.font = `bold ${fontSize}px Arial Narrow, sans-serif`;
     }
 
     tCtx.fillStyle = '#fff';
@@ -271,16 +291,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function createHeartExplosion(cx, cy, color) {
-        for (let i = 0; i < Math.PI * 2; i += 0.1) {
+        // Giảm bước nhảy (0.1 -> 0.05) để mật độ hạt dày hơn, mịn hơn
+        for (let i = 0; i < Math.PI * 2; i += 0.05) {
+            // Công thức hình trái tim
             const x = 16 * Math.pow(Math.sin(i), 3);
             const y = -(13 * Math.cos(i) - 5 * Math.cos(2*i) - 2 * Math.cos(3*i) - Math.cos(4*i));
-            // Scale trái tim
-            const scale = w < 768 ? 8 : 12; 
-            particles.push(new Particle(cx, cy, color, x*0.1*scale, y*0.1*scale, false));
+
+            // 1. CHỈNH KÍCH THƯỚC (Giảm số ở đây để bé lại)
+            // Mobile: 2.5 (cũ là 8), PC: 4 (cũ là 12) => Bé hơn nhiều
+            const baseScale = w < 768 ? 2.5 : 4;
+
+            // 2. LÀM MỀM (Hiệu ứng nổ tự nhiên)
+            // Thay vì nhân cứng nhắc, ta nhân thêm một số ngẫu nhiên từ 0.8 đến 1.2
+            // Giúp các hạt không bay đều tăm tắp mà có độ loe ra, trông bụi bặm hơn
+            const randomForce = random(0.8, 1.2); 
+            
+            // Tính toán vận tốc (Velocity)
+            const vx = x * 0.05 * baseScale * randomForce;
+            const vy = y * 0.05 * baseScale * randomForce;
+
+            // Tạo hạt màu chính
+            particles.push(new Particle(cx, cy, color, vx, vy, false));
+
+            // (Tùy chọn) Thêm vài hạt màu trắng xen kẽ để tạo hiệu ứng lấp lánh
+            if (Math.random() < 0.3) {
+                 particles.push(new Particle(cx, cy, '#ffffff', vx * 0.8, vy * 0.8, false));
+            }
         }
     }
-
-
     function createPayloadExplosion(text, yPos, colorMode) {
         const isMobile = w < 768;
         // Chỉnh cỡ chữ tùy màn hình
@@ -411,18 +449,39 @@ document.addEventListener('DOMContentLoaded', () => {
         await sleep(150);
 
         async function fanSweep() {
-    const baseX = w / 2;
-    const baseY = h * 0.85;
+            const baseX = w / 2;
+            
+            // Tăng số lượng nan quạt lên 15 cho dày
+            const count = 15; 
+            
+            // Góc quét rộng hơn: từ -70 độ (trái) đến 70 độ (phải)
+            const startAngle = -70; 
+            const endAngle = 70;
+            const step = (endAngle - startAngle) / (count - 1);
 
-    for (let a = -40; a <= 40; a += 8) {
-        const r = new Rocket(baseX, h * 0.35, 'normal', '', 'random');
-        const rad = a * Math.PI / 180;
-        r.vx = Math.sin(rad) * 3;
-        r.vy = -Math.cos(rad) * 14;
-        rockets.push(r);
-        await sleep(60);
-    }
-}
+            for (let i = 0; i < count; i++) {
+                // Tính góc
+                const angle = startAngle + (i * step);
+                const rad = angle * Math.PI / 180;
+
+                // Tạo tên lửa
+                const r = new Rocket(baseX, h, 'normal', '', 'random');
+                
+                // Tăng lực bắn (power) để pháo bay cao hơn
+                const power = w < 768 ? 14 : 18; 
+                
+                r.vx = Math.sin(rad) * power * 0.8; // Độ toả ngang
+                r.vy = -Math.cos(rad) * power;      // Độ cao
+                
+                // Đặt điểm nổ tạo hình vòm
+                r.targetY = h * 0.15 + Math.abs(angle) * 1.5; 
+
+                rockets.push(r);
+                
+                // Tốc độ quét: 60ms mỗi tia (nhanh vừa phải)
+                await sleep(60); 
+            }
+        }
 
 
         // --- GIAI ĐOẠN 2: BẮN CHỮ (LOGIC PC vs MOBILE) ---
@@ -430,56 +489,47 @@ document.addEventListener('DOMContentLoaded', () => {
         const txt1 = isTetAm ? "CHÚC MỪNG NĂM MỚI" : "HAPPY NEW YEAR";
         const txt2 = isTetAm ? "AN KHANG THỊNH VƯỢNG" : `WELCOME ${year}`;
 
-        // Màu sắc: Dòng 1 Vàng, Dòng 2 Đỏ (hoặc Random tùy thích)
-        const color1 = '#FFD700'; // Vàng
-        const color2 = '#FF4500'; // Đỏ cam
+        // Màu sắc: Dòng 1 Vàng, Dòng 2 Đỏ cam
+        const color1 = '#FFD700'; 
+        const color2 = '#FF4500'; 
 
         if (isMobile) {
-            // === LOGIC MOBILE: HIỆN CẢ 2 DÒNG ===
-            let startY = h * 0.25;
-
-for (let i = 0; i < mobileLines.length; i++) {
-    launch(
-        'text',
-        w / 2,
-        startY + i * (h * 0.12),
-        mobileLines[i]
-    );
-    await sleep(500);
-};
-            // 1. Bắn dòng 1 lên RẤT CAO
-            launch('text', w/2, h*0.28, txt1, color1);
-            await sleep(800); // Chờ xíu
-
-            // 2. Bắn dòng 2 thấp hơn
-            launch('text', w/2, h*0.55, txt2, color2);
+            // === LOGIC MOBILE: CHỈ HIỆN CÁC TỪ DỌC ===
+            // Đã xóa phần code gây lỗi đè chữ ở đây
+            let startY = h * 0.2; // Bắt đầu cao hơn chút
+            for (let i = 0; i < mobileLines.length; i++) {
+                launch(
+                    'text',
+                    w / 2,
+                    startY + i * (h * 0.12), // Khoảng cách giữa các dòng
+                    mobileLines[i]
+                );
+                await sleep(600); // Chờ từng chữ bắn lên
+            };
             
-            // Cả 2 dòng cùng tồn tại và rơi xuống từ từ
-            await sleep(1000);
+            // Chờ cho chữ rơi xuống hết
+            await sleep(2000);
 
         } else {
-            // === LOGIC PC: HIỆN LẦN LƯỢT (NÂNG CAO) ===
+            // === LOGIC PC: HAI DÒNG XUẤT HIỆN CÙNG LÚC ===
+            
+            // Hiệu ứng tên lửa bay qua lại làm nền
             for (let i = -2; i <= 2; i++) {
-    rockets.push(new Rocket(
-        w / 2,
-        h * 0.3,
-        'normal',
-        '',
-        'random'
-    ));
-    rockets[rockets.length - 1].vx = i * 1.2;
-}
-await sleep(600);
-            // 1. Bắn dòng 1 lên CAO (h*0.3)
-            launch('text', w/2, h*0.3, txt1, color1);
-            
-            // Chờ cho chữ dòng 1 hơi tan đi (khoảng 3s)
-            await sleep(3500); 
+                rockets.push(new Rocket(w / 2, h * 0.3, 'normal', '', 'random'));
+                rockets[rockets.length - 1].vx = i * 1.2;
+            }
+            await sleep(600);
 
-            // 2. Bắn dòng 2 ĐÈ LÊN vị trí cũ (hoặc thấp hơn xíu h*0.35)
-            // Hiệu ứng: Dòng cũ mờ đi, dòng mới nổ bùm ra che lấp
-            launch('text', w/2, h*0.3, txt2, color2);
+            // 1. Bắn dòng 1 lên CAO (h*0.25)
+            launch('text', w/2, h*0.25, txt1, color1);
             
+            // 2. Chỉ chờ 0.5s (500ms)
+            await sleep(500); 
+
+            // 3. Bắn dòng 2 THẤP HƠN (h*0.45) để nằm dưới dòng 1
+            launch('text', w/2, h*0.45, txt2, color2);
+            
+            // Cả 2 dòng giờ đang hiện cùng lúc và sẽ rơi từ từ
             await sleep(4000);
         }
 
@@ -506,7 +556,14 @@ await sleep(600);
         const img = document.getElementById('ny-year-image');
 
         if (isTetAm) {
-            subText.innerHTML = `XUÂN ${year} - VẠN SỰ NHƯ Ý`;
+            // Nếu là Mobile: Dùng thẻ <br> để xuống dòng
+            if (w < 768) {
+                subText.innerHTML = `XUÂN ${year} <br> VẠN SỰ NHƯ Ý`;
+            } else {
+                // PC: Để ngang cho sang
+                subText.innerHTML = `XUÂN ${year} - VẠN SỰ NHƯ Ý`;
+            }
+
             img.src = `/img/holidays/tet${year}.jpg`;
             img.onerror = function() { this.style.display = 'none'; };
             img.style.display = 'inline-block';
