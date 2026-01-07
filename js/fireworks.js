@@ -558,10 +558,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isTetAm) {
             // Nếu là Mobile: Dùng thẻ <br> để xuống dòng
             if (w < 768) {
-                subText.innerHTML = `XUÂN ${year} <br> VẠN SỰ NHƯ Ý`;
+                subText.innerHTML = `Xuân ${year} <br> Vạn Sự Như Ý`;
             } else {
                 // PC: Để ngang cho sang
-                subText.innerHTML = `XUÂN ${year} - VẠN SỰ NHƯ Ý`;
+                subText.innerHTML = `Xuân ${year} - Vạn Sự Như Ý`;
             }
 
             img.src = `/img/holidays/tet${year}.jpg`;
