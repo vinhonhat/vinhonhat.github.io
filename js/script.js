@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Tạo HTML hiển thị
             // Mẫu: 🌙 01/01 - Ất Tỵ
             lunarHtml = `
-                <div style="color: #d97706; font-size: 0.8em; margin-top: 4px; font-weight: 500;">
+                <div style="color: #d97706; font-size: 0.95em; margin-top: 4px; font-weight: 500;">
                     <i class="fas fa-moon" style="margin-right: 6px;"></i>${lDay}/${lMonth} - Năm ${canChiStr} ${lunar.leap ? '(Nhuận)' : ''}
                 </div>
             `;
