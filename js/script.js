@@ -88,15 +88,59 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }    
     
-    // Cập nhật đồng hồ
+    // Cập nhật đồng hồ (Phiên bản V2: Thêm Can Chi - Năm)
     function updateClock() {
         const timeEl = document.getElementById('time');
         const dateEl = document.getElementById('date');
+        
         if (!timeEl || !dateEl) return;
+        
         const now = new Date();
+        
+        // 1. Hiển thị giờ
         timeEl.textContent = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        dateEl.textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        
+        // 2. Hiển thị ngày Dương
+        const solarString = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        
+        // 3. Tính ngày Âm & Can Chi
+        let lunarHtml = ''; 
+        
+        if (typeof getLunarDate === 'function') {
+            const lunar = getLunarDate(now.getDate(), now.getMonth() + 1, now.getFullYear());
+            
+            const lDay = String(lunar.day).padStart(2, '0');
+            const lMonth = String(lunar.month).padStart(2, '0');
+
+            // --- TÍNH CAN CHI (MỚI) ---
+            const CAN = ['Canh', 'Tân', 'Nhâm', 'Quý', 'Giáp', 'Ất', 'Bính', 'Đinh', 'Mậu', 'Kỷ'];
+            const CHI = ['Thân', 'Dậu', 'Tuất', 'Hợi', 'Tý', 'Sửu', 'Dần', 'Mão', 'Thìn', 'Tỵ', 'Ngọ', 'Mùi'];
+            
+            // Công thức tính Can Chi dựa trên số cuối của năm Âm lịch
+            const can = CAN[lunar.year % 10];
+            const chi = CHI[lunar.year % 12];
+            const canChiStr = `${can} ${chi}`;
+            
+            // Tạo HTML hiển thị
+            // Mẫu: 🌙 01/01 - Ất Tỵ
+            lunarHtml = `
+                <div style="color: #d97706; font-size: 0.8em; margin-top: 4px; font-weight: 500;">
+                    <i class="fas fa-moon" style="margin-right: 6px;"></i>${lDay}/${lMonth} - Năm ${canChiStr} ${lunar.leap ? '(Nhuận)' : ''}
+                </div>
+            `;
+        }
+
+        dateEl.innerHTML = `<div>${solarString}</div>${lunarHtml}`;
     }
+    // Cập nhật đồng hồ
+    //function updateClock() {
+    //    const timeEl = document.getElementById('time');
+    //    const dateEl = document.getElementById('date');
+    //    if (!timeEl || !dateEl) return;
+    //    const now = new Date();
+    //    timeEl.textContent = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    //    dateEl.textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    //}
 
     // Tải và chạy Banner
     function loadBanner() {

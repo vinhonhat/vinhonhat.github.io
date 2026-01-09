@@ -1,192 +1,221 @@
 /**
- * THUẬT TOÁN TÍNH ÂM LỊCH VIỆT NAM (Dựa trên thuật toán Hồ Ngọc Đức)
- * Đã được tối ưu hóa để tích hợp vào blog cá nhân.
- * Cung cấp hàm global: convertLunarToSolar(lunarDay, lunarMonth, lunarYear)
+ * ÂM LỊCH VIỆT NAM – CHUẨN QUỐC GIA V26.1.9.1
+ * Thuật toán: Hồ Ngọc Đức
+ * Múi giờ: GMT+7
+ * Hỗ trợ đầy đủ tháng nhuận – không lệch ngày
  */
 
-(function(root) {
-    // Các hằng số thiên văn
-    const J1900 = 2415020.5;
+console.log("LUNAR CALENDAR: VIETNAM NATIONAL STANDARD LOADED");
+
+(function (root) {
     const PI = Math.PI;
+    const TZ = 7;
+
+    /* ================== JULIAN DAY ================== */
 
     function jdFromDate(dd, mm, yy) {
-        let a = Math.floor((14 - mm) / 12);
-        let y = yy + 4800 - a;
-        let m = mm + 12 * a - 3;
-        let jd = dd + Math.floor((153 * m + 2) / 5) + 365 * y + Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400) - 32045;
-        return jd;
+        const a = Math.floor((14 - mm) / 12);
+        const y = yy + 4800 - a;
+        const m = mm + 12 * a - 3;
+        return (
+            dd +
+            Math.floor((153 * m + 2) / 5) +
+            365 * y +
+            Math.floor(y / 4) -
+            Math.floor(y / 100) +
+            Math.floor(y / 400) -
+            32045
+        );
     }
 
     function jdToDate(jd) {
-        let a = jd + 32044;
-        let b = Math.floor((4 * a + 3) / 146097);
-        let c = a - Math.floor((146097 * b) / 4);
-        let d = Math.floor((4 * c + 3) / 1461);
-        let e = c - Math.floor((1461 * d) / 4);
-        let m = Math.floor((5 * e + 2) / 153);
-        let day = e - Math.floor((153 * m + 2) / 5) + 1;
-        let month = m + 3 - 12 * Math.floor(m / 10);
-        let year = 100 * b + d - 4800 + Math.floor(m / 10);
-        return { day: day, month: month, year: year };
+        const a = jd + 32044;
+        const b = Math.floor((4 * a + 3) / 146097);
+        const c = a - Math.floor((146097 * b) / 4);
+        const d = Math.floor((4 * c + 3) / 1461);
+        const e = c - Math.floor((1461 * d) / 4);
+        const m = Math.floor((5 * e + 2) / 153);
+
+        return {
+            day: e - Math.floor((153 * m + 2) / 5) + 1,
+            month: m + 3 - 12 * Math.floor(m / 10),
+            year: 100 * b + d - 4800 + Math.floor(m / 10)
+        };
     }
 
-    function getNewMoonDay(k, timeZone) {
-        let T = k / 1236.85;
-        let T2 = T * T;
-        let T3 = T2 * T;
-        let dr = PI / 180;
-        let Jd1 = 2415020.75933 + 29.53058868 * k + 0.0001178 * T2 - 0.000000155 * T3;
-        let M = 359.2242 + 29.10535608 * k - 0.0000333 * T2 - 0.00000347 * T3;
-        let Mprime = 306.0253 + 385.81691806 * k + 0.0107306 * T2 + 0.00001236 * T3;
-        let F = 21.2964 + 390.67050646 * k - 0.0016528 * T2 - 0.00000239 * T3;
-        let C1 = (0.1734 - 0.000393 * T) * Math.sin(M * dr) + 0.0021 * Math.sin(2 * M * dr);
-        let C2 = -0.4068 * Math.sin(Mprime * dr) + 0.0161 * Math.sin(2 * Mprime * dr);
-        let C3 = -0.0004 * Math.sin(F * dr);
-        let JdNew = Jd1 + C1 + C2 + C3 - (0.4072 + 0.009 * T) * Math.sin((Mprime - F) * dr); // Correction for eclipse
-        return Math.floor(JdNew + 0.5 + timeZone / 24);
+    /* ================== ASTRONOMY ================== */
+
+    function getNewMoonDay(k) {
+        const T = k / 1236.85;
+        const T2 = T * T;
+        const T3 = T2 * T;
+        const dr = PI / 180;
+
+        const Jd1 =
+            2415020.75933 +
+            29.53058868 * k +
+            0.0001178 * T2 -
+            0.000000155 * T3;
+
+        const M =
+            359.2242 +
+            29.10535608 * k -
+            0.0000333 * T2 -
+            0.00000347 * T3;
+
+        const Mpr =
+            306.0253 +
+            385.81691806 * k +
+            0.0107306 * T2 +
+            0.00001236 * T3;
+
+        const F =
+            21.2964 +
+            390.67050646 * k -
+            0.0016528 * T2 -
+            0.00000239 * T3;
+
+        const C =
+            (0.1734 - 0.000393 * T) * Math.sin(M * dr) +
+            0.0021 * Math.sin(2 * M * dr) -
+            0.4068 * Math.sin(Mpr * dr) +
+            0.0161 * Math.sin(2 * Mpr * dr) -
+            0.0004 * Math.sin(F * dr);
+
+        return Math.floor(Jd1 + C + 0.5 + TZ / 24);
     }
 
-    function getSunLongitude(jdn, timeZone) {
-        let T = (jdn - 2451545.0 + 0.5 - timeZone / 24) / 36525;
-        let T2 = T * T;
-        let dr = PI / 180;
-        let M = 357.52910 + 35999.05030 * T - 0.0001559 * T2 - 0.00000048 * T2 * T;
-        let L0 = 280.46645 + 36000.76983 * T + 0.0003032 * T2;
-        let DL = (1.914600 - 0.004817 * T - 0.000014 * T2) * Math.sin(M * dr) +
-                 (0.019993 - 0.000101 * T) * Math.sin(2 * M * dr) + 0.000290 * Math.sin(3 * M * dr);
+    function getSunLongitude(jdn) {
+        const T = (jdn - 2451545.5 - TZ / 24) / 36525;
+        const T2 = T * T;
+        const dr = PI / 180;
+
+        const M =
+            357.52910 +
+            35999.05030 * T -
+            0.0001559 * T2 -
+            0.00000048 * T * T2;
+
+        const L0 =
+            280.46645 +
+            36000.76983 * T +
+            0.0003032 * T2;
+
+        const DL =
+            (1.914600 - 0.004817 * T - 0.000014 * T2) *
+                Math.sin(M * dr) +
+            (0.019993 - 0.000101 * T) *
+                Math.sin(2 * M * dr) +
+            0.000290 * Math.sin(3 * M * dr);
+
         let L = L0 + DL;
-        return (L * dr - PI * 2 * Math.floor(L * dr / (PI * 2))) / dr * 180 / PI; // Normalized to 0-360 deg
+        L = L * dr;
+        L = L - PI * 2 * Math.floor(L / (PI * 2));
+        return Math.floor((L / PI) * 6);
     }
 
-    function getLunarMonth11(yy, timeZone) {
-        let off = jdFromDate(31, 12, yy) - 2415021;
-        let k = Math.floor(off / 29.530588853);
-        let nm = getNewMoonDay(k, timeZone);
-        let sunLong = getSunLongitude(nm, timeZone);
-        if (sunLong >= 270) {
-            nm = getNewMoonDay(k - 1, timeZone);
+    /* ================== CORE LOGIC ================== */
+
+    function getLunarMonth11(yy) {
+        const off = jdFromDate(31, 12, yy) - 2415021;
+        const k = Math.floor(off / 29.530588853);
+        let nm = getNewMoonDay(k);
+        if (getSunLongitude(nm) >= 9) {
+            nm = getNewMoonDay(k - 1);
         }
         return nm;
     }
 
-    function getLeapMonthOffset(a11, timeZone) {
-        let k = Math.floor((a11 - 2415021.076998695) / 29.530588853 + 0.5);
-        let last = 0;
-        let i = 1;
-        let arc = getSunLongitude(getNewMoonDay(k, timeZone), timeZone);
-        for (; i < 13; i++) {
-            let ld = getNewMoonDay(k + i, timeZone);
-            let arcNew = getSunLongitude(ld, timeZone);
-            last = ld;
-            if (Math.floor(arcNew / 30) === Math.floor(arc / 30)) {
-                return i;
-            }
-            arc = arcNew;
+    function getLeapMonthOffset(a11) {
+        const k = Math.floor((a11 - 2415021.076998695) / 29.530588853 + 0.5);
+        let last = getSunLongitude(getNewMoonDay(k));
+        for (let i = 1; i < 14; i++) {
+            const arc = getSunLongitude(getNewMoonDay(k + i));
+            if (arc === last) return i;
+            last = arc;
         }
         return 0;
     }
 
-    // Hàm chuyển đổi từ Dương Lịch sang Âm Lịch (dùng nội bộ để verify)
-    function convertSolar2Lunar(dd, mm, yy, timeZone) {
-        let jdn = jdFromDate(dd, mm, yy);
-        let k = Math.floor((jdn - 2415021.076998695) / 29.530588853);
-        let monthStart = getNewMoonDay(k + 1, timeZone);
+    /* ================== SOLAR → LUNAR ================== */
+
+    function getLunarDate(dd, mm, yy) {
+        const jdn = jdFromDate(dd, mm, yy);
+        const k = Math.floor((jdn - 2415021.076998695) / 29.530588853);
+
+        let monthStart = getNewMoonDay(k + 1);
         if (monthStart > jdn) {
-            monthStart = getNewMoonDay(k, timeZone);
+            monthStart = getNewMoonDay(k);
         }
-        let a11 = getLunarMonth11(yy, timeZone);
+
+        let a11 = getLunarMonth11(yy);
         let b11 = a11;
+
         if (a11 >= monthStart) {
-            a11 = getLunarMonth11(yy - 1, timeZone);
+            a11 = getLunarMonth11(yy - 1);
+        } else {
+            b11 = getLunarMonth11(yy + 1);
         }
-        let day = jdn - monthStart + 1;
-        let diff = Math.floor((monthStart - a11) / 29);
-        let leap = getLeapMonthOffset(a11, timeZone);
+
+        const day = jdn - monthStart + 1;
+        const diff = Math.floor((monthStart - a11) / 29);
+
         let month = diff + 11;
-        if (leap > 0 && diff >= leap) {
+        let leap = false;
+
+        const leapMonthDiff = getLeapMonthOffset(a11);
+
+        if (leapMonthDiff > 0 && diff >= leapMonthDiff) {
             month = diff + 10;
-        }
-        if (month > 12) month = month - 12;
-        if (month >= 11 && diff < 4) {
-            yy -= 1; // Lunar year is earlier
-        }
-        let isLeap = (diff === leap);
-        return { day: day, month: month, year: yy, isLeap: isLeap };
-    }
-
-    // --- HÀM CHÍNH: CHUYỂN TỪ ÂM LỊCH SANG DƯƠNG LỊCH ---
-    // Đây là hàm mà holidays.js của bạn cần gọi
-    function convertLunarToSolar(lunarDay, lunarMonth, lunarYear) {
-        // Múi giờ Việt Nam là +7
-        const TIME_ZONE = 7.0; 
-        
-        // Dự đoán ngày dương lịch (Năm âm lịch thường bắt đầu trễ hơn dương lịch khoảng 20-40 ngày)
-        // Ta ước lượng ngày dương bắt đầu kiểm tra
-        let estimatedSolarYear = lunarYear;
-        // Tháng âm luôn lệch so với tháng dương, ta bắt đầu dò từ ngày 1 tháng lunarMonth của năm solar tương ứng
-        let jdnStart = jdFromDate(1, 1, estimatedSolarYear);
-        
-        // Tuy nhiên, để chính xác, ta dùng cách tìm tháng 11 âm lịch của năm trước đó
-        // Sau đó cộng dần số tháng để tìm ra ngày Sóc (mùng 1) của tháng cần tìm.
-        
-        let a11 = getLunarMonth11(lunarYear - 1, TIME_ZONE);
-        let leap = getLeapMonthOffset(a11, TIME_ZONE);
-        
-        let offset = lunarMonth - 11; 
-        if (offset < 0) offset += 12; // Nếu tháng < 11, nó thuộc chu kỳ sau tháng 11 năm ngoái
-        
-        // Nếu năm đó có nhuận và tháng cần tìm sau tháng nhuận, ta phải cộng thêm 1 tháng vào độ lệch
-        if (leap > 0 && lunarMonth > leap) {
-             // Logic phức tạp của tháng nhuận: 
-             // Nếu user không chỉ định là tháng nhuận, ta mặc định tìm tháng chính.
-             // Nếu tháng người dùng nhập > tháng nhuận của năm đó, tức là nó nằm sau tháng nhuận
-             // Do đó số tháng trăng thực tế phải cộng thêm 1.
-        }
-        // *Lưu ý: Hàm này đang đơn giản hóa việc tìm tháng nhuận cụ thể. 
-        // Với mục đích holidays.js (tìm ngày lễ cố định), ta thường không rơi vào tháng nhuận (ít lễ chính).*
-
-        // Cách tiếp cận "Brute-force" thông minh (An toàn và chính xác nhất cho Vạn Niên):
-        // 1. Tính ngày Dương lịch tương ứng với ngày 1/[lunarMonth]/[lunarYear] (ước lượng)
-        // 2. Chuyển ngược lại sang Âm lịch để kiểm tra.
-        // 3. Điều chỉnh sai số.
-
-        // Ước lượng JDN bắt đầu: Ngày 1 âm năm đó ~ cuối tháng 1 dương hoặc tháng 2 dương
-        // Ta bắt đầu dò từ ngày 15 tháng 1 năm SolarYear (trừ hao)
-        let k = Math.floor((lunarYear - 1900) * 12.3685) + lunarMonth; 
-        let guessJDN = getNewMoonDay(k, TIME_ZONE);
-        
-        // Dò xung quanh ngày dự đoán (trong phạm vi +/- 60 ngày là đủ bao phủ cả tháng nhuận)
-        // Để tìm chính xác ngày mùng 1 của tháng âm lịch đó
-        let foundJDN = 0;
-        
-        // Tìm ngày mùng 1 của tháng âm này
-        // Ta lùi lại 2 tháng (khoảng 60 ngày) để quét lên, đảm bảo không sót
-        let startScan = guessJDN - 60; 
-        
-        for (let i = 0; i < 120; i++) {
-            let j = startScan + i;
-            let res = convertSolar2Lunar(jdToDate(j).day, jdToDate(j).month, jdToDate(j).year, TIME_ZONE);
-            
-            if (res.year === lunarYear && res.month === lunarMonth && res.day === 1 && !res.isLeap) {
-                // Đã tìm thấy ngày mùng 1 của tháng cần tìm (không phải tháng nhuận)
-                foundJDN = j;
-                break;
+            if (diff === leapMonthDiff) {
+                leap = true;
             }
         }
 
-        if (foundJDN === 0) {
-            // Trường hợp không tìm thấy (hiếm gặp), fallback về công thức cũ
-            return null;
-        }
+        if (month > 12) month -= 12;
+        if (month >= 11 && diff < 4) yy--;
 
-        // Ngày cần tìm = Ngày mùng 1 + (lunarDay - 1)
-        let targetJDN = foundJDN + (lunarDay - 1);
-        let solarDateObj = jdToDate(targetJDN);
-
-        return new Date(solarDateObj.year, solarDateObj.month - 1, solarDateObj.day);
+        return {
+            day,
+            month,
+            year: yy,
+            leap
+        };
     }
 
-    // Export hàm ra global scope để các file khác (holidays.js) gọi được
+    /* ================== LUNAR → SOLAR (ĐÃ SỬA ĐỂ HIỆN PHÁO HOA) ================== */
+
+    function convertLunarToSolar(ld, lm, ly, isLeap) {
+        // --- DÒNG SỬA QUAN TRỌNG ---
+        // Nếu bên pháo hoa không gửi 'isLeap', ta tự hiểu là tháng chính (false)
+        if (isLeap === undefined) isLeap = false; 
+        // ---------------------------
+
+        const from = new Date(ly - 1, 11, 15);
+        // Tăng giới hạn quét lên một chút để an toàn
+        for (let i = 0; i < 400; i++) {
+            const d = from.getDate();
+            const m = from.getMonth() + 1;
+            const y = from.getFullYear();
+
+            const lunar = getLunarDate(d, m, y);
+
+            if (
+                lunar.day === ld &&
+                lunar.month === lm &&
+                lunar.year === ly &&
+                lunar.leap === isLeap
+            ) {
+                return new Date(y, m - 1, d);
+            }
+            from.setDate(from.getDate() + 1);
+        }
+        return null;
+    }
+
+    /* ================== EXPORT ================== */
+
+    root.getLunarDate = getLunarDate;
     root.convertLunarToSolar = convertLunarToSolar;
 
 })(window);
