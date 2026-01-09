@@ -507,7 +507,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Lời chúc cuối
         if (prefix === 'tet') {
-            subText.innerHTML = isMobile ? `Xuân ${year}<br>Vạn Sự Như Ý` : `Xuân ${year} - Vạn Sự Như Ý <br> Tấn Tài Tấn Lộc`;
+            subText.innerHTML = isMobile ? `Xuân ${year}<br>Vạn Sự Như Ý` : `Xuân ${year} <br> Vạn Sự Như Ý <br> Tấn Tài Tấn Lộc`;
         } else if (prefix === '0101') {
             subText.innerHTML = isMobile ? `Happy New Year <br>Wellcom ${year}` : `HAPPY NEW YEAR <br> WELCOME ${year}`;
             img.style.display = 'none'; 
