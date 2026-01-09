@@ -509,7 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (prefix === 'tet') {
             subText.innerHTML = isMobile ? `Xuân ${year}<br>Vạn Sự Như Ý` : `Xuân ${year} <br> Vạn Sự Như Ý <br> Tấn Tài Tấn Lộc`;
         } else if (prefix === '0101') {
-            subText.innerHTML = isMobile ? `Happy New Year <br>Wellcom ${year}` : `HAPPY NEW YEAR <br> WELCOME ${year}`;
+            subText.innerHTML = isMobile ? `Happy New Year <br>Welcome ${year}` : `Happy New Year <br>Welcome ${year}`;
             img.style.display = 'none'; 
         } else if (prefix === '0430') {
              const anniversary304 = year - 1975; 
