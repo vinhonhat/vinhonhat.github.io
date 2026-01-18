@@ -1,4 +1,4 @@
-// page-logic.js
+// page-leve2.js <!-- PHIÊN BẢN V26.1.18 -->
 // dùng cho trang con hiện thị đầy đủ từng mục con như rakuten, sim, hoc tập
 
 // Hàm này dùng để đổi định dạng ngày sang kiểu "ngày 07 tháng 11 năm 2025"

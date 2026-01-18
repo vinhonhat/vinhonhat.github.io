@@ -1,4 +1,4 @@
-// page-leve3.js
+// page-leve3.js  <!-- PHIÊN BẢN V26.1.18 -->
 // 📌 Dùng cho các trang bài viết chi tiết (để hiện gợi ý) HOẶC các trang trống (để hiện thông báo chưa có bài)
 
 // Hàm đổi định dạng ngày: "ngày 07 tháng 11 năm 2025"
