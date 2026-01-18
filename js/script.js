@@ -87,7 +87,57 @@ document.addEventListener('DOMContentLoaded', function() {
             return dateString; // Trả về ngày gốc nếu có lỗi
         }
     }    
-    
+    // --- HÀM VẼ MẶT TRĂNG THEO NGÀY ÂM (Nâng cấp) ---
+    function getMoonPhaseSVG(lunarDay) {
+        // Cấu hình chung cho SVG (Màu lấy theo màu chữ hiện tại - currentColor)
+        const svgHeader = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block; vertical-align:middle; margin-right:6px;">`;
+        const svgFooter = `</svg>`;
+        
+        // Màu viền và màu nền (dùng currentColor để ăn theo màu vàng cam #d97706)
+        const stroke = `stroke="currentColor" stroke-width="2"`;
+        const fill = `fill="currentColor"`;
+
+        // 1. NGÀY SÓC (Mùng 1, 30, 29 cuối tháng): Trăng đen (chỉ có viền tròn)
+        if (lunarDay === 1 || lunarDay >= 29) {
+            return `${svgHeader}<circle cx="12" cy="12" r="9" ${stroke}/>${svgFooter}`;
+        }
+
+        // 2. TRĂNG TRÒN (Ngày 14, 15, 16, 17): Tròn đầy
+        if (lunarDay >= 14 && lunarDay <= 17) {
+            return `${svgHeader}<circle cx="12" cy="12" r="10" ${fill}/>${svgFooter}`;
+        }
+
+        // 3. TRĂNG KHUYẾT (Các ngày còn lại)
+        // Ta dùng path SVG để vẽ hình lưỡi liềm hoặc bán nguyệt
+        let path = "";
+        
+        if (lunarDay > 1 && lunarDay < 14) {
+            // --- GIAI ĐOẠN TRĂNG LÊN (ĐẦU THÁNG) - Sáng bên PHẢI ---
+            if (lunarDay < 8) {
+                // Lưỡi liềm mỏng (Mùng 2-7)
+                path = `<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8V20z" fill-rule="evenodd" clip-rule="evenodd" ${fill} transform="scale(-1, 1) translate(-24, 0)"/>`; 
+                // (Dùng hình bán nguyệt lật ngược tạm thời hoặc vẽ path lưỡi liềm chuẩn hơn dưới đây)
+                // Code vẽ lưỡi liềm chuẩn:
+                path = `<path d="M12 2c-5.52 0-10 4.48-10 10s4.48 10 10 10c2.2 0 4.2-.7 5.8-1.9L12 2z" ${stroke}/> <path d="M12 22C12 22 18 18 18 12C18 6 12 2 12 2" ${fill}/>`; // Đơn giản hóa: Vẽ bán nguyệt phải
+                path = `<path d="M12 3a9 9 0 1 0 0 18 7 7 0 0 1 0-18z" ${fill} transform="scale(-1, 1) translate(-24, 0)"/>`; // Lưỡi liềm phải
+            } else {
+                // Bán nguyệt lớn dần (Mùng 8-13)
+                path = `<path d="M12 2a10 10 0 0 1 0 20z" ${fill}/>`; // Bán nguyệt phải
+            }
+        } else {
+            // --- GIAI ĐOẠN TRĂNG TÀN (CUỐI THÁNG) - Sáng bên TRÁI ---
+            if (lunarDay > 22) {
+                // Lưỡi liềm tàn (Ngày 23-28)
+                path = `<path d="M12 3a9 9 0 1 0 0 18 7 7 0 0 1 0-18z" ${fill}/>`; // Lưỡi liềm trái
+            } else {
+                // Bán nguyệt tàn (Ngày 18-22)
+                path = `<path d="M12 2a10 10 0 0 0 0 20z" ${fill}/>`; // Bán nguyệt trái
+            }
+        }
+
+        // Kết hợp viền tròn bên ngoài cho đẹp
+        return `${svgHeader}<circle cx="12" cy="12" r="9" ${stroke} opacity="0.3"/>${path}${svgFooter}`;
+    }
     // Cập nhật đồng hồ (Phiên bản V2: Thêm Can Chi - Năm)
     function updateClock() {
         const timeEl = document.getElementById('time');
@@ -123,9 +173,12 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Tạo HTML hiển thị
             // Mẫu: 🌙 01/01 - Ất Tỵ
+            // Lấy icon mặt trăng tương ứng với ngày
+            const moonIcon = getMoonPhaseSVG(lunar.day);
+
             lunarHtml = `
-                <div style="color: #d97706; font-size: 0.95em; margin-top: 4px; font-weight: 500;">
-                    <i class="fas fa-moon" style="margin-right: 6px;"></i>${lDay}/${lMonth} - Năm ${canChiStr} ${lunar.leap ? '(Nhuận)' : ''}
+                <div style="color: #d97706; font-size: 0.95em; margin-top: 4px; font-weight: 500; display: flex; align-items: center; justify-content: flex-end;">
+                    ${moonIcon} ${lDay}/${lMonth} - Năm ${canChiStr} ${lunar.leap ? '(Nhuận)' : ''}
                 </div>
             `;
         }
