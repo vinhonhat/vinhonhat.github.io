@@ -668,7 +668,7 @@ fetch('/data/posts.json') // Tải file JSON
     // 4. KHỞI TẠO VÀ CHẠY
     // ============================================================
     const resources = getResources();
-    if (!resources || window.innerWidth < 480) return;
+    if (!resources) return;
 
     // Tạo container
     const container = document.createElement('div');
