@@ -589,7 +589,7 @@ fetch('/data/posts.json') // Tải file JSON
     // ============================================================
     const CONFIG = {
         // CHẾ ĐỘ HIỂN THỊ: chọn 'image', 'text', 'mix', hoặc 'off'
-        mode: 'image', 
+        mode: 'mix', 
         
         // CẤU HÌNH RƠI
         count: 20,       // Số lượng hạt
@@ -620,7 +620,7 @@ fetch('/data/posts.json') // Tải file JSON
 
     // --- B. KHO EMOJI (Text) ---
     const TXT_SOURCE = {
-        tet: ['🌸', '🌼', '🌺', '🏵️', '🧧'],
+        tet: ['🌸', '🌼'],  //, '🌺', '🏵️', '🧧'
         noel: ['❄️', '❅', '❆', '🎄']
     };
 
