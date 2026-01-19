@@ -590,7 +590,7 @@ fetch('/data/posts.json') // Tải file JSON
     // ============================================================
     const CONFIG = {
         // CHẾ ĐỘ HIỂN THỊ: chọn 'image', 'text', 'mix', hoặc 'off'
-        mode: 'image', 
+        mode: 'mix', 
         
         // CẤU HÌNH RƠI
         count: 20,       // Số lượng hạt
@@ -621,8 +621,8 @@ fetch('/data/posts.json') // Tải file JSON
 
     // --- B. KHO EMOJI (Text) ---
     const TXT_SOURCE = {
-        tet: ['🌸', '🌼', '🌺', '🏵️', '🧧'],
-        noel: ['❄️', '❅', '❆', '🎄']
+        tet: ['🌸', ],  //'🌼', '🌺', '🏵️', '🧧'
+        noel: ['❄️',]   //  '❅', '❆', '🎄'
     };
 
     // ============================================================
@@ -669,7 +669,7 @@ fetch('/data/posts.json') // Tải file JSON
     // 4. KHỞI TẠO VÀ CHẠY
     // ============================================================
     const resources = getResources();
-    if (!resources || window.innerWidth < 480) return;
+    if (!resources || window.innerWidth < 280) return;
 
     // Tạo container
     const container = document.createElement('div');
