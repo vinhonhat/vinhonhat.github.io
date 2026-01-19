@@ -311,8 +311,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <i class="far fa-calendar-alt mr-2"></i>
                                 <span>${formatDate(post.date)}</span>
                             </div>
-                            <h3 class="text-xl font-bold text-gray-800 mb-2 group-hover:text-yellow-600 transition-colors">${post.title}</h3>
-                            <p class="text-gray-600 text-sm">${post.summary}</p>
+                            <h3 class="truncate-2-lines text-xl font-bold text-gray-800 mb-2 group-hover:text-yellow-600 transition-colors">${post.title}</h3>
+                            <p class="truncate-3-lines text-gray-600 text-sm">${post.summary}</p>
                         </div>
                     </article>
                 </a>
@@ -367,13 +367,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-
-
-
-
-
-
-
     // --- 3.3. Tải bài viết HƯỚNG DẪN (NÂNG CẤP) ---
     function loadGuidePosts(allContent) {
     // Kiểm tra xem element và dữ liệu có tồn tại không
@@ -403,10 +396,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 <a href="${post.link}" class="flex items-start space-x-4 group">
                     <img src="${post.imageUrl}" alt="${post.title}" class="w-24 h-16 rounded-lg object-cover transition-transform duration-300 group-hover:scale-105">
                     <div class="flex-1">
-                        <h3 class="font-bold text-gray-800 group-hover:text-yellow-600">${post.title}</h3>
-                        <p class="text-gray-600 text-sm mt-1">${post.summary}</p>
+                        <h3 class="truncate-2-lines font-bold text-gray-800 group-hover:text-yellow-600">${post.title}</h3>
+                        <p class="truncate-3-lines text-gray-600 text-sm mt-1">${post.summary}</p>
 
-                        <div class="text-xs text-gray-500 mt-2 flex items-center">
+                        <div class=" text-xs text-gray-500 mt-2 flex items-center">
                             <i class="far fa-calendar-alt mr-2"></i>
                             <span>${formatDate(post.date)}</span>
                         </div>
@@ -447,9 +440,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 <a href="${video.link}" class="flex items-center space-x-4 group">
                     <img src="${video.imageUrl}" alt="${video.title}" class="w-24 h-16 rounded-lg object-cover transition-transform duration-300 group-hover:scale-105">
                     <div class="flex-1">
-                        <h3 class="font-bold text-gray-800 group-hover:text-yellow-600">${video.title}</h3>
-                        <p class="text-gray-600 text-sm mt-1">${video.summary}</p>
-
+                        <h3 class="truncate-2-lines font-bold text-gray-800 group-hover:text-yellow-600">${video.title}</h3>
+                        <p class="truncate-3-lines text-gray-600 text-sm mt-1">${video.summary}</p>
+                        
                         <div class="text-xs text-gray-500 mt-2 flex items-center">
                             <i class="far fa-calendar-alt mr-2"></i>
                             <span>${formatDate(video.date)}</span>
