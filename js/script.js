@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     // =================================================================
-    // MỤC LỤC  phiên bản V26.1.6
+    // =========================== MỤC LỤC =============================
+    // ================= PHIÊN BẢN CẬP NHẬT V26.1.18 ===================
     // =================================================================
     // 1. ĐĂNG KÝ SERVICE WORKER (PWA)
     // 2. LẤY CÁC THÀNH PHẦN HTML (ELEMENTS)
@@ -402,8 +403,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 <a href="${post.link}" class="flex items-start space-x-4 group">
                     <img src="${post.imageUrl}" alt="${post.title}" class="w-24 h-16 rounded-lg object-cover transition-transform duration-300 group-hover:scale-105">
                     <div class="flex-1">
-                        <h3 class="truncate-2-lines font-bold text-gray-800 group-hover:text-yellow-600">${post.title}</h3>
-                        <p class="truncate-3-lines text-gray-600 text-sm mt-1">${post.summary}</p>
+                        <h3 class="font-bold text-gray-800 group-hover:text-yellow-600">${post.title}</h3>
+                        <p class="text-gray-600 text-sm mt-1">${post.summary}</p>
 
                         <div class="text-xs text-gray-500 mt-2 flex items-center">
                             <i class="far fa-calendar-alt mr-2"></i>
@@ -589,7 +590,7 @@ fetch('/data/posts.json') // Tải file JSON
     // ============================================================
     const CONFIG = {
         // CHẾ ĐỘ HIỂN THỊ: chọn 'image', 'text', 'mix', hoặc 'off'
-        mode: 'mix', 
+        mode: 'image', 
         
         // CẤU HÌNH RƠI
         count: 20,       // Số lượng hạt
@@ -620,7 +621,7 @@ fetch('/data/posts.json') // Tải file JSON
 
     // --- B. KHO EMOJI (Text) ---
     const TXT_SOURCE = {
-        tet: ['🌸', '🌼'],  //, '🌺', '🏵️', '🧧'
+        tet: ['🌸', '🌼', '🌺', '🏵️', '🧧'],
         noel: ['❄️', '❅', '❆', '🎄']
     };
 
@@ -668,7 +669,7 @@ fetch('/data/posts.json') // Tải file JSON
     // 4. KHỞI TẠO VÀ CHẠY
     // ============================================================
     const resources = getResources();
-    if (!resources) return;
+    if (!resources || window.innerWidth < 480) return;
 
     // Tạo container
     const container = document.createElement('div');
