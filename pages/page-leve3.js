@@ -1,7 +1,7 @@
-// page-logic-custom.js (ĐÃ SỬA LỖI CRASH VÀ LỖI GHI ĐÈ TIÊU ĐỀ)
-// Phiên bản dành cho các trang "trống bài chính" VÀ các trang bài viết chi tiết.
+// page-leve3.js
+// 📌 Dùng cho các trang bài viết chi tiết (để hiện gợi ý) HOẶC các trang trống (để hiện thông báo chưa có bài)
 
-// Hàm này dùng để đổi định dạng ngày sang kiểu "ngày 07 tháng 11 năm 2025"
+// Hàm đổi định dạng ngày: "ngày 07 tháng 11 năm 2025"
 function formatDate(dateString) {
     if (!dateString) return ""; 
     try {
@@ -49,8 +49,11 @@ function initializeFlexiblePage(allContent) {
         desc: el.body.dataset.description || "",
     };
 
-    // === SỬA LỖI GHI ĐÈ TIÊU ĐỀ BÀI VIẾT (FIX v2) ===
-    // Logic này (đặt tiêu đề, mô tả, nội dung trống) 
+    /// ================================================================
+    // PHẦN 1: XỬ LÝ TIÊU ĐỀ & TRANG TRỐNG
+    // ================================================================
+    // Logic: Chỉ thay đổi tiêu đề nếu là trang danh mục (có data-category)
+    // Nếu là trang bài viết chi tiết thì giữ nguyên tiêu đề gốc của bài.
     // CHỈ nên chạy trên CÁC TRANG DANH MỤC (có data-category)
     // hoặc các trang trống đặc biệt (có el.main).
     // Nó KHÔNG được chạy trên trang bài viết chi tiết (vì tiêu đề/mô tả đã do CMS điền).
@@ -79,7 +82,9 @@ function initializeFlexiblePage(allContent) {
     // === KẾT THÚC SỬA LỖI ===
 
 
-    // ============= 2️⃣ HIỂN THỊ BÀI VIẾT GỢI Ý =============
+    // ================================================================
+    // PHẦN 2: MỤC GỢI Ý (Sidebar hoặc Cuối trang)
+    // ================================================================
     // Hàm này bây giờ sẽ luôn luôn chạy được
     function renderSuggestions() {
         
@@ -136,7 +141,7 @@ function initializeFlexiblePage(allContent) {
                 <a href="${link}" 
                     class="block sm:hidden p-2 rounded-lg hover:bg-yellow-100 transition-colors duration-200 group mb-4 text-center">
                     <img src="${img}" alt="${post.title}" class="w-16 h-16 object-cover rounded-md mx-auto mb-2">
-                    <h4 class="truncate-2-lines font-semibold text-gray-800 group-hover:text-yellow-700 truncate-2-lines">${post.title}</h4>
+                    <h4 class="truncate-2-lines font-semibold text-gray-800 group-hover:text-yellow-700 ">${post.title}</h4>
                     <div class="text-xs text-gray-500 mt-1 flex justify-center items-center">
                         <i class="far fa-calendar-alt mr-1"></i><span>${formatDateSimple(post.date)}</span>
                     </div>
@@ -148,7 +153,9 @@ function initializeFlexiblePage(allContent) {
 
     // ============= 3️⃣ FORM THÊM BÀI VIẾT =============
     
-    // === SỬA LỖI 4 ===
+    // ================================================================
+    // PHẦN 3: FORM THÊM BÀI VIẾT THỦ CÔNG (Nếu có nút Toggle)
+    // ================================================================
     // Toàn bộ logic form chỉ chạy NẾU tìm thấy nút 'toggle-add-form'
     const toggleBtn = document.getElementById("toggle-add-form");
     if (toggleBtn) {
@@ -189,10 +196,12 @@ function initializeFlexiblePage(allContent) {
             form.classList.add("hidden");
         });
     }
-    // === KẾT THÚC SỬA LỖI 4 ===
+
 }
 
-// ============= 4️⃣ TẢI DỮ LIỆU TỪ JSON =============
+// ================================================================
+// PHẦN 4: TẢI DỮ LIỆU TỪ JSON
+// ================================================================
 // (Phần này đã đúng, giữ nguyên)
 document.addEventListener('DOMContentLoaded', () => {
     fetch('/data/posts.json')
