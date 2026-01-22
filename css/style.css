@@ -34,25 +34,27 @@ body {
 
 /* Class cắt ở dòng thứ 1 */
 .truncate-1-lines {
-    display: -webkit-box !important; /* <--- THÊM !IMPORTANT VÀO ĐÂY */
+    display: -webkit-box !important;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1; /* Số 1 là số dòng */
+    -webkit-line-clamp: 1;
     line-clamp: 1;
     overflow: hidden;
 }
-/* Class cắt ở dòng thứ 3 */
+
+/* Class cắt ở dòng thứ 2 (SỬA CHÚ THÍCH NÀY) */
 .truncate-2-lines {
-    display: -webkit-box !important; /* <--- THÊM !IMPORTANT VÀO ĐÂY */
+    display: -webkit-box !important;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2; /* Cắt ở dòng thứ 2 */
-    line-clamp: 2;         /* Phải sửa số này thành 2 cho giống bên trên */
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
     overflow: hidden;
 }
+
 /* Class cắt ở dòng thứ 3 */
 .truncate-3-lines {
-    display: -webkit-box !important; /* <--- THÊM !IMPORTANT VÀO ĐÂY */
+    display: -webkit-box !important;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3; /* Số 3 là số dòng */
+    -webkit-line-clamp: 3;
     line-clamp: 3;
     overflow: hidden;
 }
@@ -103,6 +105,7 @@ body {
 .rainbow-text {
     background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     background-size: 200% auto;
     animation: rainbow 3s linear infinite;
