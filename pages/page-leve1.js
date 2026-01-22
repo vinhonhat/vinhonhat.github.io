@@ -80,10 +80,10 @@ function renderPostsForCategory(category, containerId, allContent, maxPosts = 2)
                     <img src="${imageUrl}" alt="${post.title}" class="w-full h-48 object-cover">
                 </a>
                 <div class="p-6 flex flex-col flex-grow">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">
+                    <h3 class="truncate-2-lines text-xl font-bold text-gray-800 mb-2">
                         <a href="${postLink}" class="hover:text-yellow-600">${post.title}</a>
                     </h3>
-                    <p class="text-gray-600 text-sm flex-grow">${summary}</p>
+                    <p class="truncate-2-lines text-gray-600 text-sm flex-grow">${summary}</p>
                     <div class="mt-4 flex items-center text-gray-500 text-sm">
                         <i class="far fa-calendar-alt mr-2"></i>
                         <span>${postDate}</span>
