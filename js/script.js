@@ -578,57 +578,54 @@ fetch('/data/posts.json') // Tải file JSON
     document.addEventListener('DOMContentLoaded', startTitleAnimation);
 
     /* =================================================================
-   HIỆU ỨNG MÙA LỄ HỘI TỰ ĐỘNG (NOEL & TẾT)
-   - Tận dụng hàm getLunarDate có sẵn.
-   - Lịch trình:
-     + Noel: 22/12 - 28/12 Dương lịch (Tuyết rơi).
-     + Tết: 01/12 Âm - 30/01 Âm (Hoa Đào & Mai rơi).
+   HIỆU ỨNG MÙA LỄ HỘI TỰ ĐỘNG V7 (PHIÊN BẢN EMOJI SIÊU NHẸ)
+   - Sử dụng trực tiếp Emoji (🌸, 🌼, ❄️) làm hạt rơi.
+   - Không cần ảnh, không lo lỗi link, cực nhẹ.
+   - Vẫn giữ lịch trình tự động Noel & Tết.
 ================================================================= */
 (function() {
-    // 1. CẤU HÌNH CHUNG
+    // 1. CẤU HÌNH CHUNG (BẢNG ĐIỀU KHIỂN)
     const CONFIG = {
-        count: 20,       // Số lượng hạt (20 là vừa đẹp)
-        minSize: 12,     // Kích thước nhỏ nhất
-        maxSize: 22,     // Kích thước lớn nhất
-        minSpeed: 10,    // Tốc độ nhanh nhất (10s)
-        maxSpeed: 18     // Tốc độ chậm nhất (18s)
+        count: 25,       // Số lượng hạt (Tăng lên 25 cho dày hơn chút vì emoji nhỏ gọn)
+        minSize: 16,     // Kích thước font chữ nhỏ nhất (px)
+        maxSize: 28,     // Kích thước font chữ lớn nhất (px)
+        minSpeed: 10,    // Rơi nhanh nhất (10s)
+        maxSpeed: 20     // Rơi chậm nhất (20s) - cho bay lơ lửng
     };
 
-    // 2. KHO ẢNH (SVG Base64 sắc nét)
-    const daoSrc = "data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg transform='translate(50,50)'%3E%3Cg%3E%3Cpath fill='%23FFB7C5' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10'/%3E%3Cpath fill='%23FFB7C5' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10' transform='rotate(72)'/%3E%3Cpath fill='%23FFB7C5' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10' transform='rotate(144)'/%3E%3Cpath fill='%23FFB7C5' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10' transform='rotate(216)'/%3E%3Cpath fill='%23FFB7C5' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10' transform='rotate(288)'/%3E%3C/g%3E%3Ccircle r='8' fill='%23FFD700'/%3E%3C/g%3E%3C/svg%3E";
-    const maiSrc = "data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg transform='translate(50,50)'%3E%3Cg%3E%3Cpath fill='%23FFD700' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10'/%3E%3Cpath fill='%23FFD700' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10' transform='rotate(72)'/%3E%3Cpath fill='%23FFD700' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10' transform='rotate(144)'/%3E%3Cpath fill='%23FFD700' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10' transform='rotate(216)'/%3E%3Cpath fill='%23FFD700' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10' transform='rotate(288)'/%3E%3C/g%3E%3Ccircle r='8' fill='%23FF4500'/%3E%3C/g%3E%3C/svg%3E";
-    const tuyetSrc = "data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23E0F7FA' stroke-width='8' stroke-linecap='round'%3E%3Cpath d='M50 10 V90 M10 50 H90 M22 22 L78 78 M78 22 L22 78'/%3E%3C/g%3E%3C/svg%3E";
+    // 2. KHO EMOJI (Thêm bớt tùy thích)
+    // Bộ hoa cho ngày Tết (🌸 Anh đào, 🌼 Cúc vàng, 🌺 Dâm bụt, 🏵️ Mẫu đơn)
+    const flowerEmojis = ['🌸', '🌼', '🌺', '🏵️']; 
+    // Bộ tuyết cho Noel
+    const snowEmojis = ['❄️', '❅', '❆'];
 
     // 3. LOGIC KIỂM TRA NGÀY (DÙNG HÀM CÓ SẴN)
-    function getEventImages() {
+    function getEventEmojis() {
         const now = new Date();
         const d = now.getDate();
-        const m = now.getMonth() + 1; // Tháng dương (1-12)
+        const m = now.getMonth() + 1;
         const y = now.getFullYear();
 
         // --- CHECK NOEL (22/12 - 28/12 Dương) ---
         if (m === 12 && d >= 22 && d <= 28) {
-            console.log("❄️ Đang là mùa Noel: Tuyết rơi");
-            return [tuyetSrc];
+            console.log("❄️ Mùa Noel: Tuyết rơi");
+            return snowEmojis;
         }
 
         // --- CHECK TẾT (Tháng 12 Âm & Tháng 1 Âm) ---
-        // Tận dụng hàm getLunarDate đã có trong script.js (từ thư viện lunar-calendar.js)
         if (typeof getLunarDate === 'function') {
             const lunar = getLunarDate(d, m, y);
-            // Nếu là tháng Chạp (12) hoặc tháng Giêng (1)
             if (lunar.month === 12 || lunar.month === 1) {
-                console.log(`🌸 Đang là mùa Tết (Tháng ${lunar.month} Âm): Hoa rơi`);
-                return [daoSrc, maiSrc];
+                console.log(`🌸 Mùa Tết (Tháng ${lunar.month} Âm): Hoa rơi`);
+                return flowerEmojis;
             }
         }
-
-        return null; // Không phải dịp lễ -> Không rơi
+        return null; // Không phải dịp lễ -> Tắt
     }
 
     // 4. KHỞI TẠO HIỆU ỨNG
-    const images = getEventImages();
-    if (!images || window.innerWidth < 480) return; // Nếu ko có ảnh hoặc màn hình nhỏ -> Thoát
+    const currentEmojis = getEventEmojis();
+    if (!currentEmojis || window.innerWidth < 480) return;
 
     // Tạo Container
     const container = document.createElement('div');
@@ -638,13 +635,17 @@ fetch('/data/posts.json') // Tải file JSON
     });
     document.body.appendChild(container);
 
-    // Lớp Hạt (Hoa/Tuyết)
+    // Lớp Hạt (Dùng thẻ DIV chứa Text Emoji)
     class Particle {
         constructor() {
-            this.el = document.createElement('img');
-            this.el.src = images[Math.floor(Math.random() * images.length)];
+            this.el = document.createElement('div');
+            // Chọn emoji ngẫu nhiên
+            this.el.textContent = currentEmojis[Math.floor(Math.random() * currentEmojis.length)];
             this.el.style.position = 'absolute';
-            this.el.style.filter = 'drop-shadow(1px 2px 2px rgba(0,0,0,0.15))';
+            this.el.style.userSelect = 'none';
+            this.el.style.textAlign = 'center';
+            // Thêm bóng chữ nhẹ cho nổi bật
+            this.el.style.textShadow = '1px 2px 3px rgba(0,0,0,0.2)';
             container.appendChild(this.el);
             this.reset(true);
         }
@@ -653,10 +654,16 @@ fetch('/data/posts.json') // Tải file JSON
             const w = window.innerWidth;
             const h = window.innerHeight;
             
+            // Kích thước (Dùng font-size cho emoji)
             this.size = Math.random() * (CONFIG.maxSize - CONFIG.minSize) + CONFIG.minSize;
+            this.el.style.fontSize = this.size + 'px';
+            // Đặt width/height bằng font-size để xoay tâm chuẩn
             this.el.style.width = this.size + 'px';
+            this.el.style.height = this.size + 'px';
+            this.el.style.lineHeight = this.size + 'px';
+
             this.x = Math.random() * w; 
-            this.y = isInitial ? Math.random() * h : -this.size; // Lần đầu rải đều
+            this.y = isInitial ? Math.random() * h : -this.size;
             
             const duration = Math.random() * (CONFIG.maxSpeed - CONFIG.minSpeed) + CONFIG.minSpeed;
             this.speed = h / (duration * 60);
@@ -664,15 +671,18 @@ fetch('/data/posts.json') // Tải file JSON
             this.sway = Math.random() * 100; 
             this.swayStep = Math.random() * 0.02 + 0.01; 
             this.rotation = Math.random() * 360; 
-            this.rotationSpeed = (Math.random() - 0.5) * 1; 
-            this.el.style.opacity = Math.random() * 0.4 + 0.6;
+            this.rotationSpeed = (Math.random() - 0.5) * 1.5; // Xoay nhanh hơn xíu cho sinh động
+            
+            // Emoji thì không cần trong suốt quá, để rõ nét
+            this.el.style.opacity = Math.random() * 0.3 + 0.7; 
         }
 
         update() {
             this.y += this.speed;
             this.sway += this.swayStep;
             this.rotation += this.rotationSpeed;
-            this.el.style.transform = `translate3d(${this.x + Math.sin(this.sway)*20}px, ${this.y}px, 0) rotate(${this.rotation}deg)`;
+            // Lắc lư mạnh hơn chút (30px)
+            this.el.style.transform = `translate3d(${this.x + Math.sin(this.sway)*30}px, ${this.y}px, 0) rotate(${this.rotation}deg)`;
             if (this.y > window.innerHeight) this.reset(false);
         }
     }
