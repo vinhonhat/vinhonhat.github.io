@@ -31,6 +31,15 @@ body {
     transition: transform 0.2s ease-in-out;
     color: #F6AD55;
 }
+
+/* Class cắt ở dòng thứ 1 */
+.truncate-1-lines {
+    display: -webkit-box !important; /* <--- THÊM !IMPORTANT VÀO ĐÂY */
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1; /* Số 1 là số dòng */
+    line-clamp: 1;
+    overflow: hidden;
+}
 /* Class cắt ở dòng thứ 3 */
 .truncate-2-lines {
     display: -webkit-box !important; /* <--- THÊM !IMPORTANT VÀO ĐÂY */

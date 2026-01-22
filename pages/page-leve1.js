@@ -32,6 +32,10 @@ function formatDateSimple(dateString) {
         return dateString;
     }
 }
+// ================================================================
+// PHẦN 1: MỤC CHÍNH (Hiển thị 2 bài mới nhất của từng mục)
+// ================================================================
+
 function renderPostsForCategory(category, containerId, allContent, maxPosts = 2) {
     const container = document.getElementById(containerId);
     if (!container || typeof allContent === 'undefined') return;
@@ -96,7 +100,7 @@ function renderPostsForCategory(category, containerId, allContent, maxPosts = 2)
                 <img src="${imageUrl}" alt="${post.title}" class="w-24 h-24 rounded-lg object-cover flex-shrink-0">
                 <div class="flex-1">
                     <h3 class="truncate-2-lines font-bold text-lg text-gray-800 group-hover:text-yellow-600">${post.title}</h3>
-                    <p class="text-gray-600 text-sm mt-1 truncate-2-lines">${summary}</p>
+                    <p class="truncate-2-lines text-gray-600 text-sm mt-1 ">${summary}</p>
                     <div class="text-xs text-gray-500 mt-2 flex items-center">
                         <i class="far fa-calendar-alt mr-2"></i>
                         <span>${postDate}</span>
@@ -106,6 +110,10 @@ function renderPostsForCategory(category, containerId, allContent, maxPosts = 2)
         `;
     }).join('');
 }
+
+// ================================================================
+// PHẦN 2: MỤC GỢI Ý (Sidebar bên phải)
+// ================================================================
 
 function renderSuggestions(containerId, allContent) {
     const container = document.getElementById(containerId);
@@ -162,7 +170,7 @@ function renderSuggestions(containerId, allContent) {
                 class="block sm:hidden p-2 rounded-lg hover:bg-yellow-100 transition-colors duration-200 group mb-4 text-center">
                 <img src="${imageUrl}" alt="${post.title}" 
                     class="w-16 h-16 object-cover rounded-md mx-auto mb-2">
-                <h4 class="truncate-2-lines font-semibold text-gray-800 group-hover:text-yellow-700 truncate-2-lines">${post.title}</h4>
+                <h4 class="truncate-2-lines font-semibold text-gray-800 group-hover:text-yellow-700">${post.title}</h4>
                 <div class="text-xs text-gray-500 mt-1 flex justify-center items-center">
                     <i class="far fa-calendar-alt mr-1"></i>
                     <span>${formatDateSimple(post.date)}</span>
