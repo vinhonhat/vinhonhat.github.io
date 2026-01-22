@@ -595,7 +595,7 @@ fetch('/data/posts.json') // Tải file JSON
 
     // 2. KHO EMOJI (Thêm bớt tùy thích)
     // Bộ hoa cho ngày Tết (🌸 Anh đào, 🌼 Cúc vàng, 🌺 Dâm bụt, 🏵️ Mẫu đơn)
-    const flowerEmojis = ['🌸', '🌼', '🌺', '🏵️']; 
+    const flowerEmojis = ['🌸',  '🏵️']; 
     // Bộ tuyết cho Noel
     const snowEmojis = ['❄️', '❅', '❆'];
 
