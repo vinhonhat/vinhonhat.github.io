@@ -278,7 +278,13 @@
         
     <div class="max-w-4xl mx-auto pt-12 pb-0 px-4">
         
-        <h2 class="text-2xl font-bold text-gray-800 text-center">KIỂM TRA MÁY TÍNH CƠ BẢN
+        <h2 class="text-2xl font-bold text-gray-800 text-center flex justify-center items-center gap-3">
+            KIỂM TRA MÁY TÍNH CƠ BẢN
+            <button onclick="window.location.reload(true)" 
+                    title="Làm mới trang (Xóa cache lỗi)"
+                    class="bg-gray-200 hover:bg-yellow-500 hover:text-white text-gray-600 rounded-full w-10 h-10 flex items-center justify-center text-base transition-all duration-300 shadow-sm focus:outline-none">
+                <i class="fas fa-sync-alt"></i>
+            </button>
         </h2>
     
         <div id="screen-tester"tabindex="0">
@@ -949,9 +955,12 @@
 })();
 
 </script>
-
+<script src="/js/lunar-calendar.js"></script>
 <script src="/js/script.js"></script>
 <script src="/js/content.js"></script>
 <script src="/pages/page-logic.js"></script>
+
+<!-- ================= KET THUC ================= -->
 </body>
 </html>
+

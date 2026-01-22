@@ -577,4 +577,114 @@ fetch('/data/posts.json') // Tải file JSON
     // (Chúng ta thêm vào 'DOMContentLoaded' để đảm bảo nó không chạy quá sớm)
     document.addEventListener('DOMContentLoaded', startTitleAnimation);
 
+    /* =================================================================
+   HIỆU ỨNG MÙA LỄ HỘI TỰ ĐỘNG (NOEL & TẾT)
+   - Tận dụng hàm getLunarDate có sẵn.
+   - Lịch trình:
+     + Noel: 22/12 - 28/12 Dương lịch (Tuyết rơi).
+     + Tết: 01/12 Âm - 30/01 Âm (Hoa Đào & Mai rơi).
+================================================================= */
+(function() {
+    // 1. CẤU HÌNH CHUNG
+    const CONFIG = {
+        count: 20,       // Số lượng hạt (20 là vừa đẹp)
+        minSize: 12,     // Kích thước nhỏ nhất
+        maxSize: 22,     // Kích thước lớn nhất
+        minSpeed: 10,    // Tốc độ nhanh nhất (10s)
+        maxSpeed: 18     // Tốc độ chậm nhất (18s)
+    };
+
+    // 2. KHO ẢNH (SVG Base64 sắc nét)
+    const daoSrc = "data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg transform='translate(50,50)'%3E%3Cg%3E%3Cpath fill='%23FFB7C5' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10'/%3E%3Cpath fill='%23FFB7C5' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10' transform='rotate(72)'/%3E%3Cpath fill='%23FFB7C5' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10' transform='rotate(144)'/%3E%3Cpath fill='%23FFB7C5' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10' transform='rotate(216)'/%3E%3Cpath fill='%23FFB7C5' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10' transform='rotate(288)'/%3E%3C/g%3E%3Ccircle r='8' fill='%23FFD700'/%3E%3C/g%3E%3C/svg%3E";
+    const maiSrc = "data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg transform='translate(50,50)'%3E%3Cg%3E%3Cpath fill='%23FFD700' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10'/%3E%3Cpath fill='%23FFD700' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10' transform='rotate(72)'/%3E%3Cpath fill='%23FFD700' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10' transform='rotate(144)'/%3E%3Cpath fill='%23FFD700' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10' transform='rotate(216)'/%3E%3Cpath fill='%23FFD700' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10' transform='rotate(288)'/%3E%3C/g%3E%3Ccircle r='8' fill='%23FF4500'/%3E%3C/g%3E%3C/svg%3E";
+    const tuyetSrc = "data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23E0F7FA' stroke-width='8' stroke-linecap='round'%3E%3Cpath d='M50 10 V90 M10 50 H90 M22 22 L78 78 M78 22 L22 78'/%3E%3C/g%3E%3C/svg%3E";
+
+    // 3. LOGIC KIỂM TRA NGÀY (DÙNG HÀM CÓ SẴN)
+    function getEventImages() {
+        const now = new Date();
+        const d = now.getDate();
+        const m = now.getMonth() + 1; // Tháng dương (1-12)
+        const y = now.getFullYear();
+
+        // --- CHECK NOEL (22/12 - 28/12 Dương) ---
+        if (m === 12 && d >= 22 && d <= 28) {
+            console.log("❄️ Đang là mùa Noel: Tuyết rơi");
+            return [tuyetSrc];
+        }
+
+        // --- CHECK TẾT (Tháng 12 Âm & Tháng 1 Âm) ---
+        // Tận dụng hàm getLunarDate đã có trong script.js (từ thư viện lunar-calendar.js)
+        if (typeof getLunarDate === 'function') {
+            const lunar = getLunarDate(d, m, y);
+            // Nếu là tháng Chạp (12) hoặc tháng Giêng (1)
+            if (lunar.month === 12 || lunar.month === 1) {
+                console.log(`🌸 Đang là mùa Tết (Tháng ${lunar.month} Âm): Hoa rơi`);
+                return [daoSrc, maiSrc];
+            }
+        }
+
+        return null; // Không phải dịp lễ -> Không rơi
+    }
+
+    // 4. KHỞI TẠO HIỆU ỨNG
+    const images = getEventImages();
+    if (!images || window.innerWidth < 480) return; // Nếu ko có ảnh hoặc màn hình nhỏ -> Thoát
+
+    // Tạo Container
+    const container = document.createElement('div');
+    Object.assign(container.style, {
+        position: 'fixed', top: '0', left: '0', width: '100%', height: '100%',
+        pointerEvents: 'none', zIndex: '99999', overflow: 'hidden'
+    });
+    document.body.appendChild(container);
+
+    // Lớp Hạt (Hoa/Tuyết)
+    class Particle {
+        constructor() {
+            this.el = document.createElement('img');
+            this.el.src = images[Math.floor(Math.random() * images.length)];
+            this.el.style.position = 'absolute';
+            this.el.style.filter = 'drop-shadow(1px 2px 2px rgba(0,0,0,0.15))';
+            container.appendChild(this.el);
+            this.reset(true);
+        }
+
+        reset(isInitial = false) {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            
+            this.size = Math.random() * (CONFIG.maxSize - CONFIG.minSize) + CONFIG.minSize;
+            this.el.style.width = this.size + 'px';
+            this.x = Math.random() * w; 
+            this.y = isInitial ? Math.random() * h : -this.size; // Lần đầu rải đều
+            
+            const duration = Math.random() * (CONFIG.maxSpeed - CONFIG.minSpeed) + CONFIG.minSpeed;
+            this.speed = h / (duration * 60);
+            
+            this.sway = Math.random() * 100; 
+            this.swayStep = Math.random() * 0.02 + 0.01; 
+            this.rotation = Math.random() * 360; 
+            this.rotationSpeed = (Math.random() - 0.5) * 1; 
+            this.el.style.opacity = Math.random() * 0.4 + 0.6;
+        }
+
+        update() {
+            this.y += this.speed;
+            this.sway += this.swayStep;
+            this.rotation += this.rotationSpeed;
+            this.el.style.transform = `translate3d(${this.x + Math.sin(this.sway)*20}px, ${this.y}px, 0) rotate(${this.rotation}deg)`;
+            if (this.y > window.innerHeight) this.reset(false);
+        }
+    }
+
+    // Chạy vòng lặp
+    const particles = [];
+    for(let i=0; i<CONFIG.count; i++) particles.push(new Particle());
+    function animate() {
+        particles.forEach(p => p.update());
+        requestAnimationFrame(animate);
+    }
+    animate();
+})();
+
 }); // <-- Dòng này là dòng cuối cùng của file
