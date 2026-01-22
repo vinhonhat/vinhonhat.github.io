@@ -578,56 +578,99 @@ fetch('/data/posts.json') // Tải file JSON
     document.addEventListener('DOMContentLoaded', startTitleAnimation);
 
     /* =================================================================
-   HIỆU ỨNG MÙA LỄ HỘI TỰ ĐỘNG V7 (PHIÊN BẢN EMOJI SIÊU NHẸ)
-   - Sử dụng trực tiếp Emoji (🌸, 🌼, ❄️) làm hạt rơi.
-   - Không cần ảnh, không lo lỗi link, cực nhẹ.
-   - Vẫn giữ lịch trình tự động Noel & Tết.
+   HIỆU ỨNG MÙA LỄ HỘI ĐA NĂNG V8 (ALL-IN-ONE)
+   - Tích hợp cả Ảnh SVG (sắc nét) và Emoji (nhẹ).
+   - Chế độ 'mix': Rơi trộn lẫn cả ảnh và emoji.
+   - Tự động theo lịch (Noel/Tết) + Tùy chỉnh chế độ dễ dàng.
 ================================================================= */
 (function() {
-    // 1. CẤU HÌNH CHUNG (BẢNG ĐIỀU KHIỂN)
+    // ============================================================
+    // 1. TRUNG TÂM ĐIỀU KHIỂN (SỬA Ở ĐÂY)
+    // ============================================================
     const CONFIG = {
-        count: 25,       // Số lượng hạt (Tăng lên 25 cho dày hơn chút vì emoji nhỏ gọn)
-        minSize: 16,     // Kích thước font chữ nhỏ nhất (px)
-        maxSize: 28,     // Kích thước font chữ lớn nhất (px)
-        minSpeed: 10,    // Rơi nhanh nhất (10s)
-        maxSpeed: 20     // Rơi chậm nhất (20s) - cho bay lơ lửng
+        // CHẾ ĐỘ HIỂN THỊ: chọn 'image', 'text', 'mix', hoặc 'off'
+        mode: 'image', 
+        
+        // CẤU HÌNH RƠI
+        count: 20,       // Số lượng hạt
+        minSpeed: 10,    // Tốc độ nhanh nhất (giây)
+        maxSpeed: 18,    // Tốc độ chậm nhất (giây)
+        
+        // KÍCH THƯỚC (Pixel)
+        sizeImage: { min: 10, max: 20 }, // Kích thước cho Ảnh
+        sizeText:  { min: 16, max: 28 }  // Kích thước cho Emoji
     };
 
-    // 2. KHO EMOJI (Thêm bớt tùy thích)
-    // Bộ hoa cho ngày Tết (🌸 Anh đào, 🌼 Cúc vàng, 🌺 Dâm bụt, 🏵️ Mẫu đơn)
-    const flowerEmojis = ['🌸',  '🏵️']; 
-    // Bộ tuyết cho Noel
-    const snowEmojis = ['❄️', '❅', '❆'];
+    // ============================================================
+    // 2. KHO TÀI NGUYÊN
+    // ============================================================
+    // --- A. KHO ẢNH SVG (Base64) ---
+    const IMG_SOURCE = {
+        tet: [
+            // Hoa Đào (Hồng đậm)
+            "data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg transform='translate(50,50)'%3E%3Cg%3E%3Cpath fill='%23FF69B4' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10'/%3E%3Cpath fill='%23FF69B4' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10' transform='rotate(72)'/%3E%3Cpath fill='%23FF69B4' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10' transform='rotate(144)'/%3E%3Cpath fill='%23FF69B4' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10' transform='rotate(216)'/%3E%3Cpath fill='%23FF69B4' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10' transform='rotate(288)'/%3E%3C/g%3E%3Ccircle r='8' fill='%23FFD700'/%3E%3C/g%3E%3C/svg%3E",
+            // Hoa Mai (Vàng cam)
+            "data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg transform='translate(50,50)'%3E%3Cg%3E%3Cpath fill='%23FFA500' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10'/%3E%3Cpath fill='%23FFA500' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10' transform='rotate(72)'/%3E%3Cpath fill='%23FFA500' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10' transform='rotate(144)'/%3E%3Cpath fill='%23FFA500' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10' transform='rotate(216)'/%3E%3Cpath fill='%23FFA500' d='M0,-10 C-10,-25 -10,-45 0,-45 C10,-45 10,-25 0,-10' transform='rotate(288)'/%3E%3C/g%3E%3Ccircle r='8' fill='%23FF4500'/%3E%3C/g%3E%3C/svg%3E"
+        ],
+        noel: [
+            // Bông Tuyết
+            "data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23E0F7FA' stroke-width='8' stroke-linecap='round'%3E%3Cpath d='M50 10 V90 M10 50 H90 M22 22 L78 78 M78 22 L22 78'/%3E%3C/g%3E%3C/svg%3E"
+        ]
+    };
 
-    // 3. LOGIC KIỂM TRA NGÀY (DÙNG HÀM CÓ SẴN)
-    function getEventEmojis() {
+    // --- B. KHO EMOJI (Text) ---
+    const TXT_SOURCE = {
+        tet: ['🌸', '🌼', '🌺', '🏵️', '🧧'],
+        noel: ['❄️', '❅', '❆', '🎄']
+    };
+
+    // ============================================================
+    // 3. LOGIC XỬ LÝ (TỰ ĐỘNG CHỌN NGUỒN)
+    // ============================================================
+    function getResources() {
+        if (CONFIG.mode === 'off') return null;
+
         const now = new Date();
         const d = now.getDate();
         const m = now.getMonth() + 1;
         const y = now.getFullYear();
+        
+        let season = null; // 'tet' hoặc 'noel'
 
-        // --- CHECK NOEL (22/12 - 28/12 Dương) ---
-        if (m === 12 && d >= 22 && d <= 28) {
-            console.log("❄️ Mùa Noel: Tuyết rơi");
-            return snowEmojis;
-        }
-
-        // --- CHECK TẾT (Tháng 12 Âm & Tháng 1 Âm) ---
-        if (typeof getLunarDate === 'function') {
+        // Check Noel (22/12 - 28/12 Dương)
+        if (m === 12 && d >= 22 && d <= 28) season = 'noel';
+        
+        // Check Tết (Ưu tiên Lịch Âm)
+        if (!season && typeof getLunarDate === 'function') {
             const lunar = getLunarDate(d, m, y);
-            if (lunar.month === 12 || lunar.month === 1) {
-                console.log(`🌸 Mùa Tết (Tháng ${lunar.month} Âm): Hoa rơi`);
-                return flowerEmojis;
-            }
+            if (lunar.month === 12 || lunar.month === 1) season = 'tet';
         }
-        return null; // Không phải dịp lễ -> Tắt
+        // Check Tết (Dự phòng Lịch Dương nếu trang con lỗi)
+        if (!season && (m === 1 || m === 2)) season = 'tet';
+
+        if (!season) return null; // Không phải mùa lễ
+
+        // Lấy dữ liệu dựa trên Mode
+        let items = [];
+        // Nếu mode là image hoặc mix -> Lấy ảnh
+        if (CONFIG.mode === 'image' || CONFIG.mode === 'mix') {
+            IMG_SOURCE[season].forEach(src => items.push({ type: 'img', val: src }));
+        }
+        // Nếu mode là text hoặc mix -> Lấy emoji
+        if (CONFIG.mode === 'text' || CONFIG.mode === 'mix') {
+            TXT_SOURCE[season].forEach(txt => items.push({ type: 'txt', val: txt }));
+        }
+
+        return items.length > 0 ? items : null;
     }
 
-    // 4. KHỞI TẠO HIỆU ỨNG
-    const currentEmojis = getEventEmojis();
-    if (!currentEmojis || window.innerWidth < 480) return;
+    // ============================================================
+    // 4. KHỞI TẠO VÀ CHẠY
+    // ============================================================
+    const resources = getResources();
+    if (!resources || window.innerWidth < 480) return;
 
-    // Tạo Container
+    // Tạo container
     const container = document.createElement('div');
     Object.assign(container.style, {
         position: 'fixed', top: '0', left: '0', width: '100%', height: '100%',
@@ -635,17 +678,26 @@ fetch('/data/posts.json') // Tải file JSON
     });
     document.body.appendChild(container);
 
-    // Lớp Hạt (Dùng thẻ DIV chứa Text Emoji)
     class Particle {
         constructor() {
-            this.el = document.createElement('div');
-            // Chọn emoji ngẫu nhiên
-            this.el.textContent = currentEmojis[Math.floor(Math.random() * currentEmojis.length)];
+            // Chọn ngẫu nhiên 1 tài nguyên (có thể là ảnh hoặc text)
+            const item = resources[Math.floor(Math.random() * resources.length)];
+            
+            if (item.type === 'img') {
+                this.el = document.createElement('img');
+                this.el.src = item.val;
+                this.isText = false;
+                this.el.style.filter = 'drop-shadow(2px 3px 2px rgba(0,0,0,0.2))'; // Bóng ảnh
+            } else {
+                this.el = document.createElement('div');
+                this.el.textContent = item.val;
+                this.isText = true;
+                this.el.style.textAlign = 'center';
+                this.el.style.textShadow = '1px 2px 3px rgba(0,0,0,0.2)'; // Bóng chữ
+            }
+
             this.el.style.position = 'absolute';
             this.el.style.userSelect = 'none';
-            this.el.style.textAlign = 'center';
-            // Thêm bóng chữ nhẹ cho nổi bật
-            this.el.style.textShadow = '1px 2px 3px rgba(0,0,0,0.2)';
             container.appendChild(this.el);
             this.reset(true);
         }
@@ -653,41 +705,44 @@ fetch('/data/posts.json') // Tải file JSON
         reset(isInitial = false) {
             const w = window.innerWidth;
             const h = window.innerHeight;
-            
-            // Kích thước (Dùng font-size cho emoji)
-            this.size = Math.random() * (CONFIG.maxSize - CONFIG.minSize) + CONFIG.minSize;
-            this.el.style.fontSize = this.size + 'px';
-            // Đặt width/height bằng font-size để xoay tâm chuẩn
-            this.el.style.width = this.size + 'px';
-            this.el.style.height = this.size + 'px';
-            this.el.style.lineHeight = this.size + 'px';
 
-            this.x = Math.random() * w; 
-            this.y = isInitial ? Math.random() * h : -this.size;
-            
+            // Xử lý kích thước tùy loại
+            let size;
+            if (this.isText) {
+                size = Math.random() * (CONFIG.sizeText.max - CONFIG.sizeText.min) + CONFIG.sizeText.min;
+                this.el.style.fontSize = size + 'px';
+                this.el.style.lineHeight = size + 'px'; // Căn giữa dòng cho emoji
+            } else {
+                size = Math.random() * (CONFIG.sizeImage.max - CONFIG.sizeImage.min) + CONFIG.sizeImage.min;
+            }
+            this.el.style.width = size + 'px';
+            this.el.style.height = size + 'px';
+
+            this.x = Math.random() * w;
+            this.y = isInitial ? Math.random() * h : -size;
+
             const duration = Math.random() * (CONFIG.maxSpeed - CONFIG.minSpeed) + CONFIG.minSpeed;
             this.speed = h / (duration * 60);
+
+            this.sway = Math.random() * 100;
+            this.swayStep = Math.random() * 0.02 + 0.01;
+            this.rotation = Math.random() * 360;
+            this.rotationSpeed = (Math.random() - 0.5) * (this.isText ? 1.5 : 1); // Emoji xoay nhanh hơn xíu
             
-            this.sway = Math.random() * 100; 
-            this.swayStep = Math.random() * 0.02 + 0.01; 
-            this.rotation = Math.random() * 360; 
-            this.rotationSpeed = (Math.random() - 0.5) * 1.5; // Xoay nhanh hơn xíu cho sinh động
-            
-            // Emoji thì không cần trong suốt quá, để rõ nét
-            this.el.style.opacity = Math.random() * 0.3 + 0.7; 
+            this.el.style.opacity = Math.random() * 0.4 + 0.6;
         }
 
         update() {
             this.y += this.speed;
             this.sway += this.swayStep;
             this.rotation += this.rotationSpeed;
-            // Lắc lư mạnh hơn chút (30px)
-            this.el.style.transform = `translate3d(${this.x + Math.sin(this.sway)*30}px, ${this.y}px, 0) rotate(${this.rotation}deg)`;
+            const swayOffset = Math.sin(this.sway) * (this.isText ? 30 : 20); // Emoji lắc mạnh hơn xíu
+            this.el.style.transform = `translate3d(${this.x + swayOffset}px, ${this.y}px, 0) rotate(${this.rotation}deg)`;
+
             if (this.y > window.innerHeight) this.reset(false);
         }
     }
 
-    // Chạy vòng lặp
     const particles = [];
     for(let i=0; i<CONFIG.count; i++) particles.push(new Particle());
     function animate() {
