@@ -111,10 +111,10 @@ function initializePage(allContent) {
                         <img src="${imageUrl}" alt="${post.title}" class="w-full h-48 object-cover">
                     </a>
                     <div class="p-6 flex flex-col flex-grow">
-                        <h3 class="text-xl font-bold text-gray-800 mb-2">
+                        <h3 class="truncate-2-lines text-xl font-bold text-gray-800 mb-2">
                             <a href="${post.link || '#'}" class="hover:text-yellow-600">${post.title}</a>
                         </h3>
-                        <p class="text-gray-600 text-sm flex-grow">${summary}</p>
+                        <p class="truncate-3-lines text-gray-600 text-sm flex-grow">${summary}</p>
                         <div class="mt-4 flex items-center text-gray-500 text-sm">
                             <i class="far fa-calendar-alt mr-2"></i>
                             <span>${postDate}</span>
@@ -129,7 +129,7 @@ function initializePage(allContent) {
                 <a href="${post.link || '#'}" class="block sm:hidden flex items-start space-x-4 p-4 bg-white rounded-lg shadow-md transition-shadow duration-300 hover:shadow-lg">
                     <img src="${imageUrl}" alt="${post.title}" class="w-24 h-24 rounded-lg object-cover flex-shrink-0">
                     <div class="flex-1">
-                        <h3 class="font-bold text-lg text-gray-800 group-hover:text-yellow-600">${post.title}</h3>
+                        <h3 class="truncate-2-lines font-bold text-lg text-gray-800 group-hover:text-yellow-600">${post.title}</h3>
                         <p class="text-gray-600 text-sm mt-1 truncate-2-lines">${summary}</p>
                         <div class="text-xs text-gray-500 mt-2 flex items-center">
                             <i class="far fa-calendar-alt mr-2"></i>
@@ -208,7 +208,7 @@ function initializePage(allContent) {
                 <img src="${imageUrl}" alt="${post.title}" 
                     class="w-16 h-16 object-cover rounded-md flex-shrink-0">
                 <div class="ml-4">
-                    <h4 class="font-semibold text-gray-800 group-hover:text-yellow-700">${post.title}</h4>
+                    <h4 class="truncate-2-lines font-semibold text-gray-800 group-hover:text-yellow-700">${post.title}</h4>
                     <div class="text-xs text-gray-500 mt-1 flex items-center">
                         <i class="far fa-calendar-alt mr-1"></i>
                         <span>${formatDateSimple(post.date)}</span>
@@ -221,7 +221,7 @@ function initializePage(allContent) {
                 class="block sm:hidden p-2 rounded-lg hover:bg-yellow-100 transition-colors duration-200 group mb-4 text-center">
                 <img src="${imageUrl}" alt="${post.title}" 
                     class="w-16 h-16 object-cover rounded-md mx-auto mb-2">
-                <h4 class="font-semibold text-gray-800 group-hover:text-yellow-700 truncate-2-lines">${post.title}</h4>
+                <h4 class="truncate-2-lines font-semibold text-gray-800 group-hover:text-yellow-700 truncate-2-lines">${post.title}</h4>
                 <div class="text-xs text-gray-500 mt-1 flex justify-center items-center">
                     <i class="far fa-calendar-alt mr-1"></i>
                     <span>${formatDateSimple(post.date)}</span>
