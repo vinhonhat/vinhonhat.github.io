@@ -3,15 +3,19 @@
 const bannerSlides = [
     
     {
-        imageUrl: "/img/banners/1222.jpg",
+        imageUrl: "/img/banners/0203.jpg",
         link: "#"
     },
     {
-        imageUrl: "/img/banners/noel.jpg",
+        imageUrl: "/img/banners/0214.jpg",
         link: "#"
     },
     {
-        imageUrl: "/img/banners/happy-new-year-2026.jpg",
+        imageUrl: "/img/banners/tet.jpg",
+        link: "#"
+    },
+    {
+        imageUrl: "/img/banners/0227.jpg",
         link: "#"
     }
 ];
