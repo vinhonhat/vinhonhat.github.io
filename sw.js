@@ -10,12 +10,12 @@ const urlsToCache = [
     // 1. CÁC FILE CHÍNH CỦA WEBSITE
     '/',                  // 1
     '/index.html',        // 2
-    //'/css/style.css',     // 3
+    '/css/style.css',     // 3
     '/js/script.js',      // 4
     '/manifest.json',     // 5
-    //'/data/posts.json',   // 6  
+    '/data/posts.json',   // 6  
     '/data/banner.js',    // 7    
-    //'/hf/header.html',    // 8     
+    '/hf/header.html',    // 8     
     '/hf/footer.html',    // 9
 
     // Các file khác (Giữ nguyên)
