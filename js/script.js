@@ -310,35 +310,46 @@ document.addEventListener('DOMContentLoaded', function() {
         let bannerHtml = '';
         let dotsHtml = ''; // Thêm biến chứa HTML của chấm tròn
 
-        // Tạo HTML cho chấm tròn có thanh thời gian
+        // 1. TẠO HTML CHẤM TRÒN (Chỉ tạo đúng số lượng ảnh gốc)
         finalBanners.forEach((slide, index) => {
-            bannerHtml += `
-                <a href="${slide.link}" class="w-full flex-shrink-0" draggable="false">
-                    <img src="${slide.imageUrl}" alt="Banner" class="w-full h-auto rounded-lg object-cover select-none" draggable="false">
-                </a>
-            `;
-
+            // Quan trọng: data-index bắt đầu từ 1 (thay vì 0)
             dotsHtml += `
-                <button data-index="${index}" class="dot-btn relative h-2 w-2 rounded-full overflow-hidden transition-all duration-300 bg-white/60">
+                <button data-index="${index + 1}" class="dot-btn relative h-2 w-2 rounded-full overflow-hidden transition-all duration-300 bg-white/60">
                     <span class="progress-bar absolute top-0 left-0 h-full bg-yellow-500 w-0"></span>
                 </button>
             `;
         });
 
+        // 2. TẠO HTML ẢNH (Bao gồm: Ảnh cuối ảo + Các ảnh gốc + Ảnh đầu ảo)
+        const renderSlide = (slide) => `
+            <a href="${slide.link}" class="w-full flex-shrink-0" draggable="false">
+                <img src="${slide.imageUrl}" alt="Banner" class="w-full h-auto rounded-lg object-cover select-none" draggable="false">
+            </a>
+        `;
+        
+        // Nối HTML theo thứ tự chuẩn cho Infinite Loop
+        bannerHtml += renderSlide(finalBanners[finalBanners.length - 1]); // Chèn bản sao ảnh cuối lên đầu
+        finalBanners.forEach(slide => bannerHtml += renderSlide(slide));  // Chèn các ảnh gốc vào giữa
+        bannerHtml += renderSlide(finalBanners[0]);                       // Chèn bản sao ảnh đầu xuống cuối
+
+        // 3. ĐẨY RA GIAO DIỆN (Giữ nguyên như cũ)
         bannerSlider.innerHTML = bannerHtml;
         const bannerDots = document.getElementById('bannerDots');
         if (bannerDots) bannerDots.innerHTML = dotsHtml;
-    }
+    } // <-- Dấu đóng hàm loadBanner()
 
-    // --- HÀM KHỞI CHẠY BANNER (MỚI: VUỐT + CHẤM TRÒN) ---
+    
+    // --- HÀM KHỞI CHẠY BANNER (MỚI: VUỐT + CHẤM TRÒN + VÒNG LẶP VÔ TẬN) ---
     function initBannerSlider() {
         const slider = document.getElementById('bannerSlider');
         const dotsContainer = document.getElementById('bannerDots');
         
         if (!slider || slider.children.length <= 1) return;
 
-        let currentIndex = 0;
+        let currentIndex = 1; // Bắt đầu ở vị trí 1 (ảnh gốc đầu tiên)
         const totalSlides = slider.children.length;
+        const realSlidesCount = totalSlides - 2; // Số ảnh gốc thực tế
+        let isTransitioning = false; // Cờ khóa click liên tục
         const dots = dotsContainer ? dotsContainer.querySelectorAll('.dot-btn') : [];
         let autoPlayInterval;
         const slideDuration = 4000; // 4 giây
@@ -346,16 +357,21 @@ document.addEventListener('DOMContentLoaded', function() {
         slider.style.cursor = 'grab';
 
         function goToSlide(index) {
-            if (index >= totalSlides) currentIndex = 0;
-            else if (index < 0) currentIndex = totalSlides - 1;
-            else currentIndex = index;
+            if (isTransitioning) return; // Nếu đang trượt thì bỏ qua click
+            isTransitioning = true;
+            currentIndex = index;
 
             slider.style.transition = 'transform 0.5s ease-in-out';
             slider.style.transform = `translateX(-${currentIndex * 100}%)`;
 
+            // Tính lại index cho chấm tròn
+            let dotIndex = currentIndex - 1;
+            if (currentIndex === 0) dotIndex = realSlidesCount - 1;
+            if (currentIndex === totalSlides - 1) dotIndex = 0;
+
             dots.forEach((dot, idx) => {
                 const progressBar = dot.querySelector('.progress-bar');
-                if (idx === currentIndex) {
+                if (idx === dotIndex) { 
                     dot.className = "dot-btn relative h-2 w-8 rounded-full overflow-hidden transition-all duration-300 bg-white/30";
                     progressBar.style.transition = 'none';
                     progressBar.style.width = '0%';
@@ -371,6 +387,23 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
+        
+        // Xử lý dịch chuyển âm thầm khi trượt xong
+        slider.addEventListener('transitionend', () => {
+            isTransitioning = false;
+            if (currentIndex === 0) {
+                // Đang ở Clone cuối -> Nhảy về ảnh thật cuối cùng
+                slider.style.transition = 'none';
+                currentIndex = realSlidesCount;
+                slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+            } else if (currentIndex === totalSlides - 1) {
+                // Đang ở Clone đầu -> Nhảy về ảnh thật đầu tiên
+                slider.style.transition = 'none';
+                currentIndex = 1;
+                slider.style.transform = `translateX(-100%)`;
+            }
+        });
+
         function startAutoPlay() {
             clearInterval(autoPlayInterval);
             autoPlayInterval = setInterval(() => goToSlide(currentIndex + 1), slideDuration);
@@ -380,11 +413,12 @@ document.addEventListener('DOMContentLoaded', function() {
         let isDragging = false;
 
         function startDrag(e) {
+            if (isTransitioning) return; // Khóa vuốt khi đang trượt
             isDragging = true;
             slider.style.cursor = 'grabbing';
             clearInterval(autoPlayInterval); 
             const activeProgressBar = dots[currentIndex].querySelector('.progress-bar');
-            activeProgressBar.style.transition = 'none'; 
+            if(activeProgressBar) activeProgressBar.style.transition = 'none'; 
             startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
         }
 
@@ -419,9 +453,11 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
-        goToSlide(0);
+        goToSlide(1);
         startAutoPlay();
-    }
+    } // <-- Dấu đóng ngoặc của hàm initBannerSlider
+
+    
 
     function checkAndShowPopup() {
         // THÊM DÒNG NÀY: Nếu pháo hoa đang chạy thì thôi, không hiện popup thường
@@ -677,8 +713,63 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }
-    });
 
+        // =================================================================
+        // ĐƯA NÚT BÍ MẬT VÀO ĐÂY (CHỜ HEADER TẢI XONG MỚI GẮN SỰ KIỆN)
+        // =================================================================
+        const siteLogo = document.getElementById('site-logo');
+        const siteLogoImg = document.getElementById('site-logo-img');
+        let logoClickTimer; 
+
+        if (siteLogo) {
+            // --- XỬ LÝ CLICK ĐƠN (Về trang chủ) ---
+            siteLogo.addEventListener('click', (e) => {
+                e.preventDefault(); 
+                
+                logoClickTimer = setTimeout(() => {
+                    window.location.href = '/'; 
+                }, 300);
+            });
+
+            // --- XỬ LÝ CLICK ĐÚP (Xóa Cache) ---
+            siteLogo.addEventListener('dblclick', async (e) => {
+                e.preventDefault(); 
+                clearTimeout(logoClickTimer); 
+
+                if (confirm("Bạn có muốn xóa bộ nhớ đệm và tải bản cập nhật mới nhất không?")) {
+                    try {
+                        if (siteLogoImg) siteLogoImg.classList.add('animate-spin'); 
+
+                        if ('serviceWorker' in navigator) {
+                            const registrations = await navigator.serviceWorker.getRegistrations();
+                            for (let registration of registrations) {
+                                await registration.unregister();
+                            }
+                        }
+
+                        if ('caches' in window) {
+                            const cacheNames = await caches.keys();
+                            await Promise.all(cacheNames.map(name => caches.delete(name)));
+                        }
+
+                        localStorage.clear();
+                        sessionStorage.clear();
+
+                        setTimeout(() => {
+                            window.location.reload(true);
+                        }, 1000); 
+
+                    } catch (error) {
+                        console.error("Lỗi khi xóa cache:", error);
+                        alert("Có lỗi xảy ra khi xóa cache.");
+                        if (siteLogoImg) siteLogoImg.classList.remove('animate-spin'); 
+                    }
+                }
+            });
+        }
+    }); // <-- Kết thúc hàm loadHTML Header
+
+    
     // 2. Tải Footer
     loadHTML('/hf/footer.html', 'footer-placeholder');
 
@@ -771,6 +862,8 @@ fetch('/data/posts.json') // Tải file JSON
     // Chỉ chạy hiệu ứng này sau khi trang đã tải xong
     // (Chúng ta thêm vào 'DOMContentLoaded' để đảm bảo nó không chạy quá sớm)
     document.addEventListener('DOMContentLoaded', startTitleAnimation);
+
+    
 
     /* =================================================================
    HIỆU ỨNG MÙA LỄ HỘI ĐA NĂNG V8 (ALL-IN-ONE)
