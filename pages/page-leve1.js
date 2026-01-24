@@ -1,5 +1,5 @@
 
-// page-leve1.js
+// page-leve1.js <!-- PHIÊN BẢN V26.1.18 -->
 // 📌 Dùng cho trang bai-viet-hd.html, hoctap. html, cấp độ đầu tiên sau trang chủ
 // Hiển thị 2 bài mới nhất của mỗi category, layout y chang rakuten (card PC + list mobile + sidebar gợi ý)
 // Nếu category không có bài => ẩn luôn cả section
