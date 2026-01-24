@@ -114,30 +114,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- XỬ LÝ CÁC MỐC TRĂNG KHUYẾT (MỐC 2, 3, 4) ---
 
-    // GIAI ĐOẠN TRĂNG LÊN (Sáng từ bên TRÁI sang)
+    // =========================================================
+    // GIAI ĐOẠN TRĂNG LÊN (Sáng dần từ PHẢI sang TRÁI)
+    // Đầu tháng (Từ mùng 3 đến 13)
+    // =========================================================
     if (lunarDay >= 3 && lunarDay <= 13) {
         if (lunarDay <= 5) {
-            // MỐC 2: Khuyết bên trái (Lưỡi liềm)
-            path = `<path d="M 12 2 A 10 10 0 0 0 12 22 A 6 10 0 0 1 12 2 Z" ${fillMoon}/>`;
+            // MỐC 2: Lưỡi liềm PHẢI (Sáng một ít bên phải)
+            path = `<path d="M 12 2 A 10 10 0 0 1 12 22 A 6 10 0 0 0 12 2 Z" ${fillMoon}/>`;
         } else if (lunarDay <= 9) {
-            // MỐC 3: Nửa hình tròn bên trái
-            path = `<path d="M 12 2 A 10 10 0 0 0 12 22 Z" ${fillMoon}/>`;
-        } else {
-            // MỐC 4: Hiện 75% bên trái
-            path = `<path d="M 12 2 A 10 10 0 0 0 12 22 A 6 10 0 0 0 12 2 Z" ${fillMoon}/>`;
-        }
-    } 
-    // GIAI ĐOẠN TRĂNG TÀN (Sáng bên PHẢI, tối dần từ trái)
-    else if (lunarDay >= 17 && lunarDay <= 27) {
-        if (lunarDay <= 20) {
-            // MỐC 4: Hiện 75% bên phải
-            path = `<path d="M 12 2 A 10 10 0 0 1 12 22 A 6 10 0 0 1 12 2 Z" ${fillMoon}/>`;
-        } else if (lunarDay <= 24) {
-            // MỐC 3: Nửa hình tròn bên phải
+            // MỐC 3: Nửa hình tròn PHẢI (Trăng Thượng Huyền)
             path = `<path d="M 12 2 A 10 10 0 0 1 12 22 Z" ${fillMoon}/>`;
         } else {
-            // MỐC 2: Khuyết bên phải (Lưỡi liềm)
-            path = `<path d="M 12 2 A 10 10 0 0 1 12 22 A 6 10 0 0 0 12 2 Z" ${fillMoon}/>`;
+            // MỐC 4: Hiện 75% bên PHẢI (Sắp tròn)
+            path = `<path d="M 12 2 A 10 10 0 0 1 12 22 A 6 10 0 0 1 12 2 Z" ${fillMoon}/>`;
+        }
+    } 
+    // =========================================================
+    // GIAI ĐOẠN TRĂNG TÀN (Tối dần từ phải, ánh sáng còn lại ở TRÁI)
+    // Cuối tháng (Từ 17 đến 27)
+    // =========================================================
+    else if (lunarDay >= 17 && lunarDay <= 27) {
+        if (lunarDay <= 20) {
+            // MỐC 4: Còn lại 75% bên TRÁI
+            path = `<path d="M 12 2 A 10 10 0 0 0 12 22 A 6 10 0 0 0 12 2 Z" ${fillMoon}/>`;
+        } else if (lunarDay <= 24) {
+            // MỐC 3: Nửa hình tròn TRÁI (Trăng Hạ Huyền)
+            path = `<path d="M 12 2 A 10 10 0 0 0 12 22 Z" ${fillMoon}/>`;
+        } else {
+            // MỐC 2: Lưỡi liềm TRÁI (Chỉ còn vệt sáng bên trái)
+            path = `<path d="M 12 2 A 10 10 0 0 0 12 22 A 6 10 0 0 1 12 2 Z" ${fillMoon}/>`;
         }
     }
 
