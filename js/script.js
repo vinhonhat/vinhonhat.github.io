@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // =================================================================
     // =========================== MỤC LỤC =============================
-    // ================= PHIÊN BẢN CẬP NHẬT V26.1.18 ===================
+    // ================= PHIÊN BẢN CẬP NHẬT V26.1.24 ===================
     // =================================================================
     // 1. ĐĂNG KÝ SERVICE WORKER (PWA)
     // 2. LẤY CÁC THÀNH PHẦN HTML (ELEMENTS)
@@ -201,29 +201,226 @@ document.addEventListener('DOMContentLoaded', function() {
     //}
 
     // Tải và chạy Banner
+   // --- HÀM TẠO BANNER ĐỘNG (ĐÃ NÂNG CẤP THEO YÊU CẦU) ---
     function loadBanner() {
         if (!bannerSlider) return;
-        if (typeof bannerSlides === 'undefined' || bannerSlides.length === 0) return;
+
+        // 1. CHUẨN BỊ THỜI GIAN HIỆN TẠI (Reset giờ về 0 để so sánh ngày cho chuẩn)
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const currentYear = today.getFullYear();
+
+        // 2. TẠO DANH SÁCH LỄ HỘI VỚI NGÀY DƯƠNG CHUẨN XÁC
+        let upcomingHolidays = [];
+
+        // Lấy 2 năm (năm nay và năm sau) để phòng trường hợp cuối năm (ví dụ Tết DL năm sau)
+        [currentYear, currentYear + 1].forEach(year => {
+            holidays.forEach(h => {
+                let eventDate;
+                if (h.isLunar) {
+                    // Gọi hàm convertLunarToSolar từ lunar-calendar.js
+                    eventDate = convertLunarToSolar(h.day, h.month, year, false);
+                } else {
+                    eventDate = new Date(year, h.month - 1, h.day);
+                }
+                
+                if (eventDate) {
+                    eventDate.setHours(0, 0, 0, 0);
+                    upcomingHolidays.push({
+                        ...h,
+                        date: eventDate,
+                        imageUrl: `/img/banners/${h.imagePrefix}.jpg`,
+                        link: "#" // Có thể sửa link nếu muốn
+                    });
+                }
+            });
+        });
+
+        // 3. SẮP XẾP LỄ HỘI THEO THỜI GIAN (GẦN NHẤT LÊN ĐẦU)
+        upcomingHolidays.sort((a, b) => a.date - b.date);
+
+        // 4. LỌC BỎ SỰ KIỆN QUÁ HẠN (LOGIC "CUỐN CHIẾU" & KHOẢNG CÁCH)
+        // Lấy ra danh sách các sự kiện chưa hết hạn hiển thị
+        let validHolidays = [];
+        
+        for (let i = 0; i < upcomingHolidays.length; i++) {
+            const currentEvent = upcomingHolidays[i];
+            const nextEvent = upcomingHolidays[i + 1];
+
+            // Số ngày kể từ sự kiện này đến hôm nay
+            const daysSinceEvent = Math.round((today - currentEvent.date) / (1000 * 60 * 60 * 24));
+
+            // Nếu sự kiện chưa diễn ra (daysSinceEvent < 0), chắc chắn giữ lại
+            if (daysSinceEvent <= 0) {
+                validHolidays.push(currentEvent);
+                continue;
+            }
+
+            // Nếu sự kiện đã qua, tính toán thời gian ẩn (hết hạn) dựa vào sự kiện TIẾP THEO
+            let expireDays = 5; // Mặc định ẩn sau 5 ngày
+
+            if (nextEvent) {
+                // Khoảng cách giữa sự kiện này và sự kiện tiếp theo
+                const gapToNext = Math.round((nextEvent.date - currentEvent.date) / (1000 * 60 * 60 * 24));
+
+                if (gapToNext <= 2) {
+                    expireDays = 0; // Ẩn ngay trong ngày
+                } else if (gapToNext <= 4) {
+                    expireDays = 1; // Ẩn sau 1 ngày
+                } else if (gapToNext >= 15) {
+                    expireDays = 5; // Ẩn sau 5 ngày
+                } else if (gapToNext >= 10) {
+                    expireDays = 3; // Ẩn sau 3 ngày
+                } else {
+                    expireDays = 2; // Các trường hợp còn lại (khoảng cách 5-9 ngày)
+                }
+            }
+
+            // Kiểm tra xem đã đến lúc ẩn chưa
+            if (daysSinceEvent <= expireDays) {
+                validHolidays.push(currentEvent);
+            }
+        }
+
+        // Chỉ lấy 4 sự kiện lễ hội hợp lệ gần nhất
+        let finalHolidayBanners = validHolidays.slice(0, 4);
+
+        // 5. KẾT HỢP QUẢNG CÁO (ADS LOGIC)
+        // adsBanners được lấy từ file banner.js
+        let finalBanners = [];
+        const adCount = (typeof adsBanners !== 'undefined') ? adsBanners.length : 0;
+
+        if (adCount === 0) {
+            // Không có QC -> Hiện 4 Lễ
+            finalBanners = finalHolidayBanners;
+        } else if (adCount === 1) {
+            // 1 QC -> 1 QC + 3 Lễ (Ẩn lễ thứ 4)
+            finalBanners = [...adsBanners, ...finalHolidayBanners.slice(0, 3)];
+        } else if (adCount === 2) {
+            // 2 QC -> 2 QC + 2 Lễ (Ẩn lễ 3 & 4)
+            finalBanners = [...adsBanners, ...finalHolidayBanners.slice(0, 2)];
+        } else {
+            // Từ 3 QC trở lên -> Tất cả QC + 2 Lễ (Không ẩn lễ thêm nữa)
+            finalBanners = [...adsBanners, ...finalHolidayBanners.slice(0, 2)];
+        }
+
+        // 6. RENDER RA HTML
+        if (finalBanners.length === 0) return;
+
         let bannerHtml = '';
-        for (const slide of bannerSlides) {
+        let dotsHtml = ''; // Thêm biến chứa HTML của chấm tròn
+
+        // Tạo HTML cho chấm tròn có thanh thời gian
+        finalBanners.forEach((slide, index) => {
             bannerHtml += `
-                <a href="${slide.link}" class="w-full flex-shrink-0">
-                    <img src="${slide.imageUrl}" alt="Banner" class="w-full rounded-lg object-cover">
+                <a href="${slide.link}" class="w-full flex-shrink-0" draggable="false">
+                    <img src="${slide.imageUrl}" alt="Banner" class="w-full h-auto rounded-lg object-cover select-none" draggable="false">
                 </a>
             `;
-        }
+
+            dotsHtml += `
+                <button data-index="${index}" class="dot-btn relative h-2 w-2 rounded-full overflow-hidden transition-all duration-300 bg-white/60">
+                    <span class="progress-bar absolute top-0 left-0 h-full bg-yellow-500 w-0"></span>
+                </button>
+            `;
+        });
+
         bannerSlider.innerHTML = bannerHtml;
+        const bannerDots = document.getElementById('bannerDots');
+        if (bannerDots) bannerDots.innerHTML = dotsHtml;
     }
 
+    // --- HÀM KHỞI CHẠY BANNER (MỚI: VUỐT + CHẤM TRÒN) ---
     function initBannerSlider() {
-        if (!bannerSlider) return;
-        const slides = bannerSlider.children;
-        if (slides.length <= 1) return;
+        const slider = document.getElementById('bannerSlider');
+        const dotsContainer = document.getElementById('bannerDots');
+        
+        if (!slider || slider.children.length <= 1) return;
+
         let currentIndex = 0;
-        setInterval(() => {
-            currentIndex = (currentIndex + 1) % slides.length;
-            bannerSlider.style.transform = `translateX(-${currentIndex * 100}%)`;
-        }, 3000);
+        const totalSlides = slider.children.length;
+        const dots = dotsContainer ? dotsContainer.querySelectorAll('.dot-btn') : [];
+        let autoPlayInterval;
+        const slideDuration = 4000; // 4 giây
+
+        slider.style.cursor = 'grab';
+
+        function goToSlide(index) {
+            if (index >= totalSlides) currentIndex = 0;
+            else if (index < 0) currentIndex = totalSlides - 1;
+            else currentIndex = index;
+
+            slider.style.transition = 'transform 0.5s ease-in-out';
+            slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+            dots.forEach((dot, idx) => {
+                const progressBar = dot.querySelector('.progress-bar');
+                if (idx === currentIndex) {
+                    dot.className = "dot-btn relative h-2 w-8 rounded-full overflow-hidden transition-all duration-300 bg-white/30";
+                    progressBar.style.transition = 'none';
+                    progressBar.style.width = '0%';
+                    setTimeout(() => {
+                        progressBar.style.transition = `width ${slideDuration}ms linear`;
+                        progressBar.style.width = '100%';
+                    }, 50);
+                } else {
+                    dot.className = "dot-btn relative h-2 w-2 rounded-full overflow-hidden transition-all duration-300 bg-white/60";
+                    progressBar.style.transition = 'none';
+                    progressBar.style.width = '0%';
+                }
+            });
+        }
+
+        function startAutoPlay() {
+            clearInterval(autoPlayInterval);
+            autoPlayInterval = setInterval(() => goToSlide(currentIndex + 1), slideDuration);
+        }
+
+        let startX = 0;
+        let isDragging = false;
+
+        function startDrag(e) {
+            isDragging = true;
+            slider.style.cursor = 'grabbing';
+            clearInterval(autoPlayInterval); 
+            const activeProgressBar = dots[currentIndex].querySelector('.progress-bar');
+            activeProgressBar.style.transition = 'none'; 
+            startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+        }
+
+        function endDrag(e) {
+            if (!isDragging) return;
+            isDragging = false;
+            slider.style.cursor = 'grab';
+            const endX = e.type.includes('mouse') ? e.pageX : e.changedTouches[0].clientX;
+            const diffX = startX - endX;
+
+            if (Math.abs(diffX) > 50) {
+                if (diffX > 0) goToSlide(currentIndex + 1);
+                else goToSlide(currentIndex - 1);
+            } else {
+                goToSlide(currentIndex); 
+            }
+            startAutoPlay();
+        }
+
+        slider.addEventListener('mousedown', startDrag);
+        slider.addEventListener('mouseup', endDrag);
+        slider.addEventListener('mouseleave', endDrag);
+        slider.addEventListener('touchstart', startDrag, { passive: true });
+        slider.addEventListener('touchend', endDrag, { passive: true });
+
+        dots.forEach(dot => {
+            dot.addEventListener('click', (e) => {
+                const index = parseInt(e.currentTarget.getAttribute('data-index'));
+                clearInterval(autoPlayInterval);
+                goToSlide(index);
+                startAutoPlay();
+            });
+        });
+
+        goToSlide(0);
+        startAutoPlay();
     }
 
     function checkAndShowPopup() {
