@@ -1,21 +1,11 @@
 //data/banner.js
-// --- DỮ LIỆU BANNER (Giữ nguyên, không cần gộp vào allContent) ---
-const bannerSlides = [
-    
-    {
-        imageUrl: "/img/banners/0203.jpg",
-        link: "#"
-    },
-    {
-        imageUrl: "/img/banners/0214.jpg",
-        link: "#"
-    },
-    {
-        imageUrl: "/img/banners/tet.jpg",
-        link: "#"
-    },
-    {
-        imageUrl: "/img/banners/0227.jpg",
-        link: "#"
-    }
+// --- CẤU HÌNH QUẢNG CÁO (ADS) TRÊN BANNER ---
+// Nếu không có quảng cáo, hãy để mảng này rỗng: const adsBanners = [];
+// Nếu có, hãy bỏ comment các dòng bên dưới.
+
+const adsBanners = [
+    // --- VÍ DỤ CÁC QUẢNG CÁO ---
+    // { imageUrl: "/img/banners/ad-1.jpg", link: "https://shopee.vn" },
+    // { imageUrl: "/img/banners/ad-2.jpg", link: "https://lazada.vn" },
+    // { imageUrl: "/img/banners/ad-3.jpg", link: "#" }
 ];
