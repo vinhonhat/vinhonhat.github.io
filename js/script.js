@@ -340,6 +340,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     
     // --- HÀM KHỞI CHẠY BANNER (MỚI: VUỐT + CHẤM TRÒN + VÒNG LẶP VÔ TẬN) ---
+    // --- HÀM KHỞI CHẠY BANNER (ĐÃ SỬA LỖI KẸT BANNER) ---
     function initBannerSlider() {
         const slider = document.getElementById('bannerSlider');
         const dotsContainer = document.getElementById('bannerDots');
@@ -357,7 +358,9 @@ document.addEventListener('DOMContentLoaded', function() {
         slider.style.cursor = 'grab';
 
         function goToSlide(index) {
-            if (isTransitioning) return; // Nếu đang trượt thì bỏ qua click
+            // FIX 1: Chặn không cho chạy nếu đang trượt HOẶC bấm vào chính slide hiện tại
+            if (isTransitioning || index === currentIndex) return; 
+            
             isTransitioning = true;
             currentIndex = index;
 
@@ -387,10 +390,9 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        
         // Xử lý dịch chuyển âm thầm khi trượt xong
         slider.addEventListener('transitionend', () => {
-            isTransitioning = false;
+            isTransitioning = false; // Mở khóa cờ trượt
             if (currentIndex === 0) {
                 // Đang ở Clone cuối -> Nhảy về ảnh thật cuối cùng
                 slider.style.transition = 'none';
@@ -417,7 +419,7 @@ document.addEventListener('DOMContentLoaded', function() {
             isDragging = true;
             slider.style.cursor = 'grabbing';
             clearInterval(autoPlayInterval); 
-            const activeProgressBar = dots[currentIndex].querySelector('.progress-bar');
+            const activeProgressBar = dots[currentIndex - 1]?.querySelector('.progress-bar');
             if(activeProgressBar) activeProgressBar.style.transition = 'none'; 
             startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
         }
@@ -429,11 +431,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const endX = e.type.includes('mouse') ? e.pageX : e.changedTouches[0].clientX;
             const diffX = startX - endX;
 
+            // FIX 2: Bỏ điều kiện else gây kẹt khi vuốt quá nhẹ
             if (Math.abs(diffX) > 50) {
                 if (diffX > 0) goToSlide(currentIndex + 1);
                 else goToSlide(currentIndex - 1);
-            } else {
-                goToSlide(currentIndex); 
             }
             startAutoPlay();
         }
@@ -449,14 +450,33 @@ document.addEventListener('DOMContentLoaded', function() {
                 const index = parseInt(e.currentTarget.getAttribute('data-index'));
                 clearInterval(autoPlayInterval);
                 goToSlide(index);
-                startAutoPlay();
+                startAutoPlay(); // Tự động chạy lại sau khi bấm
             });
         });
 
-        goToSlide(1);
+        // FIX 3: Khởi động an toàn, không dùng goToSlide(1) để tránh kẹt trang load đầu
+        slider.style.transition = 'none';
+        slider.style.transform = `translateX(-100%)`; // Đặt thẳng vào slide 1
+        
+        dots.forEach((dot, idx) => {
+            const progressBar = dot.querySelector('.progress-bar');
+            if (idx === 0) {
+                dot.className = "dot-btn relative h-2 w-8 rounded-full overflow-hidden transition-all duration-300 bg-white/30";
+                
+                // --- ĐOẠN ĐƯỢC SỬA: Đưa về 0% rồi mới cho chạy lên 100% ---
+                progressBar.style.transition = 'none';
+                progressBar.style.width = '0%';
+                
+                setTimeout(() => {
+                    progressBar.style.transition = `width ${slideDuration}ms linear`;
+                    progressBar.style.width = '100%';
+                }, 50); // Đợi 50ms để trình duyệt kịp kích hoạt hiệu ứng
+                // -----------------------------------------------------------
+            }
+        });
+
         startAutoPlay();
     } // <-- Dấu đóng ngoặc của hàm initBannerSlider
-
     
 
     function checkAndShowPopup() {
