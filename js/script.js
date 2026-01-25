@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // =================================================================
     // =========================== MỤC LỤC =============================
-    // ================= PHIÊN BẢN CẬP NHẬT V26.1.25 ===================
+    // ================= PHIÊN BẢN CẬP NHẬT V26.1.25.1 ===================
     // =================================================================
     // 1. ĐĂNG KÝ SERVICE WORKER (PWA)
     // 2. LẤY CÁC THÀNH PHẦN HTML (ELEMENTS)
@@ -40,10 +40,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- 2. LẤY CÁC THÀNH PHẦN HTML (ELEMENTS) (Giữ nguyên) ---
-    //const timeEl = document.getElementById('time');
-    //const dateEl = document.getElementById('date');
-    //const menuToggle = document.getElementById('menu-toggle');
-    //const mobileMenu = document.getElementById('mobile-menu');
     const bannerSlider = document.getElementById('bannerSlider');
     const postsContainer = document.getElementById('latest-posts-container'); // Sẽ dùng cho bài viết đề xuất
     const popupOverlay = document.getElementById('popupOverlay');
@@ -196,21 +192,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
         dateEl.innerHTML = `<div>${solarString}</div>${lunarHtml}`;
     }
-    // Cập nhật đồng hồ
-    //function updateClock() {
-    //    const timeEl = document.getElementById('time');
-    //    const dateEl = document.getElementById('date');
-    //    if (!timeEl || !dateEl) return;
-    //    const now = new Date();
-    //    timeEl.textContent = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    //    dateEl.textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    //}
-
+    
     // Tải và chạy Banner
-   // --- HÀM TẠO BANNER ĐỘNG (ĐÃ NÂNG CẤP THEO YÊU CẦU) ---
+    // --- HÀM TẠO BANNER ĐỘNG (ĐÃ NÂNG CẤP THEO YÊU CẦU) ---
     async function loadBanner() { // ĐÃ THÊM 'async' VÀO ĐÂY
         if (!bannerSlider) return;
 
+        // THÊM ĐOẠN NÀY VÀO: Kiểm tra xem dữ liệu holidays đã load chưa
+            if (typeof holidays === 'undefined') {
+                console.warn("Chưa tải được dữ liệu holidays!");
+                return; 
+            }
         // 1. CHUẨN BỊ THỜI GIAN HIỆN TẠI (Reset giờ về 0 để so sánh ngày cho chuẩn)
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -529,17 +521,42 @@ document.addEventListener('DOMContentLoaded', function() {
         startAutoPlay();
     } // <-- Dấu đóng ngoặc của hàm initBannerSlider
     
+    // =====================================================================
+    // 🎛️ BẢNG ĐIỀU KHIỂN TỔNG (MASTER SWITCH) CHO 4 HIỆU ỨNG
+    // =====================================================================
+    window.EFFECT_CONFIG = {
+        // 1. CHÂM NGÔN (Ngày thường)
+        proverb: 'off',     // 'auto': Hiện ngày thường | 'off': Tắt
 
+        // 2. POPUP LỄ HỘI (Có ảnh + Lời chúc)
+        holiday: 'auto',     // 'auto': Hiện ngày lễ     | 'off': Tắt
+
+        // 3. PHÁO HOA
+        fireworks: 'auto',   // 'auto': Nổ dịp Tết       | 'off': Tắt
+
+        // 4. HOA RƠI / TUYẾT RƠI
+        // CHẾ ĐỘ HIỂN THỊ: chọn 'image', 'text', 'mix', hoặc 'off'
+        particles: 'auto'    // 'auto': Tự đổi theo mùa  | 'mix'/'text'/'image': Ép kiểu | 'off': Tắt
+    };
+
+    // --- HÀM XỬ LÝ POPUP THÔNG MINH (ĐÃ ĐỒNG BỘ VỚI BẢNG ĐIỀU KHIỂN) ---
     async function checkAndShowPopup() {
-        // THÊM DÒNG NÀY: Nếu pháo hoa đang chạy thì thôi, không hiện popup thường
-        if (window.isFireworksPlaying) return;
-        // ... (Toàn bộ code của hàm này được giữ nguyên, không thay đổi)
+                // ... (Toàn bộ code của hàm này được giữ nguyên, không thay đổi)
         if (!popupOverlay) return;
+        // Nếu tắt pháo hoa trong bảng điều khiển -> Hủy lệnh pháo hoa
+        if (window.EFFECT_CONFIG.fireworks === 'off') {
+            window.isFireworksPlaying = false; 
+        }
+
+        // Nếu Pháo hoa đang nổ -> Dừng hiện Popup để không bị che nhau
+        if (window.isFireworksPlaying) return;
+
         popupText.className = 'text-gray-600 mb-6'; // Reset style
         const today = new Date();
         let activeHoliday = null;
 
-        if (typeof holidays !== 'undefined') {
+        // TÌM NGÀY LỄ (Chỉ tìm khi Công tắc Lễ hội = 'auto')
+        if (window.EFFECT_CONFIG.holiday === 'auto' && typeof holidays !== 'undefined') {
             const currentYear = today.getFullYear();
             for (const holiday of holidays) {
                 let holidayDate = holiday.isLunar ? convertLunarToSolar(holiday.day, holiday.month, currentYear) : new Date(currentYear, holiday.month - 1, holiday.day);
@@ -551,38 +568,41 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
+        // --- XÉT ĐIỀU KIỆN HIỂN THỊ ---
         if (activeHoliday) {
+            // HIỆN POPUP LỄ HỘI (Vẫn giữ tính năng bắt lỗi ảnh)
             popupTitle.innerHTML = `<span class="rainbow-text font-bold">🎉Chào mừng ngày ${activeHoliday.name}!🎉</span>`;
             popupText.textContent = "Chúc bạn và gia đình có một ngày lễ thật ý nghĩa và vui vẻ!";
             
-            // --- BỔ SUNG LOGIC CHỌN ẢNH D/M ---
             let imageSuffix = window.innerWidth < 768 ? 'm' : 'd';
             const imgPath = `img/holidays/${activeHoliday.imagePrefix}${imageSuffix}.jpg`;
 
-            // --- KIỂM TRA ẢNH TỒN TẠI HAY LỖI (TÍNH NĂNG MỚI) ---
             const isImageOk = await new Promise((resolve) => {
                 const img = new Image();
-                img.onload = () => resolve(true);  // Ảnh tốt
-                img.onerror = () => resolve(false); // Ảnh lỗi hoặc chưa up
+                img.onload = () => resolve(true);  
+                img.onerror = () => resolve(false); 
                 img.src = imgPath;
             });
 
-            // Nếu ảnh OK -> Hiện ảnh
-            // Nếu ảnh LỖI -> Ẩn ảnh đi (chỉ hiện chữ chúc mừng ở trên)
             if (isImageOk) {
                 holidayImage.src = imgPath;
                 holidayImage.style.display = 'block';
             } else {
                 holidayImage.style.display = 'none'; 
             }
-            
-        } else if (typeof proverbs !== 'undefined') {
+            popupOverlay.style.display = 'flex';
+
+        } else if (window.EFFECT_CONFIG.proverb === 'auto' && typeof proverbs !== 'undefined') {
+            // HIỆN POPUP CHÂM NGÔN (Khi không có lễ & Công tắc châm ngôn = 'auto')
             popupTitle.textContent = "";
             popupText.innerHTML = proverbs[Math.floor(Math.random() * proverbs.length)];
             popupText.classList.add('rainbow-text', 'text-2xl', 'font-bold');
             holidayImage.style.display = 'none';
+            popupOverlay.style.display = 'flex';
+        } else {
+            // TẤT CẢ ĐỀU OFF HOẶC KHÔNG CÓ LỄ -> KHÔNG HIỆN GÌ CẢ
+            return;
         }
-        popupOverlay.style.display = 'flex';
     }
 
 
@@ -838,7 +858,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         sessionStorage.clear();
 
                         setTimeout(() => {
-                            window.location.reload(true);
+                            window.location.reload();
                         }, 2000); 
 
                     } catch (error) {
@@ -960,7 +980,8 @@ fetch('/data/posts.json') // Tải file JSON
     // ============================================================
     const CONFIG = {
         // CHẾ ĐỘ HIỂN THỊ: chọn 'image', 'text', 'mix', hoặc 'off'
-        mode: 'mix', 
+        // Lấy dữ liệu từ Bảng Điều Khiển Tổng ở trên
+        mode: window.EFFECT_CONFIG.particles === 'auto' ? 'mix' : window.EFFECT_CONFIG.particles,
         
         // CẤU HÌNH RƠI
         count: 20,       // Số lượng hạt
