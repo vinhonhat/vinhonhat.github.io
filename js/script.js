@@ -14,6 +14,24 @@ document.addEventListener('DOMContentLoaded', function() {
     // 4. GỌI CÁC HÀM ĐỂ CHẠY TRANG WEB
     // =================================================================
 
+    // =====================================================================
+    // 🎛️ BẢNG ĐIỀU KHIỂN TỔNG (MASTER SWITCH) CHO 4 HIỆU ỨNG
+    // =====================================================================
+    window.EFFECT_CONFIG = {
+        // 1. CHÂM NGÔN (Ngày thường)
+        proverb: 'off',     // 'auto': Hiện ngày thường | 'off': Tắt
+
+        // 2. POPUP LỄ HỘI (Có ảnh + Lời chúc)
+        holiday: 'auto',     // 'auto': Hiện ngày lễ     | 'off': Tắt
+
+        // 3. PHÁO HOA
+        fireworks: 'auto',   // 'auto': Nổ dịp Tết       | 'off': Tắt
+
+        // 4. HOA RƠI / TUYẾT RƠI
+        // CHẾ ĐỘ HIỂN THỊ: chọn 'image', 'text', 'mix', hoặc 'off'
+        particles: 'auto'    // 'auto': Tự đổi theo mùa  | 'mix'/'text'/'image': Ép kiểu | 'off': Tắt
+    };
+    
 	// --- 1. HÀM TẢI HTML ĐỘNG (THÊM MỚI) ---
     // Hàm này sẽ tải nội dung từ một file (vd: header.html) vào một element trên trang
     const loadHTML = (file, elementId) => {
@@ -521,24 +539,7 @@ document.addEventListener('DOMContentLoaded', function() {
         startAutoPlay();
     } // <-- Dấu đóng ngoặc của hàm initBannerSlider
     
-    // =====================================================================
-    // 🎛️ BẢNG ĐIỀU KHIỂN TỔNG (MASTER SWITCH) CHO 4 HIỆU ỨNG
-    // =====================================================================
-    window.EFFECT_CONFIG = {
-        // 1. CHÂM NGÔN (Ngày thường)
-        proverb: 'off',     // 'auto': Hiện ngày thường | 'off': Tắt
-
-        // 2. POPUP LỄ HỘI (Có ảnh + Lời chúc)
-        holiday: 'auto',     // 'auto': Hiện ngày lễ     | 'off': Tắt
-
-        // 3. PHÁO HOA
-        fireworks: 'auto',   // 'auto': Nổ dịp Tết       | 'off': Tắt
-
-        // 4. HOA RƠI / TUYẾT RƠI
-        // CHẾ ĐỘ HIỂN THỊ: chọn 'image', 'text', 'mix', hoặc 'off'
-        particles: 'auto'    // 'auto': Tự đổi theo mùa  | 'mix'/'text'/'image': Ép kiểu | 'off': Tắt
-    };
-
+    
     // --- HÀM XỬ LÝ POPUP THÔNG MINH (ĐÃ ĐỒNG BỘ VỚI BẢNG ĐIỀU KHIỂN) ---
     async function checkAndShowPopup() {
                 // ... (Toàn bộ code của hàm này được giữ nguyên, không thay đổi)
