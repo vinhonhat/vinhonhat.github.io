@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Tải và chạy Banner
    // --- HÀM TẠO BANNER ĐỘNG (ĐÃ NÂNG CẤP THEO YÊU CẦU) ---
-    function loadBanner() {
+    async function loadBanner() { // ĐÃ THÊM 'async' VÀO ĐÂY
         if (!bannerSlider) return;
 
         // 1. CHUẨN BỊ THỜI GIAN HIỆN TẠI (Reset giờ về 0 để so sánh ngày cho chuẩn)
@@ -253,11 +253,14 @@ document.addEventListener('DOMContentLoaded', function() {
             const currentEvent = upcomingHolidays[i];
             const nextEvent = upcomingHolidays[i + 1];
 
-            // Số ngày kể từ sự kiện này đến hôm nay
-            const daysSinceEvent = Math.round((today - currentEvent.date) / (1000 * 60 * 60 * 24));
+            // TÍNH TOÁN: Số ngày cho ĐẾN lễ (Đã sửa đồng bộ biến 'daysUntilEvent')
+            const daysUntilEvent = Math.round((currentEvent.date - today) / (1000 * 60 * 60 * 24));
 
-            // Nếu sự kiện chưa diễn ra (daysSinceEvent < 0), chắc chắn giữ lại
-            if (daysSinceEvent <= 0) {
+            // --- YÊU CẦU 1: Quá 30 ngày -> Bỏ qua ---
+            //if (daysUntilEvent > 30) continue;
+
+            // --- YÊU CẦU 2: Chưa diễn ra (từ 0 đến 30 ngày) -> Giữ lại ---
+            if (daysUntilEvent >= 0) {
                 validHolidays.push(currentEvent);
                 continue;
             }
@@ -283,13 +286,55 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Kiểm tra xem đã đến lúc ẩn chưa
-            if (daysSinceEvent <= expireDays) {
+            // Dùng Math.abs để chuyển số âm thành dương khi so sánh
+            if (Math.abs(daysUntilEvent) <= expireDays) {
                 validHolidays.push(currentEvent);
             }
         }
 
-        // Chỉ lấy 4 sự kiện lễ hội hợp lệ gần nhất
-        let finalHolidayBanners = validHolidays.slice(0, 4);
+        // =====================================================================
+        // 4.5. KIỂM TRA ẢNH LỖI: TÌM THẾ CHỖ TRONG 30 NGÀY, K CÓ THÌ CẮT VỊ TRÍ
+        // =====================================================================
+        let finalHolidayBanners = [];
+        let maxSlots = 4; // Mặc định hiển thị 4 ảnh
+        let failedEventDate = null; // Biến lưu mốc ngày của ảnh bị lỗi
+
+        for (let item of validHolidays) {
+            // Nếu đã lấy đủ số lượng ảnh cho phép thì dừng
+            if (finalHolidayBanners.length >= maxSlots) break; 
+
+            // NẾU TRƯỚC ĐÓ CÓ ẢNH LỖI:
+            if (failedEventDate) {
+                // Tính khoảng cách từ ảnh này so với MỐC ẢNH LỖI
+                const diffDays = Math.round((item.date - failedEventDate) / (1000 * 60 * 60 * 24));
+                
+                // Nếu cách Mốc Lỗi QUÁ 30 NGÀY -> Không được thế chỗ nữa
+                if (diffDays > 30) {
+                    maxSlots--; // Cắt vĩnh viễn 1 vị trí (từ 4 giảm xuống còn 3 ảnh)
+                    failedEventDate = null; // Hủy mốc lỗi để xét item này như bình thường
+                }
+            }
+
+            // Kiểm tra xem ảnh có trên máy chủ không
+            const isImageOk = await new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve(true);  
+                img.onerror = () => resolve(false); 
+                img.src = item.imageUrl;
+            });
+
+            if (isImageOk) {
+                // Ảnh Tốt: Thêm vào và reset mốc lỗi (nếu có)
+                finalHolidayBanners.push(item);
+                failedEventDate = null; 
+            } else {
+                // Ảnh Lỗi: Ghi nhớ ngày của ảnh này làm MỐC 
+                // (Chỉ ghi nếu chưa có mốc nào trước đó)
+                if (!failedEventDate) failedEventDate = item.date;
+            }
+        }
+
+
 
         // 5. KẾT HỢP QUẢNG CÁO (ADS LOGIC)
         // adsBanners được lấy từ file banner.js
@@ -802,9 +847,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	
     // 3. Tải nội dung động (CẬP NHẬT)
-    loadBanner(); // Tải banner (từ banner.js)
-    initBannerSlider(); // Khởi chạy banner slider
-
+    // Chờ tải banner và kiểm tra ảnh lỗi xong thì mới khởi chạy hiệu ứng trượt
+    loadBanner().then(() => {
+        initBannerSlider();
+    });
 
     // THAY ĐỔI: Tải nội dung chính từ file posts.json
 fetch('/data/posts.json') // Tải file JSON

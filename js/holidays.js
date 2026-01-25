@@ -23,9 +23,11 @@ const holidays = [
     { day: 15, month: 8, isLunar: true, name: "Tết Trung Thu", imagePrefix: "trungthu" },                                   //ok
 
 ];
-    //{ day: 09, month: 11, isLunar: false, name: " Quốc tế Nam giới", imagePrefix: "1109" },
-    
-    
-    
+    // ---------------- NGÀY DƯƠNG LỊCH -----------------
+    // { day: 09, month: 11, isLunar: false, name: " Quốc tế Nam giới", imagePrefix: "1109" },
+        
+    // ---------------- NGÀY ÂM LỊCH -----------------
+    // { day: 1, month: 1, isLunar: true, name: "Tết Nguyên Đán", imagePrefix: "tet" },                                        // 2026
+  
 
     
