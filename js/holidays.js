@@ -4,8 +4,8 @@ const holidays = [
     { day: 3, month: 2, isLunar: false, name: "Thành lập Đảng Cộng Sản Việt Nam ", imagePrefix: "0203" },                   // đã có 2026
     { day: 14, month: 2, isLunar: false, name: "Lễ Tình Nhân", imagePrefix: "0214" },                                       //ok
     { day: 27, month: 2, isLunar: false, name: "Thầy thuốc Việt Nam", imagePrefix: "0227" },                                //ok
-    { day: 8, month: 3, isLunar: false, name: "Quốc tế Phụ nữ", imagePrefix: "0308" },
-    { day: 26, month: 3, isLunar: false, name: "Thành lập Đoàn TNCS Hồ Chí Minh ", imagePrefix: "0308" },
+    { day: 8, month: 3, isLunar: false, name: "Quốc tế Phụ nữ", imagePrefix: "0308" },                                      //ok
+    { day: 26, month: 3, isLunar: false, name: "Thành lập Đoàn TNCS Hồ Chí Minh ", imagePrefix: "0326" },                   //ok
     { day: 30, month: 4, isLunar: false, name: "Giải phóng miền Nam 30/4 và Quốc tế Lao Động 1/5", imagePrefix: "0430" },
     { day: 19, month: 5, isLunar: false, name: "sinh Chủ tịch Hồ Chí Minh", imagePrefix: "0519" },
     { day: 1, month: 6, isLunar: false, name: "Quốc tế Thiếu nhi", imagePrefix: "0601" },
