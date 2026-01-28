@@ -206,3 +206,33 @@ body {
 @keyframes shake { 0%, 100% {transform: rotate(0deg);} 25% {transform: rotate(-10deg);} 75% {transform: rotate(10deg);} }
 .confetti { position: absolute; width: 10px; height: 10px; z-index: 99; animation: fall 2s linear forwards; }
 @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
+
+/* --- NÚT CÀI ĐẶT APP --- */
+.install-btn {
+    margin-top: 20px;
+    padding: 10px 25px;
+    font-size: 1.1rem;
+    font-family: var(--font-main);
+    background: white;
+    color: #FF9A9E; /* Màu hồng chủ đạo */
+    border: 2px solid #FF9A9E;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: all 0.2s;
+    animation: pulse 2s infinite; /* Nhấp nháy nhẹ gây chú ý */
+}
+
+.install-btn:hover {
+    background: #FF9A9E;
+    color: white;
+}
+
+.install-btn:active {
+    transform: scale(0.95);
+}
+

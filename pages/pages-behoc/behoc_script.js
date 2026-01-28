@@ -260,3 +260,49 @@ function fireConfetti() {
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js'); });
 }
+
+// --- 8. XỬ LÝ NÚT CÀI ĐẶT PWA ---
+let deferredPrompt; // Biến để lưu sự kiện cài đặt
+const installBtn = document.getElementById('pwa-install-btn');
+const iosGuide = document.getElementById('ios-guide');
+
+// A. Dành cho Android / Chrome PC
+window.addEventListener('beforeinstallprompt', (e) => {
+    // 1. Chặn trình duyệt tự hiện popup xấu xí
+    e.preventDefault();
+    // 2. Lưu sự kiện lại để dùng sau
+    deferredPrompt = e;
+    // 3. Bây giờ mới hiện nút cài đặt của mình lên
+    if (installBtn) installBtn.style.display = 'flex';
+});
+
+// Khi bấm vào nút cài đặt
+if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+            // Hiện popup cài đặt gốc của điện thoại
+            deferredPrompt.prompt();
+            // Đợi xem người dùng bấm "Cài" hay "Hủy"
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`Kết quả cài đặt: ${outcome}`);
+            // Dù cài hay hủy thì cũng xóa sự kiện đi, lần sau load lại web mới hiện lại
+            deferredPrompt = null;
+            installBtn.style.display = 'none';
+        }
+    });
+}
+
+// B. Dành cho iPhone (iOS)
+// iPhone không có sự kiện beforeinstallprompt, nên ta kiểm tra thủ công
+function isIOS() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+}
+// Kiểm tra xem đang chạy trên trình duyệt hay đã cài rồi (standalone)
+function isInStandaloneMode() {
+  return ('standalone' in window.navigator) && (window.navigator.standalone);
+}
+
+// Nếu là iPhone và chưa cài App -> Hiện hướng dẫn
+if (isIOS() && !isInStandaloneMode()) {
+    if (iosGuide) iosGuide.style.display = 'block';
+}
