@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bé Vui Học - PWA Edition</title>
+    
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#FF9A9E">
+    <link rel="apple-touch-icon" href="/img/logoQV.png">
+
+    <link rel="stylesheet" href="behoc_style.css">
+</head>
+<body>
+
+    <div class="overlay" id="start-overlay">
+        <h1 class="app-title">Bé Vui Học</h1>
+        <button class="start-btn" onclick="unlockAudio()">▶️ VÀO CHƠI</button>
+    </div>
+
+    <div class="app-container">
+        
+        <div class="menu-view" id="menu-screen">
+            <h1 class="app-title" style="font-size: 2.5rem;">Bé chọn bài nhé</h1>
+            <div class="menu-grid">
+                <div class="menu-btn btn-num" onclick="startGame('listen_number')">
+                    <div class="menu-icon">👂</div>
+                    <div class="menu-label">Nghe & Tìm Số</div>
+                </div>
+                <div class="menu-btn btn-count" onclick="startGame('count')">
+                    <div class="menu-icon">🍎</div>
+                    <div class="menu-label">Tập Đếm</div>
+                </div>
+                <div class="menu-btn btn-color" onclick="startGame('color')">
+                    <div class="menu-icon">🎨</div>
+                    <div class="menu-label">Màu Sắc</div>
+                </div>
+                <div class="menu-btn btn-animal" onclick="startGame('match_animal')">
+                    <div class="menu-icon">🐶</div>
+                    <div class="menu-label">Tìm Con Vật</div>
+                </div>
+                <div class="menu-btn btn-abc" onclick="startGame('alphabet')">
+                    <div class="menu-icon">🔤</div>
+                    <div class="menu-label">Bảng Chữ Cái</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-view" id="game-screen">
+            <div class="top-bar">
+                <button class="back-btn" onclick="backToMenu()">🏡 Menu</button>
+                <div style="font-size: 2rem; font-weight: bold; color: #ff6f00;">⭐ <span id="score">0</span></div>
+            </div>
+
+            <div class="display-area" id="display-area">
+                <div id="question-content"></div>
+                <button class="replay-btn" onclick="playQuestionAudio()">🔊</button>
+            </div>
+
+            <div class="options-grid" id="options-grid"></div>
+        </div>
+
+    </div>
+
+    <script src="behoc_script.js"></script>
+</body>
+</html>
