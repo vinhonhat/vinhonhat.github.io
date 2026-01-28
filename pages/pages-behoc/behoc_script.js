@@ -78,7 +78,7 @@ function nextQuestion() {
     setTimeout(playQuestionAudio, 500);
 }
 
-// --- 4. RENDER GIAO DIỆN (ĐÃ SỬA: LUÔN HIỆN NỘI DUNG) ---
+// --- 4. RENDER GIAO DIỆN ---
 function renderUI() {
     const content = document.getElementById('question-content');
     const grid = document.getElementById('options-grid');
@@ -86,16 +86,14 @@ function renderUI() {
     grid.innerHTML = '';
     grid.className = 'options-grid';
 
-    // A. HIỂN THỊ PHẦN CÂU HỎI (Ở GIỮA)
+    // A. HIỂN THỊ PHẦN CÂU HỎI
     if (currentQ.type === 'number') {
-        // Nghe số: Hiện loa + Chữ gợi ý số (ẩn cũng được nhưng hiện cho dễ check)
         content.innerHTML = `
             <div class="big-icon-question">🔊</div>
             <div class="hint-text">Số mấy?</div>
         `;
     } 
     else if (currentQ.type === 'count') {
-        // Tập đếm: Hiện hình ảnh
         let html = '<div class="count-container">';
         for(let i=0; i<currentQ.val; i++) {
             html += `<img src="${PATH_IMG + currentQ.item.img}" class="game-img" style="animation-delay:${i*0.1}s">`;
@@ -104,28 +102,25 @@ function renderUI() {
         content.innerHTML = html;
     }
     else if (currentQ.type === 'color') {
-         // Màu sắc: Hiện Loa + Tên màu
          content.innerHTML = `
             <div class="big-icon-question" style="color: ${currentQ.val.hex}">🔊</div>
             <div class="hint-text" style="color: ${currentQ.val.hex}">${currentQ.val.name}</div>
          `;
     }
     else if (currentQ.type === 'match') {
-         // Con vật: Hiện Loa + Tên con vật
          content.innerHTML = `
             <div class="big-icon-question">🔊</div>
             <div class="hint-text">${currentQ.val.name}</div>
          `;
     }
     else if (currentQ.type === 'char') {
-         // Chữ cái: Hiện Loa + Chữ cái to
          content.innerHTML = `
             <div class="big-icon-question">🔊</div>
             <div class="hint-text">Chữ ${currentQ.val.toUpperCase()}</div>
          `;
     }
 
-    // B. TẠO ĐÁP ÁN (Ở DƯỚI)
+    // B. TẠO ĐÁP ÁN
     let options = [];
     if (currentQ.type === 'number' || currentQ.type === 'count') {
         let correct = currentQ.val;
@@ -158,12 +153,11 @@ function renderUI() {
             btn.style.border = '2px solid #ddd';
         } 
         else if (currentQ.type === 'match') {
-            // Đáp án là hình con vật
             btn.innerHTML = `<img src="${PATH_IMG + opt.img}" style="height:60px; object-fit:contain;">`;
         }
         else if (currentQ.type === 'char') {
             btn.textContent = opt.toUpperCase();
-            grid.classList.add('cols-3'); // Xếp 3 cột cho đẹp
+            grid.classList.add('cols-3');
         }
         else {
             btn.textContent = opt;
@@ -210,7 +204,6 @@ function playSequence(files, index = 0) {
     let audio = new Audio(PATH_MP3 + files[index]);
     audio.onended = () => playSequence(files, index + 1);
     audio.onerror = () => {
-        // Nếu lỗi file (chưa có âm thanh), không làm gì cả, bé nhìn chữ gợi ý
         console.log("File missing: " + files[index]);
         playSequence(files, index + 1);
     };
@@ -262,47 +255,38 @@ if ('serviceWorker' in navigator) {
 }
 
 // --- 8. XỬ LÝ NÚT CÀI ĐẶT PWA ---
-let deferredPrompt; // Biến để lưu sự kiện cài đặt
+let deferredPrompt;
 const installBtn = document.getElementById('pwa-install-btn');
 const iosGuide = document.getElementById('ios-guide');
 
-// A. Dành cho Android / Chrome PC
-window.addEventListener('beforeinstallprompt', (e) => {
-    // 1. Chặn trình duyệt tự hiện popup xấu xí
-    e.preventDefault();
-    // 2. Lưu sự kiện lại để dùng sau
-    deferredPrompt = e;
-    // 3. Bây giờ mới hiện nút cài đặt của mình lên
-    if (installBtn) installBtn.style.display = 'flex';
-});
+// Kiểm tra xem có đang chạy trong App không (để ẩn nút đi)
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
-// Khi bấm vào nút cài đặt
-if (installBtn) {
-    installBtn.addEventListener('click', async () => {
-        if (deferredPrompt) {
-            // Hiện popup cài đặt gốc của điện thoại
-            deferredPrompt.prompt();
-            // Đợi xem người dùng bấm "Cài" hay "Hủy"
-            const { outcome } = await deferredPrompt.userChoice;
-            console.log(`Kết quả cài đặt: ${outcome}`);
-            // Dù cài hay hủy thì cũng xóa sự kiện đi, lần sau load lại web mới hiện lại
-            deferredPrompt = null;
-            installBtn.style.display = 'none';
-        }
+if (isStandalone) {
+    if(installBtn) installBtn.style.display = 'none';
+    if(iosGuide) iosGuide.style.display = 'none';
+} else {
+    // A. Với Android / Chrome PC
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        if (installBtn) installBtn.style.display = 'flex'; // Dùng 'flex' để căn giữa đẹp
     });
-}
 
-// B. Dành cho iPhone (iOS)
-// iPhone không có sự kiện beforeinstallprompt, nên ta kiểm tra thủ công
-function isIOS() {
-  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-}
-// Kiểm tra xem đang chạy trên trình duyệt hay đã cài rồi (standalone)
-function isInStandaloneMode() {
-  return ('standalone' in window.navigator) && (window.navigator.standalone);
-}
+    if (installBtn) {
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                installBtn.style.display = 'none'; 
+            }
+        });
+    }
 
-// Nếu là iPhone và chưa cài App -> Hiện hướng dẫn
-if (isIOS() && !isInStandaloneMode()) {
-    if (iosGuide) iosGuide.style.display = 'block';
+    // B. Với iPhone (iOS)
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (isIOS && iosGuide) {
+        iosGuide.style.display = 'block';
+    }
 }
