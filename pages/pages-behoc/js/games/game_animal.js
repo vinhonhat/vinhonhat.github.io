@@ -1,9 +1,9 @@
+// js/games/game_animal.js
+
 registerGame('match_animal', {
+    // 1. Sinh dữ liệu: Lấy 1 con vật ngẫu nhiên
     generateData: function() {
-        // Lấy ngẫu nhiên 1 con vật từ danh sách ITEMS (đã khai báo ở trên hoặc khai báo lại)
-        // Lưu ý: Nếu ITEMS khai báo ở game_count.js thì ở đây không thấy được.
-        // Tốt nhất nên copy biến ITEMS vào đây hoặc để ITEMS ở core.js (biến toàn cục)
-        // Để đơn giản, em khai báo lại ITEMS ở đây cho chắc chắn chạy:
+        // Danh sách con vật (nên đồng bộ với file game_count hoặc khai báo lại ở đây)
         const LOCAL_ITEMS = [
             {id: 'tao', name: 'Quả Táo', img: 'tao.png'},
             {id: 'oto', name: 'Ô Tô', img: 'oto.png'},
@@ -16,15 +16,19 @@ registerGame('match_animal', {
         return LOCAL_ITEMS[Math.floor(Math.random() * LOCAL_ITEMS.length)];
     },
 
+    // 2. Hiển thị đề bài: HIỆN HÌNH ẢNH TO (Thay vì chữ)
     renderDisplay: function(item) {
+        // Bấm vào hình vẫn phát tiếng đọc tên con vật
         return `
-            <div class="big-icon-question">🔊</div>
-            <div class="hint-text">${item.name}</div>
+            <div onclick="playQuestionAudio()" style="cursor:pointer; text-align:center;">
+                <img src="/img/game/${item.img}" 
+                     style="width: 180px; height: 180px; object-fit: contain; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1)); animation: popIn 0.5s;">
+            </div>
         `;
     },
 
+    // 3. Tạo đáp án: 1 hình đúng + 3 hình sai
     getOptions: function(correctItem) {
-        // Cần list ITEMS đầy đủ để lấy đáp án sai
         const LOCAL_ITEMS = [
             {id: 'tao', name: 'Quả Táo', img: 'tao.png'},
             {id: 'oto', name: 'Ô Tô', img: 'oto.png'},
@@ -42,15 +46,18 @@ registerGame('match_animal', {
         return Array.from(set);
     },
 
+    // 4. Trang trí nút đáp án: Hiện hình ảnh nhỏ
     styleOptionBtn: function(btn, item) {
-        // Hiển thị hình ảnh thay vì số
-        btn.innerHTML = `<img src="/img/game/${item.img}" style="height:60px; object-fit:contain;">`;
+        btn.innerHTML = `<img src="/img/game/${item.img}" style="height:80px; width:80px; object-fit:contain;">`;
+        btn.style.padding = "5px";
     },
 
+    // 5. Âm thanh: Đọc tên con vật (VD: "Con chó")
     getAudio: function(item) {
         return [item.id + ".mp3"];
     },
 
+    // 6. Kiểm tra kết quả
     checkResult: function(selected, correct) {
         return selected.id === correct.id;
     }

@@ -235,3 +235,32 @@ body {
 .install-btn:active {
     transform: scale(0.95);
 }
+
+/* Thêm vào cuối file style.css */
+
+.big-question-mark {
+    font-size: 8rem;          /* Chữ to */
+    font-weight: bold;
+    color: #FF9A9E;           /* Màu hồng chủ đạo */
+    background: #fff;
+    border: 8px solid #FF9A9E;
+    border-radius: 50%;       /* Bo tròn thành hình tròn */
+    width: 180px; height: 180px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 10px 30px rgba(255, 154, 158, 0.3);
+    cursor: pointer;
+    transition: transform 0.2s;
+    user-select: none;
+}
+
+/* Hiệu ứng khi bấm vào nút ? */
+.big-question-mark:active {
+    transform: scale(0.9);
+    background: #ffebee;
+}
+
+/* Ẩn nút loa cũ đi nếu lỡ còn sót */
+.big-icon-question {
+    display: none !important;
+}
+

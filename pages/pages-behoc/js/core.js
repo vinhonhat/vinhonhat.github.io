@@ -5,11 +5,10 @@ const PATH_IMG = "/img/game/";
 
 // Biến quản lý chung
 let currentScore = 0;
-let activeGame = null; // Game đang chơi hiện tại
-let gameModules = {};  // Nơi chứa danh sách các game đã đăng ký
+let activeGame = null;
+let gameModules = {};
+let replayTimer = null; // Biến giữ đồng hồ đếm 5s
 
-// --- HÀM ĐĂNG KÝ GAME (QUAN TRỌNG) ---
-// Các file con sẽ gọi hàm này để báo danh
 function registerGame(gameId, gameLogic) {
     gameModules[gameId] = gameLogic;
 }
@@ -21,6 +20,7 @@ function unlockAudio() {
 }
 
 function backToMenu() {
+    stopAutoReplay(); // Tắt tự động đọc
     document.getElementById('game-screen').style.display = 'none';
     document.getElementById('menu-screen').style.display = 'flex';
     activeGame = null;
@@ -32,7 +32,7 @@ function startGame(gameId) {
         return;
     }
     
-    activeGame = gameModules[gameId]; // Gán game hiện tại
+    activeGame = gameModules[gameId];
     currentScore = 0;
     document.getElementById('score').textContent = currentScore;
     
@@ -42,56 +42,72 @@ function startGame(gameId) {
     nextQuestion();
 }
 
+// --- QUẢN LÝ TỰ ĐỘNG PHÁT LẠI ---
+function startAutoReplay() {
+    stopAutoReplay(); // Xóa timer cũ nếu có
+    // Cứ 5 giây (5000ms) thì phát lại âm thanh
+    replayTimer = setInterval(() => {
+        playQuestionAudio();
+    }, 5000);
+}
+
+function stopAutoReplay() {
+    if (replayTimer) {
+        clearInterval(replayTimer);
+        replayTimer = null;
+    }
+}
+
 // --- XỬ LÝ CÂU HỎI ---
 function nextQuestion() {
     if (!activeGame) return;
+    stopAutoReplay(); // Tạm dừng đọc khi đang sinh câu hỏi mới
 
-    // 1. Nhờ game con sinh dữ liệu câu hỏi
     const questionData = activeGame.generateData();
-    activeGame.currentData = questionData; // Lưu lại để check đáp án
+    activeGame.currentData = questionData;
 
-    // 2. Render khu vực hiển thị (Display Area)
+    // Render giao diện (Giờ sẽ là dấu ? to)
     const contentDiv = document.getElementById('question-content');
     contentDiv.innerHTML = activeGame.renderDisplay(questionData);
 
-    // 3. Render các nút chọn (Options)
+    // Render đáp án
     const gridDiv = document.getElementById('options-grid');
     gridDiv.innerHTML = '';
     gridDiv.className = 'options-grid'; 
-    if (activeGame.gridClass) gridDiv.classList.add(activeGame.gridClass); // Thêm class nếu game cần (vd: 3 cột)
+    if (activeGame.gridClass) gridDiv.classList.add(activeGame.gridClass);
 
     const options = activeGame.getOptions(questionData);
     
-    // Xáo trộn đáp án
     options.sort(() => Math.random() - 0.5).forEach(opt => {
         let btn = document.createElement('button');
         btn.className = 'option-btn';
-        
-        // Nhờ game con quyết định nút trông thế nào
         activeGame.styleOptionBtn(btn, opt);
-
         btn.onclick = () => handleCheckAnswer(opt, btn);
         gridDiv.appendChild(btn);
     });
 
-    // 4. Phát âm thanh đề bài
+    // Phát âm thanh lần đầu sau 0.5s và bắt đầu đếm ngược 5s
     setTimeout(() => {
-        playSequence(activeGame.getAudio(questionData));
+        playQuestionAudio();
+        startAutoReplay(); // Bắt đầu tính giờ 5s
     }, 500);
 }
 
 function playQuestionAudio() {
     if (activeGame && activeGame.currentData) {
-        playSequence(activeGame.getAudio(activeGame.currentData));
+        // Nếu game có hỗ trợ lấy file âm thanh thì mới phát
+        const files = activeGame.getAudio(activeGame.currentData);
+        if (files && files.length > 0) {
+            playSequence(files);
+        }
     }
 }
 
-// --- KIỂM TRA ĐÁP ÁN ---
 function handleCheckAnswer(selected, btn) {
-    // Nhờ game con kiểm tra đúng sai
     const isCorrect = activeGame.checkResult(selected, activeGame.currentData);
 
     if (isCorrect) {
+        stopAutoReplay(); // Bé trả lời đúng thì dừng đọc ngay
         btn.classList.add('correct');
         currentScore++;
         document.getElementById('score').textContent = currentScore;
@@ -105,8 +121,33 @@ function handleCheckAnswer(selected, btn) {
     }
 }
 
-// --- CÁC HÀM TIỆN ÍCH (Âm thanh, Pháo hoa...) ---
-// (Giữ nguyên code playSequence, playFeedback, fireConfetti cũ của anh copy vào đây)
-function playSequence(files, index = 0) { /* ... code cũ ... */ }
-function playFeedback(isCorrect) { /* ... code cũ ... */ }
-function fireConfetti() { /* ... code cũ ... */ }
+// --- UTILS ---
+function playSequence(files, index = 0) {
+    if (index >= files.length) return;
+    let audio = new Audio(PATH_MP3 + files[index]);
+    audio.onended = () => playSequence(files, index + 1);
+    audio.onerror = () => {
+        console.log("File missing: " + files[index]);
+        playSequence(files, index + 1);
+    };
+    audio.play().catch(e => {});
+}
+
+function playFeedback(isCorrect) {
+    let file = isCorrect ? (Math.random() < 0.5 ? "gioi qua.mp3" : "chinh xac.mp3") : "sai roi.mp3";
+    let audio = new Audio(PATH_MP3 + file);
+    audio.play().catch(e => {});
+}
+
+function fireConfetti() {
+    const colors = ['#f44336', '#2196f3', '#ffeb3b', '#4caf50'];
+    for(let i=0; i<30; i++) {
+        let c = document.createElement('div');
+        c.className = 'confetti';
+        c.style.left = Math.random()*100+'%';
+        c.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+        c.style.animationDuration = (Math.random()+1)+'s';
+        document.body.appendChild(c);
+        setTimeout(()=>c.remove(), 2000);
+    }
+}
