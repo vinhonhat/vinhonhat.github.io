@@ -7,7 +7,7 @@ const PATH_IMG = "/img/game/";
 let currentScore = 0;
 let activeGame = null;
 let gameModules = {};
-let replayTimer = null; // Biến giữ đồng hồ đếm 5s
+let replayTimer = null; 
 
 function registerGame(gameId, gameLogic) {
     gameModules[gameId] = gameLogic;
@@ -20,7 +20,7 @@ function unlockAudio() {
 }
 
 function backToMenu() {
-    stopAutoReplay(); // Tắt tự động đọc
+    stopAutoReplay();
     document.getElementById('game-screen').style.display = 'none';
     document.getElementById('menu-screen').style.display = 'flex';
     activeGame = null;
@@ -42,10 +42,8 @@ function startGame(gameId) {
     nextQuestion();
 }
 
-// --- QUẢN LÝ TỰ ĐỘNG PHÁT LẠI ---
 function startAutoReplay() {
-    stopAutoReplay(); // Xóa timer cũ nếu có
-    // Cứ 5 giây (5000ms) thì phát lại âm thanh
+    stopAutoReplay();
     replayTimer = setInterval(() => {
         playQuestionAudio();
     }, 5000);
@@ -61,16 +59,14 @@ function stopAutoReplay() {
 // --- XỬ LÝ CÂU HỎI ---
 function nextQuestion() {
     if (!activeGame) return;
-    stopAutoReplay(); // Tạm dừng đọc khi đang sinh câu hỏi mới
+    stopAutoReplay(); 
 
     const questionData = activeGame.generateData();
     activeGame.currentData = questionData;
 
-    // Render giao diện (Giờ sẽ là dấu ? to)
     const contentDiv = document.getElementById('question-content');
     contentDiv.innerHTML = activeGame.renderDisplay(questionData);
 
-    // Render đáp án
     const gridDiv = document.getElementById('options-grid');
     gridDiv.innerHTML = '';
     gridDiv.className = 'options-grid'; 
@@ -86,16 +82,14 @@ function nextQuestion() {
         gridDiv.appendChild(btn);
     });
 
-    // Phát âm thanh lần đầu sau 0.5s và bắt đầu đếm ngược 5s
     setTimeout(() => {
         playQuestionAudio();
-        startAutoReplay(); // Bắt đầu tính giờ 5s
+        startAutoReplay(); 
     }, 500);
 }
 
 function playQuestionAudio() {
     if (activeGame && activeGame.currentData) {
-        // Nếu game có hỗ trợ lấy file âm thanh thì mới phát
         const files = activeGame.getAudio(activeGame.currentData);
         if (files && files.length > 0) {
             playSequence(files);
@@ -103,39 +97,53 @@ function playQuestionAudio() {
     }
 }
 
+// --- KIỂM TRA ĐÁP ÁN (Đã nâng cấp) ---
 function handleCheckAnswer(selected, btn) {
     const isCorrect = activeGame.checkResult(selected, activeGame.currentData);
 
     if (isCorrect) {
-        stopAutoReplay(); // Bé trả lời đúng thì dừng đọc ngay
+        stopAutoReplay();
         btn.classList.add('correct');
         currentScore++;
         document.getElementById('score').textContent = currentScore;
-        playFeedback(true);
+        
+        // Đọc tên đáp án đúng (nếu game hỗ trợ) -> Khen giỏi
+        let soundQueue = [];
+        if (activeGame.getAnswerAudio) {
+            soundQueue = activeGame.getAnswerAudio(selected);
+        }
+        soundQueue.push(Math.random() < 0.5 ? "gioi qua.mp3" : "chinh xac.mp3");
+        playSequence(soundQueue);
+
         fireConfetti();
-        setTimeout(nextQuestion, 1500);
+        setTimeout(nextQuestion, 2000); // Chờ lâu hơn chút để nghe hết tiếng
     } else {
         btn.classList.add('wrong');
-        playFeedback(false);
-        setTimeout(() => btn.classList.remove('wrong'), 500);
+        
+        // LOGIC MỚI: Đọc tên đáp án sai -> Rồi mới báo sai
+        let soundQueue = [];
+        if (activeGame.getAnswerAudio) {
+            // Lấy âm thanh của cái nút vừa bấm nhầm
+            soundQueue = activeGame.getAnswerAudio(selected);
+        }
+        soundQueue.push("sai roi.mp3");
+        
+        playSequence(soundQueue);
+        
+        setTimeout(() => btn.classList.remove('wrong'), 1000);
     }
 }
 
 // --- UTILS ---
 function playSequence(files, index = 0) {
-    if (index >= files.length) return;
+    if (!files || index >= files.length) return;
+    
     let audio = new Audio(PATH_MP3 + files[index]);
     audio.onended = () => playSequence(files, index + 1);
     audio.onerror = () => {
         console.log("File missing: " + files[index]);
-        playSequence(files, index + 1);
+        playSequence(files, index + 1); // Bỏ qua file lỗi, chạy tiếp
     };
-    audio.play().catch(e => {});
-}
-
-function playFeedback(isCorrect) {
-    let file = isCorrect ? (Math.random() < 0.5 ? "gioi qua.mp3" : "chinh xac.mp3") : "sai roi.mp3";
-    let audio = new Audio(PATH_MP3 + file);
     audio.play().catch(e => {});
 }
 

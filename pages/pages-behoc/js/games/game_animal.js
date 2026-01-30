@@ -1,63 +1,84 @@
 // js/games/game_animal.js
 
+// Danh sách đầy đủ các con vật và hoa quả từ ảnh anh gửi
+const ANIMAL_ITEMS = [
+    {id: 'bo', name: 'Con Bò', img: 'bo.png'},
+    {id: 'cho', name: 'Con Chó', img: 'cho.png'},
+    {id: 'chuoi', name: 'Quả Chuối', img: 'chuoi.png'},
+    {id: 'chuot', name: 'Con Chuột', img: 'chuot.png'},
+    {id: 'de', name: 'Con Dê', img: 'de.png'},
+    {id: 'duahau', name: 'Dưa Hấu', img: 'duahau.png'},
+    {id: 'ech', name: 'Con Ếch', img: 'ech.png'},
+    {id: 'ga',  name: 'Con Gà', img: 'ga.png'},
+    {id: 'giun', name: 'Con Giun', img: 'giun.png'},
+    {id: 'heo', name: 'Con Heo', img: 'heo.png'},
+    {id: 'khi', name: 'Con Khỉ', img: 'khi.png'},
+    {id: 'meo', name: 'Con Mèo', img: 'meo.png'},
+    {id: 'ngua', name: 'Con Ngựa', img: 'ngua.png'},
+    {id: 'oto', name: 'Ô Tô', img: 'oto.png'},
+    {id: 'ran', name: 'Con Rắn', img: 'ran.png'},
+    {id: 'rong', name: 'Con Rồng', img: 'rong.png'},
+    {id: 'sao', name: 'Ngôi Sao', img: 'sao.png'},
+    {id: 'sutu', name: 'Sư Tử', img: 'sutu.png'},
+    {id: 'tao', name: 'Quả Táo', img: 'tao.png'},
+    {id: 'tho', name: 'Con Thỏ', img: 'tho.png'},
+    {id: 'trau', name: 'Con Trâu', img: 'trau.png'},
+    {id: 'vit', name: 'Con Vịt', img: 'vit.png'}
+];
+
 registerGame('match_animal', {
-    // 1. Sinh dữ liệu: Lấy 1 con vật ngẫu nhiên
+    // 1. Sinh dữ liệu ngẫu nhiên
     generateData: function() {
-        // Danh sách con vật (nên đồng bộ với file game_count hoặc khai báo lại ở đây)
-        const LOCAL_ITEMS = [
-            {id: 'tao', name: 'Quả Táo', img: 'tao.png'},
-            {id: 'oto', name: 'Ô Tô', img: 'oto.png'},
-            {id: 'cho', name: 'Con Chó', img: 'cho.png'},
-            {id: 'meo', name: 'Con Mèo', img: 'meo.png'},
-            {id: 'ga',  name: 'Con Gà', img: 'ga.png'},
-            {id: 'vit', name: 'Con Vịt', img: 'vit.png'},
-            {id: 'sao', name: 'Ngôi Sao', img: 'sao.png'}
-        ];
-        return LOCAL_ITEMS[Math.floor(Math.random() * LOCAL_ITEMS.length)];
+        return ANIMAL_ITEMS[Math.floor(Math.random() * ANIMAL_ITEMS.length)];
     },
 
-    // 2. Hiển thị đề bài: HIỆN HÌNH ẢNH TO (Thay vì chữ)
+    // 2. Hiển thị: HÌNH ẢNH TO + CHỮ BÊN DƯỚI
     renderDisplay: function(item) {
-        // Bấm vào hình vẫn phát tiếng đọc tên con vật
         return `
-            <div onclick="playQuestionAudio()" style="cursor:pointer; text-align:center;">
+            <div onclick="playQuestionAudio()" style="cursor:pointer; text-align:center; display:flex; flex-direction:column; align-items:center;">
                 <img src="/img/game/${item.img}" 
-                     style="width: 180px; height: 180px; object-fit: contain; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1)); animation: popIn 0.5s;">
+                     style="width: 150px; height: 150px; object-fit: contain; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1)); animation: popIn 0.5s;">
+                <div style="font-size: 2.5rem; font-weight: bold; color: #555; margin-top: 10px; background: rgba(255,255,255,0.8); padding: 5px 20px; border-radius: 15px;">
+                    ${item.name}
+                </div>
             </div>
         `;
     },
 
-    // 3. Tạo đáp án: 1 hình đúng + 3 hình sai
+    // 3. Tạo đáp án (KHÔNG TRÙNG LẶP)
     getOptions: function(correctItem) {
-        const LOCAL_ITEMS = [
-            {id: 'tao', name: 'Quả Táo', img: 'tao.png'},
-            {id: 'oto', name: 'Ô Tô', img: 'oto.png'},
-            {id: 'cho', name: 'Con Chó', img: 'cho.png'},
-            {id: 'meo', name: 'Con Mèo', img: 'meo.png'},
-            {id: 'ga',  name: 'Con Gà', img: 'ga.png'},
-            {id: 'vit', name: 'Con Vịt', img: 'vit.png'},
-            {id: 'sao', name: 'Ngôi Sao', img: 'sao.png'}
-        ];
+        // Lọc bỏ item đúng ra để lấy list sai
+        let otherItems = ANIMAL_ITEMS.filter(x => x.id !== correctItem.id);
         
-        let set = new Set([correctItem]);
-        while(set.size < 4) {
-            set.add(LOCAL_ITEMS[Math.floor(Math.random() * LOCAL_ITEMS.length)]);
-        }
-        return Array.from(set);
+        // Xáo trộn danh sách sai
+        otherItems.sort(() => Math.random() - 0.5);
+        
+        // Lấy 3 item làm nhiễu
+        let options = otherItems.slice(0, 3);
+        
+        // Thêm đáp án đúng vào
+        options.push(correctItem);
+        
+        return options; 
     },
 
-    // 4. Trang trí nút đáp án: Hiện hình ảnh nhỏ
+    // 4. Trang trí nút đáp án (Chỉ hiện hình nhỏ)
     styleOptionBtn: function(btn, item) {
         btn.innerHTML = `<img src="/img/game/${item.img}" style="height:80px; width:80px; object-fit:contain;">`;
         btn.style.padding = "5px";
     },
 
-    // 5. Âm thanh: Đọc tên con vật (VD: "Con chó")
+    // 5. Âm thanh CÂU HỎI: Hỏi "Con gì đây?"
     getAudio: function(item) {
-        return [item.id + ".mp3"];
+        return ["congi.mp3"]; 
     },
 
-    // 6. Kiểm tra kết quả
+    // 6. Âm thanh ĐÁP ÁN (Đọc tên con vật/quả)
+    getAnswerAudio: function(item) {
+        return [item.id + ".mp3"]; // VD: bo.mp3, chuoi.mp3...
+    },
+
+    // 7. Kiểm tra kết quả
     checkResult: function(selected, correct) {
         return selected.id === correct.id;
     }

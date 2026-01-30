@@ -21,7 +21,11 @@ body {
 .app-container {
     width: 100%; height: 100%;
     display: flex; flex-direction: column;
-    justify-content: center; align-items: center;
+
+    /* ĐỔI THÀNH flex-start ĐỂ NEO LÊN TRÊN */
+    justify-content: flex-start; 
+
+    align-items: center;
     position: relative; transition: all 0.3s ease;
 }
 
@@ -68,7 +72,11 @@ body {
     display: none;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+
+    /* ĐỔI THÀNH flex-start và THÊM padding-top */
+    justify-content: flex-start;
+    padding-top: 50px; /* Cách mép trên 50px cho thoáng */
+
     overflow-y: auto; 
 }
 
