@@ -1,7 +1,7 @@
 {
   "name": "Bé Vui Học",
   "short_name": "Bé Vui Học",
-  "start_url": "./index.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#FBF7F0",
