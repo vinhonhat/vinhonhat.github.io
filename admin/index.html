@@ -23,7 +23,7 @@
     
     <main class="max-w-6xl mx-auto px-4 mt-8">
         <h1 class="text-3xl font-bold text-gray-800 border-l-4 border-yellow-600 pl-4 mb-6">CMS - Quản Trị</h1>
-        <p class="text-xs text-gray-500 ml-5 mb-6">Phiên bản: V25.11 (071300)</p>
+        <p class="text-xs text-gray-500 ml-5 mb-6">Phiên bản: V26.1.31 (1400)</p>
         <div class="grid grid-cols-1 gap-8">
             
             <!-- FORM CHỈNH SỬA (Đã chuyển ra giữa) -->
@@ -46,11 +46,15 @@
                         <div>
                             <label for="basePathSelector" class="block text-sm font-medium text-gray-700">Chọn thư mục lưu</label>
                             <select id="basePathSelector" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
-                                <option value="/pages/pages-baiviet/">Bài viết [/pages/pages-baiviet/]</option>
+                                <option value="/pages/pages-baiviet/rakuten">Rakuten [/pages/pages-baiviet/rakuten]</option>
+                                <option value="/pages/pages-baiviet/seven">Seven [/pages/pages-baiviet/seven]</option>
+                                <option value="/pages/pages-baiviet/sim">Sim [/pages/pages-baiviet/sim]</option>
+                                <option value="/pages/pages-baiviet/other">other [/pages/pages-baiviet/other]</option>
                                 <option value="/pages/pages-video/">Video [/pages/pages-video/]</option>
-                                <option value="/pages/pages-app/">Ứng Dụng [/pages/pages-app/]</option>
-                                <option value="/pages/pages-giaitri/">Giải Trí [/pages/pages-giaitri/]</option>
-                                <option value="/pages/pages-hoctap/">Học Tập [/pages/pages-hoctap/]</option>
+                                <option value="/pages/pages-app/">Ứng dụng [/pages/pages-app/]</option>
+                                <option value="/pages/pages-giaitri/">giải trí [/pages/pages-giaitri/]</option>
+                                <option value="/pages/pages-hoctap/hoctap">nihongo [/pages/pages-hoctap/hoctap]</option>
+                                <option value="/pages/pages-hoctap/tokutei">tokutei [/pages/pages-hoctap/tokutei]</option>
                                 <!-- Thêm các thư mục khác của bạn ở đây nếu cần -->
                             </select>
                         </div>
@@ -288,6 +292,8 @@
             image_list_label: 'Gợi ý thư mục', // <-- Đổi tên menu cho dễ hiểu
             relative_urls: false, // <-- MỚI: THÊM DÒNG NÀY ĐỂ TẮT CHUYỂN ĐỔI
             importcss_append: true,
+
+            // nếu cần thêm mới thì chèn vào từ dấu { đến hết }, nếu sau cùng thì k thêm , nhé
             // --- DANH SÁCH MẪU TAB ĐẦY ĐỦ (2, 3, 4 TAB) ---
             templates: [
                 {
@@ -302,6 +308,22 @@
                             <div class="p-4 md:p-6">
                                 <div class="tab-panel" data-panel-id="tab1"><h3 class="text-2xl font-bold mb-3">Nội dung iPhone</h3><p>Viết nội dung...</p></div>
                                 <div class="tab-panel hidden" data-panel-id="tab2"><h3 class="text-2xl font-bold mb-3">Nội dung Android</h3><p>Viết nội dung...</p></div>
+                            </div>
+                        </div><p>&nbsp;</p>`
+                },
+                // --- CÁC MẪU CŨ KHÁC (GIỮ NGUYÊN HOẶC XÓA TÙY BẠN) ---
+                {
+                    title: '🖼️ Lưới 2 Cột (Ảnh lớn)',
+                    description: 'Chia đôi màn hình, tự động xuống dòng trên mobile',
+                    content: `
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+                            <div class="bg-white p-4 rounded-lg shadow-sm border text-center">
+                                <img src="https://placehold.co/400x250" alt="Ảnh 1" class="w-full h-auto rounded-md mb-3">
+                                <p class="font-bold text-gray-800">Tiêu đề 1</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow-sm border text-center">
+                                <img src="https://placehold.co/400x250" alt="Ảnh 2" class="w-full h-auto rounded-md mb-3">
+                                <p class="font-bold text-gray-800">Tiêu đề 2</p>
                             </div>
                         </div><p>&nbsp;</p>`
                 },
@@ -341,6 +363,74 @@
                             </div>
                         </div><p>&nbsp;</p>`
                 },
+                
+
+               {
+                    title: '📲 COMBO: 2 Tab + Lưới App (3 Cột)',
+                    description: 'Tab iPhone/Android có sẵn lưới icon App bên trong',
+                    content: `
+                        <div class="tab-container my-6 border rounded-lg overflow-hidden bg-white shadow-sm">
+                            <div class="tab-buttons flex border-b bg-gray-50">
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-yellow-500 text-yellow-600" data-tab-id="tab1">iPhone (iOS)</button>
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700" data-tab-id="tab2">Android</button>
+                            </div>
+                            
+                            <div class="p-4 md:p-6">
+                                <div class="tab-panel" data-panel-id="tab1">
+                                    <h3 class="text-xl font-bold mb-4 text-center text-gray-700">Tải về cho iPhone</h3>
+                                    
+                                    <div class="grid grid-cols-3 gap-4 text-center">
+                                        <div class="flex flex-col items-center group">
+                                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                                <img src="https://placehold.co/100x100/ec4899/ffffff?text=App+iOS" alt="App 1" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                            </a>
+                                            <span class="text-sm font-semibold text-gray-700">Tên App 1</span>
+                                        </div>
+                                        <div class="flex flex-col items-center group">
+                                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                                <img src="https://placehold.co/100x100/ec4899/ffffff?text=App+iOS" alt="App 2" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                            </a>
+                                            <span class="text-sm font-semibold text-gray-700">Tên App 2</span>
+                                        </div>
+                                        <div class="flex flex-col items-center group">
+                                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                                <img src="https://placehold.co/100x100/ec4899/ffffff?text=App+iOS" alt="App 3" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                            </a>
+                                            <span class="text-sm font-semibold text-gray-700">Tên App 3</span>
+                                        </div>
+                                    </div>
+                                    <p class="text-center mt-4 text-sm text-gray-500">(Bấm vào icon để tải)</p>
+                                </div>
+
+                                <div class="tab-panel hidden" data-panel-id="tab2">
+                                    <h3 class="text-xl font-bold mb-4 text-center text-gray-700">Tải về cho Android</h3>
+                                    
+                                    <div class="grid grid-cols-3 gap-4 text-center">
+                                        <div class="flex flex-col items-center group">
+                                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                                <img src="https://placehold.co/100x100/3b82f6/ffffff?text=App+Android" alt="App 1" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                            </a>
+                                            <span class="text-sm font-semibold text-gray-700">App Android 1</span>
+                                        </div>
+                                        <div class="flex flex-col items-center group">
+                                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                                <img src="https://placehold.co/100x100/3b82f6/ffffff?text=App+Android" alt="App 2" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                            </a>
+                                            <span class="text-sm font-semibold text-gray-700">App Android 2</span>
+                                        </div>
+                                        <div class="flex flex-col items-center group">
+                                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                                <img src="https://placehold.co/100x100/3b82f6/ffffff?text=App+Android" alt="App 3" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                            </a>
+                                            <span class="text-sm font-semibold text-gray-700">App Android 3</span>
+                                        </div>
+                                    </div>
+                                    <p class="text-center mt-4 text-sm text-gray-500">(Bấm vào icon để tải)</p>
+                                </div>
+                            </div>
+                        </div><p>&nbsp;</p>`
+                },
+                
                 {
                     title: '⚠️ Khung Lưu ý (Vàng)',
                     description: 'Tạo khung cảnh báo màu vàng',
@@ -350,7 +440,10 @@
                             <p>Nội dung lưu ý viết ở đây...</p>
                         </div>`
                 }
+                
             ],
+
+
             content_css: ['https://cdn.tailwindcss.com', '/css/style.css'], 
             height: 600,
             image_caption: true,
