@@ -3,7 +3,7 @@
 const PATH_MP3 = "/file/mp3/";
 const PATH_IMG = "/img/game/";
 
-// Biến quản lý chung
+// --- 1. BIẾN QUẢN LÝ GAME ---
 let currentScore = 0;
 let activeGame = null;
 let gameModules = {};
@@ -13,7 +13,7 @@ function registerGame(gameId, gameLogic) {
     gameModules[gameId] = gameLogic;
 }
 
-// --- ĐIỀU HƯỚNG ---
+// --- 2. ĐIỀU HƯỚNG MÀN HÌNH ---
 function unlockAudio() {
     document.getElementById('start-overlay').style.display = 'none';
     document.getElementById('menu-screen').style.display = 'flex';
@@ -42,6 +42,7 @@ function startGame(gameId) {
     nextQuestion();
 }
 
+// --- 3. QUẢN LÝ TỰ ĐỘNG ĐỌC LẠI (5 giây) ---
 function startAutoReplay() {
     stopAutoReplay();
     replayTimer = setInterval(() => {
@@ -56,7 +57,7 @@ function stopAutoReplay() {
     }
 }
 
-// --- XỬ LÝ CÂU HỎI ---
+// --- 4. XỬ LÝ CÂU HỎI ---
 function nextQuestion() {
     if (!activeGame) return;
     stopAutoReplay(); 
@@ -64,9 +65,11 @@ function nextQuestion() {
     const questionData = activeGame.generateData();
     activeGame.currentData = questionData;
 
+    // Render nội dung
     const contentDiv = document.getElementById('question-content');
     contentDiv.innerHTML = activeGame.renderDisplay(questionData);
 
+    // Render đáp án
     const gridDiv = document.getElementById('options-grid');
     gridDiv.innerHTML = '';
     gridDiv.className = 'options-grid'; 
@@ -82,6 +85,7 @@ function nextQuestion() {
         gridDiv.appendChild(btn);
     });
 
+    // Phát âm thanh sau 0.5s và bắt đầu đếm ngược
     setTimeout(() => {
         playQuestionAudio();
         startAutoReplay(); 
@@ -97,7 +101,7 @@ function playQuestionAudio() {
     }
 }
 
-// --- KIỂM TRA ĐÁP ÁN (Đã nâng cấp) ---
+// --- 5. KIỂM TRA ĐÁP ÁN ---
 function handleCheckAnswer(selected, btn) {
     const isCorrect = activeGame.checkResult(selected, activeGame.currentData);
 
@@ -116,14 +120,13 @@ function handleCheckAnswer(selected, btn) {
         playSequence(soundQueue);
 
         fireConfetti();
-        setTimeout(nextQuestion, 2000); // Chờ lâu hơn chút để nghe hết tiếng
+        setTimeout(nextQuestion, 2000); 
     } else {
         btn.classList.add('wrong');
         
-        // LOGIC MỚI: Đọc tên đáp án sai -> Rồi mới báo sai
+        // Đọc tên đáp án sai -> Báo sai
         let soundQueue = [];
         if (activeGame.getAnswerAudio) {
-            // Lấy âm thanh của cái nút vừa bấm nhầm
             soundQueue = activeGame.getAnswerAudio(selected);
         }
         soundQueue.push("sai roi.mp3");
@@ -134,7 +137,7 @@ function handleCheckAnswer(selected, btn) {
     }
 }
 
-// --- UTILS ---
+// --- 6. CÁC HÀM TIỆN ÍCH ---
 function playSequence(files, index = 0) {
     if (!files || index >= files.length) return;
     
@@ -142,7 +145,7 @@ function playSequence(files, index = 0) {
     audio.onended = () => playSequence(files, index + 1);
     audio.onerror = () => {
         console.log("File missing: " + files[index]);
-        playSequence(files, index + 1); // Bỏ qua file lỗi, chạy tiếp
+        playSequence(files, index + 1); 
     };
     audio.play().catch(e => {});
 }
@@ -157,5 +160,61 @@ function fireConfetti() {
         c.style.animationDuration = (Math.random()+1)+'s';
         document.body.appendChild(c);
         setTimeout(()=>c.remove(), 2000);
+    }
+}
+
+// ============================================================
+// --- 7. CẤU HÌNH PWA & CÀI ĐẶT APP (ĐOẠN CODE ANH CẦN ĐÂY) ---
+// ============================================================
+
+// Đăng ký Service Worker (Bắt buộc để cài App)
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => { 
+        // Anh nhớ đảm bảo file sw.js nằm ở thư mục gốc nhé
+        navigator.serviceWorker.register('/sw.js').then(reg => {
+            console.log('SW Registered!', reg);
+        }).catch(err => {
+            console.log('SW Failed', err);
+        });
+    });
+}
+
+// Xử lý nút Cài đặt
+let deferredPrompt;
+const installBtn = document.getElementById('pwa-install-btn');
+const iosGuide = document.getElementById('ios-guide');
+
+// Kiểm tra xem có đang chạy trong App không (để ẩn nút đi)
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+if (isStandalone) {
+    // Nếu đang là App rồi -> Ẩn hết
+    if(installBtn) installBtn.style.display = 'none';
+    if(iosGuide) iosGuide.style.display = 'none';
+} else {
+    // Nếu chưa là App -> Xử lý hiển thị
+    
+    // A. Với Android / Chrome PC
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        if (installBtn) installBtn.style.display = 'block'; // Hiện nút
+    });
+
+    if (installBtn) {
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                installBtn.style.display = 'none'; // Bấm xong ẩn luôn
+            }
+        });
+    }
+
+    // B. Với iPhone (iOS)
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (isIOS && iosGuide) {
+        iosGuide.style.display = 'block';
     }
 }
