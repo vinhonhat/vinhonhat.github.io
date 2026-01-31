@@ -1,4 +1,43 @@
+// --- AUTO CLEAR CACHE SYSTEM V1 ---
+(function() {
+    const CURRENT_VERSION = '26.1.31.1'; // Thay đổi số này mỗi khi bạn cập nhật web lớn
+    const STORAGE_KEY = 'site_version';
+
+    const savedVersion = localStorage.getItem(STORAGE_KEY);
+
+    if (savedVersion !== CURRENT_VERSION) {
+        console.log('Phát hiện phiên bản mới! Đang xóa cache cũ...');
+
+        // 1. Xóa toàn bộ Service Worker (PWA) cũ
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for (let registration of registrations) {
+                    registration.unregister();
+                }
+            });
+        }
+
+        // 2. Xóa bộ nhớ đệm Cache Storage (nếu có)
+        if ('caches' in window) {
+            caches.keys().then(function(names) {
+                for (let name of names) {
+                    caches.delete(name);
+                }
+            });
+        }
+
+        // 3. Lưu phiên bản mới và reload trang
+        localStorage.setItem(STORAGE_KEY, CURRENT_VERSION);
+        
+        // Reload cứng từ server (bỏ qua cache)
+        window.location.reload(true);
+    }
+})();
+// --- END SYSTEM ---
+
 document.addEventListener('DOMContentLoaded', function() {
+    // ... code cũ của bạn ở dưới ...
+    // document.addEventListener('DOMContentLoaded', function() {
 
     // =================================================================
     // =========================== MỤC LỤC =============================
