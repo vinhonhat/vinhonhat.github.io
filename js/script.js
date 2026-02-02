@@ -530,7 +530,7 @@ document.addEventListener('DOMContentLoaded', function() {
     } // <-- Dấu đóng ngoặc của hàm initBannerSlider
     
 
-    function checkAndShowPopup() {
+    async function checkAndShowPopup() {
         // THÊM DÒNG NÀY: Nếu pháo hoa đang chạy thì thôi, không hiện popup thường
         if (window.isFireworksPlaying) return;
         // ... (Toàn bộ code của hàm này được giữ nguyên, không thay đổi)
@@ -554,17 +554,28 @@ document.addEventListener('DOMContentLoaded', function() {
         if (activeHoliday) {
             popupTitle.innerHTML = `<span class="rainbow-text font-bold">🎉Chào mừng ngày ${activeHoliday.name}!🎉</span>`;
             popupText.textContent = "Chúc bạn và gia đình có một ngày lễ thật ý nghĩa và vui vẻ!";
-			// --- BỔ SUNG LOGIC CHỌN ẢNH D/M ---
-			// Mặc định là ảnh desktop ('d')
-			let imageSuffix = 'd'; 
-			// Nếu chiều rộng màn hình nhỏ hơn 768px (di động/máy tính bảng) thì đổi sang ảnh mobile ('m')
-			if (window.innerWidth < 768) {
-				imageSuffix = 'm';
-			}
-			holidayImage.src = `img/holidays/${activeHoliday.imagePrefix}${imageSuffix}.jpg`;
-			// --- KẾT THÚC LOGIC CHỌN ẢNH ---
-			holidayImage.style.display = 'block';
-			
+            
+            // --- BỔ SUNG LOGIC CHỌN ẢNH D/M ---
+            let imageSuffix = window.innerWidth < 768 ? 'm' : 'd';
+            const imgPath = `img/holidays/${activeHoliday.imagePrefix}${imageSuffix}.jpg`;
+
+            // --- KIỂM TRA ẢNH TỒN TẠI HAY LỖI (TÍNH NĂNG MỚI) ---
+            const isImageOk = await new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve(true);  // Ảnh tốt
+                img.onerror = () => resolve(false); // Ảnh lỗi hoặc chưa up
+                img.src = imgPath;
+            });
+
+            // Nếu ảnh OK -> Hiện ảnh
+            // Nếu ảnh LỖI -> Ẩn ảnh đi (chỉ hiện chữ chúc mừng ở trên)
+            if (isImageOk) {
+                holidayImage.src = imgPath;
+                holidayImage.style.display = 'block';
+            } else {
+                holidayImage.style.display = 'none'; 
+            }
+            
         } else if (typeof proverbs !== 'undefined') {
             popupTitle.textContent = "";
             popupText.innerHTML = proverbs[Math.floor(Math.random() * proverbs.length)];
