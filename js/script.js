@@ -1,6 +1,6 @@
 // --- AUTO CLEAR CACHE SYSTEM V1 ---
 (function() {
-    const CURRENT_VERSION = '26.1.31.1'; // Thay đổi số này mỗi khi bạn cập nhật web lớn
+    const CURRENT_VERSION = '26.3.23'; // Thay đổi số này mỗi khi bạn cập nhật web lớn
     const STORAGE_KEY = 'site_version';
 
     const savedVersion = localStorage.getItem(STORAGE_KEY);
