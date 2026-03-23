@@ -1,8 +1,8 @@
 const holidays = [
     // ---------------- NGÀY DƯƠNG LỊCH --------------------------------------------------------------------CHƯA CÓ-------ĐÃ OK------NĂM NAY---------MOBILE ------PC--
-    { day: 1, month: 1, isLunar: false, name: "Tết Dương Lịch", imagePrefix: "0101" },  //-----------------------------------------------------------------------------
-    { day: 1, month: 1, isLunar: true, name: "Tết Nguyên Đán", imagePrefix: "tet" },    // ÂM LỊCH                                           // 2026
-    { day: 3, month: 2, isLunar: false, name: "Thành lập Đảng Cộng Sản Việt Nam ", imagePrefix: "0203" }, //------------------------ 2026 ----------------------------
+    { day: 1, month: 1, isLunar: false, name: "Tết Dương Lịch", imagePrefix: "0101" },  //                   chưa -----------------------------
+    { day: 1, month: 1, isLunar: true, name: "Tết Nguyên Đán", imagePrefix: "tet" },    //                   chưa                                        // 2026
+    { day: 3, month: 2, isLunar: false, name: "Thành lập Đảng Cộng Sản Việt Nam ", imagePrefix: "0203" }, // chưa ------------------
     //{ day: 14, month: 2, isLunar: false, name: "Lễ Tình Nhân", imagePrefix: "0214" },                                       //ok
     { day: 27, month: 2, isLunar: false, name: "Thầy thuốc Việt Nam", imagePrefix: "0227" },                                //ok
     { day: 8, month: 3, isLunar: false, name: "Quốc tế Phụ nữ", imagePrefix: "0308" },                                      //ok
