@@ -320,7 +320,7 @@
 },
 {
   "id": "migrated-game-flappy-20251001",
-  "status": 1,
+  "status": 0,
   "type": "post",
   "category": ["game"],
   "tags": ["game"],
