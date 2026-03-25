@@ -5,7 +5,7 @@
 
 const adsBanners = [
     // --- VÍ DỤ CÁC QUẢNG CÁO ---
-    // { imageUrl: "/img/banners/ad-1.jpg", link: "https://shopee.vn" },
+    { imageUrl: "/img/banners/vietnam.jpg", link: "#" },
     // { imageUrl: "/img/banners/ad-2.jpg", link: "https://lazada.vn" },
     // { imageUrl: "/img/banners/ad-3.jpg", link: "#" }
 ];
