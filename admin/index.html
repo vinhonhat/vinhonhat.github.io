@@ -12,6 +12,7 @@
     <link rel="icon" href="/img/logoQV.png" type="image/x-icon"> 
     <!-- Tải TinyMCE (BẮT BUỘC: Bạn phải tải về và đặt vào thư mục /admin/tinymce/) -->
     <script src="/admin/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="/admin/system_data.js"></script>
 
     <style>
         body { background-color: #FBF7F0; font-family: 'Inter', sans-serif; }
@@ -45,8 +46,19 @@
 
 
     <main class="max-w-6xl mx-auto px-4 mt-8">
-        <h1 class="text-3xl font-bold text-gray-800 border-l-4 border-yellow-600 pl-4 mb-6">CMS - Quản Trị</h1>
-        <p class="text-xs text-gray-500 ml-5 mb-6">Phiên bản: V26.4.4.1</p>
+        <div class="flex flex-row justify-between items-center mb-6 border-b pb-4">        
+        <div class="flex flex-col">
+            <h1 class="text-3xl font-bold text-gray-800 leading-none">CMS Quản Trị Bài Viết</h1>
+            <span class="text-xs text-gray-500 mt-1 font-medium">Phiên bản 26.04.04 - QVIT Tool</span>
+        </div>
+        
+        <button id="logoutBtn" class="hidden bg-white border border-red-500 text-red-500 px-4 py-2 rounded-lg shadow-sm hover:bg-red-50 transition-all flex items-center font-medium">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            Đăng xuất
+        </button>
+    </div>
         <div class="grid grid-cols-1 gap-8">
             
             <!-- FORM CHỈNH SỬA (Đã chuyển ra giữa) -->
@@ -243,7 +255,7 @@
         </div>
     </div>
 
-
+    
     <!-- JAVASCRIPT CỦA TRANG CMS -->
     <script src="/admin/config.js" type="module"></script>
 
@@ -1201,71 +1213,131 @@
     
     <!-- PHẦN MẬT KHẨU ĐỂ LOGIN CỦA TRANG ADMIN-->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const loginOverlay = document.getElementById('loginOverlay');
-            const adminUserInput = document.getElementById('adminUser');
-            const adminPassInput = document.getElementById('adminPass');
-            const rememberMeCheckbox = document.getElementById('rememberMe');
-            const loginBtn = document.getElementById('loginBtn');
-            const loginError = document.getElementById('loginError');
+    document.addEventListener('DOMContentLoaded', function() {
+        const loginOverlay = document.getElementById('loginOverlay');
+        const adminUserInput = document.getElementById('adminUser');
+        const adminPassInput = document.getElementById('adminPass');
+        const rememberMeCheckbox = document.getElementById('rememberMe');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginError = document.getElementById('loginError');
+        const logoutBtn = document.getElementById('logoutBtn');
 
-            // Cấu hình
-            const CORRECT_USER = 'admin'; 
-            const CORRECT_PASS = 'quangvinh9x';
-            const EXPIRY_DAYS = 7; // Số ngày tự động đăng xuất
+        // --- HÀM GIẢI MÃ ĐÚNG QUY LUẬT CỦA VINH ---
+        // Lấy 2 ký tự (bỏ 3) -> Lấy 3 ký tự (bỏ 4) -> Lấy 4 ký tự (bỏ 5)...
+        function decodeCustom(encodedStr) {
+            if (!encodedStr) return "";
+            let result = "";
+            let pointer = 0;
+            let correctLen = 2; 
+            let junkLen = 3;    
 
-            // 1. Kiểm tra trạng thái đăng nhập và thời hạn
-            const loggedInTime = localStorage.getItem('adminLoginTime');
-            const isRemembered = localStorage.getItem('adminLoggedIn') === 'true';
+            while (pointer < encodedStr.length) {
+                // Lấy phần ký tự có khả năng là đúng
+                let fragment = encodedStr.substring(pointer, pointer + correctLen);
+                
+                // KIỂM TRA: Nếu trong phần vừa lấy có chữ 'W'
+                if (fragment.includes('W')) {
+                    // Chỉ lấy phần trước chữ W và dừng hẳn
+                    result += fragment.split('W')[0];
+                    break; 
+                }
 
-            if (isRemembered && loggedInTime) {
-                const now = new Date().getTime();
-                const diffTime = now - parseInt(loggedInTime);
-                const diffDays = diffTime / (1000 * 60 * 60 * 24);
+                result += fragment;
+                pointer += correctLen;
+                
+                // Sau khi lấy phần đúng, kiểm tra xem phần rác tiếp theo có chứa 'W' không
+                let junkPart = encodedStr.substring(pointer, pointer + junkLen);
+                if (junkPart.includes('W')) {
+                    break; // Thấy W trong phần rác cũng dừng luôn
+                }
+                
+                pointer += junkLen;
+                correctLen++;
+                junkLen++;
+            }
+            return result;
+        }
 
-                if (diffDays < EXPIRY_DAYS) {
-                    // Còn trong thời hạn 7 ngày -> Cho vào luôn
-                    loginOverlay.style.display = 'none';
-                    return;
-                } else {
-                    // Quá 7 ngày -> Xóa dữ liệu cũ để bắt đăng nhập lại
+        // Giải mã và áp dụng vào cấu hình
+        const CONFIG = {
+            adminUser: decodeCustom(_sys_config.u),
+            adminPass: decodeCustom(_sys_config.p),
+            expiryDays: _sys_config.e || 7
+        };
+        
+        // DÒNG NÀY ĐỂ KIỂM TRA:
+        //alert("Tên đăng nhập máy đọc được là: " + CONFIG.adminUser);
+        //alert("Mật khẩu máy đọc được là: " + CONFIG.adminPass);
+
+        function showAdminUI() {
+            loginOverlay.style.display = 'none';
+            document.body.style.overflow = '';
+            if (logoutBtn) {
+                logoutBtn.classList.remove('hidden');
+                logoutBtn.classList.add('flex');
+            }
+        }
+
+        // 1. Kiểm tra bộ nhớ tạm (Remember Me)
+        const loggedInTime = localStorage.getItem('adminLoginTime');
+        const isRemembered = localStorage.getItem('adminLoggedIn') === 'true';
+
+        if (isRemembered && loggedInTime) {
+            const now = new Date().getTime();
+            const diffDays = (now - parseInt(loggedInTime)) / (1000 * 60 * 60 * 24);
+            if (diffDays < CONFIG.expiryDays) {
+                showAdminUI();
+            } else {
+                localStorage.removeItem('adminLoggedIn');
+                localStorage.removeItem('adminLoginTime');
+            }
+        }
+
+        if (loginOverlay.style.display !== 'none') {
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 2. Hàm xử lý đăng nhập
+        function handleLogin() {
+            // SO SÁNH VỚI GIÁ TRỊ ĐÃ GIẢI MÃ
+            if (adminUserInput.value === CONFIG.adminUser && adminPassInput.value === CONFIG.adminPass) {
+                if (rememberMeCheckbox.checked) {
+                    localStorage.setItem('adminLoggedIn', 'true');
+                    localStorage.setItem('adminLoginTime', new Date().getTime().toString());
+                }
+                showAdminUI();
+            } else {
+                loginError.classList.remove('hidden');
+                adminPassInput.value = ''; 
+                adminPassInput.focus();
+            }
+        }
+
+        // 3. Sự kiện nút bấm và phím Enter
+        loginBtn.addEventListener('click', handleLogin);
+        
+        adminUserInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') adminPassInput.focus();
+        });
+        
+        adminPassInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleLogin();
+        });
+
+        // 4. Sự kiện Đăng xuất
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', function() {
+                if (confirm('Bạn có chắc chắn muốn đăng xuất không?')) {
                     localStorage.removeItem('adminLoggedIn');
                     localStorage.removeItem('adminLoginTime');
+                    location.reload();
                 }
-            }
-
-            // 2. Khóa cuộn trang nếu phải đăng nhập
-            document.body.style.overflow = 'hidden';
-
-            function checkLogin() {
-                if (adminUserInput.value === CORRECT_USER && adminPassInput.value === CORRECT_PASS) {
-                    if (rememberMeCheckbox.checked) {
-                        // Lưu trạng thái và mốc thời gian hiện tại (miligiây)
-                        localStorage.setItem('adminLoggedIn', 'true');
-                        localStorage.setItem('adminLoginTime', new Date().getTime().toString());
-                    }
-                    
-                    loginOverlay.style.display = 'none';
-                    document.body.style.overflow = '';
-                } else {
-                    loginError.classList.remove('hidden');
-                    adminPassInput.value = ''; 
-                    adminPassInput.focus();
-                }
-            }
-
-            loginBtn.addEventListener('click', checkLogin);
-
-            adminUserInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') adminPassInput.focus();
             });
-            adminPassInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') checkLogin();
-            });
-
-            adminUserInput.focus();
-        });
-    </script>
+        }
+        
+        if (loginOverlay.style.display !== 'none') adminUserInput.focus();
+    });
+</script>
     
 </body>
 </html>

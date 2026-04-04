@@ -22,6 +22,8 @@ export const SITE_CONFIG = {
         facebook: "https://www.facebook.com/your-page",
         tiktok: "https://www.tiktok.com/@your-profile"
     }
+    
+    
 };
 
 
