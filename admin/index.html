@@ -20,7 +20,30 @@
     </style>
 </head>
 <body class="bg-[#FBF7F0]">
-    
+
+    <!-- PHẦN ĐĂNG NHẬP CHO TRANG ADMIN -->
+    <div id="loginOverlay" class="fixed inset-0 bg-[#FBF7F0] z-[9999] flex flex-col items-center justify-center">
+        <div class="bg-white p-8 rounded-lg shadow-lg text-center w-80">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Đăng Nhập Admin</h2>
+            <img src="/img/logoQV.png" alt="Logo" class="w-16 h-16 mx-auto mb-4 rounded-full shadow-sm" onerror="this.style.display='none'"> 
+            
+            <input type="text" id="adminUser" class="border border-gray-300 p-2 rounded w-full mb-3 text-center focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Tên đăng nhập...">
+            
+            <input type="password" id="adminPass" class="border border-gray-300 p-2 rounded w-full mb-3 text-center focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Nhập mật khẩu...">
+            
+            <div class="flex items-center justify-start mb-4 text-sm text-gray-600">
+                <input type="checkbox" id="rememberMe" class="mr-2 cursor-pointer w-4 h-4">
+                <label for="rememberMe" class="cursor-pointer select-none">Nhớ tôi trên máy này</label>
+            </div>
+            
+            <button id="loginBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full font-bold transition-colors">
+                Mở Khóa
+            </button>
+            <p id="loginError" class="text-red-500 mt-3 hidden text-sm font-semibold">Sai tài khoản hoặc mật khẩu!</p>
+        </div>
+    </div>
+
+
     <main class="max-w-6xl mx-auto px-4 mt-8">
         <h1 class="text-3xl font-bold text-gray-800 border-l-4 border-yellow-600 pl-4 mb-6">CMS - Quản Trị</h1>
         <p class="text-xs text-gray-500 ml-5 mb-6">Phiên bản: V26.1.31 (1400)</p>
@@ -1151,6 +1174,74 @@
             alert('✅ Đã tạo JSON cho bài hiện tại! Hãy copy phần này và dán vào data/posts.json.');
         });
 
+    </script>
+    
+    <!-- PHẦN MẬT KHẨU ĐỂ LOGIN CỦA TRANG ADMIN-->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginOverlay = document.getElementById('loginOverlay');
+            const adminUserInput = document.getElementById('adminUser');
+            const adminPassInput = document.getElementById('adminPass');
+            const rememberMeCheckbox = document.getElementById('rememberMe');
+            const loginBtn = document.getElementById('loginBtn');
+            const loginError = document.getElementById('loginError');
+
+            // Cấu hình
+            const CORRECT_USER = 'admin'; 
+            const CORRECT_PASS = 'quangvinh9x';
+            const EXPIRY_DAYS = 7; // Số ngày tự động đăng xuất
+
+            // 1. Kiểm tra trạng thái đăng nhập và thời hạn
+            const loggedInTime = localStorage.getItem('adminLoginTime');
+            const isRemembered = localStorage.getItem('adminLoggedIn') === 'true';
+
+            if (isRemembered && loggedInTime) {
+                const now = new Date().getTime();
+                const diffTime = now - parseInt(loggedInTime);
+                const diffDays = diffTime / (1000 * 60 * 60 * 24);
+
+                if (diffDays < EXPIRY_DAYS) {
+                    // Còn trong thời hạn 7 ngày -> Cho vào luôn
+                    loginOverlay.style.display = 'none';
+                    return;
+                } else {
+                    // Quá 7 ngày -> Xóa dữ liệu cũ để bắt đăng nhập lại
+                    localStorage.removeItem('adminLoggedIn');
+                    localStorage.removeItem('adminLoginTime');
+                }
+            }
+
+            // 2. Khóa cuộn trang nếu phải đăng nhập
+            document.body.style.overflow = 'hidden';
+
+            function checkLogin() {
+                if (adminUserInput.value === CORRECT_USER && adminPassInput.value === CORRECT_PASS) {
+                    if (rememberMeCheckbox.checked) {
+                        // Lưu trạng thái và mốc thời gian hiện tại (miligiây)
+                        localStorage.setItem('adminLoggedIn', 'true');
+                        localStorage.setItem('adminLoginTime', new Date().getTime().toString());
+                    }
+                    
+                    loginOverlay.style.display = 'none';
+                    document.body.style.overflow = '';
+                } else {
+                    loginError.classList.remove('hidden');
+                    adminPassInput.value = ''; 
+                    adminPassInput.focus();
+                }
+            }
+
+            loginBtn.addEventListener('click', checkLogin);
+
+            adminUserInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') adminPassInput.focus();
+            });
+            adminPassInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') checkLogin();
+            });
+
+            adminUserInput.focus();
+        });
     </script>
     
 </body>
