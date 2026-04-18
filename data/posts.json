@@ -302,8 +302,37 @@
 
 
 
+
 {
   "_comment": "=============================================== NHÓM BÀI GAME (BẮT ĐẦU) ===============================================================",
+  "id": "migrated-game-vongquay-20251005",
+  "status": 1,
+  "type": "post",
+  "category": ["game"],
+  "tags": ["game"],
+  "date": "2025-10-05",
+  "featured": false,
+  "title": "🎡 Vòng Quay Diệu Kỳ 🎡",
+  "summary": "vòng quay giúp bạn đỡ phân vân với những lựa chọn của mình, giải trí vui",
+  "imageUrl": "img/posts/giaitri/vongquay.png",
+  "link": "/pages/pages-giaitri/vongquay.html",
+  "contentHtml": ""
+},
+{
+  "id": "migrated-game-timer",
+  "status": 1,
+  "type": "post",
+  "category": ["game"],
+  "tags": ["game"],
+  "date": "2026-04-18",
+  "featured": true,
+  "title": "⏳️ Đồng Hồ Đếm Ngược ⏳️",
+  "summary": "Đồng hồ đếm ngược giúp bạn tính thời gian làm việc hay trò chơi, giải trí vui",
+  "imageUrl": "img/posts/giaitri/timer.png",
+  "link": "/pages/pages-giaitri/timer v3.html",
+  "contentHtml": ""
+},
+{
   "id": "migrated-game-xephinh-20251025",
   "status": 0,
   "type": "post",
@@ -345,34 +374,7 @@
   "link": "/pages/pages-giaitri/FlappyBird.html",
   "contentHtml": ""
 },
-{
-  "id": "migrated-game-vongquay-20251005",
-  "status": 1,
-  "type": "post",
-  "category": ["game"],
-  "tags": ["game"],
-  "date": "2025-10-05",
-  "featured": false,
-  "title": "🎡 Vòng Quay Diệu Kỳ 🎡",
-  "summary": "vòng quay giúp bạn đỡ phân vân với những lựa chọn của mình, giải trí vui",
-  "imageUrl": "img/posts/giaitri/vongquay.png",
-  "link": "/pages/pages-giaitri/vongquay.html",
-  "contentHtml": ""
-},
-{
-  "id": "migrated-game-timer",
-  "status": 1,
-  "type": "post",
-  "category": ["game"],
-  "tags": ["game"],
-  "date": "2026-04-18",
-  "featured": false,
-  "title": "⏳️ Đồng Hồ Đếm Ngược ⏳️",
-  "summary": "Đồng hồ đếm ngược giúp bạn tính thời gian làm việc hay trò chơi, giải trí vui",
-  "imageUrl": "img/posts/giaitri/timer.png",
-  "link": "/pages/pages-giaitri/timer v3.html",
-  "contentHtml": ""
-},
+
 {
   "id": "migrated-game-sudoku-20251004",
   "status": 0,
