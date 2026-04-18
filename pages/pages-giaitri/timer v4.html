@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đồng hồ cát | Vinh ở Nhật</title> 
+    
+    <link rel="manifest" href="/manifest.json"> 
+    <meta name="theme-color" content="#F6AD55"> 
+    <link rel="apple-touch-icon" href="/img/logo1.png"> 
+    <link rel="icon" href="/img/logoQV.png" type="image/x-icon"> 
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+
+    <style>
+        :root { --primary-color: #ff6b6b; }
+        .hourglass-body { display: flex; flex-direction: column; align-items: center; width: 100%; gap: 2rem; }
+        /* Khi màn hình rộng (PC) */
+        @media (min-width: 1024px) {
+            .hourglass-body {
+                flex-direction: row-reverse; /* PC: Đảo ngược - Đồng hồ bên phải, Nút bên trái */
+                align-items: flex-start;
+                justify-content: center;
+            }
+        }
+        .primary-btn { background: var(--primary-color); color: white; padding: 12px 24px; border-radius: 8px; font-weight: 600; transition: opacity 0.2s; width: 100%; }
+        .primary-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        /* Nút phụ (Tạm dừng, Kết thúc) */
+        .secondary-btn {padding: 10px; border-radius: 8px; font-weight: 600; color: white; transition: opacity 0.2s; }
+        #hourglassCanvas { filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); background: #f9fafb; border-radius: 12px; }
+    </style>
+</head>
+
+<body class="bg-[#FBF7F0]">
+    <div id="header-placeholder" class="sticky top-0 z-50 bg-white shadow-md"></div>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-24 mt-4">
+    <div class="mb-4 lg:w-2/3">
+        <h1 class="text-2xl font-bold text-gray-800 border-l-8 border-yellow-500 pl-4">Đồng Hồ Cát</h1>
+        <p class="text-gray-500 italic pl-6">Công cụ giải trí trực tuyến V3</p>
+    </div>
+
+    <div class="flex flex-col lg:flex-row lg:space-x-8">
+        <article class="lg:w-2/3 bg-white p-6 md:p-8 rounded-lg shadow-md">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 border-b-2 border-yellow-500 inline-block pb-2">Đồng Hồ Cát Diệu Kỳ</h2>
+            </div>
+
+            <div class="hourglass-body flex flex-col lg:flex-row-reverse items-center lg:items-start justify-center gap-8 w-full">
+                <div class="relative w-[300px] h-[400px] flex-shrink-0">
+                    <canvas id="hourglassCanvas"></canvas>
+                    <div id="timerDisplay" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-3xl font-mono font-bold text-gray-800 bg-white/90 px-4 py-1 rounded-full shadow-md z-10">
+                        00:00
+                    </div>
+                </div>
+
+                <div class="w-full max-w-[300px] space-y-4">
+                    <div class="flex flex-col">
+                        <label class="text-sm text-gray-500 mb-1 ml-1 font-semibold">Thời gian (giây)</label>
+                        <input id="timeInput" type="number" value="60" min="1" class="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-yellow-500 outline-none transition-colors">
+                    </div>
+                    
+                    <div class="grid grid-cols-1 gap-2">
+                        <button id="startBtn" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-lg transition-all uppercase tracking-wider">
+                            Bắt đầu
+                        </button>
+                        
+                        <div class="grid grid-cols-2 gap-2">
+                            <button id="pauseBtn" class="bg-gray-500 hover:bg-gray-600 disabled:opacity-30 disabled:cursor-not-allowed text-white font-bold py-3 rounded-lg transition-all uppercase text-sm" disabled>
+                                Tạm dừng
+                            </button>
+                            <button id="stopBtn" class="bg-red-500 hover:bg-red-600 disabled:opacity-30 disabled:cursor-not-allowed text-white font-bold py-3 rounded-lg transition-all uppercase text-sm" disabled>
+                                Kết thúc
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <aside class="lg:w-1/3 mt-10 lg:mt-0">
+            <div class="sticky top-24 bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-bold text-gray-800 border-l-4 border-yellow-500 pl-3 mb-4">Bài viết gợi ý</h2>
+                <div id="suggested-posts-container" class="grid grid-cols-2 gap-4 lg:grid-cols-1"></div>
+            </div>
+        </aside>
+    </div>
+</main>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="/js/script.js"></script>
+    <script src="/js/content.js"></script>
+    <script src="/js/lunar-calendar.js"></script>
+    <script src="/pages/page-leve3.js"></script>
+
+
+    <script>
+        let interval = null;
+        let isPaused = false;
+        let isRunning = false;
+        let timeLeft = 0;
+        let sandTop = 1000;
+        let sandBottom = 0;
+        const totalSand = 1000;
+        const SAND_COLOR = "#f6ad55";
+        let particles = [];
+
+        const canvas = document.getElementById('hourglassCanvas');
+        const ctx = canvas.getContext('2d');
+        const timeInput = document.getElementById('timeInput');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const startBtn = document.getElementById('startBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const stopBtn = document.getElementById('stopBtn');
+
+        canvas.width = 300;
+        canvas.height = 400;
+
+        class Particle {
+            constructor() {
+                this.x = 150 + (Math.random() - 0.5) * 4;
+                this.y = 200;
+                this.vy = Math.random() * 2 + 3;
+                this.targetY = 375 - (Math.random() * 10);
+            }
+            update() { if (this.y < this.targetY) this.y += this.vy; }
+            draw() {
+                ctx.fillStyle = SAND_COLOR;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function drawSand() {
+            // Chặn giới hạn để cát không tràn ngược khi timeLeft < 0
+            const topRatio = Math.max(0, sandTop / totalSand);
+            const bottomRatio = Math.min(1, sandBottom / totalSand);
+            ctx.fillStyle = SAND_COLOR;
+
+            if (sandTop > 0) {
+                ctx.beginPath();
+                ctx.moveTo(140 - (75 * topRatio), 193 - (170 * topRatio));
+                ctx.lineTo(160 + (75 * topRatio), 193 - (170 * topRatio));
+                ctx.lineTo(152, 200);
+                ctx.lineTo(148, 200);
+                ctx.fill();
+            }
+
+            if (sandBottom > 0) {
+                ctx.beginPath();
+                const sandHeight = 170 * bottomRatio;
+                const currentY = 375 - sandHeight;
+                const widthAtY = 80 - (75 * bottomRatio); 
+                ctx.moveTo(150 - widthAtY, currentY);
+                ctx.lineTo(150 + widthAtY, currentY);
+                ctx.lineTo(235, 375);
+                ctx.lineTo(65, 375);
+                ctx.closePath();
+                ctx.fill();
+            }
+        }
+
+        function drawFrame() {
+            ctx.strokeStyle = "#4A5568";
+            ctx.lineWidth = 6;
+            ctx.lineJoin = "round";
+            ctx.beginPath();
+            ctx.moveTo(60, 20); ctx.lineTo(240, 20);
+            ctx.lineTo(150, 200);
+            ctx.lineTo(240, 380);
+            ctx.lineTo(60, 380);
+            ctx.lineTo(150, 200);
+            ctx.lineTo(60, 20);
+            ctx.stroke();
+            ctx.fillStyle = "#744210";
+            ctx.fillRect(50, 10, 200, 10);
+            ctx.fillRect(50, 380, 200, 10);
+        }
+
+        function updateDisplay() {
+            const m = Math.floor(timeLeft / 60);
+            const s = timeLeft % 60;
+            timerDisplay.textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawSand();
+            if (isRunning && !isPaused && timeLeft > 0) {
+                for(let i=0; i<5; i++) particles.push(new Particle());
+            }
+            particles.forEach((p, index) => {
+                p.update();
+                p.draw();
+                if (p.y >= p.targetY) particles.splice(index, 1);
+            });
+            drawFrame();
+            requestAnimationFrame(animate);
+        }
+
+        function startTimer() {
+            if (isRunning && !isPaused) return;
+
+            if (!isPaused) {
+                const secs = parseInt(timeInput.value) || 60;
+                timeLeft = secs;
+                sandTop = totalSand;
+                sandBottom = 0;
+                particles = [];
+            }
+
+            isRunning = true;
+            isPaused = false;
+
+            // Điều khiển trạng thái nút bấm
+            startBtn.disabled = true;
+            startBtn.classList.add('opacity-50');
+            pauseBtn.disabled = false;
+            stopBtn.disabled = false;
+            pauseBtn.textContent = "Tạm dừng";
+
+            const flow = totalSand / (parseInt(timeInput.value) || 60);
+
+            if (interval) clearInterval(interval);
+            interval = setInterval(() => {
+                if (!isPaused) {
+                    timeLeft--;
+                    sandTop -= flow;
+                    sandBottom += flow;
+                    updateDisplay();
+
+                    if (timeLeft <= 0) {
+                        finishTimer();
+                    }
+                }
+            }, 1000);
+        }
+
+        function finishTimer() {
+            clearInterval(interval);
+            isRunning = false;
+            isPaused = false;
+            startBtn.disabled = false;
+            startBtn.classList.remove('opacity-50');
+            startBtn.textContent = "Chạy lại";
+            pauseBtn.disabled = true;
+            stopBtn.disabled = true;
+            timerDisplay.textContent = "HẾT GIỜ";
+        }
+
+        function resetToInitial() {
+            clearInterval(interval);
+            isRunning = false;
+            isPaused = false;
+            timeLeft = 0;
+            sandTop = 0;
+            sandBottom = 0;
+            updateDisplay();
+            
+            startBtn.disabled = false;
+            startBtn.classList.remove('opacity-50');
+            startBtn.textContent = "Bắt đầu";
+            pauseBtn.disabled = true;
+            stopBtn.disabled = true;
+            pauseBtn.textContent = "Tạm dừng";
+        }
+
+        pauseBtn.onclick = () => {
+            isPaused = !isPaused;
+            pauseBtn.textContent = isPaused ? "Tiếp tục" : "Tạm dừng";
+        };
+
+        stopBtn.onclick = resetToInitial;
+        startBtn.onclick = startTimer;
+
+        // Khởi tạo
+        updateDisplay();
+        animate();
+        drawFrame();
+    </script>
+</body>
+</html>
