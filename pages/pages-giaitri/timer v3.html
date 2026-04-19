@@ -40,7 +40,7 @@
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-24 mt-4">
     <div class="mb-4 lg:w-2/3">
         <h1 class="text-2xl font-bold text-gray-800 border-l-8 border-yellow-500 pl-4">Đồng Hồ Cát</h1>
-        <p class="text-gray-500 italic pl-6">Công cụ giải trí trực tuyến V3</p>
+        <p class="text-gray-500 italic pl-6">Công cụ giải trí trực tuyến V3.1</p>
     </div>
 
     <div class="flex flex-col lg:flex-row lg:space-x-8">
@@ -60,7 +60,7 @@
                 <div class="w-full max-w-[300px] space-y-4">
                     <div class="flex flex-col">
                         <label class="text-sm text-gray-500 mb-1 ml-1 font-semibold">Thời gian (giây)</label>
-                        <input id="timeInput" type="number" value="60" min="1" class="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-yellow-500 outline-none transition-colors">
+                        <input id="timeInput" type="number" value="60" min="1" max="43200" class="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-yellow-500 outline-none transition-colors">
                     </div>
                     
                     <div class="grid grid-cols-1 gap-2">
@@ -99,6 +99,8 @@
 
 
     <script>
+        // 1. Khai báo biến giới hạn ở đầu (12 tiếng = 43200 giây)
+        const MAX_TIME = 43200;
         let interval = null;
         let isPaused = false;
         let isRunning = false;
@@ -116,6 +118,7 @@
         const startBtn = document.getElementById('startBtn');
         const pauseBtn = document.getElementById('pauseBtn');
         const stopBtn = document.getElementById('stopBtn');
+        
 
         canvas.width = 300;
         canvas.height = 400;
@@ -135,6 +138,18 @@
                 ctx.fill();
             }
         }
+
+        // 2. Hàm chặn nhập chữ và giới hạn 4 ký tự số
+            timeInput.onkeypress = function(e) {
+                // Chỉ cho phép nhập số (0-9)
+                if (isNaN(String.fromCharCode(e.which))) {
+                    e.preventDefault();
+                }
+                // Giới hạn độ dài tối đa 4 ký tự
+                if (this.value.length >= 4) {
+                    e.preventDefault();
+                }
+            };
 
         function drawSand() {
             // Chặn giới hạn để cát không tràn ngược khi timeLeft < 0
@@ -208,6 +223,12 @@
 
             if (!isPaused) {
                 const secs = parseInt(timeInput.value) || 60;
+
+                // Thêm đoạn giới hạn này
+                if (secs > MAX_TIME) {
+                    secs = MAX_TIME;
+                    timeInput.value = MAX_TIME; // Cập nhật lại con số hiển thị trên ô nhập
+                }
                 timeLeft = secs;
                 sandTop = totalSand;
                 sandBottom = 0;
