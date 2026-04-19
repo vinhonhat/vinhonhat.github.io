@@ -40,7 +40,7 @@
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-24 mt-4">
     <div class="mb-4 lg:w-2/3">
         <h1 class="text-2xl font-bold text-gray-800 border-l-8 border-yellow-500 pl-4">Đồng Hồ Cát</h1>
-        <p class="text-gray-500 italic pl-6">Công cụ giải trí trực tuyến V3.1</p>
+        <p class="text-gray-500 italic pl-6">Công cụ giải trí trực tuyến V3.2</p>
     </div>
 
     <div class="flex flex-col lg:flex-row lg:space-x-8">
@@ -151,6 +151,33 @@
                 }
             };
 
+        // Hàm tạo tiếng "ting" bằng Web Audio API
+        function playTing(count = 1, speed = 200) {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const oscillator = audioCtx.createOscillator();
+                    const gainNode = audioCtx.createGain();
+
+                    // Chuyển sang 'square' để tiếng gắt và to như chuông điện tử
+                    oscillator.type = 'square'; 
+                    // Tần số 880Hz - 1000Hz là dải tai người nghe rõ nhất
+                    oscillator.frequency.setValueAtTime(950, audioCtx.currentTime); 
+                    
+                    // Tăng âm lượng lên (0.2 là khá to, đừng để lên 1.0 sẽ bị rè)
+                    gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioCtx.destination);
+
+                    oscillator.start();
+                    oscillator.stop(audioCtx.currentTime + 0.3);
+                }, i * speed);
+            }
+        }
+
         function drawSand() {
             // Chặn giới hạn để cát không tràn ngược khi timeLeft < 0
             const topRatio = Math.max(0, sandTop / totalSand);
@@ -255,8 +282,18 @@
                     sandBottom += flow;
                     updateDisplay();
 
+                    // Xử lý âm thanh tại các mốc thời gian
+                    if (timeLeft === 30 || timeLeft === 15) {
+                        playTing(1); // 30s và 15s: Ting 1 lần
+                    } else if (timeLeft === 10) {
+                        playTing(2, 150); // 10s: Ting 2 lần nhanh
+                    } else if (timeLeft === 5) {
+                        playTing(3, 100); // 5s: Ting 3 lần tốc độ nhanh
+                    }
+
                     if (timeLeft <= 0) {
                         finishTimer();
+                        playTing(3, 300); // Kết thúc: Ting 3 lần chậm hơn một chút
                     }
                 }
             }, 1000);
