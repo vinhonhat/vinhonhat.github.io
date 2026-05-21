@@ -81,9 +81,19 @@
 
         <div class="game-view" id="game-screen">
             <div class="top-bar">
-                <button class="back-btn" onclick="backToMenu()">🏡 Menu</button>
-                <div style="font-size: 2rem; font-weight: bold; color: #ff6f00;">⭐ <span id="score">0</span></div>
+            <button class="back-btn" onclick="backToMenu()">🏡 Menu</button>
+            <div id="score-container" style="font-size: 2rem; font-weight: bold; color: #ff6f00;">
+                ⭐ <span id="score">0</span>
             </div>
+
+            
+            <div id="alphabet-toggle" class="mode-toggle" style="display: none;">
+                <button id="btn-learn" class="toggle-btn active" onclick="switchAlphabetMode('learn')">📖 Học</button>
+                <button id="btn-practice" class="toggle-btn" onclick="switchAlphabetMode('practice')">🎯 Luyện</button>
+            </div>
+
+            
+        </div>
 
             <div class="display-area" id="display-area">
                 <div id="question-content"></div>
