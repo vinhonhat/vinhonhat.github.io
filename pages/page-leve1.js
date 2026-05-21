@@ -216,7 +216,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 renderPostsForCategory('nhahang', 'nhahang-posts', allContent);
                 renderPostsForCategory('nongnghiep', 'nongnghiep-posts', allContent);
                 renderPostsForCategory('tokuteikhac', 'tokuteikhac-posts', allContent);
-                
+
+                //bé học
+                renderPostsForCategory('behoc', 'behoc-posts', allContent);
                 
                 //ỨNG DỤNG
                 renderPostsForCategory('windows', 'windows-posts', allContent);

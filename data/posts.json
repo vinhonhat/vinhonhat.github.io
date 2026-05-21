@@ -104,7 +104,7 @@
   "featured": true,
   "title": "Tạo file luyện viết kanji",
   "summary": "Website tạo file luyện viết kanji mọi cấp độ A4 miễn phí",
-  "imageUrl": "https://placehold.co/400x250/FBD38D/ffffff?text=Luyen+Kanji",
+  "imageUrl": "/img/posts/hoctap/nihongo/kanji.png",
   "link": "/pages/pages-hoctap/hoctap/luyen_kanji_A4_fixed.html",
   "contentHtml": ""
 },
@@ -138,7 +138,7 @@
   "featured": true,
   "title": "Tài liệu ôn thi nhà hàng",
   "summary": "tổng hợp tài liệu ôn thi tokutei nhà hàng",
-  "imageUrl": "https://placehold.co/400x250/FBD38D/ffffff?text=tokutei nhà hàng",
+  "imageUrl": "/img/posts/hoctap/tokutei/nhahang2.png",
   "link": "/pages/pages-hoctap/nhahang.html",
   "contentHtml": ""
 },
@@ -152,7 +152,7 @@
   "featured": true,
   "title": "Tổng hợp kiến thức ôn thi thực phẩm QUAN TRỌNG",
   "summary": "Tổng hợp kiến thức ôn thi thực phẩm sưu tầm ",
-  "imageUrl": "https://placehold.co/400x250/FBD38D/ffffff?text=tokutei thực phẩm",
+  "imageUrl": "/img/posts/hoctap/tokutei/thucpham2.jpg",
   "link": "https://tuangiao-my.sharepoint.com/:b:/g/personal/quangvinh0902jp_tuangiao_edu_vn/EYgrqdJw9k9Por6d0OO231cBNf0hjhduJ4rv8fjdBI098g?e=Rifoiv",
   "contentHtml": ""
 },
@@ -166,7 +166,7 @@
   "featured": true,
   "title": "Tài liệu ôn thi thực hành thực phẩm tiếng nhật",
   "summary": "Tài liệu ôn thi thực hành tokutei thực phẩm ",
-  "imageUrl": "https://placehold.co/400x250/FBD38D/ffffff?text=tokutei thực phẩm",
+  "imageUrl": "/img/posts/hoctap/tokutei/thucpham.jpg",
   "link": "https://drive.google.com/file/d/12pfErYS7TAeQVSefUPJihehGy0nwZypE/preview",
   "contentHtml": ""
 },
@@ -180,7 +180,7 @@
   "featured": true,
   "title": "Tài liệu ôn thi thực hành thực phẩm tiếng Việt",
   "summary": "Tài liệu ôn thi thực hành tokutei thực phẩm ",
-  "imageUrl": "https://placehold.co/400x250/FBD38D/ffffff?text=tokutei thực phẩm",
+  "imageUrl": "/img/posts/hoctap/tokutei/thucpham2.jpg",
   "link": "https://drive.google.com/file/d/1TDPVWISXHlgpshSoJzveSqOwlaFNiU2U/preview",
   "contentHtml": ""
 },
@@ -194,7 +194,7 @@
   "featured": true,
   "title": "Tài liệu ôn thi thực phẩm bản mới tiếng nhật ",
   "summary": "tổng hợp tài liệu ôn thi tokutei thực phẩm bản mới tiếng nhật ",
-  "imageUrl": "https://placehold.co/400x250/FBD38D/ffffff?text=tokutei thực phẩm",
+  "imageUrl": "/img/posts/hoctap/tokutei/thucpham.jpg",
   "link": "https://drive.google.com/file/d/1kyGtxFO9lcyC2uGNQ0jJC1jaXEUrOjC6/preview",
   "contentHtml": ""
 },
@@ -208,7 +208,7 @@
   "featured": true,
   "title": "Tài liệu ôn thi thực phẩm bản mới tiếng Việt ",
   "summary": "tổng hợp tài liệu ôn thi tokutei thực phẩm bản mới tiếng Việt ",
-  "imageUrl": "https://placehold.co/400x250/FBD38D/ffffff?text=tokutei thực phẩm",
+  "imageUrl": "/img/posts/hoctap/tokutei/thucpham2.jpg",
   "link": "https://drive.google.com/file/d/1KZvpNQIo0feRYHLF6T0MzVMaYSr6RB0k/preview",
   "contentHtml": ""
 },
@@ -222,7 +222,7 @@
   "featured": false,
   "title": "Tài liệu ôn thi kaigo tiếng Việt",
   "summary": "tổng hợp tài liệu ôn thi tokutei kaigo",
-  "imageUrl": "https://placehold.co/400x250/FBD38D/ffffff?text=tokutei kaigo",
+  "imageUrl": "/img/posts/hoctap/tokutei/kaigo-vi.jpg",
   "link": "https://drive.google.com/file/d/1kexk0siuQ8Wc-_k7z5GQDoUYlSSKViFm/preview",
   "contentHtml": ""
 },
@@ -236,7 +236,7 @@
   "featured": false,
   "title": "Tài liệu ôn thi kaigo tiếng nhật",
   "summary": "tổng hợp tài liệu ôn thi tokutei kaigo",
-  "imageUrl": "https://placehold.co/400x250/FBD38D/ffffff?text=tokutei kaigo",
+  "imageUrl": "/img/posts/hoctap/tokutei/kaigo-jp.jpg",
   "link": "https://drive.google.com/file/d/18Bw3xnGKxshToQWtJOaeCeCoxcEq8J7k/preview",
   "contentHtml": ""
 },
@@ -250,7 +250,7 @@
   "featured": true,
   "title": "Tài liệu tokutei chăn nuôi",
   "summary": "tổng hợp tài liệu ôn thi tokutei chăn nuôi",
-  "imageUrl": "https://placehold.co/400x250/FBD38D/ffffff?text=tokutei Chăn Nuôi",
+  "imageUrl": "/img/posts/hoctap/tokutei/channuoi.jpg",
   "link": "https://drive.google.com/file/d/1HDFnkOZ-Wj0mg-ZMpFZnkxUwstTcNKU1/view?usp=sharing",
   "contentHtml": ""
 },
@@ -264,7 +264,7 @@
   "featured": true,
   "title": "Tài liệu tokutei Trồng trọt",
   "summary": "tổng hợp tài liệu ôn thi tokutei Trồng trọt",
-  "imageUrl": "https://placehold.co/400x250/FBD38D/ffffff?text=tokutei Trồng trọt",
+  "imageUrl": "/img/posts/hoctap/tokutei/nongnghiep.png",
   "link": "https://drive.google.com/file/d/1CibrI7TFGe4ZqfASKH4lfU6beNL041n3/view?usp=sharing",
   "contentHtml": ""
 },
@@ -292,11 +292,45 @@
   "featured": true,
   "title": "Tài liệu tokutei khách sạn",
   "summary": "tổng hợp tài liệu ôn thi tokutei khách sạn",
-  "imageUrl": "https://placehold.co/400x250/FBD38D/ffffff?text=tokutei khách sạn",
+  "imageUrl": "/img/posts/hoctap/tokutei/hotel.jpg",
   "link": "https://drive.google.com/file/d/1jNsxXYqyeQce6RzVxUu6pabRXWMqHCw4/view?usp=sharing",
   "contentHtml": "",
   "_comment": "=============================================== NHÓM BÀI TOKUTEI (KẾT THÚC) ============================================================"
 },
+
+
+{
+  "_comment": "============== NHÓM BÀI BÉ HỌC (BẮT ĐẦU) ===============================================",
+  "id": "post-bé học", 
+  "type": "post",
+  "status": 1,
+  "category": ["behoc"],
+  "tags": ["behoc"],
+  "date": "2026-5-20",
+  "featured": true,
+  "title": "Bé vừa học vừa chơi",
+  "summary": "cho bé từ 3 tuổi trở lên tập làm quen với hình ảnh, bảng chử cái, con số....",
+  "imageUrl": "/behoc/behoc.png",
+  "link": "/behoc/index.html",
+  "contentHtml": ""
+},
+
+{
+  "id": "post--",
+  "type": "post",
+  "status": 0,
+  "category": ["sim"],
+  "tags": ["smartpit"],
+  "date": "2025-11-07",
+  "featured": true,
+  "title": "Hướng dẫn cách đóng cước sim data bằng SmartPit tại combini",
+  "summary": "Các cách nạp tiền tiện lợi và nhanh chóng cho sim Softbank data tại combini FAMILY.",
+  "imageUrl": "/img/posts/sim/smp/avt.jpg",
+  "link": "/pages/pages-baiviet/sim/cuoc-sim-data-softbank-smartpit-tai-combini-20251107.html",
+  "contentHtml": "<p>HƯỚNG DẪN THANH TO&Aacute;N CƯỚC SIM BẰNG SMARTPIT TẠI COMBINI</p>\n<p>khi mua sim bạn sẽ được cấp m&atilde; SmartPit cố định gồm c&oacute; 13 chữ số v&agrave; số điện thoại sim của bạn</p>\n<div class=\"tab-container my-6 border rounded-lg overflow-hidden bg-white shadow-sm\"><!-- Nút bấm -->\n<div class=\"tab-buttons flex border-b bg-gray-50\"><button class=\"tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-yellow-500 text-yellow-600\" data-tab-id=\"tab1\">&nbsp;FamilyMart</button>&nbsp;<button class=\"tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700\" data-tab-id=\"tab2\">Lawson&nbsp;</button></div>\n<!-- Nội dung -->\n<div class=\"p-4 md:p-6\">\n<div class=\"tab-panel\" data-panel-id=\"tab1\">\n<h3 class=\"text-2xl font-bold mb-3\">Hướng dẫn tại cửa h&agrave;ng Family ở c&acirc;y m&aacute;y in</h3>\n<p>tại c&acirc;y m&aacute;y in của cửa h&agrave;ng Family Mart&nbsp; l&agrave;m theo hướng dẫn</p>\n<table style=\"border-collapse: collapse; width: 100%; height: 3477px;\" border=\"1\"><colgroup><col style=\"width: 49.9035%;\"><col style=\"width: 50.0965%;\"></colgroup>\n<tbody>\n<tr style=\"height: auto;\">\n<td style=\"height: 384px;\"><img src=\"/img/posts/smp/f1.png\" alt=\"\" width=\"505\" height=\"380\"></td>\n<td style=\"height: auto;\">\n<p style=\"text-align: left;\"><strong>Bước 1:&nbsp; </strong>Tr&ecirc;n m&agrave;n h&igrave;nh bạn chọn:「<strong>ファミマTカード／楽天Edy／WAON／スマートピット</strong>」</p>\n<p style=\"text-align: left;\"><strong>ステップ 1:</strong>&nbsp;トップメニューから「<strong>ファミマカード／楽天Edy／スマートピット</strong>」を選択してください。</p>\n</td>\n</tr>\n<tr style=\"height: 346px;\">\n<td style=\"height: 346px;\">\n<p><strong>Bước 2:</strong> chọn n&uacute;t「<strong>スマートピット　Smart Pit</strong>」</p>\n<p><strong>ステップ 2:「スマートピット」</strong>を選択してください。</p>\n</td>\n<td style=\"height: 346px;\"><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"/img/posts/smp/f2.png\" alt=\"\" width=\"510\" height=\"384\"></td>\n</tr>\n<tr style=\"height: 383px;\">\n<td style=\"height: 383px;\"><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"/img/posts/smp/f3.png\" alt=\"\" width=\"509\" height=\"383\"></td>\n<td style=\"height: 383px;\">\n<p><strong>Bước 3:&nbsp;</strong>Th&ocirc;ng tin bi&ecirc;n nhận sẽ được hiển thị tr&ecirc;n m&agrave;n h&igrave;nh. Sau đ&oacute; x&aacute;c nhận đ&uacute;ng nội dung th&igrave; nhấn v&agrave;o n&uacute;t 「次へ」</p>\n<p><strong>ステップ 3: 「次へ」</strong>を選択してください。</p>\n</td>\n</tr>\n<tr style=\"height: 361px;\">\n<td style=\"height: 361px;\">\n<p><strong>Bước 4: </strong>M&agrave;n h&igrave;nh hiển thị một số th&ocirc;ng tin li&ecirc;n quan đến thanh to&aacute;n Smart Pit. Chọn「確認」OK</p>\n<p><strong>ステップ 4:&nbsp;</strong>「確認」を選択してください。</p>\n</td>\n<td style=\"height: 361px;\"><img src=\"/img/posts/smp/f4.png\" alt=\"\" width=\"499\" height=\"375\"></td>\n</tr>\n<tr style=\"height: 389px;\">\n<td style=\"height: 389px;\"><img src=\"/img/posts/smp/f5.png\" alt=\"\" width=\"512\" height=\"385\"></td>\n<td style=\"height: 389px;\">\n<p><strong>Bước 5:</strong> Nhập 13 số của thẻ SmartPit (Ch&uacute; &yacute; nhập đ&uacute;ng m&atilde; số của m&igrave;nh) rồi chọn 「OK」</p>\n<p><strong>ステップ 5:&nbsp;</strong>スマートピットポータルで取得、またはスマートピットカードに記載されているスマートピット番号（13桁）を入力してください。</p>\n</td>\n</tr>\n<tr style=\"height: 424px;\">\n<td style=\"height: 424px;\">\n<p><strong>Bước 6:&nbsp;</strong>&nbsp;Th&ocirc;ng tin thanh to&aacute;n của bạn sẽ được hiển thị tr&ecirc;n m&agrave;n h&igrave;nh, sau đ&oacute; h&atilde;y chọn ho&aacute; đơn m&agrave; bạn muốn thanh to&aacute;n v&agrave; nhấn n&uacute;t 「OK」</p>\n<p><strong>ステップ 6: </strong>お支払いする項目をリストから選択してください。</p>\n<p>※1件のみ選択できます。</p>\n</td>\n<td style=\"height: 424px;\">\n<p><img src=\"/img/posts/smp/f6.png\" alt=\"\" width=\"516\" height=\"388\"></p>\n</td>\n</tr>\n<tr style=\"height: 389px;\">\n<td style=\"height: 389px;\"><img src=\"/img/posts/smp/f7.png\" alt=\"\" width=\"512\" height=\"385\"></td>\n<td style=\"height: 389px;\">\n<p><strong>Bước 7:&nbsp;</strong>vui l&ograve;ng kiểm tra lại th&ocirc;ng tin thanh to&aacute;n đ&atilde; chọn v&agrave; nhấn n&uacute;t 「OK」</p>\n<p><strong>ステップ 7:&nbsp;</strong>お支払い内容、方法をご確認後「OK」を選択してください。</p>\n</td>\n</tr>\n<tr style=\"height: 421px;\">\n<td style=\"height: 421px;\">\n<p><strong>Bước 8: </strong>M&aacute;y sẽ in ra phiếu thanh to&aacute;n, bạn mang phiếu ra quầy thanh to&aacute;n của combini để thanh to&aacute;n l&agrave; được.</p>\n<p><strong>ステップ 8:&nbsp;</strong>出力された「Mコピーサービス申込券」をレジまでお持ちください。（お支払いは「現金」または「FamiPay」となります。）</p>\n</td>\n<td style=\"height: 421px;\">\n<p><img src=\"/img/posts/smp/f8.png\" alt=\"\" width=\"513\" height=\"385\"></p>\n</td>\n</tr>\n<tr style=\"height: 380px;\">\n<td style=\"height: 380px;\"><img src=\"/img/posts/smp/f9.jpg\" alt=\"\" width=\"506\" height=\"376\"></td>\n<td style=\"height: 380px;\">\n<p><strong>Bước 9:&nbsp;</strong>Phiếu thanh to&aacute;n c&oacute; gi&aacute; trị trong v&ograve;ng 30 ph&uacute;t kể từ khi được ph&aacute;t h&agrave;nh, để thanh to&aacute;n bạn nhanh ch&oacute;ng thanh to&aacute;n trong thời gian quy định</p>\n<p><strong>ステップ 9: </strong>「Mコピーサービス申込券」をお持ちの上、お支払い有効期限までにレジにてお支払いください。</p>\n</td>\n</tr>\n</tbody>\n</table>\n</div>\n<div class=\"tab-panel hidden\" data-panel-id=\"tab2\">\n<h3 class=\"text-2xl font-bold mb-3\">Hướng dẫn tại cửa h&agrave;ng Lawson&nbsp;</h3>\n<p>tại c&acirc;y m&aacute;y loppi của cửa h&agrave;ng lawson&nbsp; l&agrave;m theo hướng dẫn</p>\n<table style=\"border-collapse: collapse; width: 100%; height: 1788px;\" border=\"1\"><colgroup><col style=\"width: 49.9518%;\"><col style=\"width: 49.9518%;\"></colgroup>\n<tbody>\n<tr style=\"height: 388px;\">\n<td style=\"height: 388px;\"><img style=\"float: left;\" src=\"/img/posts/smp/l1.jpg\" alt=\"Ảnh yucho \" width=\"496\" height=\"373\"></td>\n<td style=\"height: 388px;\">\n<p style=\"text-align: left;\"><strong>Bước 1:&nbsp;</strong>Chọn mục 「各種番号をお持ちの方」</p>\n<p><strong>ステップ 1:</strong> Loppi画面より「各種番号をお持ちの方」を選択してください。</p>\n</td>\n</tr>\n<tr style=\"height: 346px;\">\n<td style=\"height: 346px;\">\n<p><strong>Bước 2: </strong>Nhập 13 số của thẻ Smart Pit (ch&uacute; &yacute; nhập đ&uacute;ng m&atilde; số của m&igrave;nh)</p>\n<p><strong>ステップ 2:</strong> 番号検索画面にて「スマートピット番号（13桁）」を入力してください。</p>\n</td>\n<td style=\"height: 346px;\"><img src=\"/img/posts/smp/l2.jpg\" alt=\"Ảnh rakuten \" width=\"505\" height=\"380\"></td>\n</tr>\n<tr style=\"height: 361px;\">\n<td style=\"height: 361px;\"><img src=\"/img/posts/smp/l3.jpg\" alt=\"\" width=\"510\" height=\"379\"></td>\n<td style=\"height: 361px;\">\n<p><strong>Bước 3 : </strong>Sau khi nhập xong 13 số thẻ th&igrave; nhấn「次へ」</p>\n<p><strong>ステップ 3: 「スマートピット番号（13桁）」</strong>の入力後「次へ」ボタンを押してください。<strong><br></strong></p>\n</td>\n</tr>\n<tr style=\"height: 352px;\">\n<td style=\"height: 352px;\">\n<p><strong>Bước 4: </strong>chọn「スマートピットお支払い」</p>\n<p><strong>ステップ 4:&nbsp;</strong>サービスが2件表示されますので「スマートピットお支払い」を選択してください。</p>\n</td>\n<td style=\"height: 352px;\"><img src=\"/img/posts/smp/l4.jpg\" alt=\"\" width=\"520\" height=\"386\"></td>\n</tr>\n<tr style=\"height: 341px;\">\n<td style=\"height: 341px;\"><img style=\"float: left;\" src=\"/img/posts/smp/l5.jpg\" alt=\"\" width=\"506\" height=\"376\"></td>\n<td style=\"height: 341px;\">\n<p><strong>Bước 5: </strong>M&agrave;n h&igrave;nh hiển thị nội dung cần thanh to&aacute;n, kiểm tra lại số tiền phải thanh to&aacute;n rồi nhấn v&agrave;o ch&iacute;nh nội dung đ&oacute;</p>\n<p><strong>ステップ 5: </strong>ご請求の情報が表示されます。<br>お支払いになる請求情報を選択（タッチ）してください。<strong><br></strong></p>\n</td>\n</tr>\n<tr>\n<td>\n<p><strong>Bước 6: </strong>Khi mục nội dung thanh to&aacute;n đổi sang m&agrave;u xanh dương th&igrave; chọn 「確定する」</p>\n<p><strong>ステップ 6: </strong>お支払いになる請求情報の選択（タッチ）が完了したら「確定する」ボタンを押してください。。</p>\n</td>\n<td>\n<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"/img/posts/smp/l6.jpg\" alt=\"\" width=\"519\" height=\"385\"></p>\n</td>\n</tr>\n<tr>\n<td><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"/img/posts/smp/l7.jpg\" alt=\"\" width=\"507\" height=\"376\"></td>\n<td>\n<p><strong>Bước 7:&nbsp;</strong>X&aacute;c nhận lại nội dung thanh to&aacute;n một lần nữa. Nếu đ&atilde; đ&uacute;ng rồi th&igrave; chọn 「確定する」</p>\n<p><strong>ステップ 7: </strong>選択した請求情報を再度ご確認の上、「確定する」ボタンを押してください。</p>\n</td>\n</tr>\n<tr>\n<td>\n<p><strong>Bước 8:</strong> M&aacute;y sẽ in ra phiếu thanh to&aacute;n, qu&yacute; kh&aacute;ch vui l&ograve;ng mang phiếu ra quầy thanh to&aacute;n của combini để thanh to&aacute;n</p>\n<p><strong>ステップ 8:</strong> 申込券が発券されますので、申込券をお取りになり「スマートピットお支払い申込券」と印字されていることをご確認の上、レジでお支払いください。</p>\n</td>\n<td>\n<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"/img/posts/smp/l8.jpg\" alt=\"\" width=\"517\" height=\"384\"></p>\n</td>\n</tr>\n</tbody>\n</table>\n<p>&nbsp;</p>\n</div>\n</div>\n</div>",
+  "_comment": "============== NHÓM BÀI TIẾNG NHẬT (KẾT THÚC) ==============================================="
+},
+
 
 
 
@@ -601,7 +635,7 @@
   "featured": true,
   "title": "Chặn cập nhật iphone, iPad mới nhất 2025",
   "summary": "Hướng dẫn chặn cập nhật iphone, và không hiện thông báo cập nhật IOS mới. với TvOS 26 cho mọi dòng IPhone IPad",
-  "imageUrl": "https://placehold.co/1200x630/FBF7F0/718096?text=Block OTA IOS",
+  "imageUrl": "/img/posts/other/blockota/block-ota.jpg",
   "link": "/pages/pages-baiviet/other/chan-cap-nhat-iphone-ipad-moi-nhat-2025-20251127.html",
   "contentHtml": "<p class=\"MsoNormal\" style=\"text-align: left;\"><span style=\"font-family: 'Arial',sans-serif; mso-ascii-theme-font: minor-latin; mso-hansi-theme-font: minor-latin; mso-bidi-theme-font: minor-latin;\">C&oacute; ai bị OCD giống m&igrave;nh kh&ocirc;ng. M&igrave;nh m&agrave; thấy c&aacute;i th&ocirc;ng b&aacute;o g&igrave; chưa đọc l&agrave; phải bấm đọc cho bằng được. Vậy n&ecirc;n khi iPhone cứ hiện th&ocirc;ng b&aacute;o cập nhật hệ điều h&agrave;nh iOS m&atilde;i d&ugrave; kh&ocirc;ng muốn cập nhật, bực m&igrave;nh lắm. Nhỡ <strong>cập nhật l&ecirc;n m&aacute;y chạy chậm đi, lag hơn, tốn pin hơn</strong> th&igrave; sao? C&oacute; nhiều c&aacute;ch để tắt th&ocirc;ng b&aacute;o n&agrave;y v&agrave; chặn kh&ocirc;ng cho iPhone cập nhật phần mềm, c&aacute;ch dễ nhất c&oacute; lẽ l&agrave;&nbsp;c&agrave;i<strong> profile tvOS beta</strong>&nbsp;để m&aacute;y kh&ocirc;ng kiểm tra cập nhật của iOS nữa.</span></p>\n<h3 class=\"d-flex align-items-center\" style=\"text-align: left;\"><strong><span dir=\"auto\">I.&nbsp; Tải v&agrave; c&agrave;i đặt hồ sơ</span></strong></h3>\n<p style=\"text-align: left;\"><strong><span dir=\"auto\">Bước 1: tải xuống</span></strong></p>\n<p style=\"text-align: left;\"><span dir=\"auto\">Từ thiết bị của bạn, chạm v&agrave;o n&uacute;t b&ecirc;n dưới để tải xuống cấu h&igrave;nh Block OTA. Thiết bị sẽ th&ocirc;ng b&aacute;o cho bạn khi cấu h&igrave;nh đ&atilde; được tải xuống. Mở C&agrave;i đặt, chạm v&agrave;o cấu h&igrave;nh v&agrave; l&agrave;m theo hướng dẫn tr&ecirc;n m&agrave;n h&igrave;nh để cho ph&eacute;p c&agrave;i đặt.</span></p>\n<div class=\"profile-button d-flex flex-nowrap align-items-stretch justify-content-center mb-1\" style=\"text-align: left;\"><a class=\"button profile-btn-dl linksmart rounded-pill d-flex justify-content-center align-items-center\" href=\"https://betaprofiles.dev/dl/block-ota/blockota-26.mobileconfig\">\n<div class=\"btn-dl-profile-icon me-2\">&nbsp;</div>\n<div><strong><span dir=\"auto\" style=\"color: rgb(35, 111, 161);\">Tải xuống Hồ sơ Block OTA tại đ&acirc;y</span></strong></div>\n</a></div>\n<div class=\"text-center mb-3\" style=\"text-align: left;\"><small><em><span dir=\"auto\">Kh&ocirc;ng sao nếu bạn thấy m&igrave;nh đang c&agrave;i đặt tvOS 26; đ&acirc;y kh&ocirc;ng phải l&agrave; lỗi.</span></em></small></div>\n<div class=\"text-center mb-3\" style=\"text-align: left;\"><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"/img/posts/other/blockota/1.jpg\" alt=\"Ảnh giải tr&iacute;\" width=\"1036\" height=\"988\"></div>\n<div class=\"text-center mb-3\" style=\"text-align: left;\"><strong>Bước 2: c&agrave;i đặt</strong></div>\n<div class=\"text-center mb-3\" style=\"text-align: left;\"><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"/img/posts/other/blockota/2.jpg\" alt=\"\" width=\"1036\" height=\"987\"></div>\n<div class=\"text-center mb-3\" style=\"text-align: left;\"><strong><span dir=\"auto\">Bước 3: Khởi động lại thiết bị của bạn</span></strong></div>\n<div class=\"text-center mb-3\" style=\"text-align: left;\">\n<p><span dir=\"auto\">Đừng qu&ecirc;n khởi động lại thiết bị sau khi c&agrave;i đặt cấu h&igrave;nh để mọi thay đổi c&oacute; thể được &aacute;p dụng.</span></p>\n<p><span dir=\"auto\">Để kiểm tra xem cấu h&igrave;nh c&oacute; đang hoạt động tr&ecirc;n thiết bị của bạn hay kh&ocirc;ng, h&atilde;y v&agrave;o C&agrave;i đặt &gt; C&agrave;i đặt chung &gt; Cập nhật phần mềm. Nếu hiển thị \"iOS đ&atilde; cập nhật\", bạn đ&atilde; chặn cập nhật th&agrave;nh c&ocirc;ng.</span></p>\n<p><span dir=\"auto\"><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"/img/posts/other/blockota/3.jpg\" alt=\"\" width=\"418\" height=\"698\"></span></p>\n</div>\n<div class=\"text-center mb-3\" style=\"text-align: left;\">Nếu bạn vẫn thấy bản cập nhật mới khả dụng, h&atilde;y v&agrave;o Cập nhật Beta v&agrave; chọn Tắt. Sau đ&oacute;, điều hướng đến C&agrave;i đặt &gt; C&agrave;i đặt chung &gt; Bộ nhớ iPhone v&agrave; kiểm tra xem bản cập nhật phần mềm đ&atilde; được tải xuống chưa. Nếu đ&atilde; tải xuống, h&atilde;y chọn v&agrave; x&oacute;a bản cập nhật đ&oacute; khỏi iPhone hoặc iPad.</div>\n<div class=\"text-center mb-3\">\n<h3 style=\"text-align: left;\"><strong><span dir=\"auto\">II. Gỡ c&agrave;i đặt Block OTA Profile</span></strong></h3>\n<p style=\"text-align: left;\"><span dir=\"auto\">Trong trường hợp bạn muốn thiết bị của m&igrave;nh c&oacute; thể cập nhật b&igrave;nh thường, bạn cần gỡ c&agrave;i đặt cấu h&igrave;nh OTA Block như sau:</span></p>\n<ol style=\"text-align: left;\">\n<li><span dir=\"auto\">Mở ứng dụng C&agrave;i đặt</span></li>\n<li><span dir=\"auto\">V&agrave;o Chung&nbsp;</span><strong><span dir=\"auto\">&gt; Quản l&yacute; VPN &amp; Thiết bị</span></strong></li>\n<li><span dir=\"auto\">Chạm v&agrave;o&nbsp;</span><strong><span dir=\"auto\">Hồ sơ phần mềm tvOS 26 Beta</span></strong><span dir=\"auto\">&nbsp;, chọn&nbsp;</span><strong><span dir=\"auto\">X&oacute;a hồ sơ</span></strong><span dir=\"auto\">&nbsp;v&agrave; nhập mật m&atilde; thiết bị của bạn.</span></li>\n<li><span dir=\"auto\">Khởi động lại thiết bị để &aacute;p dụng những thay đổi.</span></li>\n</ol>\n<img class=\"mb-3 img-fluid\" style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"/img/posts/other/blockota/4.jpg\" alt=\"gỡ c&agrave;i đặt hồ sơ tvos 17 beta\" width=\"1034\" height=\"985\" loading=\"lazy\">\n<p style=\"text-align: left;\"><span dir=\"auto\">B&acirc;y giờ, h&atilde;y kiểm tra bản cập nhật trong C&agrave;i đặt - Chung - Cập nhật phần mềm.</span></p>\n</div>"
 },
