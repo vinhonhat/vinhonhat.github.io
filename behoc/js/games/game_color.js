@@ -1,4 +1,5 @@
 // js/games/game_color.js
+// Color: Nhận biết các màu sắc (Đỏ, Xanh, Vàng, Tím, Đen...).
 
 const GAME_COLORS = [
     {id: 'do', name: 'Màu Đỏ', hex: '#FF5252'},

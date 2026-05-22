@@ -1,8 +1,11 @@
 // Đăng ký với Core: Tên game là 'listen_number'
+// Number: Luyện tai nghe để nhận biết các mặt số (Phạm vi từ 0 đến 30).
+
+
 registerGame('listen_number', {
     // 1. Sinh dữ liệu
     generateData: function() {
-        return Math.floor(Math.random() * 30); // Trả về 1 số ngẫu nhiên
+        return Math.floor(Math.random() * 100); // Trả về 1 số ngẫu nhiên tới 99
     },
 
     // 2. Hiển thị đề bài (HTML)
@@ -17,7 +20,7 @@ registerGame('listen_number', {
     getOptions: function(correctNum) {
         let set = new Set([correctNum]);
         while(set.size < 4) {
-            set.add(Math.floor(Math.random() * 30));
+            set.add(Math.floor(Math.random() * 100));
         }
         return Array.from(set);
     },
@@ -31,7 +34,7 @@ registerGame('listen_number', {
     getAudio: function(num) {
         // Logic đọc số (tách từ code cũ của anh)
         let list = [];
-        if (num < 10) list.push(num + ".mp3");
+        if (num >= 0 && num < 10) { list.push(num + ".mp3");}
         else if (num === 10) list.push("10.mp3");
         else if (num > 10 && num < 20) {
             list.push("10.mp3");

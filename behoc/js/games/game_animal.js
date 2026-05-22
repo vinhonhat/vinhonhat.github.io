@@ -1,6 +1,7 @@
 // js/games/game_animal.js
+// Animal: Nhận biết, đọc tên các con vật và hoa quả qua hình ảnh + âm thanh.
 
-// Danh sách đầy đủ các con vật và hoa quả từ ảnh anh gửi
+// Danh sách đầy đủ các con vật và hoa quả từ ảnh trong kho img
 const ANIMAL_ITEMS = [
     {id: 'bo', name: 'Con Bò', img: 'bo.png'},
     {id: 'cho', name: 'Con Chó', img: 'cho.png'},
@@ -23,7 +24,30 @@ const ANIMAL_ITEMS = [
     {id: 'tao', name: 'Quả Táo', img: 'tao.png'},
     {id: 'tho', name: 'Con Thỏ', img: 'tho.png'},
     {id: 'trau', name: 'Con Trâu', img: 'trau.png'},
-    {id: 'vit', name: 'Con Vịt', img: 'vit.png'}
+    {id: 'vit', name: 'Con Vịt', img: 'vit.png'},
+
+    {id: 'ca', name: 'Cái Ca', img: 'ca.png'},
+    {id: 'tran', name: 'Con Trăn', img: 'tran.png'},
+    {id: 'am', name: 'Cái Ấm', img: 'am.png'},
+    {id: 'ca_fish', name: 'Con Cá', img: 'ca_fish.png'},
+    {id: 'dudu', name: 'Đu Đủ', img: 'dudu.png'},
+    {id: 'embe', name: 'Em Bé', img: 'embe.png'},
+    {id: 'bonghoa', name: 'Bông Hoa', img: 'bonghoa.png'},
+    {id: 'bi', name: 'Viên Bi', img: 'bi.png'},
+    {id: 'keo', name: 'Cái Kéo', img: 'keo.png'},
+    {id: 'na', name: 'Quả Na', img: 'na.png'},
+    {id: 'ong', name: 'Con Ong', img: 'ong.png'},
+    {id: 'o_umbrella', name: 'Cái Ô', img: 'o_umbrella.png'},
+    {id: 'mo', name: 'Quả Mơ', img: 'mo.png'},
+    {id: 'pin', name: 'Viên Pin', img: 'pin.png'},
+    {id: 'qua', name: 'Món Quà', img: 'qua.png'},
+    {id: 'rua', name: 'Con Rùa', img: 'rua.png'},
+    {id: 'tom', name: 'Con Tôm', img: 'tom.png'},
+    {id: 'mu', name: 'Cái Mũ', img: 'mu.png'},
+    {id: 'vo', name: 'Quyển Vở', img: 'vo.png'},
+    {id: 'xedap', name: 'Xe Đạp', img: 'xedap.png'},
+    {id: 'yta', name: 'Y Tá', img: 'yta.png'}
+
 ];
 
 registerGame('match_animal', {

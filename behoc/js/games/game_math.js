@@ -1,4 +1,5 @@
 // js/games/game_math.js
+// Math: Bé làm tính cộng, trừ cơ bản (Phạm vi trong khoảng 10)
 
 registerGame('math', {
     // 1. Sinh phép tính (Cộng hoặc Trừ trong phạm vi 10)

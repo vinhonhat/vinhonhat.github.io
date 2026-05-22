@@ -1,4 +1,5 @@
 // js/games/game_count.js
+// Count: Tập đếm số lượng hình vẽ (Phạm vi từ 1 đến 10).
 
 const ITEMS = [
     {id: 'tao', name: 'Quả Táo', img: 'tao.png'},
