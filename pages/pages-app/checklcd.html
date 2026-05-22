@@ -539,7 +539,7 @@
     // Gán sự kiện cho các nút loa trái
     document.getElementById('left-speaker').addEventListener('click', () => {
         // Đường dẫn từ file 1
-        audioPlayer.src = '/file/mp3/left_speaker.mp3'; 
+        audioPlayer.src = '/file/mp3/check/left_speaker.mp3'; 
         audioPlayer.play().catch(e => { 
             speakerStatus.textContent = 'Lỗi phát âm thanh. Vui lòng click lại.'; 
             console.error(e); 
@@ -550,7 +550,7 @@
     // --- LOA PHẢI  ---
     document.getElementById('right-speaker').addEventListener('click', () => {
         // Đường dẫn từ file 1 (ĐÃ SỬA LỖI TYPO 'right_speakermp3')
-        audioPlayer.src = '/file/mp3/right_speaker.mp3'; 
+        audioPlayer.src = '/file/mp3/check/right_speaker.mp3'; 
         audioPlayer.play().catch(e => { 
             speakerStatus.textContent = 'Lỗi phát âm thanh. Vui lòng click lại.'; 
             console.error(e); 
@@ -562,10 +562,10 @@
     document.getElementById('stereo-speaker').addEventListener('click', () => {
         // 1. Danh sách nhạc (Bạn thêm bao nhiêu bài tuỳ thích vào đây)
         const stereoList = [
-            '/file/mp3/tet nay con se ve.mp3',       // Bài 1 tết này con sẽ về
-            '/file/mp3/Viet Nam oi.mp3',  // Bài 2 "Tinh Thần Việt Nam" của Liêu Phong
-            '/file/mp3/Khuc-Giao-Mua-Remix-Chau-Khai-Phong.mp3',  // Bài 3 (Ví dụ)
-            // '/file/mp3/bai_khac.mp3',  // Cứ thêm dấu phẩy và dòng mới
+            '/file/mp3/check/tet nay con se ve.mp3',       // Bài 1 tết này con sẽ về
+            '/file/mp3/check/Viet Nam oi.mp3',  // Bài 2 "Tinh Thần Việt Nam" của Liêu Phong
+            '/file/mp3/check/Khuc-Giao-Mua-Remix-Chau-Khai-Phong.mp3',  // Bài 3 (Ví dụ)
+            // '/file/mp3/check/bai_khac.mp3',  // Cứ thêm dấu phẩy và dòng mới
         ];
 
         // 2. Chọn ngẫu nhiên 1 bài trong danh sách trên
