@@ -40,7 +40,15 @@ registerGame('color', {
 
     // 5. Âm thanh: Đọc tên màu (Ví dụ: do.mp3)
     getAudio: function(colorObj) {
-        return [colorObj.id + ".mp3"];
+
+        return [
+
+            "/file/mp3/game/color/mau.mp3",
+
+            "/file/mp3/game/color/" +
+            colorObj.id +
+            ".mp3"
+        ];
     },
 
     // 6. Kiểm tra

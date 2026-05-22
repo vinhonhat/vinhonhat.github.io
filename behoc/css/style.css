@@ -359,4 +359,21 @@ body {
     .card-img { width: 80px; height: 80px; }
     .learn-keyboard { grid-template-columns: repeat(4, 1fr); gap: 5px; }
 }
+.key-btn.active-key {
 
+    background:
+        linear-gradient(
+            135deg,
+            #ff7043,
+            #ff9800
+        );
+
+    color: white;
+
+    border-color: #ff5722;
+
+    transform: scale(1.05);
+
+    box-shadow:
+        0 4px 12px rgba(255,87,34,0.35);
+}
