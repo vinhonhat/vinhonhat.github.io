@@ -8,6 +8,8 @@ const ITEMS = [
     {id: 'meo', name: 'Con Mèo', img: 'meo.png'},
     {id: 'ga',  name: 'Con Gà', img: 'ga.png'},
     {id: 'vit', name: 'Con Vịt', img: 'vit.png'},
+    {id: 'ong',  name: 'Con Ong', img: 'ong.png'},
+    {id: 'bi', name: 'Viên bi', img: 'bi.png'},
     {id: 'sao', name: 'Ngôi Sao', img: 'sao.png'}
 ];
 
