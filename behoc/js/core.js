@@ -1,6 +1,6 @@
 // js/core.js
 
-const PATH_MP3 = "/file/mp3/";
+const PATH_MP3 = "/file/mp3/game/";
 const PATH_IMG = "/img/game/";
 
 // --- 1. BIẾN QUẢN LÝ GAME ---
@@ -8,6 +8,7 @@ let currentScore = 0;
 let activeGame = null;
 let gameModules = {};
 let replayTimer = null; 
+let currentAudio = null;
 
 function registerGame(gameId, gameLogic) {
     gameModules[gameId] = gameLogic;
@@ -20,26 +21,102 @@ function unlockAudio() {
 }
 
 function backToMenu() {
+
+    // =====================================================
+    // Dừng auto replay
+    // =====================================================
+
     stopAutoReplay();
+
+
+
+    // =====================================================
+    // Dừng audio đang phát
+    // =====================================================
+
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        currentAudio = null;
+    }
+
+
+
+    // =====================================================
+    // Xóa nội dung game cũ
+    // tránh lưu ảnh / nút cũ
+    // =====================================================
+
+    document.getElementById('question-content').innerHTML = '';
+    document.getElementById('options-grid').innerHTML = '';
+
+
+
+    // =====================================================
+    // Ẩn game
+    // =====================================================
+
     document.getElementById('game-screen').style.display = 'none';
+
+
+
+    // =====================================================
+    // Hiện menu
+    // =====================================================
+
     document.getElementById('menu-screen').style.display = 'flex';
+
+
+
+    // =====================================================
+    // Reset game hiện tại
+    // =====================================================
+
     activeGame = null;
 }
 
 function startGame(gameId) {
+
     if (!gameModules[gameId]) {
         alert("Game này đang bảo trì hoặc chưa tải xong!");
         return;
     }
-    
+
+    // =====================================================
+    // Dừng audio cũ nếu còn
+    // =====================================================
+
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        currentAudio = null;
+    }
+
+    // =====================================================
+    // Reset giao diện cũ
+    // =====================================================
+
+    document.getElementById('question-content').innerHTML = '';
+    document.getElementById('options-grid').innerHTML = '';
+
     activeGame = gameModules[gameId];
+
     currentScore = 0;
     document.getElementById('score').textContent = currentScore;
-    
+
     document.getElementById('menu-screen').style.display = 'none';
     document.getElementById('game-screen').style.display = 'flex';
-    
-    nextQuestion();
+
+    // Dingdong lúc vào game
+    let introAudio = new Audio(PATH_MP3 + "dingdong.mp3");
+
+    introAudio.play().catch(e => {
+        nextQuestion();
+    });
+
+    introAudio.onended = () => {
+        nextQuestion();
+    };
 }
 
 // --- 3. QUẢN LÝ TỰ ĐỘNG ĐỌC LẠI (5 giây) ---
@@ -85,13 +162,23 @@ function nextQuestion() {
         gridDiv.appendChild(btn);
     });
 
-    // Phát âm thanh sau 0.5s và bắt đầu đếm ngược
-    setTimeout(() => {
-        playQuestionAudio();
-        startAutoReplay(); 
-    }, 500);
-}
+    // =====================================================
+// Đợi giao diện hiện xong
+// =====================================================
 
+// Đợi render UI xong rồi đọc
+setTimeout(() => {
+
+    playQuestionAudio();
+
+    // Bật auto replay sau lần đọc đầu
+    setTimeout(() => {
+        startAutoReplay();
+    }, 3000);
+
+}, 500);
+
+}
 function playQuestionAudio() {
     if (activeGame && activeGame.currentData) {
         const files = activeGame.getAudio(activeGame.currentData);
@@ -137,16 +224,112 @@ function handleCheckAnswer(selected, btn) {
     }
 }
 
-// --- 6. CÁC HÀM TIỆN ÍCH ---
-function playSequence(files, index = 0) {
+// =====================================================
+// ĐỌC DANH SÁCH AUDIO
+// =====================================================
+
+function playSequence(files, index = 0, isNewSequence = true) {
+
+    // Nếu hết file -> dừng
     if (!files || index >= files.length) return;
-    
-    let audio = new Audio(PATH_MP3 + files[index]);
-    audio.onended = () => playSequence(files, index + 1);
+
+    // =====================================================
+    // Chỉ dừng audio cũ khi bắt đầu sequence mới
+    // =====================================================
+
+    if (isNewSequence && currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+    }
+
+    // Tạo audio mới
+    let audioPath = files[index];
+
+    // Nếu chưa phải full path
+    if (
+        !audioPath.startsWith('/')
+    ) {
+
+        audioPath =
+            PATH_MP3 + audioPath;
+    }
+
+    let audio = new Audio(audioPath);
+
+    // Lưu audio hiện tại
+    currentAudio = audio;
+
+
+
+    // =====================================================
+    // TỐC ĐỘ ĐỌC
+    // =====================================================
+
+    // Nếu là số ghép nhiều file
+    if (files.length >= 2) {
+        audio.playbackRate = 1.15;
+    }
+
+    // Số đơn giữ nguyên
+    else {
+        audio.playbackRate = 1.0;
+    }
+
+
+
+    // =====================================================
+    // NỐI ÂM
+    // =====================================================
+
+    audio.onloadedmetadata = () => {
+
+        let overlap = 0;
+
+        // Nếu là số ghép
+        if (files.length >= 2) {
+
+            // File "mươi" nối sát hơn
+            if (files[index] === "muoi.mp3") {
+                overlap = 180;
+            }
+
+            // Các file khác nối nhẹ
+            else {
+                overlap = 140;
+            }
+        }
+
+        let nextDelay = Math.max(
+            (audio.duration * 1000) - overlap,
+            100
+        );
+
+        // =================================================
+        // Phát file tiếp theo
+        // =================================================
+
+        setTimeout(() => {
+            playSequence(files, index + 1, false);
+        }, nextDelay);
+    };
+
+
+
+    // =====================================================
+    // Nếu thiếu file
+    // =====================================================
+
     audio.onerror = () => {
         console.log("File missing: " + files[index]);
-        playSequence(files, index + 1); 
+        playSequence(files, index + 1, false);
     };
+
+
+
+    // =====================================================
+    // Phát audio
+    // =====================================================
+
     audio.play().catch(e => {});
 }
 
