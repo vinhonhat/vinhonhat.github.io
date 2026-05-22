@@ -15,7 +15,7 @@ const ALPHABET_DICT = {
     'k': { word: 'cái kéo', img: 'keo.png', spellAudio: 'spell_k.mp3' },
     'l': { word: 'con lợn', img: 'heo.png', spellAudio: 'spell_l.mp3' },
     'm': { word: 'con mèo', img: 'meo.png', spellAudio: 'spell_m.mp3' },
-    'n': { word: 'cái nơ', img: 'no.png', spellAudio: 'spell_n.mp3' },
+    'n': { word: 'Quả Na', img: 'na.png', spellAudio: 'spell_n.mp3' },
     'o': { word: 'con ong', img: 'ong.png', spellAudio: 'spell_o.mp3' },
     'ô': { word: 'cái ô', img: 'o_umbrella.png', spellAudio: 'spell_oo.mp3' },
     'ơ': { word: 'quả mơ', img: 'mo.png', spellAudio: 'spell_ow.mp3' },
