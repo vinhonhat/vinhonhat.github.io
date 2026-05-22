@@ -32,7 +32,7 @@ const ANIMAL_ITEMS = [
     {id: 'ca_fish', name: 'Con Cá', img: 'ca_fish.png'},
     {id: 'dudu', name: 'Đu Đủ', img: 'dudu.png'},
     {id: 'embe', name: 'Em Bé', img: 'embe.png'},
-    {id: 'bonghoa', name: 'Bông Hoa', img: 'bonghoa.png'},
+    {id: 'bonghoa', name: 'Bông Hoa', img: 'hoa.png'},
     {id: 'bi', name: 'Viên Bi', img: 'bi.png'},
     {id: 'keo', name: 'Cái Kéo', img: 'keo.png'},
     {id: 'na', name: 'Quả Na', img: 'na.png'},
