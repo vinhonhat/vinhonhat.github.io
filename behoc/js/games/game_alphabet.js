@@ -98,16 +98,19 @@ function startAlphabetGame() {
 
     <div style="
         width:100%;
-        max-width:900px;
+        max-width:650px;
         margin:0 auto;
-        min-height:100%;
+
+        height:min(90vh,900px);
+        overflow:hidden;
+
         display:flex;
         flex-direction:column;
 
         background:rgba(255,255,255,0.25);
         backdrop-filter:blur(10px);
-        border-radius:30px;
-        padding:20px;
+        border-radius:22px;
+        padding:12px;
         box-shadow:0 8px 30px rgba(0,0,0,0.15);
         border:3px solid rgba(255,255,255,0.5);
     ">
@@ -121,11 +124,11 @@ function startAlphabetGame() {
             gap:10px;
         ">
 
-            <!-- HOME -->
+            <!-- HOME MENU-->
             <button
                 onclick="closeAlphabetGame()"
                 class="back-btn">
-                🏠 Menu
+                🏠 
             </button>
 
             <!-- SCORE -->
@@ -139,22 +142,25 @@ function startAlphabetGame() {
                 ⭐ ${alphabetScore}
             </div>
 
-            <!-- MODE -->
+            <!-- MODE LUYỆN HỌC -->
             <button
                 id="alphabet-mode-btn"
                 onclick="switchAlphabetMode()"
+                Class="alphabet-icon-btn"
                 style="
-                    padding:12px 18px;
-                    font-size:22px;
+                    background:transparent;
                     border:none;
-                    border-radius:14px;
-                    background:linear-gradient(135deg,#4caf50,#66bb6a);
-                    color:white;
-                    font-weight:bold;
-                    min-width:130px;
+                    box-shadow:none;
+                    font-size:42px;
+                    padding:0;
+                    width:auto;
+                    height:auto;
+                    transition:transform 0.15s;
+                    onmousedown="this.style.transform='scale(0.9)'"
+                    onmouseup="this.style.transform='scale(1)'"
                 "
             >
-                🎮 Luyện
+                🎯
             </button>
 
         </div>
@@ -206,7 +212,7 @@ function closeAlphabetGame() {
 }
 
 // -----------------------------------------------------
-// SWITCH MODE
+// SWITCH MODE LUYỆN HỌC
 // -----------------------------------------------------
 
 function switchAlphabetMode() {
@@ -220,7 +226,7 @@ function switchAlphabetMode() {
 
         alphabetMode = 'practice';
 
-        btn.innerHTML = '📖 Học';
+        btn.innerHTML = '📖';
 
         btn.style.background =
             'linear-gradient(135deg,#ff9800,#ffb74d)';
@@ -229,7 +235,7 @@ function switchAlphabetMode() {
 
         alphabetMode = 'learn';
 
-        btn.innerHTML = '🎯 Luyện';
+        btn.innerHTML = '🎯';
 
         btn.style.background =
             'linear-gradient(135deg,#4caf50,#66bb6a)';
@@ -281,7 +287,8 @@ function renderLearnMode() {
         <div style="
             display:flex;
             flex-direction:column;
-            height:calc(100vh - 120px);
+            height:100%;
+            min-height:0;
             gap:15px;
         ">
 
@@ -310,7 +317,7 @@ function renderLearnMode() {
                     <div
                         id="learn-char"
                         style="
-                            font-size:140px;
+                            font-size:min(24vw,140px);
                             font-weight:bold;
                             text-align:center;
                             line-height:1;
@@ -331,8 +338,8 @@ function renderLearnMode() {
                             id="learn-img"
                             src=""
                             style="
-                                width:160px;
-                                height:160px;
+                                width:min(28vw,160px);
+                                height:min(28vw,160px);
                                 object-fit:contain;
                             "
                         >
@@ -340,7 +347,7 @@ function renderLearnMode() {
                         <div
                             id="learn-word"
                             style="
-                                font-size:34px;
+                                font-size:min(6vw,34px);
                                 text-align:center;
                                 margin-top:10px;
                                 font-weight:bold;
@@ -406,7 +413,7 @@ function selectAlphabetChar(char) {
             {btn.classList.add('active-key');
         }
     });
-    
+
     const data = ALPHABET_DATA[char];
 
     document.getElementById('learn-char').textContent =
@@ -486,7 +493,8 @@ function renderPracticeMode() {
         <div style="
             display:flex;
             flex-direction:column;
-            height:calc(100vh - 120px);
+            height:100%;
+            min-height:0;
         ">
 
             <!-- PHẦN TRÊN -->
