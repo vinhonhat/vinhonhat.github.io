@@ -410,5 +410,8 @@ body {
 .alphabet-icon-btn::-moz-focus-inner{
     border:0;
 }
-
+.option-btn{
+    min-height:70px;
+    font-size:min(8vw,32px);
+}
 

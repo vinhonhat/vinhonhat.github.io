@@ -102,7 +102,7 @@ function startAlphabetGame() {
         margin:0 auto;
 
         height:min(90vh,900px);
-        overflow:hidden;
+        overflow:auto;
 
         display:flex;
         flex-direction:column;
@@ -170,6 +170,8 @@ function startAlphabetGame() {
             id="alphabet-content"
             style="
                 flex:1;
+                min-height:0;
+                overflow:hidden;
             "
         ></div>
 
@@ -374,7 +376,9 @@ function renderLearnMode() {
                 style="
                     flex:1;
                     overflow-y:auto;
-                    padding-bottom:30px;
+                    min-height:0;
+                    padding-bottom:80px;
+                    -webkit-overflow-scrolling:touch;
                 "
             >
 
@@ -500,12 +504,12 @@ function renderPracticeMode() {
             <!-- PHẦN TRÊN -->
             <div style="
                 text-align:center;
-                margin-bottom:25px;
+                margin-bottom:12px;
                 flex-shrink:0;
 
                 background:white;
-                border-radius:28px;
-                padding:20px;
+                border-radius:22px;
+                padding:12px;
                 box-shadow:
                     0 4px 12px rgba(0,0,0,0.12);
             ">
@@ -519,8 +523,8 @@ function renderPracticeMode() {
                     <img
                         src="/img/game/${data.img}"
                         style="
-                            width:180px;
-                            height:180px;
+                            width:min(34vw,120px);
+                            height:min(34vw,120px);
                             object-fit:contain;
                         "
                     >
@@ -531,7 +535,7 @@ function renderPracticeMode() {
                 <div style="
                     width:100%;
                     text-align:center;
-                    font-size:34px;
+                    font-size:min(7vw,28px);
                     font-weight:bold;
                     margin-top:10px;
                     margin-bottom:18px;
@@ -549,7 +553,7 @@ function renderPracticeMode() {
                 gap:15px;
                 align-content:start;
                 position:relative;
-                padding-top:50px;
+                padding-top:38px;
             ">
 
                 <!-- NÚT LOA -->
@@ -562,10 +566,10 @@ function renderPracticeMode() {
                         transform:translateX(-50%);
                         border:none;
                         background:white;
-                        width:70px;
-                        height:70px;
+                        width:56px;
+                        height:56px;
                         border-radius:50%;
-                        font-size:38px;
+                        font-size:30px;
                         box-shadow:0 3px 8px rgba(0,0,0,0.2);
                         z-index:10;
                     "
