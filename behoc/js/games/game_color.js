@@ -43,7 +43,7 @@ registerGame('color', {
 
         return [
 
-            "/file/mp3/game/color/mau.mp3",
+            //"/file/mp3/game/color/mau.mp3",
 
             "/file/mp3/game/color/" +
             colorObj.id +
