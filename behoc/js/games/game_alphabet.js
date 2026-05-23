@@ -291,15 +291,17 @@ function renderLearnMode() {
             flex-direction:column;
             height:100%;
             min-height:0;
-            gap:15px;
+            gap:8px;
         ">
 
             <!-- KHUNG HIỂN THỊ -->
             <div
                 style="
                     background:white;
+                    max-height:38%;
+                    overflow:hidden;
                     border-radius:25px;
-                    padding:20px;
+                    padding:10px 14px;
                     flex-shrink:0;
                     box-shadow:0 3px 10px rgba(0,0,0,0.12);
                 "
@@ -319,7 +321,7 @@ function renderLearnMode() {
                     <div
                         id="learn-char"
                         style="
-                            font-size:min(24vw,140px);
+                            font-size:clamp(60px,16vw,100px);
                             font-weight:bold;
                             text-align:center;
                             line-height:1;
@@ -340,8 +342,8 @@ function renderLearnMode() {
                             id="learn-img"
                             src=""
                             style="
-                                width:min(28vw,160px);
-                                height:min(28vw,160px);
+                                width:clamp(70px,20vw,110px);
+                                height:clamp(70px,20vw,110px);
                                 object-fit:contain;
                             "
                         >
@@ -349,7 +351,7 @@ function renderLearnMode() {
                         <div
                             id="learn-word"
                             style="
-                                font-size:min(6vw,34px);
+                                font-size:clamp(18px,4vw,26px);
                                 text-align:center;
                                 margin-top:10px;
                                 font-weight:bold;
@@ -550,7 +552,7 @@ function renderPracticeMode() {
                 flex:1;
                 display:grid;
                 grid-template-columns:repeat(2,1fr);
-                gap:15px;
+                gap:8px;
                 align-content:start;
                 position:relative;
                 padding-top:38px;
