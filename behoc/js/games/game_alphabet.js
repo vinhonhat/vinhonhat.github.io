@@ -286,13 +286,16 @@ function renderLearnMode() {
 
     content.innerHTML = `
     
-        <div style="
-            display:flex;
-            flex-direction:column;
-            height:100%;
-            min-height:0;
-            gap:8px;
-        ">
+        <div
+            class="learn-layout"
+            style="
+                display:flex;
+                flex-direction:column;
+                height:100%;
+                min-height:0;
+                gap:12px;
+            "
+        >
 
             <!-- KHUNG HIỂN THỊ -->
             <div
@@ -362,10 +365,11 @@ function renderLearnMode() {
 
                 </div>
 
-                <!-- ICON AUDIO -->
+                <!-- ICON AUDIO loa -->
                 <div style="
+                    top:-22px;
                     text-align:center;
-                    font-size:42px;
+                    font-size:22px;
                     margin-top:10px;
                 ">
                     🔊
