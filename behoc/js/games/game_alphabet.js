@@ -527,6 +527,7 @@ function renderPracticeMode() {
                 ">
 
                     <img
+                        id="practice-img"
                         src="/img/game/${data.img}"
                         style="
                             width:min(34vw,120px);
@@ -536,8 +537,22 @@ function renderPracticeMode() {
                     >
 
                 </div>
-
-                <!-- TÊN -->
+                <div
+                    id="practice-answer-word"
+                    style="
+                        grid-column:1 / -1;
+                        text-align:center;
+                        font-size:34px;
+                        font-weight:bold;
+                        color:#ff5722;
+                        opacity:0;
+                        transform:scale(0.8);
+                        transition:all 0.3s;
+                    "
+                >
+                    ${data.word}
+                </div>
+                <!-- TÊN 
                 <div style="
                     width:100%;
                     text-align:center;
@@ -547,7 +562,7 @@ function renderPracticeMode() {
                     margin-bottom:18px;
                 ">
                     ${data.word}
-                </div>
+                </div>-->
 
             </div>
 
@@ -584,7 +599,7 @@ function renderPracticeMode() {
                 </button>
 
                 ${buttons}
-
+                
             </div>
 
         </div>
@@ -599,7 +614,10 @@ function renderPracticeMode() {
 
 function playPracticeQuestion() {
 
-    playAlphabetAudio(currentQuestion + '.mp3');
+    const data =
+        ALPHABET_DATA[currentQuestion];
+
+    playAlphabetAudio(data.audio);
 }
 
 // -----------------------------------------------------
@@ -623,6 +641,36 @@ function checkAlphabetAnswer(char, btn) {
 
         // hiệu ứng xanh
         btn.classList.add('correct');
+        // hiện tên delay nhẹ
+        setTimeout(() => {
+
+            const word =
+                document.getElementById(
+                    'practice-answer-word'
+                );
+
+            word.style.opacity = '1';
+
+            word.style.transform = 'scale(1)';
+
+        }, 300);
+
+        // rung hình
+        const img =
+            document.getElementById(
+                'practice-img'
+            );
+
+        img.animate(
+            [
+                { transform:'scale(1)' },
+                { transform:'scale(1.08)' },
+                { transform:'scale(1)' }
+            ],
+            {
+                duration:500
+            }
+        );
 
         alphabetScore++;
 
@@ -651,7 +699,7 @@ function checkAlphabetAnswer(char, btn) {
 
             renderPracticeMode();
 
-        }, 1000);
+        }, 2000);
     }
 
     // ====================================
