@@ -7,6 +7,7 @@
 // ✔ Đáp án đỏ/xanh
 // ✔ Animation rung sai
 // ✔ Đồng đều 2 bên
+// ✔ Đồng đều 2 bên
 // =====================================================
 
 registerGame('math2', {
@@ -18,6 +19,7 @@ registerGame('math2', {
 
         const allowItems = ITEMS.filter(item =>
             [
+                'tao2',
                 'tao',
                 'ca'
             ].includes(item.id)
@@ -66,17 +68,11 @@ registerGame('math2', {
     renderDisplay: function (data) {
 
         // ẨN LOA
-        setTimeout(() => {
+        const replayBtn = document.querySelector('.replay-btn');
 
-            const replayBtn =
-                document.querySelector('.replay-btn');
-
-            if (replayBtn) {
-
-                replayBtn.style.display = 'none';
-            }
-
-        }, 50);
+        if (replayBtn) {
+            replayBtn.style.display = 'none';
+        }
 
         // ---------------------------------------------
         // ITEM TRÁI
@@ -144,7 +140,7 @@ registerGame('math2', {
                         class="basket-bg"
                     >
 
-                    <div class="basket-items">
+                    <div class="basket-items items-${data.left}">
 
                         ${leftHTML}
 
@@ -167,7 +163,7 @@ registerGame('math2', {
                         class="basket-bg"
                     >
 
-                    <div class="basket-items">
+                    <div class="basket-items items-${data.right}">
 
                         ${rightHTML}
 
@@ -176,14 +172,7 @@ registerGame('math2', {
                 </div>
 
             </div>
-
-            <!-- ICON -->
-            <div class="math2-center-icon">
-
-                ✨
-
-            </div>
-
+            
         </div>
 
         `;
@@ -218,6 +207,7 @@ registerGame('math2', {
     styleOptionBtn: function (btn, value) {
 
         btn.textContent = value;
+        btn.classList.add('option-btn');
 
         btn.style.fontSize = '2rem';
 
@@ -281,6 +271,7 @@ WRAP
 .math2-wrap {
 
     width: 100%;
+    padding-top: 10px;
 }
 
 /* =====================================================
@@ -309,6 +300,7 @@ TITLE
         1fr auto 1fr;
 
     align-items: center;
+    margin-top: 10px;
 
     gap: 10px;
 }
@@ -316,14 +308,24 @@ TITLE
 /* =====================================================
 PLUS
 ===================================================== */
-
 .math2-plus {
 
-    font-size: 70px;
+    display:flex;
 
-    font-weight: bold;
+    justify-content:center;
 
-    color: white;
+    align-items:center;
+
+    font-size:70px;
+
+    font-weight:bold;
+
+    color:#ff9800;
+
+    text-shadow:
+        0 2px 4px rgba(0,0,0,0.25);
+
+    height:100%;
 }
 
 /* =====================================================
@@ -336,11 +338,11 @@ GIỎ
 
     width: 100%;
 
-    max-width: 380px;
+    max-width: 520px;
 
     margin: auto;
 
-    height: 360px;
+    height: 440px;
 
     display: flex;
 
@@ -366,6 +368,8 @@ GIỎ
     object-fit: contain;
 
     pointer-events: none;
+
+    display: none;
 }
 
 /* =====================================================
@@ -378,19 +382,17 @@ VÙNG ITEM
 
     z-index: 2;
 
-    width: 78%;
+    width: 82%;
 
-    height: 62%;
+    height: 68%;
 
-    display: flex;
+    display: grid;
 
-    flex-wrap: wrap;
+    justify-items: center;
 
-    justify-content: center;
+    align-items: center;
 
-    align-content: center;
-
-    gap: 8px;
+    gap: 4px;
 
     padding-top: 20px;
 }
@@ -415,16 +417,11 @@ ITEM
 ICON
 ===================================================== */
 
-.math2-center-icon {
 
-    text-align: center;
 
-    font-size: 60px;
+.display-area {
 
-    margin-top: 5px;
-
-    animation:
-        sparkle 1.5s infinite;
+    overflow: hidden !important;
 }
 
 /* =====================================================
@@ -456,66 +453,195 @@ ANIMATION FLOAT
 SPARKLE
 ===================================================== */
 
-@keyframes sparkle {
 
-    0% {
-
-        transform:
-            scale(1);
-    }
-
-    50% {
-
-        transform:
-            scale(1.15);
-    }
-
-    100% {
-
-        transform:
-            scale(1);
-    }
-}
 
 /* =====================================================
 MOBILE
 ===================================================== */
 
-@media (max-width: 700px) {
+/* =========================================
+PC LỚN
+========================================= */
+
+.math2-basket {
+
+    height: 380px;
+}
+
+/* =========================================
+TABLET DỌC + MOBILE
+========================================= */
+
+@media (max-width: 900px) {
 
     .math2-groups {
 
-        grid-template-columns:
-            1fr;
-    }
-
-    .math2-plus {
-
-        font-size: 50px;
-
-        text-align: center;
+        grid-template-columns: 1fr;
     }
 
     .math2-basket {
 
-        height: 220px;
+        height: 240px;
 
-        max-width: 300px;
-    }
-
-    .basket-items {
-
-        width: 80%;
-
-        height: 60%;
+        max-width: 660px;
     }
 
     .math2-item {
 
-        width: 48px;
-
-        height: 48px;
+        width: 44px;
+        height: 44px;
     }
+
+
+    #options-grid {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .option-btn {
+
+    min-height: 60px !important;
+
+    font-size: 1.6rem !important;
+
+    padding: 6px !important;
+    }
+}
+
+/* =========================================
+ĐIỆN THOẠI NHỎ
+========================================= */
+
+@media (max-width: 500px) {
+
+    .math2-basket {
+
+        height: 170px;
+
+        max-width: 260px;
+    }
+
+    .math2-item {
+
+        width: 42px;
+        height: 42px;
+    }
+
+    .math2-plus {
+
+        font-size: 42px;
+    }
+}
+
+@media (min-width: 901px) {
+
+    #options-grid {
+
+        grid-template-columns:
+            repeat(4, 1fr);
+    }
+}
+
+
+/* =========================================
+1 2 3 ITEM = 1 HÀNG
+========================================= */
+
+.items-1,
+.items-2,
+.items-3 {
+
+    grid-template-columns:
+        repeat(3, 1fr);
+}
+
+/* =========================================
+4 5 6 ITEM = 2 HÀNG
+========================================= */
+
+.items-4,
+.items-5,
+.items-6 {
+
+    grid-template-columns:
+        repeat(3, 1fr);
+}
+
+/* =========================================
+7 8 9 ITEM = 3 HÀNG
+========================================= */
+
+.items-7,
+.items-8,
+.items-9 {
+
+    grid-template-columns:
+        repeat(3, 1fr);
+}
+
+.items-1 img {
+
+    grid-column: 2;
+}
+
+.items-2 img:nth-child(1) {
+
+    grid-column: 1;
+}
+
+.items-2 img:nth-child(2) {
+
+    grid-column: 3;
+}
+
+.items-4 img:nth-child(4) {
+
+    grid-column: 2;
+}
+
+.items-5 img:nth-child(4) {
+
+    grid-column: 1;
+}
+
+.items-5 img:nth-child(5) {
+
+    grid-column: 3;
+}
+
+.items-7 img:nth-child(7) {
+
+    grid-column: 2;
+}
+
+.items-8 img:nth-child(7) {
+
+    grid-column: 1;
+}
+
+.items-8 img:nth-child(8) {
+
+    grid-column: 3;
+}
+.items-7 img:nth-child(7){
+
+    grid-column:2;
+}
+
+.items-8 img:nth-child(7){
+
+    grid-column:1;
+}
+
+.items-8 img:nth-child(8){
+
+    grid-column:3;
+}
+.items-9 .math2-item{
+
+    width:40px;
+    height:40px;
 }
 
 `;
@@ -593,3 +719,53 @@ handleAnswer = function (selected) {
     // gọi framework cũ
     oldHandleAnswer(selected);
 };
+
+// =====================================================
+// EFFECT ĐÚNG / SAI
+// =====================================================
+
+document.addEventListener('click', function(e){
+
+    const btn = e.target.closest('.option-btn');
+
+    if(!btn) return;
+
+    const value =
+        parseInt(btn.textContent);
+
+    // ĐÚNG
+    if(value === currentGameData.total){
+
+        btn.classList.add('correct');
+
+        setTimeout(()=>{
+
+            btn.classList.remove('correct');
+
+        }, 800);
+    }
+
+    // SAI
+    else{
+
+        btn.classList.add('wrong');
+
+        btn.animate(
+            [
+                { transform:'translateX(0px)' },
+                { transform:'translateX(-6px)' },
+                { transform:'translateX(6px)' },
+                { transform:'translateX(0px)' }
+            ],
+            {
+                duration:300
+            }
+        );
+
+        setTimeout(()=>{
+
+            btn.classList.remove('wrong');
+
+        }, 700);
+    }
+});
