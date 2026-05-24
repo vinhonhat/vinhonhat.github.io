@@ -52,6 +52,10 @@
         <div class="menu-view" id="menu-screen">
             <h1 class="app-title" style="font-size: 2.5rem;">Bé chọn bài nhé</h1>
             <div class="menu-grid">
+                <div class="menu-btn btn-abc" onclick="startAlphabetGame()">
+                    <div class="menu-icon">🔤</div>
+                    <div class="menu-label">Bảng Chữ Cái</div>
+                </div>
                 <div class="menu-btn btn-num" onclick="startGame('listen_number')">
                     <div class="menu-icon">👂</div>
                     <div class="menu-label">Nghe & Tìm Số</div>
@@ -69,13 +73,14 @@
                     <div class="menu-label">Tìm Con Vật</div>
                 </div>
                 <div class="menu-btn btn-num" onclick="startGame('math')" style="background: linear-gradient(135deg, #ff9966 0%, #ff5e62 100%);">
-                    <div class="menu-icon">🧮</div>
+                    <div class="menu-icon">➕➖</div>
                     <div class="menu-label">Bé Tập Tính</div>
                 </div>
-                <div class="menu-btn btn-abc" onclick="startAlphabetGame()">
-                    <div class="menu-icon">🔤</div>
-                    <div class="menu-label">Bảng Chữ Cái</div>
+                <div class="menu-btn btn-num" onclick="startGame('math2')" style="background: linear-gradient(135deg, #4facfe 0%, #43e97b 100%);">
+                    <div class="menu-icon">🧩</div>
+                    <div class="menu-label">Bé Tách Gộp</div>
                 </div>
+                                
             </div>
         </div>
 
@@ -112,6 +117,7 @@
     <script src="js/games/game_color.js"></script>
     <script src="js/games/game_animal.js"></script>
     <script src="js/games/game_math.js"></script>
+    <script src="js/games/game_math2.js"></script>
     <script src="js/games/game_alphabet.js"></script>
 
 </body>
