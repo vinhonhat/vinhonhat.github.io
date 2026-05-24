@@ -37,7 +37,18 @@ const ALPHABET_DATA = {
     'ư': { word: 'sư tử', img: 'sutu.png', audio: 'spell_uw.mp3' },
     'v': { word: 'quyển vở', img: 'vo.png', audio: 'spell_v.mp3' },
     'x': { word: 'xe đạp', img: 'xedap.png', audio: 'spell_x.mp3' },
-    'y': { word: 'y tá', img: 'yta.png', audio: 'spell_y.mp3' }
+    'y': { word: 'y tá', img: 'yta.png', audio: 'spell_y.mp3' },
+    'ch': { word: 'con chó', img: 'cho.png', audio: 'spell_ch.mp3' },
+    'gh': { word: 'cái ghế', img: 'ghe.png', audio: 'spell_gh.mp3' },
+    'gi': { word: 'con giun', img: 'giun.png', audio: 'spell_gi.mp3' },
+    'kh': { word: 'quả khế', img: 'khe.png', audio: 'spell_kh.mp3' },
+    'ng': { word: 'con ngựa', img: 'ngua.png', audio: 'spell_ng.mp3' },
+    'ngh': { word: 'củ nghệ', img: 'nghe.png', audio: 'spell_ngh.mp3' },
+    'nh': { word: 'con nhện', img: 'nhen.png', audio: 'spell_nh.mp3' },
+    'ph': { word: 'Phở bò', img: 'pho.png', audio: 'spell_ph.mp3' },
+    'th': { word: 'Thỏ', img: 'tho.png', audio: 'spell_th.mp3' },
+    'tr': { word: 'Trăng', img: 'trang.png', audio: 'spell_tr.mp3' },
+    'qu': { word: 'Quạt', img: 'quat.png', audio: 'spell_qu.mp3' },
 };
 
 const ALPHABET_KEYS = Object.keys(ALPHABET_DATA);
