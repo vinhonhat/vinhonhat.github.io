@@ -335,13 +335,40 @@ function renderLearnMode() {
                     <div
                         id="learn-char"
                         style="
-                            font-size:clamp(60px,16vw,100px);
-                            font-weight:bold;
                             text-align:center;
                             line-height:1;
                         "
                     >
-                        A
+
+                        <!-- CHỮ HOA -->
+                        <div
+                            id="learn-char-upper"
+                            style="
+                                font-size:min(18vw,100px);
+                                font-weight:bold;
+                            "
+                        >
+                            A
+                        </div>
+
+                        <!-- CHỮ THƯỜNG -->
+                        <div
+                            id="learn-char-lower"
+                            style="
+                                font-size:min(12vw,60px);
+                                margin-top:8px;
+
+                                font-family:
+                                    'Comic Sans MS',
+                                    'Segoe Print',
+                                    cursive;
+
+                                color:#ff7043;
+                            "
+                        >
+                            a
+                        </div>
+
                     </div>
 
                     <!-- HÌNH + TÊN -->
@@ -437,8 +464,11 @@ function selectAlphabetChar(char) {
 
     const data = ALPHABET_DATA[char];
 
-    document.getElementById('learn-char').textContent =
+    document.getElementById('learn-char-upper').textContent =
         char.toUpperCase();
+
+    document.getElementById('learn-char-lower').textContent =
+        char;
 
     document.getElementById('learn-word').textContent =
         data.word;
@@ -457,7 +487,9 @@ function replayAlphabetAudio() {
 
     let char =
         document
-        .getElementById('learn-char')
+        .getElementById(
+            'learn-char-lower'
+        )
         .textContent
         .toLowerCase();
 
