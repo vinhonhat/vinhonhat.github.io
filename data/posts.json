@@ -298,14 +298,13 @@
   "_comment": "=============================================== NHÓM BÀI TOKUTEI (KẾT THÚC) ============================================================"
 },
 
-
 {
   "_comment": "============== NHÓM BÀI BÉ HỌC (BẮT ĐẦU) ===============================================",
   "id": "post-bé học", 
   "type": "post",
   "status": 1,
-  "category": ["behoc"],
-  "tags": ["behoc"],
+  "category": [],
+  "tags": [],
   "date": "2026-5-20",
   "featured": true,
   "title": "Bé vừa học vừa chơi",
