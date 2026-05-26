@@ -30,6 +30,58 @@
 <!-- 🔹 File CSS riêng của bạn -->
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/behoc/css/style.css">
+
+    <style>
+        /* CSS đưa dòng chữ phiên bản xuống góc dưới cùng bên phải màn hình game */
+        .game-version-bottom-right {
+            position: absolute;
+            bottom: 10px;    /* Cách cạnh dưới màn hình game 10px */
+            right: 15px;     /* Cách cạnh phải màn hình game 15px */
+            font-size: 0.75rem;
+            color: #a0aec0;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            z-index: 100;    /* Đảm bảo luôn nằm trên cùng không bị che */
+            pointer-events: none; /* Tránh việc bé bấm nhầm vào chữ */
+            animation: cornerVersionJump 2.5s ease-in-out infinite;
+        }
+
+        .menu-beta-badge {
+            position: absolute;
+            top: 8px;       /* Cách mép trên 8px */
+            right: 8px;     /* Cách mép phải 8px */
+            font-size: 0.6rem;
+            background: #000000;
+            color: #ffffff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            border: 1px solid #ffffff; /* Thêm viền trắng cho nổi bật trên nền gradient */
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1;
+            z-index: 10;
+            animation: betaBadgeCornerJump 2s ease-in-out infinite;
+        }
+        /* Hiệu ứng nhún nhảy nhẹ nhàng, đổi màu sắc sinh động tại góc phải */
+        @keyframes cornerVersionJump {
+            0%, 100% {
+                transform: translateY(0);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateY(0px); /* Nhảy nhẹ lên 4px */
+                opacity: 0.9;
+                color: #ff9800; /* Đổi màu cam nhẹ tạo điểm nhấn công nghệ */
+            }
+        }
+        
+        /* ⚠️ Lưu ý: Nếu nút chứa game-view (#game-screen) trong style.css chưa có position, 
+        bạn thêm thuộc tính này để định vị absolute của thẻ con chạy chính xác */
+        #game-screen {
+            position: relative;
+        }
+    </style>
 </head>
 <body>
 
@@ -81,10 +133,11 @@
                     <div class="menu-label">Bé Tách Gộp</div>
                 </div>
                 
-                <div class="menu-btn btn-num" onclick="startGame('math4')" style="background: linear-gradient(135deg, #4facfe 0%, #43e97b 100%);">
+                <div class="menu-btn btn-num" onclick="startGame('math4')" style="background: linear-gradient(135deg, #4facfe 0%, #43e97b 100%); position: relative; overflow: hidden;">
+                    <span class="menu-beta-badge">Beta</span>
                     <div class="menu-icon">🧮</div>
                     <div class="menu-label">Bé Tách Gộp 2</div>
-                </div>  
+                </div>
                 <!--
                 <div class="menu-btn btn-num" onclick="startGame('math4')" style="background: linear-gradient(135deg, #4facfe 0%, #43e97b 100%);">
                     <div class="menu-icon">1️⃣<2️⃣</div>
@@ -137,6 +190,7 @@
             </div>
 
             <div class="options-grid" id="options-grid"></div>
+            <div class="game-version-bottom-right">v3.0 Beta</div>
         </div>
 
     </div>
