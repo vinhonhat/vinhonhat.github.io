@@ -588,7 +588,7 @@
   "type": "guide",
   "category": ["other"],
   "tags": ["other"],
-  "date": "2025-10-29",
+  "date": "2026-5-29",
   "featured": true,
   "title": "Check máy tính cơ bản",
   "summary": "trang hướng dẫn check màn hình, loa, míc, camera, và bàn phím máy tính dùng cho cả Windows và MacBook.",
@@ -640,8 +640,8 @@
 },
 {
   "id": "post-20260612-1821",
-  "type": "post",
   "status": 1,
+  "type": "guide",
   "category": ["sim","vneid"],
   "tags": ["sim","vneid"],
   "date": "2026-06-12",
