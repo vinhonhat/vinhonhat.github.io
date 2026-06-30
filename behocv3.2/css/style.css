@@ -595,4 +595,46 @@ body {
     box-shadow: none;
 }
 
+/* =====================================================
+   GLOBAL - CHỐNG COPY / CHỌN CHỮ / NHẤN GIỮ
+   Áp dụng cho menu + toàn bộ game
+===================================================== */
 
+html,
+body,
+button,
+img,
+.menu-view,
+.game-view,
+.overlay,
+#menu-screen,
+#game-screen,
+#alphabet-screen,
+.menu-btn,
+.option-btn,
+.key-btn,
+.back-btn,
+.replay-btn {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Không cho kéo ảnh trên PC/mobile */
+img {
+    -webkit-user-drag: none;
+    user-drag: none;
+}
+
+/* Giữ thao tác bấm nút nhanh, giảm delay mobile */
+button,
+.menu-btn,
+.option-btn,
+.key-btn,
+.back-btn,
+.replay-btn {
+    touch-action: manipulation;
+}

@@ -254,7 +254,7 @@ function startRegisteredGame(gameId, title, module) {
     renderGameShell(title);
     resetScore();
 
-    playAudio(commonAudioPath('dingdong.mp3'), {
+    playAudio(welcomeAudioPath(), {
         stopOld: true,
         onended: nextQuestion,
         onerror: nextQuestion
@@ -325,7 +325,7 @@ function handleCheckAnswer(selected, btn) {
         if (typeof activeGame.getAnswerAudio === 'function') {
             queue = activeGame.getAnswerAudio(selected) || [];
         }
-        queue.push(commonAudioPath(Math.random() < 0.5 ? 'gioi-qua.mp3' : 'chinh-xac.mp3'));
+        queue.push(correctAudioPath());
         playSequence(queue);
 
         fireGameConfetti();
@@ -337,7 +337,7 @@ function handleCheckAnswer(selected, btn) {
         if (typeof activeGame.getAnswerAudio === 'function') {
             queue = activeGame.getAnswerAudio(selected) || [];
         }
-        queue.push(commonAudioPath('sai-roi.mp3'));
+        queue.push(wrongAudioPath());
         playSequence(queue);
 
         setTimeout(() => btn.classList.remove('wrong'), 900);
@@ -367,14 +367,7 @@ if ('serviceWorker' in navigator) {
 
 let deferredPrompt = null;
 
-// PWA: đăng ký service worker
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(err => {
-            console.log('SW Failed:', err);
-        });
-    });
-}
+
 
 window.addEventListener('DOMContentLoaded', () => {
     const installBtn = document.getElementById('pwa-install-btn');

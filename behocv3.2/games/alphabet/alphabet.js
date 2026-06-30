@@ -66,6 +66,24 @@ let alphabetAudio = null;
 let currentQuestion = '';
 
 // -----------------------------------------------------
+// STOP ALPHABET AUDIO
+// Dùng khi bấm chữ khác, đổi học/luyện, thoát game.
+// -----------------------------------------------------
+
+function stopAlphabetAudio() {
+    if (alphabetAudio) {
+        try {
+            alphabetAudio.pause();
+            alphabetAudio.currentTime = 0;
+        } catch (e) {}
+
+        alphabetAudio = null;
+    }
+
+    stopAllAudio();
+}
+
+// -----------------------------------------------------
 // START GAME
 // -----------------------------------------------------
 
@@ -191,7 +209,7 @@ function startAlphabetGame() {
 
     document.body.appendChild(screen);
 
-    playAudio(commonAudioPath('dingdong.mp3'), {
+    playAudio(welcomeAudioPath(), {
         stopOld: true,
         onended: renderAlphabetMode,
         onerror: renderAlphabetMode
@@ -208,16 +226,12 @@ function startAlphabetGame() {
 
 // -----------------------------------------------------
 // CLOSE
+// Thoát game: dừng toàn bộ âm thanh.
 // -----------------------------------------------------
 
 function closeAlphabetGame() {
 
-    if(alphabetAudio) {
-
-        alphabetAudio.pause();
-
-        alphabetAudio.currentTime = 0;
-    }
+    stopAlphabetAudio();
 
     let screen = document.getElementById('alphabet-screen');
 
@@ -225,21 +239,21 @@ function closeAlphabetGame() {
         screen.remove();
     }
 
-    stopAllAudio();
-
     document.getElementById('menu-screen').style.display = 'flex';
 }
 
 // -----------------------------------------------------
-// SWITCH MODE LUYỆN HỌC
+// SWITCH MODE LUYỆN / HỌC
+// Khi đổi mode: tắt âm đang phát ngay.
+// Ví dụ đang đọc A mà bấm 🎯 thì dừng A và đọc câu luyện mới.
 // -----------------------------------------------------
 
 function switchAlphabetMode() {
 
+    stopAlphabetAudio();
+
     const btn =
-        document.getElementById(
-            'alphabet-mode-btn'
-        );
+        document.getElementById('alphabet-mode-btn');
 
     if(alphabetMode === 'learn') {
 
@@ -446,22 +460,22 @@ function renderLearnMode() {
 }
 
 
-
-
 // -----------------------------------------------------
 // SELECT CHAR
+// Khi bấm chữ khác: tắt âm cũ rồi phát chữ mới.
 // -----------------------------------------------------
+
 function selectAlphabetChar(char) {
-    // =====================================
-    // ACTIVE KEY
-    // =====================================
+
+    stopAlphabetAudio();
+
     document
     .querySelectorAll('.key-btn')
-    .forEach(btn => {btn.classList.remove('active-key');
+    .forEach(btn => {
+        btn.classList.remove('active-key');
 
-        if(
-            btn.dataset.char === char)
-            {btn.classList.add('active-key');
+        if(btn.dataset.char === char) {
+            btn.classList.add('active-key');
         }
     });
 
@@ -726,10 +740,7 @@ function checkAlphabetAnswer(char, btn) {
             '⭐ ' + alphabetScore;
 
         // âm thanh đúng
-        playAudio(
-            commonAudioPath(Math.random() < 0.5 ? 'gioi-qua.mp3' : 'chinh-xac.mp3'),
-            { stopOld: true }
-        );
+        playAudio(correctAudioPath(), { stopOld: true });
 
         fireAlphabetConfetti();
 
@@ -753,7 +764,7 @@ function checkAlphabetAnswer(char, btn) {
         // đỏ nút sai
         btn.classList.add('wrong');
 
-        playAudio(commonAudioPath('sai-roi.mp3'), { stopOld: true });
+        playAudio(wrongAudioPath(), { stopOld: true });
 
         // rung nhẹ
         btn.animate(
@@ -779,95 +790,40 @@ function checkAlphabetAnswer(char, btn) {
 
 // -----------------------------------------------------
 // PLAY AUDIO
+// Âm Alphabet nằm trong audio/alphabet/
+// Âm chung nằm trong audio/common/
 // -----------------------------------------------------
+
 function playAlphabetAudio(file, isCommon = false) {
 
     try {
 
-        if(alphabetAudio) {
+        stopAlphabetAudio();
 
-            alphabetAudio.pause();
-            alphabetAudio.currentTime = 0;
-        }
-
-        // Nếu là âm thanh dùng chung
         let fullPath;
 
         if(isCommon) {
-
-            fullPath =
-                commonAudioPath(file);
-
+            fullPath = commonAudioPath(file);
         } else {
-
-            fullPath =
-                alphabetAudioPath(file);
+            fullPath = alphabetAudioPath(file);
         }
 
-        console.log('PLAY:', fullPath);
+        console.log('ALPHABET PLAY:', fullPath);
 
         alphabetAudio = playAudio(fullPath, { stopOld: true });
 
     } catch(err) {
 
-        console.log('AUDIO FAIL:', err);
+        console.log('ALPHABET AUDIO FAIL:', err);
     }
 }
+
+// -----------------------------------------------------
+// PHÁO GIẤY ALPHABET
+// Gọi hiệu ứng chung trong game-core.js
+// -----------------------------------------------------
 
 function fireAlphabetConfetti() {
-
-    const colors = [
-        '#f44336',
-        '#2196f3',
-        '#ffeb3b',
-        '#4caf50'
-    ];
-
-    for(let i=0; i<30; i++) {
-
-        let c = document.createElement('div');
-
-        c.style.position = 'fixed';
-
-        c.style.left =
-            Math.random() * 100 + '%';
-
-        c.style.top = '-20px';
-
-        c.style.width = '12px';
-
-        c.style.height = '12px';
-
-        c.style.background =
-            colors[
-                Math.floor(
-                    Math.random() * colors.length
-                )
-            ];
-
-        c.style.zIndex = '99999';
-
-        c.style.borderRadius = '50%';
-
-        c.style.pointerEvents = 'none';
-
-        c.style.transition = 'all 2s linear';
-
-        document.body.appendChild(c);
-
-        setTimeout(() => {
-
-            c.style.top = '100vh';
-
-            c.style.transform =
-                'rotate(720deg)';
-
-        }, 50);
-
-        setTimeout(() => {
-
-            c.remove();
-
-        }, 2200);
-    }
+    fireGameConfetti();
 }
+
