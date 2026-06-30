@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bé Vui Học - Vinh ở Nhật</title>
+
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#F6AD55">
+    <link rel="apple-touch-icon" href="img/logo1.png">
+    <link rel="icon" href="img/logoQV.png" type="image/x-icon">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/game-core.css">
+</head>
+<body>
+
+    <!-- Màn hình mở khóa âm thanh -->
+    <div class="overlay" id="start-overlay">
+        <h1 class="app-title">Bé Vui Học</h1>
+        <div class="splash-version">v3.2 Beta</div>
+        <button class="start-btn" type="button" onclick="unlockAudio()">▶️ VÀO CHƠI</button>
+
+        <button id="pwa-install-btn" class="install-btn" type="button" style="display:none;">
+            📲 Cài App Cho Bé
+        </button>
+        <div id="ios-guide" style="display:none; margin-top:20px; color:#555; text-align:center; background:rgba(255,255,255,0.8); padding:10px; border-radius:10px;">
+            <p style="margin:0">Để cài trên iPhone:</p>
+            <p style="margin:5px 0 0 0">Bấm <b>Chia sẻ</b> rồi chọn <b>Thêm vào MH chính</b></p>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <div class="menu-view" id="menu-screen">
+            <h1 class="app-title" style="font-size:2.5rem;">Bé chọn bài nhé</h1>
+
+            <div class="menu-grid">
+                <button class="menu-btn btn-abc" type="button" onclick="startGame('alphabet')">
+                    <div class="menu-icon">🔤</div>
+                    <div class="menu-label">Bảng Chữ Cái</div>
+                </button>
+
+                <button class="menu-btn btn-num" type="button" onclick="startGame('listen_number')">
+                    <div class="menu-icon">👂</div>
+                    <div class="menu-label">Nghe & Tìm Số</div>
+                </button>
+
+                <button class="menu-btn btn-count" type="button" onclick="startGame('count')">
+                    <div class="menu-icon">🍎</div>
+                    <div class="menu-label">Tập Đếm</div>
+                </button>
+
+                <button class="menu-btn btn-color" type="button" onclick="startGame('color')">
+                    <div class="menu-icon">🎨</div>
+                    <div class="menu-label">Màu Sắc</div>
+                </button>
+
+                <button class="menu-btn btn-animal" type="button" onclick="startGame('match_animal')">
+                    <div class="menu-icon">🐶</div>
+                    <div class="menu-label">Tìm Con Vật</div>
+                </button>
+
+                <button class="menu-btn btn-num" type="button" onclick="startGame('math')" style="background:linear-gradient(135deg,#ff9966 0%,#ff5e62 100%);">
+                    <div class="menu-icon">➕➖</div>
+                    <div class="menu-label">Bé Tập Tính</div>
+                </button>
+
+                <button class="menu-btn btn-num" type="button" onclick="startGame('math2')" style="background:linear-gradient(135deg,#4facfe 0%,#43e97b 100%);">
+                    <div class="menu-icon">🧩</div>
+                    <div class="menu-label">Bé Tách Gộp</div>
+                </button>
+
+                <button class="menu-btn btn-num" type="button" onclick="startGame('math4')" style="background:linear-gradient(135deg,#4facfe 0%,#43e97b 100%); position:relative; overflow:hidden;">
+                    <span class="menu-beta-badge">Beta</span>
+                    <div class="menu-icon">🧮</div>
+                    <div class="menu-label">Bé Tách Gộp 2</div>
+                </button>
+            </div>
+        </div>
+
+        <div class="game-view" id="game-screen" style="display:none;"></div>
+    </div>
+
+    <script src="js/audio.js"></script>
+    <script src="js/asset.js"></script>
+    <script src="js/game-core.js"></script>
+    <script src="js/core.js"></script>
+</body>
+</html>

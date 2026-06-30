@@ -1,0 +1,364 @@
+/* =====================================================
+   ALPHABET GAME
+===================================================== */
+
+#alphabet-screen{
+    position:fixed;
+    inset:0;
+    z-index:9999;
+
+    padding:15px;
+    box-sizing:border-box;
+    overflow:auto;
+
+    background:
+    linear-gradient(
+        135deg,
+        #ffe082 0%,
+        #ffcc80 40%,
+        #ffab91 100%
+    );
+}
+
+.alphabet-wrapper{
+    width:100%;
+    max-width:650px;
+    margin:auto;
+
+    height:min(90vh,900px);
+
+    display:flex;
+    flex-direction:column;
+
+    background:rgba(255,255,255,.25);
+    backdrop-filter:blur(10px);
+
+    border-radius:24px;
+
+    padding:12px;
+
+    border:3px solid rgba(255,255,255,.5);
+
+    box-shadow:
+        0 8px 30px rgba(0,0,0,.15);
+}
+
+.alphabet-topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    gap:10px;
+
+    margin-bottom:15px;
+}
+
+.alphabet-score{
+    font-size:28px;
+    font-weight:bold;
+}
+
+.alphabet-icon-btn{
+    border:none;
+    background:transparent;
+
+    font-size:42px;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.alphabet-icon-btn:active{
+    transform:scale(.9);
+}
+
+#alphabet-content{
+    flex:1;
+    min-height:0;
+}
+
+/* =====================================================
+   LEARN MODE
+===================================================== */
+
+.learn-layout{
+    display:flex;
+    flex-direction:column;
+
+    gap:12px;
+
+    height:100%;
+}
+
+.learn-card{
+    background:#fff;
+
+    border-radius:25px;
+
+    padding:12px;
+
+    flex-shrink:0;
+
+    box-shadow:
+        0 3px 10px rgba(0,0,0,.12);
+}
+
+.learn-display{
+    display:grid;
+    grid-template-columns:1fr 2fr;
+
+    gap:10px;
+
+    align-items:center;
+}
+
+.learn-char{
+    text-align:center;
+    line-height:1;
+}
+
+.learn-char-upper{
+    font-size:min(18vw,100px);
+    font-weight:bold;
+}
+
+.learn-char-lower{
+    font-size:min(12vw,60px);
+
+    margin-top:8px;
+
+    color:#ff7043;
+
+    /* QUAN TRỌNG */
+    font-family:
+        "Andika",
+        "Comic Sans MS",
+        "Segoe Print",
+        cursive;
+}
+
+.learn-image-box{
+    display:flex;
+    flex-direction:column;
+
+    align-items:center;
+    justify-content:center;
+}
+
+.learn-image{
+    width:clamp(70px,20vw,110px);
+    height:clamp(70px,20vw,110px);
+
+    object-fit:contain;
+}
+
+.learn-word{
+    margin-top:10px;
+
+    text-align:center;
+
+    font-size:clamp(18px,4vw,26px);
+
+    font-weight:bold;
+}
+
+.learn-speaker{
+    text-align:center;
+    font-size:22px;
+    margin-top:10px;
+}
+
+.keyboard-scroll{
+    flex:1;
+
+    overflow-y:auto;
+
+    padding-bottom:80px;
+
+    -webkit-overflow-scrolling:touch;
+}
+
+.keyboard-grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+
+    gap:10px;
+}
+
+/* =====================================================
+   KEYBOARD
+===================================================== */
+
+.key-btn{
+    border:none;
+
+    border-radius:16px;
+
+    background:#fff;
+
+    min-height:58px;
+
+    font-size:24px;
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+    box-shadow:
+        0 2px 6px rgba(0,0,0,.15);
+}
+
+.key-btn:active{
+    transform:scale(.95);
+}
+
+.active-key{
+    background:#ff9800;
+    color:#fff;
+}
+
+/* =====================================================
+   PRACTICE MODE
+===================================================== */
+
+.practice-layout{
+    display:flex;
+    flex-direction:column;
+
+    height:100%;
+}
+
+.practice-card{
+    background:#fff;
+
+    border-radius:22px;
+
+    padding:12px;
+
+    margin-bottom:12px;
+
+    text-align:center;
+
+    box-shadow:
+        0 4px 12px rgba(0,0,0,.12);
+}
+
+.practice-image{
+    width:min(34vw,120px);
+    height:min(34vw,120px);
+
+    object-fit:contain;
+}
+
+.practice-answer{
+    font-size:34px;
+    font-weight:bold;
+
+    color:#ff5722;
+
+    opacity:0;
+    transform:scale(.8);
+
+    transition:.3s;
+}
+
+.practice-grid{
+    flex:1;
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:8px;
+
+    align-content:start;
+
+    position:relative;
+
+    padding-top:38px;
+}
+
+.practice-speaker{
+    position:absolute;
+
+    left:50%;
+    top:-5px;
+
+    transform:translateX(-50%);
+
+    width:56px;
+    height:56px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#fff;
+
+    font-size:30px;
+
+    box-shadow:
+        0 3px 8px rgba(0,0,0,.2);
+
+    z-index:10;
+}
+
+.option-btn{
+    border:none;
+
+    border-radius:18px;
+
+    min-height:70px;
+
+    background:#fff;
+
+    font-size:32px;
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+    box-shadow:
+        0 2px 6px rgba(0,0,0,.15);
+}
+
+.option-btn:active{
+    transform:scale(.95);
+}
+
+.option-btn.correct{
+    background:#4caf50;
+    color:white;
+}
+
+.option-btn.wrong{
+    background:#f44336;
+    color:white;
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width:600px){
+
+    .keyboard-grid{
+        grid-template-columns:repeat(4,1fr);
+    }
+
+    .option-btn{
+        font-size:28px;
+        min-height:65px;
+    }
+
+    .learn-char-upper{
+        font-size:72px;
+    }
+
+    .learn-char-lower{
+        font-size:52px;
+    }
+}
