@@ -1,50 +1,68 @@
-behocv3.1/
+behocv3.2/
+behocv3/
 │
-├── index.html                ← File duy nhất
+├── index.html
+├── manifest.json
+├── sw.js
 │
 ├── css/
-│   ├── style.css             ← Splash + menu chính
-│   ├── game.css              ← Khung game dùng chung
-│   │
-│   ├── alphabet.css
-│   ├── animal.css
-│   ├── color.css
-│   ├── count.css
-│   ├── number.css
-│   ├── math.css
-│   ├── math2.css
-│   └── math4.css
+│   ├── style.css              ← CSS màn chào + menu chính
+│   └── game-core.css          ← CSS dùng chung cho game
 │
 ├── js/
-│   ├── core.js               ← Điều khiển app
-│   ├── game.js               ← Hàm dùng chung
+│   ├── core.js                ← điều khiển app, menu, startGame()
+│   ├── audio.js               ← unlockAudio(), playAudio(), stopAllAudio()
+│   ├── asset.js               ← khai báo đường dẫn ảnh + âm thanh
+│   └── game-core.js           ← Home, điểm, học/luyện, confetti, helper chung
+│
+├── games/
 │   │
-│   └── games/
-│       ├── alphabet.js
-│       ├── animal.js
-│       ├── color.js
-│       ├── count.js
-│       ├── number.js
-│       ├── math.js
-│       ├── math2.js
+│   ├── alphabet/
+│   │   ├── alphabet.css
+│   │   └── alphabet.js
+│   │
+│   ├── number/
+│   │   ├── number.css
+│   │   └── number.js
+│   │
+│   ├── count/
+│   │   ├── count.css
+│   │   └── count.js
+│   │
+│   ├── color/
+│   │   ├── color.css
+│   │   └── color.js
+│   │
+│   ├── animal/
+│   │   ├── animal.css
+│   │   └── animal.js
+│   │
+│   ├── math/
+│   │   ├── math.css
+│   │   └── math.js
+│   │
+│   ├── math2/
+│   │   ├── math2.css
+│   │   └── math2.js
+│   │
+│   └── math4/
+│       ├── math4.css
 │       └── math4.js
 │
 ├── img/
 │
-├── audio/
-│   ├── alphabet/
-│   ├── animal/
-│   ├── color/
-│   ├── number/
-│   │
-│   ├── dingdong.mp3
-│   ├── gioi qua.mp3
-│   ├── chinh xac.mp3
-│   └── sai roi.mp3
-│
-├── manifest.json
-└── sw.js
-
+└── audio/
+    ├── common/
+    │   ├── dingdong.mp3
+    │   ├── chinh-xac.mp3
+    │   ├── gioi-qua.mp3
+    │   └── sai-roi.mp3
+    │
+    ├── alphabet/
+    ├── numbers/
+    ├── colors/
+    ├── animals/
+    └── math/
 Luồng hoạt động
 index.html
 

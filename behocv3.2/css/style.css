@@ -115,54 +115,7 @@ body {
 .menu-icon { font-size: 3rem; margin-bottom: 5px; }
 .menu-label { font-size: 1.1rem; font-weight: bold; color: white; text-shadow: 0 1px 1px rgba(0,0,0,0.3); }
 
-/* --- GAME SCREEN --- */
-.game-view {
-    width: 100%; height: 100%;
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    
-    /* THAY ĐỔI Ở ĐÂY */
-    justify-content: flex-start; /* Đẩy toàn bộ nội dung lên trên đầu */
-    padding-top: 10px;           /* Thêm chút khoảng cách để không sát mép màn hình quá */
-    overflow-y: auto;            /* Cho phép cuộn nếu màn hình quá ngắn */
-}
 
-.top-bar {
-    width: 100%; max-width: 800px;
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 5px 0; margin-bottom: 10px;
-}
-
-.back-btn {
-    background: #fff; border: 2px solid #ff9a9e;
-    padding: 8px 20px; border-radius: 20px;
-    font-weight: bold; color: #ff9a9e; cursor: pointer;
-    box-shadow: 0 4px 0 #ffcdd2;
-}
-.back-btn:active { transform: translateY(4px); box-shadow: none; }
-
-.display-area {
-    background: rgba(255,255,255,0.95);
-    border: 6px solid white; border-radius: 30px;
-    padding: 20px; width: 100%; max-width: 800px;
-    display: flex; justify-content: center; align-items: center;
-    flex-direction: column; /* Xếp dọc để hiện text dưới icon */
-    gap: 10px; position: relative;
-    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-    flex-grow: 1; max-height: 50vh; margin-bottom: 20px;
-}
-
-.replay-btn {
-    position: absolute; bottom: -30px;
-    background: #FFEB3B; border: 5px solid #fff;
-    border-radius: 50%; width: 70px; height: 70px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 2.5rem; cursor: pointer; z-index: 10;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-    animation: pulse 2s infinite;
-}
-.replay-btn:active { transform: scale(0.95); box-shadow: none; }
 
 .big-icon-question {
     font-size: 6rem;
