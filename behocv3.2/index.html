@@ -8,8 +8,7 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#F6AD55">
     <link rel="apple-touch-icon" href="img/logo1.png">
-    <link rel="icon" href="img/logoQV.png" type="image/x-icon">
-
+    <link rel="icon" href="/img/logoQV.png" type="image/x-icon">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/game-core.css">
 </head>
@@ -18,15 +17,23 @@
     <!-- Màn hình mở khóa âm thanh -->
     <div class="overlay" id="start-overlay">
         <h1 class="app-title">Bé Vui Học</h1>
-        <div class="splash-version">v3.2 Beta</div>
+        
         <button class="start-btn" type="button" onclick="unlockAudio()">▶️ VÀO CHƠI</button>
 
         <button id="pwa-install-btn" class="install-btn" type="button" style="display:none;">
             📲 Cài App Cho Bé
         </button>
-        <div id="ios-guide" style="display:none; margin-top:20px; color:#555; text-align:center; background:rgba(255,255,255,0.8); padding:10px; border-radius:10px;">
-            <p style="margin:0">Để cài trên iPhone:</p>
-            <p style="margin:5px 0 0 0">Bấm <b>Chia sẻ</b> rồi chọn <b>Thêm vào MH chính</b></p>
+        <div class="splash-version">v3.2 Beta</div>
+        <div id="ios-guide" class="install-guide" style="display:none;">
+            <p class="install-guide-title">Để cài trên iPhone:</p>
+            <p class="install-guide-text">
+                Bấm <b>Chia sẻ</b>
+                <img 
+                    src="https://img.icons8.com/ios-glyphs/30/000000/share-rounded.png" 
+                    class="install-share-icon"
+                    alt="share">
+                chọn <b>"Thêm vào MH chính"</b>
+            </p>
         </div>
     </div>
 
@@ -36,6 +43,7 @@
 
             <div class="menu-grid">
                 <button class="menu-btn btn-abc" type="button" onclick="startGame('alphabet')">
+                    <span class="menu-new-app">new</span>
                     <div class="menu-icon">🔤</div>
                     <div class="menu-label">Bảng Chữ Cái</div>
                 </button>
@@ -70,8 +78,8 @@
                     <div class="menu-label">Bé Tách Gộp</div>
                 </button>
 
-                <button class="menu-btn btn-num" type="button" onclick="startGame('math4')" style="background:linear-gradient(135deg,#4facfe 0%,#43e97b 100%); position:relative; overflow:hidden;">
-                    <span class="menu-beta-badge">Beta</span>
+                <button class="menu-btn btn-num" type="button" onclick="startGame('math4')" style="background:linear-gradient(135deg,#4facfe 0%,#43e97b 100%); ">
+                    <span class="menu-beta-badge">beta</span>
                     <div class="menu-icon">🧮</div>
                     <div class="menu-label">Bé Tách Gộp 2</div>
                 </button>
