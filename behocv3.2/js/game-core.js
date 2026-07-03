@@ -64,7 +64,7 @@ function renderGameShell(title = 'Bé Vui Học', config = {}) {
                 <button
                     class="replay-btn"
                     type="button"
-                    onclick="playQuestionAudio()"
+                    onclick="handleReplayQuestion()"
                     aria-label="Nghe lại">
                     🔊
                 </button>
@@ -128,6 +128,10 @@ function renderGameHeader(config = {}) {
 
             <div class="top-bar-right">
                 ${modeHtml}
+            </div>
+
+            <div class="top-timer-track" aria-hidden="true">
+                <div id="top-timer-fill" class="top-timer-fill timer-green"></div>
             </div>
         </div>
     `;

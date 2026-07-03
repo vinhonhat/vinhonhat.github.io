@@ -9,6 +9,8 @@ let activeGame = null;
 let activeGameId = null;
 let currentQuestionData = null;
 let replayTimer = null;
+let questionTimer = null;
+let questionTimerDeadline = 0;
 let gameStartedOnce = false;
 
 const GAME_CONFIG = {
@@ -162,6 +164,7 @@ function showMenuOnly() {
 
 function backToMenu() {
     stopAutoReplay();
+    stopQuestionTimer(true);
     stopAllAudio();
 
     activeGame = null;
@@ -193,6 +196,7 @@ async function startGame(gameId) {
     }
 
     stopAutoReplay();
+    stopQuestionTimer(true);
     stopAllAudio();
     applyGameLayoutClass(gameId);
 
@@ -273,11 +277,13 @@ function startRegisteredGame(gameId, title, module) {
     // 1. Dựng khung game trước
     renderGameShell(title);
     resetScore();
+    resetTopTimerBar();
 
     // 2. Hiện câu hỏi + đáp án ngay
-    // Nhưng KHÔNG phát âm câu hỏi vội
+    // Nhưng KHÔNG phát âm câu hỏi và KHÔNG chạy thời gian vội
     nextQuestion({
-        playAudioNow: false
+        playAudioNow: false,
+        startTimerNow: false
     });
 
     // 3. Phát dingdong mỗi lần vào game
@@ -289,10 +295,10 @@ function startRegisteredGame(gameId, title, module) {
 
         introDone = true;
 
-        // Dingdong xong mới phát âm câu hỏi
+        // Dingdong xong mới phát âm câu hỏi + bắt đầu tính giờ
         playQuestionAudio();
-
-        setTimeout(startAutoReplay, 3000);
+        startQuestionTimer();
+        startAutoReplay();
     }
 
     playAudio(welcomeAudioPath(), {
@@ -306,9 +312,11 @@ function nextQuestion(config = {}) {
     if (!activeGame) return;
 
     const playAudioNow = config.playAudioNow !== false;
+    const startTimerNow = config.startTimerNow !== false;
     const audioDelay = config.audioDelay ?? 300;
 
     stopAutoReplay();
+    stopQuestionTimer(false);
 
     const questionContent = document.getElementById('question-content');
     const optionsGrid = document.getElementById('options-grid');
@@ -349,11 +357,20 @@ function nextQuestion(config = {}) {
 
     optionsGrid.appendChild(fragment);
 
+    resetTopTimerBar();
+
     if (playAudioNow) {
         setTimeout(() => {
             playQuestionAudio();
-            setTimeout(startAutoReplay, 3000);
+
+            if (startTimerNow) {
+                startQuestionTimer();
+            }
+
+            startAutoReplay();
         }, audioDelay);
+    } else if (startTimerNow) {
+        startQuestionTimer();
     }
 }
 
@@ -373,6 +390,7 @@ function handleCheckAnswer(selected, btn) {
 
     if (isCorrect) {
         stopAutoReplay();
+        stopQuestionTimer(false);
         btn.classList.add('correct');
         addScore(1);
 
@@ -399,16 +417,116 @@ function handleCheckAnswer(selected, btn) {
     }
 }
 
-function startAutoReplay() {
+function startAutoReplay(delayMs = 5000) {
     stopAutoReplay();
-    replayTimer = setInterval(playQuestionAudio, 5000);
+
+    const questionRef = currentQuestionData;
+
+    replayTimer = setTimeout(() => {
+        replayTimer = null;
+
+        if (!activeGame) return;
+        if (currentQuestionData !== questionRef) return;
+
+        // Tự nhắc lại câu hỏi đúng 1 lần, không lặp vô hạn
+        playQuestionAudio();
+    }, delayMs);
 }
 
 function stopAutoReplay() {
     if (replayTimer) {
-        clearInterval(replayTimer);
+        clearTimeout(replayTimer);
         replayTimer = null;
     }
+}
+
+// =====================================================
+// THANH THỜI GIAN CÂU HỎI
+// Mặc định mỗi câu có 10 giây.
+// Game nào muốn khác có thể đặt activeGame.questionTimeSec = số giây.
+// =====================================================
+
+function getQuestionTimeMs() {
+    if (!activeGame) return 10000;
+
+    const sec = Number(activeGame.questionTimeSec || activeGame.questionTime || 10);
+
+    if (!Number.isFinite(sec) || sec <= 0) {
+        return 10000;
+    }
+
+    // Nếu truyền 10 nghĩa là 10 giây. Nếu truyền 10000 nghĩa là mili giây.
+    return sec > 1000 ? sec : sec * 1000;
+}
+
+function resetTopTimerBar() {
+    setTopTimerPercent(100);
+}
+
+function setTopTimerPercent(percent) {
+    const fill = document.getElementById('top-timer-fill');
+    if (!fill) return;
+
+    const p = Math.max(0, Math.min(100, percent));
+
+    fill.style.transform = `scaleX(${p / 100})`;
+
+    fill.classList.remove('timer-green', 'timer-yellow', 'timer-red');
+
+    if (p <= 30) {
+        fill.classList.add('timer-red');
+    } else if (p <= 75) {
+        fill.classList.add('timer-yellow');
+    } else {
+        fill.classList.add('timer-green');
+    }
+}
+
+function startQuestionTimer() {
+    stopQuestionTimer(false);
+
+    const totalMs = getQuestionTimeMs();
+    questionTimerDeadline = Date.now() + totalMs;
+
+    setTopTimerPercent(100);
+
+    questionTimer = setInterval(() => {
+        const remainMs = questionTimerDeadline - Date.now();
+        const percent = (remainMs / totalMs) * 100;
+
+        setTopTimerPercent(percent);
+
+        if (remainMs <= 0) {
+            stopQuestionTimer(false);
+            handleQuestionTimeUp();
+        }
+    }, 100);
+}
+
+function stopQuestionTimer(resetBar = false) {
+    if (questionTimer) {
+        clearInterval(questionTimer);
+        questionTimer = null;
+    }
+
+    if (resetBar) {
+        resetTopTimerBar();
+    }
+}
+
+function handleQuestionTimeUp() {
+    if (!activeGame || !currentQuestionData) return;
+
+    stopAutoReplay();
+    setTopTimerPercent(0);
+
+    playSequence([wrongAudioPath()]);
+
+    setTimeout(() => {
+        if (activeGame) {
+            nextQuestion();
+        }
+    }, 900);
 }
 
 // PWA: dùng đường dẫn tương đối để chạy được trong thư mục /behocv3.2/ hoặc khi test local.
