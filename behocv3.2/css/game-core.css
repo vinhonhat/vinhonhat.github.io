@@ -8,13 +8,11 @@
     -webkit-tap-highlight-color:transparent;
 }
 
-
 /* =====================================
    TOP BAR - HEADER DÙNG CHUNG TOÀN BỘ GAME
-   Gồm: Home bên trái / Điểm ở giữa / Học-Luyện bên phải
-   Nền trắng nhẹ như mẫu cũ, không cuộn theo nội dung.
+   Bình thường viền vàng trang trí.
+   Khi chơi, viền biến thành thanh thời gian.
 ===================================== */
-
 .top-bar {
     width: 100%;
 
@@ -35,7 +33,7 @@
 
     background: rgba(255,255,255,0.92);
 
-    border: 2px solid rgba(255,255,255,0.85);
+    border: 2px solid #fadd7e;
     border-radius: 12px;
 
     box-shadow:
@@ -45,6 +43,87 @@
     box-sizing: border-box;
 
     z-index: 20;
+
+    --timer-color: #2950ff;
+    --timer-scale: 1;
+    --topbar-timer-height: 4px;
+}
+
+/* =====================================
+   TIMER DƯỚI TOP BAR
+   Bình thường: viền vàng trang trí.
+   Khi chơi: đáy top-bar là thanh thời gian.
+   Phần đã chạy qua là xám, phần còn lại là màu.
+   Thanh dính liền viền dưới, không có khe trắng.
+===================================== */
+
+.top-bar::before {
+    content: "";
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: var(--topbar-timer-height, 4px);
+
+    background: #fadd7e;
+
+    pointer-events: none;
+
+    z-index: 1;
+}
+
+.top-bar.timer-running::before {
+    background: #eeeeee;
+}
+
+.top-bar::after {
+    content: "";
+    position: absolute;
+
+    left: 0;
+    bottom: 0;
+
+    width: 100%;
+    height: var(--topbar-timer-height, 4px);
+
+    background: var(--timer-color, #2950ff);
+
+    transform: scaleX(var(--timer-scale, 1));
+    transform-origin: left center;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    z-index: 2;
+
+    transition: none !important;
+    will-change: transform;
+}
+
+.top-bar.timer-running .top-timer-progress {
+    opacity: 1;
+}
+
+.top-bar.timer-green {
+    --timer-color: #2950ff;
+}
+
+.top-bar.timer-yellow {
+    --timer-color: #ffaf38;
+}
+
+.top-bar.timer-red {
+    --timer-color: #ff1100;
+}
+
+.top-bar-left,
+.top-bar-center,
+.top-bar-right {
+    position: relative;
+    z-index: 2;
 }
 
 .top-bar-left {
@@ -68,55 +147,82 @@
 
     min-width: 0;
 }
+
 /* =====================================
-   THANH THỜI GIAN TRÊN TOP BAR
-   Thanh nhỏ ở đáy top-bar.
-   Phần màu là thời gian còn lại, thu từ phải sang trái.
-   >75% xanh, <=75% vàng, <=30% đỏ.
+   TIMER DƯỚI TOP BAR
+   Bình thường: viền vàng trang trí.
+   Khi chơi: đáy top-bar là thanh thời gian.
+   Phần đã chạy qua là xám, phần còn lại là màu.
+   Thanh dính liền viền dưới, không có khe trắng.
 ===================================== */
 
-.top-timer-track {
+.top-bar::before {
+    content: "";
     position: absolute;
-    left: 8px;
-    right: 8px;
-    bottom: 3px;
 
-    height: var(--top-timer-height, 4px);
+    left: 0;
+    right: 0;
+    bottom: 0;
 
-    background: rgba(255,255,255,0.95);
-    border-radius: 999px;
+    height: var(--topbar-timer-height, 4px);
 
-    overflow: hidden;
+    background: #fadd7e;
 
     pointer-events: none;
+
+    z-index: 1;
 }
 
-.top-timer-fill {
-    width: 100%;
-    height: 100%;
+.top-bar.timer-running::before {
+    background: #eeeeee;
+}
 
-    transform: scaleX(1);
+.top-bar::after {
+    content: "";
+    position: absolute;
+
+    left: 0;
+    bottom: 0;
+
+    width: 100%;
+    height: var(--topbar-timer-height, 4px);
+
+    background: var(--timer-color, #2950ff);
+
+    transform: scaleX(var(--timer-scale, 1));
     transform-origin: left center;
 
-    border-radius: inherit;
+    opacity: 0;
 
-    background: #4caf50;
+    pointer-events: none;
 
-    transition:
-        transform 0.12s linear,
-        background-color 0.2s linear;
+    z-index: 2;
+
+    transition: none !important;
+    will-change: transform;
 }
 
-.top-timer-fill.timer-green {
-    background: #4caf50;
+.top-bar.timer-running::after {
+    opacity: 1;
 }
 
-.top-timer-fill.timer-yellow {
-    background: #ffc107;
+.top-bar.timer-green {
+    --timer-color: #2950ff;
 }
 
-.top-timer-fill.timer-red {
-    background: #f44336;
+.top-bar.timer-yellow {
+    --timer-color: #ffaf38;
+}
+
+.top-bar.timer-red {
+    --timer-color: #ff1100;
+}
+
+.top-bar-left,
+.top-bar-center,
+.top-bar-right {
+    position: relative;
+    z-index: 3;
 }
 
 /* =====================================
@@ -132,6 +238,8 @@
 
         padding: 5px 10px;
         border-radius: 14px;
+
+        --topbar-border-size: 4px;
     }
 }
 
@@ -424,7 +532,7 @@
 
     padding: 0;
 
-    border: 19px solid #ffffff;
+    border: 3px solid #ffffff;
     border-radius: 50%;
 
     background: rgba(255,255,255,0.98);
@@ -559,3 +667,102 @@
         rotate(720deg);
     }
 }
+/* =====================================
+   POPUP TẠM DỪNG GAME
+   Hiện khi bé không tương tác 3 câu liên tiếp.
+===================================== */
+
+.game-pause-overlay {
+    position: absolute;
+    inset: 0;
+
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 18px;
+
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(6px);
+}
+
+.game-pause-box {
+    width: min(90%, 360px);
+
+    padding: 24px 20px;
+
+    text-align: center;
+
+    background: rgba(255,255,255,0.96);
+
+    border: 5px solid #ffd54f;
+    border-radius: 28px;
+
+    box-shadow:
+        0 15px 35px rgba(0,0,0,0.18);
+}
+
+.game-pause-icon {
+    font-size: 3rem;
+    margin-bottom: 8px;
+}
+
+.game-pause-title {
+    font-size: 1.45rem;
+    font-weight: bold;
+
+    color: #ff6f00;
+
+    margin-bottom: 8px;
+}
+
+.game-pause-text {
+    font-size: 1rem;
+
+    color: #555;
+
+    line-height: 1.45;
+
+    margin-bottom: 18px;
+}
+
+.game-pause-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.game-pause-resume,
+.game-pause-menu {
+    border: none;
+    border-radius: 999px;
+
+    padding: 11px 18px;
+
+    font-family: var(--font-main);
+    font-size: 1rem;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow: 0 5px 0 rgba(0,0,0,0.12);
+}
+
+.game-pause-resume {
+    background: #ffb74d;
+    color: white;
+}
+
+.game-pause-menu {
+    background: #eeeeee;
+    color: #555;
+}
+
+.game-pause-resume:active,
+.game-pause-menu:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+

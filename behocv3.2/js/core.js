@@ -1,5 +1,14 @@
 // js/core.js
 // Điều khiển app v3.2: mở khóa audio, hiện menu, load CSS/JS game khi bấm.
+// =====================================================
+// PHIÊN BẢN APP
+// Khi cập nhật web/app, chỉ cần tăng số này.
+// Ví dụ: 3.2.1 -> 3.2.2
+// =====================================================
+
+const APP_VERSION = '3.2.1';
+const APP_VERSION_KEY = 'behoc_app_version';
+
 
 const loadedCss = new Set();
 const loadedJs = new Set();
@@ -8,9 +17,13 @@ const gameModules = {};
 let activeGame = null;
 let activeGameId = null;
 let currentQuestionData = null;
+
 let replayTimer = null;
 let questionTimer = null;
-let questionTimerDeadline = 0;
+let timerColorZone = '';
+
+let gamePausedByNoInteraction = false;
+
 let gameStartedOnce = false;
 
 const GAME_CONFIG = {
@@ -165,13 +178,16 @@ function showMenuOnly() {
 function backToMenu() {
     stopAutoReplay();
     stopQuestionTimer(true);
+    closeNoInteractionPause();
     stopAllAudio();
+
+    gamePausedByNoInteraction = false;
+    noInteractionCount = 0;
 
     activeGame = null;
     activeGameId = null;
     currentQuestionData = null;
 
-    // Nếu game custom như Alphabet còn màn hình riêng thì xóa.
     const alphabetScreen = document.getElementById('alphabet-screen');
     if (alphabetScreen) alphabetScreen.remove();
 
@@ -197,7 +213,12 @@ async function startGame(gameId) {
 
     stopAutoReplay();
     stopQuestionTimer(true);
+    closeNoInteractionPause();
     stopAllAudio();
+
+    gamePausedByNoInteraction = false;
+    noInteractionCount = 0;
+
     applyGameLayoutClass(gameId);
 
     await loadCssOnce(config.css);
@@ -274,13 +295,16 @@ function startRegisteredGame(gameId, title, module) {
     activeGame = module;
     currentQuestionData = null;
 
+    gamePausedByNoInteraction = false;
+    noInteractionCount = 0;
+
     // 1. Dựng khung game trước
     renderGameShell(title);
     resetScore();
     resetTopTimerBar();
 
     // 2. Hiện câu hỏi + đáp án ngay
-    // Nhưng KHÔNG phát âm câu hỏi và KHÔNG chạy thời gian vội
+    // Nhưng chưa phát âm câu hỏi và chưa chạy thời gian
     nextQuestion({
         playAudioNow: false,
         startTimerNow: false
@@ -289,13 +313,14 @@ function startRegisteredGame(gameId, title, module) {
     // 3. Phát dingdong mỗi lần vào game
     let introDone = false;
 
-    function playFirstQuestionAudio() {
+    function afterIntro() {
         if (introDone) return;
         if (activeGame !== module) return;
+        if (gamePausedByNoInteraction) return;
 
         introDone = true;
 
-        // Dingdong xong mới phát âm câu hỏi + bắt đầu tính giờ
+        // Dingdong xong mới đọc câu hỏi và chạy timer
         playQuestionAudio();
         startQuestionTimer();
         startAutoReplay();
@@ -303,13 +328,14 @@ function startRegisteredGame(gameId, title, module) {
 
     playAudio(welcomeAudioPath(), {
         stopOld: true,
-        onended: playFirstQuestionAudio,
-        onerror: playFirstQuestionAudio
+        onended: afterIntro,
+        onerror: afterIntro
     });
 }
 
 function nextQuestion(config = {}) {
     if (!activeGame) return;
+    if (gamePausedByNoInteraction) return;
 
     const playAudioNow = config.playAudioNow !== false;
     const startTimerNow = config.startTimerNow !== false;
@@ -361,6 +387,8 @@ function nextQuestion(config = {}) {
 
     if (playAudioNow) {
         setTimeout(() => {
+            if (gamePausedByNoInteraction) return;
+
             playQuestionAudio();
 
             if (startTimerNow) {
@@ -383,8 +411,19 @@ function playQuestionAudio() {
     }
 }
 
+function handleReplayQuestion() {
+    if (gamePausedByNoInteraction) return;
+
+    markGameInteraction();
+
+    playQuestionAudio();
+}
+
 function handleCheckAnswer(selected, btn) {
     if (!activeGame || !currentQuestionData) return;
+    if (gamePausedByNoInteraction) return;
+
+    markGameInteraction();
 
     const isCorrect = activeGame.checkResult(selected, currentQuestionData);
 
@@ -402,7 +441,7 @@ function handleCheckAnswer(selected, btn) {
         playSequence(queue);
 
         fireGameConfetti();
-        setTimeout(nextQuestion, 2000);
+        setTimeout(() => nextQuestion(), 2000);
     } else {
         btn.classList.add('wrong');
 
@@ -426,9 +465,10 @@ function startAutoReplay(delayMs = 5000) {
         replayTimer = null;
 
         if (!activeGame) return;
+        if (gamePausedByNoInteraction) return;
         if (currentQuestionData !== questionRef) return;
 
-        // Tự nhắc lại câu hỏi đúng 1 lần, không lặp vô hạn
+        // Nhắc lại câu hỏi đúng 1 lần
         playQuestionAudio();
     }, delayMs);
 }
@@ -441,71 +481,143 @@ function stopAutoReplay() {
 }
 
 // =====================================================
+// TƯƠNG TÁC CỦA BÉ
+// Có bấm đáp án hoặc bấm loa thì tính là có tương tác.
+// Sau 3 câu liên tiếp không tương tác thì tạm dừng game.
+// =====================================================
+
+function markGameInteraction() {
+    noInteractionCount = 0;
+}
+
+
+// =====================================================
 // THANH THỜI GIAN CÂU HỎI
+// Viền top-bar là đồng hồ đếm ngược.
 // Mặc định mỗi câu có 10 giây.
-// Game nào muốn khác có thể đặt activeGame.questionTimeSec = số giây.
+// Game nào muốn khác: activeGame.questionTimeSec = số giây.
 // =====================================================
 
 function getQuestionTimeMs() {
     if (!activeGame) return 10000;
 
-    const sec = Number(activeGame.questionTimeSec || activeGame.questionTime || 10);
+    const sec = Number(
+        activeGame.questionTimeSec ||
+        activeGame.questionTime ||
+        10
+    );
 
     if (!Number.isFinite(sec) || sec <= 0) {
         return 10000;
     }
 
-    // Nếu truyền 10 nghĩa là 10 giây. Nếu truyền 10000 nghĩa là mili giây.
     return sec > 1000 ? sec : sec * 1000;
 }
 
-function resetTopTimerBar() {
-    setTopTimerPercent(100);
+function prepareTopTimerStroke() {
+    const progress = document.querySelector('#game-screen .top-timer-progress');
+    if (!progress) return null;
+
+    if (!topTimerLength) {
+        topTimerLength = progress.getTotalLength();
+    }
+
+    progress.style.strokeDasharray = String(topTimerLength);
+    progress.style.strokeDashoffset = '0';
+
+    return progress;
 }
 
-function setTopTimerPercent(percent) {
-    const fill = document.getElementById('top-timer-fill');
-    if (!fill) return;
+function resetTopTimerBar() {
+    topTimerLength = 0;
+    setTopTimerPercent(100, false);
+}
+
+function setTopTimerPercent(percent, running = true) {
+    const bar = document.querySelector('#game-screen .top-bar');
+    if (!bar) return;
 
     const p = Math.max(0, Math.min(100, percent));
 
-    fill.style.transform = `scaleX(${p / 100})`;
+    // Thanh dưới top-bar thu nhỏ từ phải sang trái.
+    // p = 100: đầy thanh. p = 0: hết thanh.
+    bar.style.setProperty('--timer-scale', (p / 100).toFixed(4));
 
-    fill.classList.remove('timer-green', 'timer-yellow', 'timer-red');
+    if (!running) {
+        bar.classList.remove(
+            'timer-running',
+            'timer-green',
+            'timer-yellow',
+            'timer-red'
+        );
+
+        timerColorZone = '';
+        return;
+    }
+
+    if (!bar.classList.contains('timer-running')) {
+        bar.classList.add('timer-running');
+    }
+
+    let zone = 'green';
 
     if (p <= 30) {
-        fill.classList.add('timer-red');
-    } else if (p <= 75) {
-        fill.classList.add('timer-yellow');
-    } else {
-        fill.classList.add('timer-green');
+        zone = 'red';
+    } else if (p <= 60) {
+        zone = 'yellow';
+    }
+
+    if (zone !== timerColorZone) {
+        bar.classList.remove(
+            'timer-green',
+            'timer-yellow',
+            'timer-red'
+        );
+
+        bar.classList.add('timer-' + zone);
+
+        timerColorZone = zone;
     }
 }
 
 function startQuestionTimer() {
+    if (gamePausedByNoInteraction) return;
+
     stopQuestionTimer(false);
 
     const totalMs = getQuestionTimeMs();
-    questionTimerDeadline = Date.now() + totalMs;
+    const startTime = performance.now();
+    const endTime = startTime + totalMs;
 
-    setTopTimerPercent(100);
+    setTopTimerPercent(100, true);
 
-    questionTimer = setInterval(() => {
-        const remainMs = questionTimerDeadline - Date.now();
+    function updateTimer(now) {
+        if (gamePausedByNoInteraction) {
+            stopQuestionTimer(false);
+            return;
+        }
+
+        const remainMs = endTime - now;
         const percent = (remainMs / totalMs) * 100;
 
-        setTopTimerPercent(percent);
+        setTopTimerPercent(percent, true);
 
         if (remainMs <= 0) {
+            questionTimer = null;
             stopQuestionTimer(false);
             handleQuestionTimeUp();
+            return;
         }
-    }, 100);
+
+        questionTimer = requestAnimationFrame(updateTimer);
+    }
+
+    questionTimer = requestAnimationFrame(updateTimer);
 }
 
 function stopQuestionTimer(resetBar = false) {
     if (questionTimer) {
-        clearInterval(questionTimer);
+        cancelAnimationFrame(questionTimer);
         questionTimer = null;
     }
 
@@ -516,17 +628,271 @@ function stopQuestionTimer(resetBar = false) {
 
 function handleQuestionTimeUp() {
     if (!activeGame || !currentQuestionData) return;
+    if (gamePausedByNoInteraction) return;
 
     stopAutoReplay();
-    setTopTimerPercent(0);
+    setTopTimerPercent(0, true);
+
+    noInteractionCount += 1;
+
+    if (noInteractionCount >= 3) {
+        pauseGameForNoInteraction();
+        return;
+    }
 
     playSequence([wrongAudioPath()]);
 
     setTimeout(() => {
-        if (activeGame) {
+        if (activeGame && !gamePausedByNoInteraction) {
             nextQuestion();
         }
     }, 900);
+}
+
+
+// =====================================================
+// TẠM DỪNG KHI BÉ KHÔNG TƯƠNG TÁC
+// Sau 3 câu liên tiếp hết giờ không bấm gì.
+// =====================================================
+
+function pauseGameForNoInteraction() {
+    if (gamePausedByNoInteraction) return;
+
+    gamePausedByNoInteraction = true;
+
+    stopAutoReplay();
+    stopQuestionTimer(false);
+    stopAllAudio();
+
+    setTopTimerPercent(0, true);
+
+    const gameScreen = document.getElementById('game-screen');
+    if (!gameScreen) return;
+
+    closeNoInteractionPause();
+
+    const pause = document.createElement('div');
+    pause.id = 'game-pause-overlay';
+    pause.className = 'game-pause-overlay';
+
+    pause.innerHTML = `
+        <div class="game-pause-box">
+            <div class="game-pause-icon">⏸️</div>
+
+            <div class="game-pause-title">
+                Tạm dừng rồi bé ơi
+            </div>
+
+            <div class="game-pause-text">
+                Bé chưa chọn đáp án trong 3 câu liên tiếp.
+            </div>
+
+            <div class="game-pause-actions">
+                <button
+                    class="game-pause-resume"
+                    type="button"
+                    onclick="resumeGameAfterPause()">
+                    Chơi tiếp
+                </button>
+
+                <button
+                    class="game-pause-menu"
+                    type="button"
+                    onclick="backToMenu()">
+                    Về menu
+                </button>
+            </div>
+        </div>
+    `;
+
+    gameScreen.appendChild(pause);
+}
+
+function closeNoInteractionPause() {
+    const old = document.getElementById('game-pause-overlay');
+    if (old) old.remove();
+}
+
+function resumeGameAfterPause() {
+    if (!activeGame) return;
+
+    closeNoInteractionPause();
+
+    gamePausedByNoInteraction = false;
+    noInteractionCount = 0;
+
+    resetTopTimerBar();
+
+    // Chơi tiếp bằng một câu mới
+    nextQuestion({
+        playAudioNow: false,
+        startTimerNow: false
+    });
+
+    let introDone = false;
+
+    function afterIntro() {
+        if (introDone) return;
+        if (!activeGame) return;
+        if (gamePausedByNoInteraction) return;
+
+        introDone = true;
+
+        playQuestionAudio();
+        startQuestionTimer();
+        startAutoReplay();
+    }
+
+    playAudio(welcomeAudioPath(), {
+        stopOld: true,
+        onended: afterIntro,
+        onerror: afterIntro
+    });
+}
+
+// =====================================================
+// NÚT VÀO CHƠI + KIỂM TRA PHIÊN BẢN
+// Bấm 1 lần: vào app
+// Bấm đúp: hỏi xoá cache / cập nhật
+// =====================================================
+
+let startButtonClickTimer = null;
+let hasNewAppVersion = false;
+
+window.addEventListener('DOMContentLoaded', () => {
+    setupStartButtonActions();
+    checkAppVersionForUpdateHint();
+});
+
+function setupStartButtonActions() {
+    const startBtn = document.getElementById('start-btn');
+
+    if (!startBtn) return;
+
+    startBtn.addEventListener('click', () => {
+        if (startButtonClickTimer) {
+            clearTimeout(startButtonClickTimer);
+            startButtonClickTimer = null;
+
+            askClearPwaCache();
+            return;
+        }
+
+        startButtonClickTimer = setTimeout(() => {
+            startButtonClickTimer = null;
+            unlockAudio();
+        }, 260);
+    });
+}
+// =====================================================
+// KIỂM TRA PHIÊN BẢN
+// Nếu localStorage đang lưu bản cũ khác APP_VERSION
+// thì hiện gợi ý nhấn đúp để cập nhật.
+// =====================================================
+
+function checkAppVersionForUpdateHint() {
+    const hint = document.getElementById('update-hint');
+
+    const savedVersion = localStorage.getItem(APP_VERSION_KEY);
+
+    // Lần đầu mở app: chưa có version cũ
+    // Lưu version hiện tại và không hiện gợi ý.
+    if (!savedVersion) {
+        localStorage.setItem(APP_VERSION_KEY, APP_VERSION);
+
+        if (hint) {
+            hint.style.display = 'none';
+        }
+
+        hasNewAppVersion = false;
+        return;
+    }
+
+    // Có version cũ và khác version mới
+    if (savedVersion !== APP_VERSION) {
+        hasNewAppVersion = true;
+
+        if (hint) {
+            hint.style.display = 'block';
+            hint.textContent =
+                `Có bản cập nhật mới ${savedVersion} → ${APP_VERSION}. ` +
+                `Nhấn đúp “Vào chơi” để cập nhật.`;
+        }
+
+        return;
+    }
+
+    // Đang là bản mới nhất
+    hasNewAppVersion = false;
+
+    if (hint) {
+        hint.style.display = 'none';
+    }
+}
+// =====================================================
+// HỎI XOÁ CACHE / CẬP NHẬT
+// =====================================================
+
+function askClearPwaCache() {
+    const message = hasNewAppVersion
+        ? 'Có bản cập nhật mới.\n\nBạn muốn xoá cache để tải bản mới không?'
+        : 'Bạn muốn xoá cache ứng dụng không?\n\nDùng khi app bị lỗi hoặc kẹt bản cũ.';
+
+    const ok = confirm(message);
+
+    if (!ok) return;
+
+    clearPwaCacheAndReload();
+}
+// =====================================================
+// XOÁ CACHE PWA + SERVICE WORKER + LOCAL STORAGE
+// Dùng khi app bị kẹt bản cũ.
+// Hiện tại điểm chưa lưu nên có thể xoá localStorage.
+// Sau này nếu có lưu điểm/cài đặt thì bỏ localStorage.clear().
+// =====================================================
+
+async function clearPwaCacheAndReload() {
+    try {
+        // 1. Xoá Cache Storage
+        if ('caches' in window) {
+            const cacheNames = await caches.keys();
+
+            await Promise.all(
+                cacheNames.map(cacheName => caches.delete(cacheName))
+            );
+        }
+
+        // 2. Gỡ service worker nếu có
+        if ('serviceWorker' in navigator) {
+            const registrations =
+                await navigator.serviceWorker.getRegistrations();
+
+            await Promise.all(
+                registrations.map(registration => registration.unregister())
+            );
+        }
+
+        // 3. Xoá localStorage
+        // Sau này nếu có lưu điểm/cài đặt thì tắt dòng này.
+        localStorage.clear();
+
+        // 4. Xoá sessionStorage
+        sessionStorage.clear();
+
+        alert('Đã xoá cache. App sẽ tải lại bản mới.');
+
+        // 5. Reload chống cache
+        const cleanUrl = location.origin + location.pathname;
+        location.replace(cleanUrl + '?refresh=' + Date.now());
+
+    } catch (err) {
+        console.error('Lỗi xoá cache:', err);
+
+        alert(
+            'Không xoá được cache hoàn toàn.\n' +
+            'Bạn hãy đóng app rồi mở lại.'
+        );
+    }
 }
 
 // PWA: dùng đường dẫn tương đối để chạy được trong thư mục /behocv3.2/ hoặc khi test local.

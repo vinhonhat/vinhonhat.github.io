@@ -141,6 +141,31 @@ body {
     animation: splashVersionJump 2.3s ease-in-out infinite;
 }
 
+/* =====================================================
+   GỢI Ý CẬP NHẬT APP
+   Chỉ hiện khi phiên bản hiện tại khác phiên bản đã lưu.
+===================================================== */
+
+.update-hint {
+    margin-top: 10px;
+
+    max-width: 320px;
+
+    padding: 8px 12px;
+
+    font-size: 0.85rem;
+    line-height: 1.35;
+
+    text-align: center;
+
+    color: #ff6f00;
+    background: rgba(255, 248, 225, 0.95);
+
+    border: 2px solid #ffd54f;
+    border-radius: 14px;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
 
 /* =====================================================
    NÚT CÀI APP Ở MÀN CHÀO

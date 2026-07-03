@@ -129,10 +129,6 @@ function renderGameHeader(config = {}) {
             <div class="top-bar-right">
                 ${modeHtml}
             </div>
-
-            <div class="top-timer-track" aria-hidden="true">
-                <div id="top-timer-fill" class="top-timer-fill timer-green"></div>
-            </div>
         </div>
     `;
 }
@@ -142,8 +138,6 @@ function clearGameScreen() {
     const gameScreen = document.getElementById('game-screen');
     if (gameScreen) gameScreen.innerHTML = '';
 }
-
-
 
 // =====================================================
 // PHẦN 6 — PHÁO GIẤY NAN QUẠT
