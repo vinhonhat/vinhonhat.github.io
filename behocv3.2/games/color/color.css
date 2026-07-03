@@ -1,0 +1,226 @@
+/* games/color/color.css */
+/* =====================================================
+   GAME NHẬN BIẾT MÀU - CSS RIÊNG
+   Khung chung, top-bar, timer, nút loa, đáp án
+   vẫn do css/game-core.css quản lý.
+===================================================== */
+
+.game-color {
+    /* Khung 50 / 50 theo yêu cầu */
+    --question-ratio: 50fr;
+    --answer-ratio: 50fr;
+
+    --game-body-gap: 0px;
+
+    --answer-top-padding: 16px;
+
+    --replay-size: 28px;
+    --replay-font-size: 13px;
+
+    /* 4 đáp án màu luôn chia 2 x 2 */
+    --answer-cols-mobile: 2;
+    --answer-cols-pc: 2;
+    --answer-gap: 12px;
+}
+
+/* =====================================================
+   KHUNG CÂU HỎI
+   Không tạo khung riêng để tránh bị đúp với khung ngoài.
+===================================================== */
+
+.color-question {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+.color-question-card {
+    width: 100%;
+    height: 100%;
+
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    padding: 0;
+    margin: 0;
+
+    cursor: pointer;
+
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+
+    animation: colorQuestionPop 0.28s ease-out both;
+}
+
+.color-question-card:active {
+    transform: none;
+}
+
+.color-question-mark {
+    font-size: clamp(5.5rem, 24vw, 11rem);
+    font-weight: 900;
+
+    line-height: 0.9;
+
+    color: #ff8a00;
+
+    text-shadow: none;
+}
+
+.color-question-text {
+    font-size: clamp(1.7rem, 7vw, 3rem);
+    font-weight: 900;
+
+    line-height: 1;
+
+    color: #4a3422;
+
+    text-shadow: none;
+}
+
+/* =====================================================
+   ĐÁP ÁN MÀU
+===================================================== */
+
+.color-option-btn {
+    min-height: clamp(84px, 18vh, 160px);
+
+    background: var(--color-value) !important;
+
+    border: 6px solid rgba(255,255,255,0.96) !important;
+    border-radius: 26px !important;
+
+    /* Màu phẳng, không đổ bóng/inset để màu nhìn thật hơn. */
+    box-shadow: none !important;
+
+    color: transparent !important;
+
+    overflow: hidden;
+
+    transition:
+        transform 0.16s ease,
+        border-color 0.16s ease,
+        box-shadow 0.16s ease,
+        opacity 0.16s ease;
+}
+
+/* Không phủ gradient lên màu đáp án. */
+.color-option-btn::after {
+    content: none;
+}
+
+/* Giữ nguyên màu thật khi chọn đúng, chỉ nhấn mạnh bằng viền/sáng. */
+.game-color .color-option-btn.correct {
+    background: var(--color-value) !important;
+    color: transparent !important;
+
+    border-color: #fff700 !important;
+
+    box-shadow:
+        0 0 0 6px rgba(255, 247, 0, 0.72),
+        0 0 22px rgba(255, 247, 0, 0.75) !important;
+
+    transform: scale(1.04);
+}
+
+/* Sai thì không đổi sang màu hồng, chỉ làm mờ và viền đỏ. */
+.game-color .color-option-btn.wrong {
+    background: var(--color-value) !important;
+    color: transparent !important;
+
+    border-color: #ff1744 !important;
+    opacity: 0.55;
+
+    box-shadow:
+        0 0 0 5px rgba(255, 23, 68, 0.35) !important;
+}
+
+.color-option-btn:active {
+    transform: scale(0.97);
+}
+
+/* Màu đen cần viền sáng rõ hơn */
+.color-option-btn[title="Màu Đen"] {
+    border-color: #f7f7f7 !important;
+}
+
+
+/* Khi trả lời đúng: nhấn màu đúng lên khu câu hỏi, không tạo khung mới. */
+.game-color.color-correct-flash .color-question-mark {
+    color: var(--current-correct-color, #ff8a00);
+    animation: colorQuestionCorrectPulse 0.65s ease-out 0s 2;
+}
+
+.game-color.color-correct-flash .color-question-text {
+    color: var(--current-correct-color, #4a3422);
+}
+
+/* =====================================================
+   PC / iPad
+===================================================== */
+
+@media (min-width: 768px) {
+    .game-color {
+        --question-ratio: 50fr;
+        --answer-ratio: 50fr;
+        --answer-gap: 16px;
+    }
+
+    .color-option-btn {
+        min-height: 150px;
+    }
+}
+
+@media (max-height: 680px) {
+    .color-question-mark {
+        font-size: clamp(4.8rem, 20vw, 8rem);
+    }
+
+    .color-question-text {
+        font-size: clamp(1.35rem, 5.5vw, 2rem);
+    }
+
+    .color-option-btn {
+        min-height: clamp(70px, 15vh, 120px);
+    }
+}
+
+@keyframes colorQuestionCorrectPulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.12);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes colorQuestionPop {
+    from {
+        opacity: 0;
+        transform: scale(0.72) translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
