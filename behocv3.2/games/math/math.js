@@ -1,65 +1,125 @@
-// js/games/game_math.js
-// Math: Bé làm tính cộng, trừ cơ bản (Phạm vi trong khoảng 10) 🔢, 📏, 📐, ➕, ➖, ✖️, ➗, 🧮
+// games/math/math.js
+// =====================================================
+// GAME: BÉ LÀM TÍNH
+// Chuẩn v3.2 - dùng registerGame() + game-core.js
+// Cộng / trừ trong phạm vi 10.
+// =====================================================
 
-registerGame('math', {
-    // 1. Sinh phép tính (Cộng hoặc Trừ trong phạm vi 10)
-    generateData: function() {
-        const isPlus = Math.random() > 0.5; // 50% là cộng, 50% là trừ
-        let a, b, result, operator;
+function getRandomMathData() {
+    const isPlus = Math.random() > 0.5;
+    let a;
+    let b;
+    let result;
+    let operator;
 
-        if (isPlus) {
-            // Phép cộng: a + b <= 10
-            a = Math.floor(Math.random() * 6); // 0 đến 5
-            b = Math.floor(Math.random() * 6); // 0 đến 5
-            result = a + b;
-            operator = '+';
-        } else {
-            // Phép trừ: a - b >= 0
-            a = Math.floor(Math.random() * 10) + 1; // 1 đến 10
-            b = Math.floor(Math.random() * (a + 1)); // b <= a
-            result = a - b;
-            operator = '-';
+    if (isPlus) {
+        // Phép cộng: kết quả không quá 10.
+        a = Math.floor(Math.random() * 6);
+        b = Math.floor(Math.random() * 6);
+
+        while (a + b > 10) {
+            a = Math.floor(Math.random() * 6);
+            b = Math.floor(Math.random() * 6);
         }
 
-        return { a: a, b: b, operator: operator, result: result };
+        result = a + b;
+        operator = '+';
+    } else {
+        // Phép trừ: kết quả không âm.
+        a = Math.floor(Math.random() * 10) + 1;
+        b = Math.floor(Math.random() * (a + 1));
+
+        result = a - b;
+        operator = '-';
+    }
+
+    return {
+        a,
+        b,
+        operator,
+        result
+    };
+}
+
+function getRandomMathAnswer() {
+    return Math.floor(Math.random() * 15);
+}
+
+function shuffleMathOptions(list) {
+    const arr = list.slice();
+
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+
+    return arr;
+}
+
+registerGame('math', {
+    // Mỗi câu có 15 giây.
+    questionTimeSec: 15,
+
+    // =====================================================
+    // SINH PHÉP TÍNH
+    // =====================================================
+    generateData() {
+        return getRandomMathData();
     },
 
-    // 2. Hiển thị đề bài
-    renderDisplay: function(data) {
+    // =====================================================
+    // HIỂN THỊ ĐỀ BÀI
+    // =====================================================
+    renderDisplay(data) {
         return `
-            <div class="big-icon-question">🧮</div>
-            <div class="hint-text" style="font-size: 3rem;">
-                ${data.a} ${data.operator} ${data.b} = ?
+            <div class="math-question">
+                <div class="math-icon">🧮</div>
+
+                <div class="math-expression" aria-label="Phép tính">
+                    <span class="math-number">${data.a}</span>
+                    <span class="math-operator">${data.operator}</span>
+                    <span class="math-number">${data.b}</span>
+                    <span class="math-equal">=</span>
+                    <span class="math-question-mark">?</span>
+                </div>
             </div>
         `;
     },
 
-    // 3. Tạo đáp án (1 đúng, 3 sai)
-    getOptions: function(data) {
-        let set = new Set([data.result]);
-        while(set.size < 4) {
-            // Tạo số ngẫu nhiên từ 0 đến 15 để làm đáp án nhiễu
-            let wrong = Math.floor(Math.random() * 15);
-            set.add(wrong);
+    // =====================================================
+    // TẠO 4 ĐÁP ÁN
+    // =====================================================
+    getOptions(data) {
+        const answerSet = new Set([data.result]);
+
+        while (answerSet.size < 4) {
+            answerSet.add(getRandomMathAnswer());
         }
-        return Array.from(set);
+
+        return shuffleMathOptions(Array.from(answerSet));
     },
 
-    // 4. Trang trí nút
-    styleOptionBtn: function(btn, value) {
+    // =====================================================
+    // STYLE NÚT ĐÁP ÁN
+    // =====================================================
+    styleOptionBtn(btn, value) {
         btn.textContent = value;
-        btn.style.color = '#d35400'; // Màu cam đậm cho số
+        btn.classList.add('math-option-btn');
+        btn.setAttribute('aria-label', 'Đáp án ' + value);
     },
 
-    // 5. Âm thanh (Chỉ đọc kết quả hoặc tiếng ting tong)
-    getAudio: function(data) {
-        // Game toán hiện tại chưa có file âm đọc phép tính, 
-        // nên ta chỉ cần im lặng hoặc để bé tự tính.
-        return []; 
+    // =====================================================
+    // ÂM CÂU HỎI
+    // Tạm để rỗng, bé tự nhìn phép tính.
+    // =====================================================
+    getAudio() {
+        return [];
     },
 
-    // 6. Kiểm tra
-    checkResult: function(selected, data) {
-        return selected === data.result;
+    // =====================================================
+    // KIỂM TRA ĐÁP ÁN
+    // =====================================================
+    checkResult(selected, data) {
+        return Number(selected) === Number(data.result);
     }
 });
