@@ -28,21 +28,108 @@ function addScore(amount = 1) {
     if (score) score.textContent = String(globalScore);
 }
 
-function renderGameShell(title = 'Bé Vui Học') {
+// =====================================================
+// GAME SHELL DÙNG CHUNG
+// Tạo khung chuẩn cho toàn bộ game:
+// - top-bar: Home / Điểm / Học-Luyện nếu có
+// - display-area: khu câu hỏi
+// - answer-panel: khu đáp án + nút loa ở giữa phía trên
+// =====================================================
+
+function renderGameShell(title = 'Bé Vui Học', config = {}) {
     const gameScreen = document.getElementById('game-screen');
+    if (!gameScreen) return;
+
+    const {
+        hasMode = false,
+        mode = 'practice',
+        onLearn = '',
+        onPractice = ''
+    } = config;
 
     gameScreen.innerHTML = `
-        <div class="top-bar">
-            <button class="back-btn" type="button" onclick="backToMenu()">🏠</button>
-            <div id="game-title" style="font-size:1.2rem;font-weight:bold;color:#ff6f00;text-align:center;">${title}</div>
-            <div id="score-container">⭐ <span id="score">0</span></div>
+        ${renderGameHeader({
+            score: '⭐ <span id="score">0</span>',
+            hasMode,
+            mode,
+            onHome: 'backToMenu()',
+            onLearn,
+            onPractice
+        })}
+
+        <div class="game-body">
+            <div class="display-area" id="question-content"></div>
+
+            <div class="answer-panel">
+                <button
+                    class="replay-btn"
+                    type="button"
+                    onclick="playQuestionAudio()"
+                    aria-label="Nghe lại">
+                    🔊
+                </button>
+
+                <div class="options-grid" id="options-grid"></div>
+            </div>
         </div>
+    `;
+}
 
-        <div class="display-area" id="question-content"></div>
 
-        <button class="replay-btn" type="button" onclick="playQuestionAudio()" aria-label="Nghe lại">🔊</button>
+// =====================================================
+// TOP BAR DÙNG CHUNG
+// Home / Điểm / Học-Luyện
+// Dùng class .top-bar thống nhất cho toàn bộ game.
+// =====================================================
 
-        <div class="options-grid" id="options-grid"></div>
+function renderGameHeader(config = {}) {
+    const {
+        score = '⭐ 0',
+        hasMode = false,
+        mode = 'practice',
+        onHome = 'backToMenu()',
+        onLearn = '',
+        onPractice = ''
+    } = config;
+
+    const modeHtml = hasMode
+        ? `
+            <div class="top-bar-mode">
+                <button
+                    class="game-mode-btn ${mode === 'learn' ? 'active' : ''}"
+                    type="button"
+                    onclick="${onLearn}"
+                    title="Học">
+                    📖
+                </button>
+
+                <button
+                    class="game-mode-btn ${mode === 'practice' ? 'active' : ''}"
+                    type="button"
+                    onclick="${onPractice}"
+                    title="Luyện">
+                    🎯
+                </button>
+            </div>
+        `
+        : '';
+
+    return `
+        <div class="top-bar">
+            <div class="top-bar-left">
+                <button class="back-btn" type="button" onclick="${onHome}">
+                    <span class="back-icon">🏠</span>
+                </button>
+            </div>
+
+            <div class="top-bar-center">
+                <div id="score-container">${score}</div>
+            </div>
+
+            <div class="top-bar-right">
+                ${modeHtml}
+            </div>
+        </div>
     `;
 }
 
@@ -51,6 +138,8 @@ function clearGameScreen() {
     const gameScreen = document.getElementById('game-screen');
     if (gameScreen) gameScreen.innerHTML = '';
 }
+
+
 
 // =====================================================
 // PHẦN 6 — PHÁO GIẤY NAN QUẠT

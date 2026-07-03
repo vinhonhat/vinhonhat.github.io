@@ -75,6 +75,14 @@ const GAME_CONFIG = {
         js: 'games/math4/math4.js',
         moduleId: 'math4',
         type: 'registered'
+    },
+    frame_test: {
+        title: 'Test Khung',
+        folder: 'frame-test',
+        css: 'games/frame-test/frame-test.css',
+        js: 'games/frame-test/frame-test.js',
+        moduleId: 'frame_test',
+        type: 'registered'
     }
 };
 
@@ -147,6 +155,7 @@ function showMenuOnly() {
     if (game) {
         game.style.display = 'none';
         game.innerHTML = '';
+        game.className = 'game-view';
     }
     if (menu) menu.style.display = 'flex';
 }
@@ -166,6 +175,15 @@ function backToMenu() {
     showMenuOnly();
 }
 
+function applyGameLayoutClass(gameId) {
+    const game = document.getElementById('game-screen');
+    if (!game) return;
+
+    const safeId = String(gameId).replace(/_/g, '-');
+
+    game.className = 'game-view game-' + safeId;
+}
+
 async function startGame(gameId) {
     const config = GAME_CONFIG[gameId];
 
@@ -176,6 +194,7 @@ async function startGame(gameId) {
 
     stopAutoReplay();
     stopAllAudio();
+    applyGameLayoutClass(gameId);
 
     await loadCssOnce(config.css);
     await loadJsOnce(config.js);
@@ -251,55 +270,91 @@ function startRegisteredGame(gameId, title, module) {
     activeGame = module;
     currentQuestionData = null;
 
+    // 1. Dựng khung game trước
     renderGameShell(title);
     resetScore();
 
-    playAudio(welcomeAudioPath(), {
-        stopOld: true,
-        onended: nextQuestion,
-        onerror: nextQuestion
+    // 2. Hiện câu hỏi + đáp án ngay
+    // Nhưng KHÔNG phát âm câu hỏi vội
+    nextQuestion({
+        playAudioNow: false
     });
 
-    // Phòng trường hợp audio bị thiếu nhưng onerror không kích hoạt kịp.
-    setTimeout(() => {
-        if (activeGame === module && !currentQuestionData) {
-            nextQuestion();
-        }
-    }, 900);
+    // 3. Phát dingdong mỗi lần vào game
+    let introDone = false;
+
+    function playFirstQuestionAudio() {
+        if (introDone) return;
+        if (activeGame !== module) return;
+
+        introDone = true;
+
+        // Dingdong xong mới phát âm câu hỏi
+        playQuestionAudio();
+
+        setTimeout(startAutoReplay, 3000);
+    }
+
+    playAudio(welcomeAudioPath(), {
+        stopOld: true,
+        onended: playFirstQuestionAudio,
+        onerror: playFirstQuestionAudio
+    });
 }
 
-function nextQuestion() {
+function nextQuestion(config = {}) {
     if (!activeGame) return;
+
+    const playAudioNow = config.playAudioNow !== false;
+    const audioDelay = config.audioDelay ?? 300;
 
     stopAutoReplay();
 
     const questionContent = document.getElementById('question-content');
     const optionsGrid = document.getElementById('options-grid');
+
     if (!questionContent || !optionsGrid) return;
 
     currentQuestionData = activeGame.generateData();
     activeGame.currentData = currentQuestionData;
 
-    questionContent.innerHTML = activeGame.renderDisplay(currentQuestionData);
+    const questionHtml = activeGame.renderDisplay(currentQuestionData);
+
+    const answerOptions = shuffleArray(
+        activeGame.getOptions(currentQuestionData)
+    );
+
+    const fragment = document.createDocumentFragment();
+
+    answerOptions.forEach(option => {
+        const btn = document.createElement('button');
+
+        btn.className = 'option-btn';
+
+        activeGame.styleOptionBtn(btn, option);
+
+        btn.onclick = () => handleCheckAnswer(option, btn);
+
+        fragment.appendChild(btn);
+    });
+
+    questionContent.innerHTML = questionHtml;
 
     optionsGrid.innerHTML = '';
     optionsGrid.className = 'options-grid';
-    if (activeGame.gridClass) optionsGrid.classList.add(activeGame.gridClass);
 
-    const options = shuffleArray(activeGame.getOptions(currentQuestionData));
+    if (activeGame.gridClass) {
+        optionsGrid.classList.add(activeGame.gridClass);
+    }
 
-    options.forEach(option => {
-        const btn = document.createElement('button');
-        btn.className = 'option-btn';
-        activeGame.styleOptionBtn(btn, option);
-        btn.onclick = () => handleCheckAnswer(option, btn);
-        optionsGrid.appendChild(btn);
-    });
+    optionsGrid.appendChild(fragment);
 
-    setTimeout(() => {
-        playQuestionAudio();
-        setTimeout(startAutoReplay, 3000);
-    }, 300);
+    if (playAudioNow) {
+        setTimeout(() => {
+            playQuestionAudio();
+            setTimeout(startAutoReplay, 3000);
+        }, audioDelay);
+    }
 }
 
 function playQuestionAudio() {
