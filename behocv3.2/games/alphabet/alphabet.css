@@ -1,364 +1,576 @@
+/* games/alphabet/alphabet.css */
 /* =====================================================
-   ALPHABET GAME
+   GAME BẢNG CHỮ CÁI - CHUẨN V3.2
+   Dùng chung khung game-core:
+   .game-view, .top-bar, .display-area, .answer-panel, .replay-btn.
+   File này chỉ chỉnh nội dung riêng của Alphabet.
 ===================================================== */
 
-#alphabet-screen{
-    position:fixed;
-    inset:0;
-    z-index:9999;
+.game-alphabet {
+    --game-body-gap: 20px;
+    --question-padding: 14px;
+    --answer-gap: 10px;
 
-    padding:15px;
-    box-sizing:border-box;
-    overflow:auto;
+    /* Mặc định cho nút loa ở phần luyện.
+       Riêng phần HỌC sẽ tắt nút loa và bỏ padding bằng .game-alphabet-learn. */
+    --answer-top-padding: 16px;
+    --replay-size: 28px;
+    --replay-font-size: 13px;
 
-    background:
-    linear-gradient(
-        135deg,
-        #ffe082 0%,
-        #ffcc80 40%,
-        #ffab91 100%
-    );
-}
-
-.alphabet-wrapper{
-    width:100%;
-    max-width:650px;
-    margin:auto;
-
-    height:min(90vh,900px);
-
-    display:flex;
-    flex-direction:column;
-
-    background:rgba(255,255,255,.25);
-    backdrop-filter:blur(10px);
-
-    border-radius:24px;
-
-    padding:12px;
-
-    border:3px solid rgba(255,255,255,.5);
-
-    box-shadow:
-        0 8px 30px rgba(0,0,0,.15);
-}
-
-.alphabet-topbar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    gap:10px;
-
-    margin-bottom:15px;
-}
-
-.alphabet-score{
-    font-size:28px;
-    font-weight:bold;
-}
-
-.alphabet-icon-btn{
-    border:none;
-    background:transparent;
-
-    font-size:42px;
-
-    cursor:pointer;
-
-    transition:.2s;
-}
-
-.alphabet-icon-btn:active{
-    transform:scale(.9);
-}
-
-#alphabet-content{
-    flex:1;
-    min-height:0;
-}
-
-/* =====================================================
-   LEARN MODE
-===================================================== */
-
-.learn-layout{
-    display:flex;
-    flex-direction:column;
-
-    gap:12px;
-
-    height:100%;
-}
-
-.learn-card{
-    background:#fff;
-
-    border-radius:25px;
-
-    padding:12px;
-
-    flex-shrink:0;
-
-    box-shadow:
-        0 3px 10px rgba(0,0,0,.12);
-}
-
-.learn-display{
-    display:grid;
-    grid-template-columns:1fr 2fr;
-
-    gap:10px;
-
-    align-items:center;
-}
-
-.learn-char{
-    text-align:center;
-    line-height:1;
-}
-
-.learn-char-upper{
-    font-size:min(18vw,100px);
-    font-weight:bold;
-}
-
-.learn-char-lower{
-    font-size:min(12vw,60px);
-
-    margin-top:8px;
-
-    color:#ff7043;
-
-    /* QUAN TRỌNG */
     font-family:
-        "Andika",
+        "Segoe UI",
+        Tahoma,
+        Arial,
+        sans-serif;
+}
+
+/* Một số bản game-core cũ còn tạo game-split-line. Alphabet không dùng. */
+.game-alphabet .game-split-line {
+    display: none !important;
+}
+
+/* =====================================================
+   TOP-BAR DÙNG CHUNG
+   -----------------------------------------------------
+   Game-core tạo 2 nút:
+   - 📖 Học
+   - 🎯 Luyện
+
+   Quy tắc ở đây:
+   - Đang HỌC  -> ẩn nút 📖, chỉ hiện 🎯 để bấm sang Luyện.
+   - Đang LUYỆN -> ẩn nút 🎯, chỉ hiện 📖 để bấm về Bảng chữ cái.
+===================================================== */
+
+.game-alphabet .top-bar {
+    grid-template-columns: 44px 1fr 44px;
+}
+
+.game-alphabet .top-bar-mode {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.game-alphabet .game-mode-btn {
+    width: 38px;
+    height: 38px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+    margin: 0;
+
+    font-size: 25px;
+    line-height: 1;
+
+    opacity: 1 !important;
+    filter: none !important;
+
+    cursor: pointer;
+
+    -webkit-tap-highlight-color: transparent;
+}
+
+.game-alphabet .game-mode-btn:active {
+    transform: scale(0.92);
+}
+
+/* Ẩn nút của mode hiện tại, chỉ chừa nút chuyển sang mode còn lại. */
+.game-alphabet .game-mode-btn.active {
+    display: none !important;
+}
+
+@media (min-width: 768px) {
+    .game-alphabet .top-bar {
+        grid-template-columns: 52px 1fr 52px;
+    }
+
+    .game-alphabet .game-mode-btn {
+        width: 42px;
+        height: 42px;
+        font-size: 29px;
+    }
+}
+
+/* =====================================================
+   TẮT TIMER RIÊNG CHO ALPHABET
+   -----------------------------------------------------
+   Alphabet không dùng đếm giờ.
+   Đặc biệt ở màn LUYỆN, bỏ luôn vạch timer dưới top-bar
+   để tránh nhìn như đang chạy thời gian.
+===================================================== */
+
+.game-alphabet-practice .top-bar::before,
+.game-alphabet-practice .top-bar::after {
+    display: none !important;
+}
+
+.game-alphabet-practice .top-bar {
+    --timer-scale: 0;
+}
+
+/* =====================================================
+   CHỖ CHỈNH TỶ LỆ TAY - HỌC / LUYỆN TÁCH RIÊNG
+   =====================================================
+
+   A. MOBILE DỌC / MẶC ĐỊNH
+      - Bảng chữ cái: .game-alphabet-learn
+      - Luyện chữ:    .game-alphabet-practice
+
+   B. IPAD DỌC
+      - chỉnh trong:
+        @media (min-width: 768px) and (orientation: portrait)
+
+   C. MÀN NGANG / PC / IPAD NGANG
+      - chỉnh trong:
+        @media (orientation: landscape)
+
+   Ý nghĩa:
+      --question-ratio: phần trên
+      --answer-ratio:   phần dưới
+
+   Ví dụ 65/35:
+      --question-ratio: 65fr;
+      --answer-ratio:   35fr;
+===================================================== */
+
+/* A1. HỌC - mobile dọc / mặc định
+   Phần trên: chữ + hình minh họa.
+   Phần dưới: bảng chữ cái. */
+.game-alphabet-learn {
+    --question-ratio: 30fr;
+    --answer-ratio: 70fr;
+
+    /* Học chữ không cần nút loa chung vì bấm từng chữ đã đọc. */
+    --answer-top-padding: 0px;
+
+    --answer-cols-mobile: 1;
+    --answer-cols-pc: 1;
+}
+
+/* A2. LUYỆN - mobile dọc / mặc định
+   Phần trên: hình gợi ý.
+   Phần dưới: 4 đáp án chữ. */
+.game-alphabet-practice {
+    --question-ratio: 60fr;
+    --answer-ratio: 40fr;
+
+    --answer-top-padding: 16px;
+
+    --answer-cols-mobile: 2;
+    --answer-cols-pc: 4;
+}
+
+/* B. IPAD DỌC
+   Chỉnh riêng tại đây để không ảnh hưởng mobile hoặc màn ngang. */
+@media (min-width: 768px) and (orientation: portrait) {
+    /* B1. HỌC - iPad dọc */
+    .game-alphabet-learn {
+        --question-ratio: 40fr;
+        --answer-ratio: 60fr;
+    }
+
+    /* B2. LUYỆN - iPad dọc */
+    .game-alphabet-practice {
+        --question-ratio: 70fr;
+        --answer-ratio: 30fr;
+    }
+}
+
+/* C. MÀN NGANG / PC / IPAD NGANG
+   Chỉnh riêng tại đây. */
+@media (orientation: landscape) {
+    /* C1. HỌC - màn ngang */
+    .game-alphabet-learn {
+        --question-ratio: 40fr;
+        --answer-ratio: 60fr;
+    }
+
+    /* C2. LUYỆN - màn ngang
+       Màn ngang đáp án thường nằm 1 hàng, 65/35 nhìn cân hơn. */
+    .game-alphabet-practice {
+        --question-ratio: 65fr;
+        --answer-ratio: 35fr;
+
+        --answer-cols-mobile: 4;
+        --answer-cols-pc: 4;
+    }
+}
+
+/* =====================================================
+   FONT CHỮ THƯỜNG CHO BÉ CẤP 1
+   -----------------------------------------------------
+   Ưu tiên font cũ Patrick Hand nếu máy/trang đã có.
+   Không để chữ nghiêng.
+
+   Nếu muốn chuẩn nhất kiểu chữ tập viết có móc, sau này nên
+   nhúng font .woff2 vào project bằng @font-face. Hiện tại dùng
+   danh sách font an toàn, ưu tiên giống chữ viết tay nhất có thể.
+===================================================== */
+
+.alphabet-lower,
+.alphabet-key-lower,
+.alphabet-option-lower {
+    font-family:
+        "Patrick Hand",
         "Comic Sans MS",
         "Segoe Print",
-        cursive;
+        "Andika",
+        "Trebuchet MS",
+        "Segoe UI",
+        Tahoma,
+        Arial,
+        sans-serif;
+
+    font-style: normal !important;
+    font-synthesis-style: none;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+    font-variant-ligatures: none;
 }
 
-.learn-image-box{
-    display:flex;
-    flex-direction:column;
+.alphabet-upper,
+.alphabet-key-upper,
+.alphabet-option-upper {
+    font-family:
+        "Segoe UI",
+        Tahoma,
+        Arial,
+        sans-serif;
 
-    align-items:center;
-    justify-content:center;
-}
-
-.learn-image{
-    width:clamp(70px,20vw,110px);
-    height:clamp(70px,20vw,110px);
-
-    object-fit:contain;
-}
-
-.learn-word{
-    margin-top:10px;
-
-    text-align:center;
-
-    font-size:clamp(18px,4vw,26px);
-
-    font-weight:bold;
-}
-
-.learn-speaker{
-    text-align:center;
-    font-size:22px;
-    margin-top:10px;
-}
-
-.keyboard-scroll{
-    flex:1;
-
-    overflow-y:auto;
-
-    padding-bottom:80px;
-
-    -webkit-overflow-scrolling:touch;
-}
-
-.keyboard-grid{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-
-    gap:10px;
+    font-style: normal !important;
+    font-synthesis-style: none;
+    font-weight: 900;
+    letter-spacing: 0;
 }
 
 /* =====================================================
-   KEYBOARD
+   HỌC CHỮ - PHẦN TRÊN
 ===================================================== */
 
-.key-btn{
-    border:none;
+.alphabet-learn-display {
+    width: 100%;
+    height: 100%;
 
-    border-radius:16px;
+    display: grid;
+    grid-template-columns: 0.9fr 1.4fr;
+    align-items: center;
+    justify-items: center;
 
-    background:#fff;
+    gap: 10px;
 
-    min-height:58px;
-
-    font-size:24px;
-    font-weight:bold;
-
-    cursor:pointer;
-
-    transition:.2s;
-
-    box-shadow:
-        0 2px 6px rgba(0,0,0,.15);
+    cursor: pointer;
+    user-select: none;
 }
 
-.key-btn:active{
-    transform:scale(.95);
+.alphabet-char-box {
+    width: 100%;
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    line-height: 1;
 }
 
-.active-key{
-    background:#ff9800;
-    color:#fff;
+.alphabet-upper {
+    font-size: clamp(4rem, 24vw, 8.8rem);
+    color: #333;
+}
+
+.alphabet-lower {
+    margin-top: 4px;
+
+    font-size: clamp(3.2rem, 17vw, 6.2rem);
+    color: #ff7043;
+}
+
+.alphabet-picture-box {
+    width: 100%;
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+.alphabet-learn-img {
+    width: clamp(74px, 23vw, 142px);
+    height: clamp(74px, 23vw, 142px);
+
+    object-fit: contain;
+
+    user-select: none;
+    -webkit-user-drag: none;
+
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.14));
+}
+
+.alphabet-word {
+    margin-top: 6px;
+
+    font-size: clamp(1.25rem, 5.2vw, 2.2rem);
+    font-weight: 900;
+
+    color: #444;
+
+    line-height: 1.12;
+    text-align: center;
+}
+
+/* HỌC: bỏ nút loa chung trong answer-panel. */
+.game-alphabet-learn .replay-btn {
+    display: none !important;
 }
 
 /* =====================================================
-   PRACTICE MODE
+   HỌC CHỮ - BẢNG CHỮ CÁI PHẦN DƯỚI
 ===================================================== */
 
-.practice-layout{
-    display:flex;
-    flex-direction:column;
-
-    height:100%;
+.game-alphabet-learn .options-grid {
+    display: block;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
-.practice-card{
-    background:#fff;
+.alphabet-keyboard-grid {
+    width: 100%;
 
-    border-radius:22px;
+    display: grid;
 
-    padding:12px;
+    /* MOBILE: 5 cột để giảm cuộn. */
+    grid-template-columns: repeat(5, minmax(0, 1fr));
 
-    margin-bottom:12px;
+    gap: 9px;
 
-    text-align:center;
+    padding-bottom: 8px;
+    box-sizing: border-box;
+}
+
+.alphabet-key-btn {
+    min-width: 0;
+    min-height: 62px;
+
+    border: none;
+    border-radius: 16px;
+
+    background: rgba(255,255,255,0.96);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 0;
+
+    cursor: pointer;
 
     box-shadow:
-        0 4px 12px rgba(0,0,0,.12);
+        0 3px 0 rgba(0,0,0,0.10),
+        0 5px 10px rgba(0,0,0,0.10);
+
+    user-select: none;
 }
 
-.practice-image{
-    width:min(34vw,120px);
-    height:min(34vw,120px);
-
-    object-fit:contain;
+.alphabet-key-btn:active {
+    transform: scale(0.95);
 }
 
-.practice-answer{
-    font-size:34px;
-    font-weight:bold;
-
-    color:#ff5722;
-
-    opacity:0;
-    transform:scale(.8);
-
-    transition:.3s;
-}
-
-.practice-grid{
-    flex:1;
-
-    display:grid;
-
-    grid-template-columns:repeat(2,1fr);
-
-    gap:8px;
-
-    align-content:start;
-
-    position:relative;
-
-    padding-top:38px;
-}
-
-.practice-speaker{
-    position:absolute;
-
-    left:50%;
-    top:-5px;
-
-    transform:translateX(-50%);
-
-    width:56px;
-    height:56px;
-
-    border:none;
-
-    border-radius:50%;
-
-    background:#fff;
-
-    font-size:30px;
-
+.alphabet-key-btn.active-key {
+    background: #ffb74d;
     box-shadow:
-        0 3px 8px rgba(0,0,0,.2);
-
-    z-index:10;
+        0 3px 0 rgba(230,126,34,0.38),
+        0 0 0 4px rgba(255,255,255,0.7);
 }
 
-.option-btn{
-    border:none;
-
-    border-radius:18px;
-
-    min-height:70px;
-
-    background:#fff;
-
-    font-size:32px;
-    font-weight:bold;
-
-    cursor:pointer;
-
-    transition:.2s;
-
-    box-shadow:
-        0 2px 6px rgba(0,0,0,.15);
+.alphabet-key-upper {
+    font-size: clamp(1.45rem, 6.4vw, 2.25rem);
+    line-height: 1;
+    color: #333;
 }
 
-.option-btn:active{
-    transform:scale(.95);
+.alphabet-key-lower {
+    margin-top: 2px;
+
+    font-size: clamp(1.16rem, 4.9vw, 1.72rem);
+    line-height: 1;
+    color: #ff7043;
 }
 
-.option-btn.correct{
-    background:#4caf50;
-    color:white;
+.alphabet-key-btn.active-key .alphabet-key-upper,
+.alphabet-key-btn.active-key .alphabet-key-lower {
+    color: white;
 }
 
-.option-btn.wrong{
-    background:#f44336;
-    color:white;
+/* IPAD: 6 cột. */
+@media (min-width: 768px) {
+    .alphabet-keyboard-grid {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .alphabet-key-btn {
+        min-height: 66px;
+    }
+}
+
+/* PC / màn lớn: 7 cột để giảm cuộn dọc. */
+@media (min-width: 1100px) {
+    .alphabet-keyboard-grid {
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+    }
 }
 
 /* =====================================================
-   MOBILE
+   LUYỆN CHỮ - PHẦN TRÊN
 ===================================================== */
 
-@media(max-width:600px){
+.alphabet-practice-question {
+    width: 100%;
+    height: 100%;
 
-    .keyboard-grid{
-        grid-template-columns:repeat(4,1fr);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    cursor: pointer;
+    text-align: center;
+    user-select: none;
+}
+
+.alphabet-practice-img {
+    width: clamp(120px, 38vw, 220px);
+    height: clamp(120px, 38vw, 220px);
+
+    object-fit: contain;
+
+    user-select: none;
+    -webkit-user-drag: none;
+
+    filter: drop-shadow(0 6px 8px rgba(0,0,0,0.13));
+}
+
+.alphabet-practice-word {
+    min-height: 1.2em;
+
+    font-size: clamp(1.75rem, 7.8vw, 3.2rem);
+    font-weight: 900;
+
+    color: #ff5722;
+
+    line-height: 1.12;
+
+    opacity: 0;
+    transform: scale(0.82);
+    transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.alphabet-practice-word.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* =====================================================
+   LUYỆN CHỮ - ĐÁP ÁN PHẦN DƯỚI
+===================================================== */
+
+.alphabet-practice-grid {
+    align-content: stretch;
+}
+
+.alphabet-option-btn {
+    min-height: 88px;
+
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 1px;
+
+    line-height: 1;
+}
+
+.alphabet-option-upper {
+    font-size: clamp(3rem, 15vw, 6.4rem);
+    line-height: 1;
+}
+
+.alphabet-option-lower {
+    font-size: clamp(1.65rem, 7vw, 2.8rem);
+    line-height: 1;
+    color: #ff7043;
+}
+
+.alphabet-option-btn.correct .alphabet-option-lower,
+.alphabet-option-btn.wrong .alphabet-option-lower {
+    color: inherit;
+}
+
+@media (min-width: 768px) {
+    .game-alphabet {
+        --question-padding: 18px;
+        --answer-gap: 14px;
     }
 
-    .option-btn{
-        font-size:28px;
-        min-height:65px;
+    .alphabet-option-btn {
+        min-height: 96px;
     }
 
-    .learn-char-upper{
-        font-size:72px;
+    .alphabet-option-upper {
+        font-size: 6.2rem;
     }
 
-    .learn-char-lower{
-        font-size:52px;
+    .alphabet-option-lower {
+        font-size: 2.8rem;
+    }
+}
+
+/* Màn ngang thấp: giảm nhẹ để tránh tràn. */
+@media (orientation: landscape) and (max-height: 560px) {
+    .game-alphabet {
+        --question-padding: 10px;
+        --answer-top-padding: 12px;
+        --answer-gap: 8px;
+    }
+
+    .game-alphabet-learn {
+        --answer-top-padding: 0px;
+    }
+
+    .alphabet-learn-img {
+        width: clamp(58px, 16vh, 100px);
+        height: clamp(58px, 16vh, 100px);
+    }
+
+    .alphabet-key-btn {
+        min-height: 50px;
+    }
+
+    .alphabet-practice-img {
+        width: clamp(92px, 34vh, 150px);
+        height: clamp(92px, 34vh, 150px);
+    }
+
+    .alphabet-option-upper {
+        font-size: clamp(2.8rem, 13vh, 5.2rem);
+    }
+
+    .alphabet-option-lower {
+        font-size: clamp(1.45rem, 6vh, 2.3rem);
     }
 }

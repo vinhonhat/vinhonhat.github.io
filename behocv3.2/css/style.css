@@ -549,7 +549,7 @@ body {
 }
 
 /* =====================================================
-   MENU BADGE - NHÃN BETA, NEW, DEV Ở GÓC NÚT GAME
+   MENU BADGE - NHÃN BETA, NEW, VERSION, DEV Ở GÓC NÚT GAME
 ===================================================== */
 
 .menu-beta-badge {
@@ -564,7 +564,7 @@ body {
     /*background: #ff4757; */
     color: rgb(133, 133, 133);
 
-    font-size: 0.75rem;
+    font-size: 0.6rem;
     font-weight: bold;
     line-height: 1;
 
@@ -586,7 +586,29 @@ body {
     /*background: #ff4757; */
     color: rgb(138, 255, 134);
 
-    font-size: 0.75rem;
+    font-size: 0.6rem;
+    font-weight: bold;
+    line-height: 1;
+
+    border-radius: 999px;
+
+    box-shadow: 0 3px 0 rgba(255, 0, 0, 0.15);
+
+    pointer-events: none;
+}
+.menu-version {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+
+    z-index: 2;
+
+    padding: 4px 9px;
+
+    /*background: #ff4757; */
+    color: rgb(2, 154, 255);
+
+    font-size: 0.6rem;
     font-weight: bold;
     line-height: 1;
 
@@ -609,7 +631,7 @@ body {
     background: #ff4757;
     color: white;
 
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     font-weight: bold;
     text-align: center;
     line-height: 1;

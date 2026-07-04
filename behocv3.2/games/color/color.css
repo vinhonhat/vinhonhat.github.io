@@ -128,14 +128,10 @@
     background: var(--color-value) !important;
     color: transparent !important;
 
-    border-color: #fff700 !important;
-
-    box-shadow:
-        0 0 0 6px rgba(255, 247, 0, 0.72),
-        0 0 22px rgba(255, 247, 0, 0.75) !important;
-
-    transform: scale(1.04);
+    border-color: #178fff !important;
+    opacity: 3.55;
 }
+
 
 /* Sai thì không đổi sang màu hồng, chỉ làm mờ và viền đỏ. */
 .game-color .color-option-btn.wrong {
@@ -143,10 +139,7 @@
     color: transparent !important;
 
     border-color: #ff1744 !important;
-    opacity: 0.55;
-
-    box-shadow:
-        0 0 0 5px rgba(255, 23, 68, 0.35) !important;
+    opacity: 3.55;
 }
 
 .color-option-btn:active {

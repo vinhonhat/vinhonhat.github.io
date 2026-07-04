@@ -73,7 +73,7 @@ registerGame('math', {
     renderDisplay(data) {
         return `
             <div class="math-question">
-                <div class="math-icon">🧮</div>
+                <div class="math-icon"></div>
 
                 <div class="math-expression" aria-label="Phép tính">
                     <span class="math-number">${data.a}</span>

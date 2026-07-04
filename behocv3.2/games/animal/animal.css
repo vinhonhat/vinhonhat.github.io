@@ -1,6 +1,6 @@
 /* games/animal/animal.css */
 /* =====================================================
-   GAME NHẬN BIẾT CON VẬT / ĐỒ VẬT / HOA QUẢ
+   GAME NGHE TÊN - CHỌN ĐÚNG HÌNH
    CSS riêng. Khung chung do css/game-core.css quản lý.
 ===================================================== */
 
@@ -19,8 +19,8 @@
 }
 
 /* =====================================================
-   KHUNG CÂU HỎI
-   Không tạo khung trong để tránh bị đúp với khung ngoài.
+   CÂU HỎI
+   Không hiện đáp án ở khu câu hỏi.
 ===================================================== */
 
 .animal-question {
@@ -32,40 +32,58 @@
     align-items: center;
     justify-content: center;
 
-    gap: clamp(8px, 2vw, 14px);
+    gap: clamp(10px, 2vw, 16px);
 
     text-align: center;
 
     cursor: pointer;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
-}
-
-.animal-main-img {
-    width: clamp(120px, 34vw, 220px);
-    height: clamp(120px, 34vw, 220px);
-
-    object-fit: contain;
-
-    filter: drop-shadow(0 7px 9px rgba(0,0,0,0.16));
 
     animation: animalPop 0.28s ease-out both;
 }
 
-.animal-name {
-    max-width: 92%;
+.animal-question-mark {
+    width: clamp(120px, 34vw, 220px);
+    height: clamp(120px, 34vw, 220px);
 
-    font-size: clamp(1.7rem, 7vw, 3rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: clamp(5rem, 22vw, 10rem);
     font-weight: 900;
-    line-height: 1.05;
+    line-height: 1;
 
-    color: #444;
+    color: #ff8a00;
 
-    padding: 2px 10px;
+    border: 8px solid rgba(255, 215, 64, 0.95);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.88);
+
+    box-shadow:
+        0 8px 18px rgba(0,0,0,0.12),
+        inset 0 -5px 0 rgba(0,0,0,0.05);
 
     text-shadow:
         2px 2px 0 rgba(255,255,255,0.95),
-        0 4px 8px rgba(0,0,0,0.08);
+        0 4px 8px rgba(0,0,0,0.14);
+}
+
+.animal-question:active .animal-question-mark {
+    transform: scale(0.96);
+}
+
+.animal-question-text {
+    max-width: 92%;
+
+    font-size: clamp(1.15rem, 4.8vw, 2rem);
+    font-weight: 900;
+    line-height: 1.15;
+
+    color: #555;
+
+    text-shadow: 1px 1px 0 rgba(255,255,255,0.95);
 }
 
 /* =====================================================
@@ -83,8 +101,8 @@
 }
 
 .animal-option-img {
-    width: clamp(66px, 21vw, 112px);
-    height: clamp(66px, 21vw, 112px);
+    width: clamp(72px, 22vw, 120px);
+    height: clamp(72px, 22vw, 120px);
 
     object-fit: contain;
 
@@ -96,7 +114,7 @@
 
 .animal-option-btn.correct .animal-option-img,
 .animal-option-btn.is-correct .animal-option-img {
-    transform: scale(1.08);
+    transform: scale(1.1);
 }
 
 .animal-option-btn.wrong .animal-option-img,
@@ -110,35 +128,38 @@
         --answer-gap: 14px;
     }
 
-    .animal-main-img {
+    .animal-question-mark {
         width: 230px;
         height: 230px;
+        font-size: 10rem;
     }
 
-    .animal-name {
-        font-size: 3rem;
+    .animal-question-text {
+        font-size: 2rem;
     }
 
     .animal-option-img {
-        width: 125px;
-        height: 125px;
+        width: 132px;
+        height: 132px;
     }
 }
 
 /* Điện thoại thấp */
 @media (max-height: 680px) {
-    .animal-main-img {
+    .animal-question-mark {
         width: clamp(96px, 28vw, 160px);
         height: clamp(96px, 28vw, 160px);
+        font-size: clamp(4rem, 18vw, 7rem);
+        border-width: 6px;
     }
 
-    .animal-name {
-        font-size: clamp(1.35rem, 6vw, 2.2rem);
+    .animal-question-text {
+        font-size: clamp(1rem, 4.4vw, 1.55rem);
     }
 
     .animal-option-img {
-        width: clamp(54px, 18vw, 88px);
-        height: clamp(54px, 18vw, 88px);
+        width: clamp(58px, 18vw, 92px);
+        height: clamp(58px, 18vw, 92px);
     }
 }
 

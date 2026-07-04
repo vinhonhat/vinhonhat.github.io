@@ -1,6 +1,6 @@
 // games/animal/animal.js
 // =====================================================
-// GAME: NHẬN BIẾT CON VẬT / ĐỒ VẬT / HOA QUẢ
+// GAME: NGHE TÊN - CHỌN ĐÚNG HÌNH
 // Chuẩn v3.2 - dùng registerGame() + game-core.js
 // Ảnh dùng imgPath(fileName) từ js/asset.js.
 // Âm dùng animalAudioPath(fileName) từ js/asset.js.
@@ -69,6 +69,10 @@ function animalSoundPath(fileName) {
     return 'audio/animals/' + fileName;
 }
 
+function getAnimalAudioFile(item) {
+    return (item.audio || item.id) + '.mp3';
+}
+
 function getRandomAnimalItem() {
     return ANIMAL_ITEMS[Math.floor(Math.random() * ANIMAL_ITEMS.length)];
 }
@@ -97,20 +101,14 @@ registerGame('match_animal', {
 
     // =====================================================
     // HIỂN THỊ CÂU HỎI
-    // Bấm vào hình để nghe lại câu hỏi.
+    // Không hiện hình/không hiện tên đáp án để bé nghe rồi tự chọn.
+    // Bấm vào dấu ? để nghe lại.
     // =====================================================
-    renderDisplay(item) {
+    renderDisplay() {
         return `
             <div class="animal-question" onclick="handleReplayQuestion()">
-                <img
-                    class="animal-main-img"
-                    src="${animalImagePath(item.img)}"
-                    alt="${item.name}"
-                    draggable="false">
-
-                <div class="animal-name">
-                    ${item.name}
-                </div>
+                <div class="animal-question-mark">?</div>
+                <div class="animal-question-text">Nghe và chọn hình đúng</div>
             </div>
         `;
     },
@@ -150,21 +148,22 @@ registerGame('match_animal', {
 
     // =====================================================
     // ÂM CÂU HỎI
-    // File cần có: audio/animals/congi.mp3
+    // Ví dụ item heo -> audio/animals/heo.mp3
     // =====================================================
-    getAudio() {
+    getAudio(item) {
         return [
-            animalSoundPath('congi.mp3')
+            animalSoundPath(getAnimalAudioFile(item))
         ];
     },
 
     // =====================================================
-    // ÂM SAU KHI CHỌN ĐÚNG
-    // Ví dụ: audio/animals/bo.mp3
+    // ÂM SAU KHI CHỌN
+    // Đúng: đọc lại tên + âm khen.
+    // Sai: đọc tên hình bé vừa chọn + sai rồi.
     // =====================================================
     getAnswerAudio(item) {
         return [
-            animalSoundPath((item.audio || item.id) + '.mp3')
+            animalSoundPath(getAnimalAudioFile(item))
         ];
     },
 
