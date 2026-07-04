@@ -14,8 +14,5 @@
     /* Khoảng trống phía trên khu đáp án để đặt nút loa */
     --answer-top-padding: 20px;
 
-    /* Vị trí và kích thước nút loa */
-    --replay-top: 10px;
-    --replay-size: 0px;
-    --replay-font-size: 25px;
+
 }
