@@ -17,11 +17,17 @@
     --replay-size: 28px;
     --replay-font-size: 13px;
 
-    font-family:
+    /* font-family:
         "Segoe UI",
         Tahoma,
         Arial,
         sans-serif;
+        QUAN TRỌNG */
+    font-family:
+        "Andika",
+        "Comic Sans MS",
+        "Segoe Print",
+        cursive;
 }
 
 /* Một số bản game-core cũ còn tạo game-split-line. Alphabet không dùng. */
