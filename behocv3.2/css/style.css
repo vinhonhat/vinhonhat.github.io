@@ -376,6 +376,7 @@ body {
 
 .btn-num { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
 .btn-count { background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); }
+.btn-connect { background: linear-gradient(135deg, #d2fc8e 0%, #f4d98f 100%); }
 .btn-color { background: linear-gradient(135deg, #fccb90 0%, #d57eeb 100%); }
 .btn-animal { background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); }
 .btn-abc { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); }

@@ -22,6 +22,7 @@
         Tahoma,
         Arial,
         sans-serif;
+        
         QUAN TRỌNG */
     font-family:
         "Andika",
@@ -411,9 +412,11 @@
     color: #ff7043;
 }
 
-.alphabet-key-btn.active-key .alphabet-key-upper,
+.alphabet-key-btn.active-key .alphabet-key-upper{
+        color: rgb(255, 1, 1);
+}
 .alphabet-key-btn.active-key .alphabet-key-lower {
-    color: white;
+    color: rgb(25, 96, 250);
 }
 
 /* IPAD: 6 cột. */

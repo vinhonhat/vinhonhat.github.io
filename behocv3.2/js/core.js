@@ -35,6 +35,22 @@ const GAME_CONFIG = {
         startFn: 'startAlphabetGame',
         type: 'custom'
     },
+    alphabet_reflex: {
+        title: 'Phản Xạ Chữ',
+        folder: 'alphabet-reflex',
+        css: 'games/alphabet-reflex/alphabet-reflex.css',
+        js: 'games/alphabet-reflex/alphabet-reflex.js',
+        moduleId: 'alphabet_reflex',
+        type: 'registered'
+    },
+    alphabet_connect: {
+        title: 'Nối Chữ',
+        folder: 'alphabet-connect',
+        css: 'games/alphabet-connect/alphabet-connect.css',
+        js: 'games/alphabet-connect/alphabet-connect.js',
+        startFn: 'startAlphabetConnectGame',
+        type: 'custom'
+    },
     listen_number: {
         title: 'Nghe & Tìm Số',
         folder: 'number',
