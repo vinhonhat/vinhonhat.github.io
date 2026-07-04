@@ -22,9 +22,6 @@ const urlsToCache = [
 
     // 3. HÌNH ẢNH ICON
     '/img/logoQV.png',
-    '/img/banners/noel.jpg',
-    '/img/banners/1222.jpg',
-    '/img/banners/happy-new-year-2026.jpg',
     // 4. CÁC THƯ VIỆN BÊN NGOÀI (CDN - BẮT BUỘC ĐỂ OFFLINE)
 
 ];
