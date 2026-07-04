@@ -11,8 +11,10 @@ registerGame('listen_number', {
     // 2. Hiển thị đề bài (HTML)
     renderDisplay: function(num) {
         return `
-            <div class="big-icon-question">🔊</div>
-            <div class="hint-text">Số mấy?</div>
+            <div class="number-question">
+                <div class="number-icon">🔊</div>
+                <div class="number-hint">Số mấy?</div>
+            </div>
         `;
     },
 
@@ -28,6 +30,8 @@ registerGame('listen_number', {
     // 4. Trang trí nút đáp án
     styleOptionBtn: function(btn, value) {
         btn.textContent = value;
+        btn.classList.add('number-option-btn');
+        btn.setAttribute('aria-label', 'Đáp án ' + value);
     },
 
     // 5. Lấy file âm thanh đề bài
