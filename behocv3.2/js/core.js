@@ -6,7 +6,7 @@
 // Ví dụ: 3.2.1 -> 3.2.2
 // =====================================================
 
-const APP_VERSION = '3.2.3';
+const APP_VERSION = '3.2.4';
 const APP_VERSION_KEY = 'behoc_app_version';
 
 
