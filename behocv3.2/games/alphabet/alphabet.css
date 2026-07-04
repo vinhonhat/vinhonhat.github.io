@@ -389,9 +389,6 @@
 
 .alphabet-key-btn.active-key {
     background: #ffb74d;
-    box-shadow:
-        0 3px 0 rgba(230,126,34,0.38),
-        0 0 0 4px rgba(255,255,255,0.7);
 }
 
 .alphabet-key-upper {
