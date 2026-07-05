@@ -574,10 +574,7 @@ function handleAlphabetConnectCorrect(tileA, tileB, btnA, btnB) {
 
     updateAlphabetConnectTopBar();
 
-    if (typeof playAudio === 'function' && typeof correctAudioPath === 'function') {
-        playAudio(correctAudioPath(), { stopOld: true });
-    }
-
+    
     [btnA, btnB].forEach(btn => {
         if (!btn) return;
         btn.classList.add('matched');
