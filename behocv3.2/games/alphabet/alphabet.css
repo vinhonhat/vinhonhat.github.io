@@ -11,24 +11,43 @@
     --question-padding: 14px;
     --answer-gap: 10px;
 
-    /* Mặc định cho nút loa ở phần luyện.
-       Riêng phần HỌC sẽ tắt nút loa và bỏ padding bằng .game-alphabet-learn. */
     --answer-top-padding: 16px;
     --replay-size: 28px;
     --replay-font-size: 13px;
 
-    /* font-family:
+    /* =====================================================
+       FONT CHỈNH TẠI ĐÂY
+       -----------------------------------------------------
+       1. --alphabet-hand-font:
+          dùng cho toàn bộ chữ thường: a, ă, â, b...
+          Nếu muốn giống font chữ "con trăn" trên iPhone,
+          để cursive đứng đầu.
+
+       2. --alphabet-upper-font:
+          dùng cho chữ in hoa: A, Ă, Â, B...
+          Nên để font rõ, đứng thẳng, dễ nhìn.
+
+       3. --alphabet-word-font:
+          dùng cho chữ minh họa: con trăn, cái ca...
+          Có thể dùng chung với chữ thường.
+    ===================================================== */
+
+    --alphabet-hand-font:
+        cursive,
+        "Segoe Print",
+        "Comic Sans MS",
+        "Andika";
+
+    --alphabet-upper-font:
         "Segoe UI",
         Tahoma,
         Arial,
         sans-serif;
-        
-        QUAN TRỌNG */
-    font-family:
-        "Andika",
-        "Comic Sans MS",
-        "Segoe Print",
-        cursive;
+
+    --alphabet-word-font:
+        var(--alphabet-hand-font);
+
+    font-family: var(--alphabet-upper-font);
 }
 
 /* Một số bản game-core cũ còn tạo game-split-line. Alphabet không dùng. */
@@ -220,39 +239,30 @@
    danh sách font an toàn, ưu tiên giống chữ viết tay nhất có thể.
 ===================================================== */
 
+/* Chữ thường: a, ă, â, b, c... */
 .alphabet-lower,
 .alphabet-key-lower,
 .alphabet-option-lower {
-    font-family:
-        "Patrick Hand",
-        "Comic Sans MS",
-        "Segoe Print",
-        "Andika",
-        "Trebuchet MS",
-        "Segoe UI",
-        Tahoma,
-        Arial,
-        sans-serif;
+    font-family: var(--alphabet-hand-font);
 
     font-style: normal !important;
     font-synthesis-style: none;
-    font-weight: 700;
+
+    font-weight: 800;
     letter-spacing: 0;
     text-transform: none;
     font-variant-ligatures: none;
 }
 
+/* Chữ in hoa: A, Ă, Â, B, C... */
 .alphabet-upper,
 .alphabet-key-upper,
 .alphabet-option-upper {
-    font-family:
-        "Segoe UI",
-        Tahoma,
-        Arial,
-        sans-serif;
+    font-family: var(--alphabet-upper-font);
 
     font-style: normal !important;
     font-synthesis-style: none;
+
     font-weight: 900;
     letter-spacing: 0;
 }
@@ -326,6 +336,8 @@
 
 .alphabet-word {
     margin-top: 6px;
+
+    font-family: var(--alphabet-word-font);
 
     font-size: clamp(1.25rem, 5.2vw, 2.2rem);
     font-weight: 900;
@@ -473,6 +485,8 @@
 .alphabet-practice-word {
     min-height: 1.2em;
 
+    font-family: var(--alphabet-word-font);
+    
     font-size: clamp(1.75rem, 7.8vw, 3.2rem);
     font-weight: 900;
 
