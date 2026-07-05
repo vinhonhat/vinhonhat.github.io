@@ -411,6 +411,35 @@
     }
 }
 
+/* =====================================================
+   HỌC CHỮ - CHỈNH RIÊNG CHỮ GHÉP
+   -----------------------------------------------------
+   Mặc định trong .game-alphabet dùng cho chữ đơn:
+   a, ă, â, b, c...
+
+   Đoạn này chỉ giảm khi chữ dài:
+   - alphabet-char-double: ch, gh, kh, ng, nh, ph, th, tr, qu
+   - alphabet-char-triple: ngh
+
+   JS sẽ tự thêm class này khi bấm chữ.
+===================================================== */
+
+/* Chữ ghép 2 ký tự: ch, gh, kh, ng... */
+.game-alphabet-learn.alphabet-char-double {
+    --alphabet-learn-upper-size: clamp(2.7rem, 11vw, 5.2rem);
+    --alphabet-learn-lower-size: clamp(2.4rem, 9.5vw, 4.6rem);
+    --alphabet-learn-img-size: clamp(56px, 18vw, 118px);
+    --alphabet-learn-word-size: clamp(1.05rem, 4.2vw, 1.75rem);
+}
+
+/* Chữ ghép 3 ký tự: ngh */
+.game-alphabet-learn.alphabet-char-triple {
+    --alphabet-learn-upper-size: clamp(1.9rem, 7.5vw, 3.7rem);
+    --alphabet-learn-lower-size: clamp(1.7rem, 6.8vw, 3.2rem);
+    --alphabet-learn-img-size: clamp(48px, 15vw, 96px);
+    --alphabet-learn-word-size: clamp(0.95rem, 3.8vw, 1.55rem);
+}
+
 /* HỌC: bỏ nút loa chung trong answer-panel. */
 .game-alphabet-learn .replay-btn {
     display: none !important;

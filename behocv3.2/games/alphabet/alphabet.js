@@ -231,6 +231,7 @@ function selectAlphabetChar(char, options = {}) {
     if (!data) return;
 
     alphabetCurrentChar = char;
+    updateAlphabetLearnSizeClass(char);
 
     document.querySelectorAll('#game-screen .alphabet-key-btn').forEach(btn => {
         btn.classList.toggle('active-key', btn.dataset.char === char);
@@ -255,6 +256,26 @@ function selectAlphabetChar(char, options = {}) {
         alphabetPlayAudio(data.audio);
     }
 }
+
+function updateAlphabetLearnSizeClass(char) {
+    const game = document.getElementById('game-screen');
+    if (!game) return;
+
+    game.classList.remove(
+        'alphabet-char-single',
+        'alphabet-char-double',
+        'alphabet-char-triple'
+    );
+
+    if (char.length >= 3) {
+        game.classList.add('alphabet-char-triple');
+    } else if (char.length === 2) {
+        game.classList.add('alphabet-char-double');
+    } else {
+        game.classList.add('alphabet-char-single');
+    }
+}
+
 
 function renderAlphabetPracticeMode(options = {}) {
     const questionContent = document.getElementById('question-content');
