@@ -252,19 +252,43 @@
     font-weight: 900;
     line-height: 1;
     color: #333;
+    text-align: center;
+    font-style: normal !important;
+}
+
+/*
+   CHỮ IN HOA:
+   Dùng font rõ nét, không nghiêng để bé không bị nhầm.
+*/
+.connect-letter-upper {
     font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
+    letter-spacing: 0.01em;
+}
+
+/*
+   CHỮ THƯỜNG:
+   Ưu tiên font kiểu viết tay giống mẫu hơn, nhưng ép không nghiêng.
+   Nếu máy không có Segoe Print / Patrick Hand thì tự fallback xuống font khác.
+*/
+.connect-letter-lower {
+    font-family:
+        "Segoe Print",
         "Patrick Hand",
         "Comic Sans MS",
-        "Segoe Print",
         "Andika",
         "Segoe UI",
         Arial,
         sans-serif;
+    font-weight: 700;
     font-style: normal !important;
-    text-align: center;
+    letter-spacing: 0;
 }
 
-.connect-tile-letter:not(:first-letter) {
+/* Chữ ghép như ch, gh, ng, ngh cần nhỏ hơn để không tràn ô. */
+.connect-letter-compound {
     font-size: var(--connect-compound-size);
 }
 

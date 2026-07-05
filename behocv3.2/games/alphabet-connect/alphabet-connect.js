@@ -64,6 +64,18 @@ const AC_COMPOUND_ITEMS = [
 
 const AC_ALL_ITEMS = AC_SIMPLE_ITEMS.concat(AC_COMPOUND_ITEMS);
 
+// Các chữ dễ gây nhầm khi trộn chữ hoa - chữ thường.
+// Ví dụ: I in hoa dễ nhìn giống l thường ở một số font.
+// Vì vậy từ level trộn chữ, game sẽ tránh đưa i/l vào cùng kiểu chơi chữ với chữ.
+const AC_CONFUSING_MIXED_KEYS = ['i', 'l'];
+
+function filterAlphabetConnectConfusingLetters(pool, level, mode) {
+    if (mode !== 'letter-letter') return pool;
+    if (level < 3) return pool;
+
+    return pool.filter(item => !AC_CONFUSING_MIXED_KEYS.includes(item.key));
+}
+
 // =====================================================
 // STATE
 // =====================================================
@@ -319,24 +331,31 @@ function getAlphabetConnectWrongPenalty(level) {
 // TẠO DỮ LIỆU Ô
 // =====================================================
 
-function getAlphabetConnectPool(level, pairCount) {
+function getAlphabetConnectPool(level, mode, pairCount) {
+    // Với kiểu chữ với chữ ở level trộn, bỏ i/l để tránh nhầm I và l.
+    const simplePool = filterAlphabetConnectConfusingLetters(
+        [...AC_SIMPLE_ITEMS],
+        level,
+        mode
+    );
+
     let pool;
 
     if (level < 8) {
-        pool = [...AC_SIMPLE_ITEMS];
+        pool = simplePool;
     } else if (level === 8) {
         // Level 8: bắt đầu làm quen chữ ghép, nhưng board vẫn 4x4.
         const compounds = shuffleArray(AC_COMPOUND_ITEMS).slice(0, Math.min(4, pairCount));
         const simpleNeed = Math.max(pairCount - compounds.length, 0);
-        pool = compounds.concat(shuffleArray(AC_SIMPLE_ITEMS).slice(0, simpleNeed));
+        pool = compounds.concat(shuffleArray(simplePool).slice(0, simpleNeed));
     } else {
-        pool = [...AC_SIMPLE_ITEMS, ...AC_COMPOUND_ITEMS];
+        pool = simplePool.concat(AC_COMPOUND_ITEMS);
     }
 
     pool = shuffleArray(pool);
 
     // Nếu level rất lớn mà số cặp vượt quá kho chữ, lặp vòng có kiểm soát.
-    // Với cấu hình hiện tại thường không cần, nhưng để game không lỗi.
+    // Với cấu hình hiện tại thường chỉ cần cho level 11 trở đi.
     const output = [];
     let index = 0;
 
@@ -366,7 +385,7 @@ function makeAlphabetConnectLabel(item, variant) {
 }
 
 function makeAlphabetConnectTiles(level, mode, pairCount) {
-    const items = getAlphabetConnectPool(level, pairCount);
+    const items = getAlphabetConnectPool(level, mode, pairCount);
     const tiles = [];
     let tileId = 1;
 
@@ -381,6 +400,7 @@ function makeAlphabetConnectTiles(level, mode, pairCount) {
                 pairId,
                 type: 'text',
                 item,
+                variant,
                 label: makeAlphabetConnectLabel(item, variant),
                 matched: false
             });
@@ -419,6 +439,7 @@ function makeAlphabetConnectTextTile(tileId, pairId, item, variant) {
         pairId,
         type: 'text',
         item,
+        variant,
         label: makeAlphabetConnectLabel(item, variant),
         matched: false
     };
@@ -499,9 +520,19 @@ function getAlphabetConnectModeText() {
 }
 
 function renderAlphabetConnectTile(tile) {
+    const letterClasses = ['connect-tile-letter'];
+
+    if (tile.type === 'text') {
+        letterClasses.push(tile.variant === 'upper' ? 'connect-letter-upper' : 'connect-letter-lower');
+
+        if (tile.item && tile.item.key && tile.item.key.length > 1) {
+            letterClasses.push('connect-letter-compound');
+        }
+    }
+
     const content = tile.type === 'image'
         ? `<img class="connect-tile-img" src="${getAlphabetConnectImagePath(tile.item.img)}" alt="${tile.item.word}" draggable="false">`
-        : `<span class="connect-tile-letter">${tile.label}</span>`;
+        : `<span class="${letterClasses.join(' ')}">${tile.label}</span>`;
 
     const typeClass = tile.type === 'image' ? 'image-tile' : 'text-tile';
 
@@ -542,11 +573,14 @@ function handleAlphabetConnectTile(tileId) {
     const btn = document.getElementById(tileId);
     if (!btn || btn.classList.contains('selected')) return;
 
+
+    btn.classList.add('selected');
+
+    // Giữ âm đọc chữ khi nhấn ô chữ để bé nghe lại.
+    // Ô hình không đọc để bé tập nối bằng nhận diện hình.
     if (tile.type === 'text' && tile.item && tile.item.audio) {
         playAlphabetConnectLetterAudio(tile.item.audio);
     }
-
-    btn.classList.add('selected');
 
     if (!AC_STATE.firstTileId) {
         AC_STATE.firstTileId = tileId;
@@ -574,7 +608,13 @@ function handleAlphabetConnectCorrect(tileA, tileB, btnA, btnB) {
 
     updateAlphabetConnectTopBar();
 
-    
+    // ÂM ĐÚNG ĐANG ẨN.
+    // Nếu sau này muốn bật lại tiếng "giỏi quá / chính xác" khi nối đúng,
+    // bỏ comment 3 dòng dưới đây.
+    // if (typeof playAudio === 'function' && typeof correctAudioPath === 'function') {
+    //     playAudio(correctAudioPath(), { stopOld: true });
+    // }
+
     [btnA, btnB].forEach(btn => {
         if (!btn) return;
         btn.classList.add('matched');
@@ -605,9 +645,12 @@ function handleAlphabetConnectWrong(btnA, btnB) {
         updateAlphabetConnectTopBar();
     }
 
-    if (typeof playAudio === 'function' && typeof wrongAudioPath === 'function') {
-        playAudio(wrongAudioPath(), { stopOld: true });
-    }
+    // ÂM SAI ĐANG ẨN.
+    // Nếu sau này muốn bật lại tiếng sai khi nối sai,
+    // bỏ comment 3 dòng dưới đây.
+    // if (typeof playAudio === 'function' && typeof wrongAudioPath === 'function') {
+    //     playAudio(wrongAudioPath(), { stopOld: true });
+    // }
 
     [btnA, btnB].forEach(btn => {
         if (!btn) return;
@@ -796,9 +839,12 @@ function getAlphabetConnectRemainRatio() {
 function handleAlphabetConnectTimeUp() {
     AC_STATE.levelComplete = true;
 
-    if (typeof playAudio === 'function' && typeof wrongAudioPath === 'function') {
-        playAudio(wrongAudioPath(), { stopOld: true });
-    }
+    // ÂM HẾT GIỜ ĐANG ẨN.
+    // Nếu sau này muốn bật lại tiếng sai khi hết giờ,
+    // bỏ comment 3 dòng dưới đây.
+    // if (typeof playAudio === 'function' && typeof wrongAudioPath === 'function') {
+    //     playAudio(wrongAudioPath(), { stopOld: true });
+    // }
 
     showAlphabetConnectOverlay(`
         <div class="connect-overlay-icon">⏰</div>
