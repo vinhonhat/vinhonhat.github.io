@@ -411,8 +411,14 @@ function renderGameMenu() {
 }
 
 
-let parentGearHoldTimer = null;
-let parentGearLongPressed = false;
+let parentGearTestTimer = null;
+let parentGearActionDone = false;
+let parentGearClickCount = 0;
+let parentGearClickResetTimer = null;
+
+// Nhấp đủ số lần này vào bánh răng để xoá cài đặt và chọn lại độ tuổi.
+// Muốn dễ hơn thì đổi 10 thành 5.
+const PARENT_GEAR_RESET_CLICK_COUNT = 10;
 
 function renderParentGearButton() {
     return `
@@ -420,7 +426,7 @@ function renderParentGearButton() {
             class="parent-gear-btn"
             type="button"
             aria-label="Phụ huynh / Test"
-            title="Bấm để mở Test. Nhấn giữ để xoá cài đặt và chọn lại độ tuổi."
+            title="Giữ 1 giây để mở Test. Nhấp ${PARENT_GEAR_RESET_CLICK_COUNT} lần liên tiếp để xoá cài đặt và chọn lại độ tuổi."
             onpointerdown="startParentGearHold(event)"
             onpointerup="endParentGearHold(event)"
             onpointercancel="cancelParentGearHold()"
@@ -431,41 +437,75 @@ function renderParentGearButton() {
     `;
 }
 
-function startParentGearHold() {
-    cancelParentGearHold();
-    parentGearLongPressed = false;
+function startParentGearHold(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
 
-    parentGearHoldTimer = setTimeout(() => {
-        parentGearHoldTimer = null;
-        parentGearLongPressed = true;
-        resetKidMenuFromGear();
-    }, 900);
+    cancelParentGearHold();
+    parentGearActionDone = false;
+
+    // Giữ khoảng 1 giây: mở menu Phụ huynh/Test.
+    // Không dùng giữ 5 giây để xoá nữa, vì giữ 1 giây đã mở Test trước.
+    parentGearTestTimer = setTimeout(() => {
+        parentGearTestTimer = null;
+        parentGearActionDone = true;
+        openParentTestMenu();
+    }, 1000);
 }
 
-function endParentGearHold() {
+function endParentGearHold(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
     cancelParentGearHold();
 }
 
 function cancelParentGearHold() {
-    if (parentGearHoldTimer) {
-        clearTimeout(parentGearHoldTimer);
-        parentGearHoldTimer = null;
+    if (parentGearTestTimer) {
+        clearTimeout(parentGearTestTimer);
+        parentGearTestTimer = null;
     }
 }
 
 function handleParentGearClick(event) {
-    if (parentGearLongPressed) {
-        parentGearLongPressed = false;
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
 
-        if (event) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-
+    // Nếu click sinh ra sau khi vừa giữ 1 giây mở Test, bỏ qua click đó.
+    if (parentGearActionDone) {
+        parentGearActionDone = false;
         return;
     }
 
-    openParentTestMenu();
+    parentGearClickCount += 1;
+
+    if (parentGearClickResetTimer) {
+        clearTimeout(parentGearClickResetTimer);
+    }
+
+    // Nếu dừng nhấp quá 3 giây thì đếm lại từ đầu.
+    parentGearClickResetTimer = setTimeout(() => {
+        parentGearClickCount = 0;
+        parentGearClickResetTimer = null;
+    }, 3000);
+
+    if (parentGearClickCount >= PARENT_GEAR_RESET_CLICK_COUNT) {
+        parentGearClickCount = 0;
+
+        if (parentGearClickResetTimer) {
+            clearTimeout(parentGearClickResetTimer);
+            parentGearClickResetTimer = null;
+        }
+
+        closeParentTestMenu();
+        resetKidMenuFromGear();
+    }
 }
 
 function resetKidMenuFromGear() {
@@ -477,7 +517,7 @@ function resetKidMenuFromGear() {
     );
 
     if (!ok) {
-        parentGearLongPressed = false;
+        parentGearActionDone = false;
         return;
     }
 
