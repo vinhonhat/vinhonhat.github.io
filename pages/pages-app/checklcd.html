@@ -46,7 +46,7 @@
             transition: background-color 0.3s ease; /* Hiệu ứng đổi màu */
             background-color: #333; /* Màu nền ban đầu */
             position: relative;
-            border-radius: 10px; /* Bo góc */
+            border-radius: 8px; /* Bo góc */
             box-shadow: 0 3px 8px rgba(0,0,0,0.1); /* Thêm bóng (như file copy) */
         }
 
@@ -83,9 +83,9 @@
            [CSS] BÀN PHÍM MỚI - Layout thật theo vị trí phím
            ====================== */
 
-        /* Cho riêng khối keyboard được rộng hơn khung nội dung 4xl hiện tại */
+        /* Giữ khối bàn phím gọn trong khung web cũ, không phình rộng sang phải */
         #keyboard-tester {
-            width: min(1280px, calc(100vw - 24px));
+            width: min(900px, calc(100vw - 24px));
             margin-left: 50%;
             transform: translateX(-50%);
         }
@@ -97,7 +97,7 @@
             border: 1px solid rgba(255,255,255,0.14);
             box-shadow: 0 18px 45px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.08);
             border-radius: 18px;
-            padding: 16px;
+            padding: 14px;
             overflow-x: auto;
             overflow-y: hidden;
             user-select: none;
@@ -116,7 +116,7 @@
         }
 
         .keyboard-head {
-            min-width: 1152px;
+            min-width: 864px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -182,21 +182,21 @@
         }
 
         .keyboard-board {
-            width: 1152px;              /* 96 cột x 12px */
-            min-width: 1152px;
+            width: 864px;               /* 96 cột x 9px: gọn vừa khung 900px */
+            min-width: 864px;
             display: grid;
-            grid-template-columns: repeat(96, 12px);
-            grid-template-rows: repeat(6, 54px);
+            grid-template-columns: repeat(96, 9px);
+            grid-template-rows: repeat(6, 43px);
             position: relative;
         }
 
         .key {
             grid-column: var(--x) / span var(--w);
             grid-row: var(--y) / span var(--h);
-            margin: 3px;
+            margin: 2px;
             min-width: 0;
             min-height: 0;
-            border-radius: 10px;
+            border-radius: 8px;
             border: 1px solid rgba(255,255,255,0.72);
             background:
                 linear-gradient(180deg, rgba(255,255,255,0.045), rgba(0,0,0,0.08)),
@@ -210,10 +210,10 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 2px;
+            gap: 1px;
             text-align: center;
             line-height: 1.05;
-            font-size: 15px;
+            font-size: 13px;
             font-weight: 600;
             transition: transform .08s ease, background-color .08s ease, box-shadow .08s ease, border-color .08s ease;
             cursor: default;
@@ -229,43 +229,43 @@
 
         .key .key-sub {
             display: block;
-            font-size: 10px;
+            font-size: 9px;
             opacity: .66;
             font-weight: 500;
             white-space: nowrap;
         }
 
         .key.key-small {
-            font-size: 12px;
+            font-size: 10px;
         }
 
         .key.key-modifier {
             justify-content: flex-end;
             align-items: flex-start;
-            padding: 0 0 9px 12px;
-            font-size: 13px;
+            padding: 0 0 7px 8px;
+            font-size: 11px;
         }
 
         .key.key-space {
-            border-radius: 12px;
+            border-radius: 10px;
         }
 
         .key.key-enter,
         .key.key-backspace,
         .key.key-shift {
-            font-size: 13px;
+            font-size: 11px;
         }
 
         .key.key-arrow {
-            font-size: 24px;
+            font-size: 20px;
         }
 
         .key.key-numpad-tall {
-            border-radius: 14px;
+            border-radius: 12px;
         }
 
         .key.key-fn {
-            font-size: 12px;
+            font-size: 11px;
             color: #d7e1eb;
         }
 
@@ -301,7 +301,7 @@
         }
 
         .keyboard-hint {
-            min-width: 1152px;
+            min-width: 864px;
             text-align: center;
             color: rgba(255,255,255,0.78);
             font-size: 13px;
@@ -319,8 +319,21 @@
             }
             #keyboard-layout-container {
                 padding: 12px;
-                border-radius: 14px;
+                border-radius: 12px;
             }
+        }
+
+        /* Vùng test chuột: bỏ nền/khung, chỉ còn 3 nút như bản cũ */
+        #trackpad-area {
+            width: fit-content;
+            max-width: 100%;
+            margin: 16px auto 0;
+            padding: 0 !important;
+            border: none;
+            border-radius: 0;
+            background: transparent;
+            cursor: default;
+            user-select: none;
         }
 
         /* [CSS MỚI] Dành cho nút chuột */
@@ -521,7 +534,7 @@
 
         </div>
 
-        <div id="trackpad-area" class="mt-4 p-4 flex justify-center items-center gap-2">
+        <div id="trackpad-area" class="mt-4 flex justify-center items-center gap-2">
             <div id="mouse-left" class="mouse-btn-display">
                 Trái
             </div>
@@ -533,7 +546,7 @@
             </div>
         </div>
 
-        <p class="text-center text-sm text-gray-500">Click bất cứ đâu trong khu vực bàn phím để kiểm tra</p>
+        <p class="text-center text-sm text-gray-500">Click trong vùng bàn phím hoặc vùng chuột để kiểm tra</p>
 
         <div class="text-center mt-6">
             <button id="reset-all-btn" class="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-5 rounded">
@@ -967,7 +980,7 @@
 
         // Hàng dưới
         k.push(makeKey('ControlLeft', 'Ctrl', 1, 6, 5, 1, 'key-modifier'));
-        k.push(makeKey('MetaLeft', '⊞ Win', 6, 6, 5, 1, 'key-modifier'));
+        k.push(makeKey('MetaLeft', 'Win', 6, 6, 5, 1, 'key-modifier'));
         k.push(makeKey('AltLeft', 'Alt', 11, 6, 5, 1, 'key-modifier'));
         k.push(makeKey('Space', '', 16, 6, 28, 1, 'key-space'));
         k.push(makeKey('AltRight', 'Alt', 44, 6, 5, 1, 'key-modifier'));
@@ -1042,7 +1055,7 @@
         k.push(makeKey('ShiftRight', 'shift', 50, 5, 11, 1, 'key-modifier key-shift'));
         k.push(makeKey('ArrowUp', '⌃', 69, 5, 4, 1, 'key-arrow'));
         addRowKeys(k, [['Numpad1','1'], ['Numpad2','2'], ['Numpad3','3']], 81, 5, 4);
-        k.push(makeKey('NumpadEnter', 'enter', 93, 5, 4, 2, 'key-numpad-tall key-small'));
+        k.push(makeKey('NumpadEnter', 'enter', 93, 6, 4, 1, 'key-small'));
 
         // Hàng dưới
         k.push(makeKey('ControlLeft', 'control', 1, 6, 5, 1, 'key-modifier'));
@@ -1227,68 +1240,79 @@
 // [JS] CHUỘT / TRACKPAD (ĐÃ CẬP NHẬT LOGIC)
 // =========================================================================
 (function() {
-    // Vùng bắt sự kiện chuột (vẫn dùng vùng bàn phím)
-    const captureZone = document.getElementById('keyboard-tester'); 
-    // 3 ô hiển thị trạng thái (lấy bằng ID mới)
+    // Vùng bắt sự kiện chuột: gồm cả bàn phím và phần hiển thị chuột bên dưới
+    const captureZones = [
+        document.getElementById('keyboard-tester'),
+        document.getElementById('trackpad-area')
+    ].filter(Boolean);
+
+    // 3 ô hiển thị trạng thái
     const leftDisplay = document.getElementById('mouse-left');
     const rightDisplay = document.getElementById('mouse-right');
     const middleDisplay = document.getElementById('mouse-middle');
 
-    if (!captureZone || !leftDisplay || !rightDisplay || !middleDisplay) {
+    if (!captureZones.length || !leftDisplay || !rightDisplay || !middleDisplay) {
         console.error('Không tìm thấy các thành phần của trackpad.');
         return;
     }
 
-    /**
-     * [LOGIC ĐÃ SỬA]: Hàm xử lý khi NHẤN chuột (mousedown)
-     * Dùng classList thay vì inline style
-     */
-    function handleMouseDown(e) {
-        e.preventDefault(); // Ngăn chọn (select) text
-        switch (e.button) {
-            case 0: // 0 = Chuột TRÁI
-                leftDisplay.classList.add('active');
-                leftDisplay.classList.remove('checked');
-                break;
-            case 1: // 1 = Chuột GIỮA (con lăn)
-                middleDisplay.classList.add('active');
-                middleDisplay.classList.remove('checked');
-                break;
-            case 2: // 2 = Chuột PHẢI
-                rightDisplay.classList.add('active');
-                rightDisplay.classList.remove('checked');
-                break;
+    function setMouseState(button, state) {
+        let display = null;
+
+        if (button === 0) display = leftDisplay;       // Chuột trái
+        if (button === 1) display = middleDisplay;     // Chuột giữa / con lăn
+        if (button === 2) display = rightDisplay;      // Chuột phải
+
+        if (!display) return;
+
+        if (state === 'down') {
+            display.classList.add('active');
+            display.classList.remove('checked');
+        } else {
+            display.classList.remove('active');
+            display.classList.add('checked');
         }
     }
 
-    /**
-     * [LOGIC ĐÃ SỬA]: Hàm xử lý khi THẢ chuột (mouseup)
-     * Xóa 'active' và thêm 'checked'
-     */
+    const buttonsStartedInCapture = new Set();
+
+    function handleMouseDown(e) {
+        e.preventDefault();
+        buttonsStartedInCapture.add(e.button);
+        setMouseState(e.button, 'down');
+    }
+
     function handleMouseUp(e) {
         e.preventDefault();
-        switch (e.button) {
-            case 0: // Trái
-                leftDisplay.classList.remove('active');
-                leftDisplay.classList.add('checked');
-                break;
-            case 1: // Giữa
-                middleDisplay.classList.remove('active');
-                middleDisplay.classList.add('checked');
-                break;
-            case 2: // Phải
-                rightDisplay.classList.remove('active');
-                rightDisplay.classList.add('checked');
-                break;
-        }
+        buttonsStartedInCapture.delete(e.button);
+        setMouseState(e.button, 'up');
     }
 
-    // Gán sự kiện cho vùng captureZone
-    captureZone.addEventListener('mousedown', handleMouseDown);
-    captureZone.addEventListener('mouseup', handleMouseUp);
+    // Bắt chuột trong cả vùng bàn phím và vùng chuột bên dưới
+    captureZones.forEach(zone => {
+        zone.addEventListener('mousedown', handleMouseDown);
+        zone.addEventListener('mouseup', handleMouseUp);
+        zone.addEventListener('contextmenu', (e) => e.preventDefault());
+    });
 
-    // Ngăn menu chuột phải hiện lên trong vùng test
-    captureZone.addEventListener('contextmenu', (e) => e.preventDefault());
+    // Nếu bấm giữ trong vùng test rồi kéo ra ngoài, vẫn kết thúc trạng thái active khi thả chuột
+    document.addEventListener('mouseup', (e) => {
+        if (!buttonsStartedInCapture.has(e.button)) return;
+        buttonsStartedInCapture.delete(e.button);
+        setMouseState(e.button, 'up');
+    });
+
+    // Tắt menu chuột phải ở phần kiểm tra Mic/Camera trở lên
+    // Vùng này chỉ chặn chuột phải, không tính là test chuột.
+    const rightClickBlockedZones = [
+        document.getElementById('screen-tester'),
+        document.getElementById('speaker-tester'),
+        document.getElementById('camera-mic-tester')
+    ].filter(Boolean);
+
+    rightClickBlockedZones.forEach(zone => {
+        zone.addEventListener('contextmenu', (e) => e.preventDefault());
+    });
 
 })();
 
