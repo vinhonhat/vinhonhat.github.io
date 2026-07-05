@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Bé Vui Học - Vinh ở Nhật</title>
 
     <link rel="manifest" href="manifest.json">
@@ -27,7 +27,7 @@
         <button id="pwa-install-btn" class="install-btn" type="button" style="display:none;">
             📲 Cài App Cho Bé
         </button>
-        <div class="splash-version">v3.2 A2</div>
+        <div class="splash-version">v3.2 A5</div>
         <div id="ios-guide" class="install-guide" style="display:none;">
             <p class="install-guide-title">Để cài trên iPhone:</p>
             <p class="install-guide-text">
@@ -42,183 +42,14 @@
     </div>
 
     <!--
-    <span class="menu-beta-badge">Beta</span>   copy cho nhãn beta
-    <span class="menu-new-app">New</span>       copy cho nhãn New
-    <span class="menu-beta-dev">Dev</span>      copy cho nhãn dev
+    Menu chính được dựng tự động bằng js/game-menu.js
+    - Lần đầu: chọn độ tuổi.
+    - Lần sau: vào thẳng menu theo độ tuổi đã lưu.
+    - Nút Phụ huynh/Test hiển thị toàn bộ game để kiểm tra nhanh.
     -->
     <div class="app-container">
         <div class="menu-view" id="menu-screen">
-            <h1 class="app-title" style="font-size:2.5rem;">Bé chọn bài nhé</h1>
-
-            <div class="menu-grid">
-                <button class="menu-btn btn-abc" type="button" onclick="startGame('alphabet')">
-                    <span class="menu-version">V3.1</span>
-                    <div class="menu-icon">🔤</div>
-                    <div class="menu-label">Bảng Chữ Cái</div>
-                </button>
-
-                <button class="menu-btn btn-num" type="button" onclick="startGame('listen_number')">
-                    <!--<span class="menu-new-app">New</span>-->
-                    <span class="menu-version">V2</span>
-                    <div class="menu-icon">👂</div>
-                    <div class="menu-label">Nghe & Tìm Số</div>
-                </button>
-
-                <button class="menu-btn btn-count" type="button" onclick="startGame('count')">
-                    <!--<span class="menu-new-app">New</span>-->
-                    <span class="menu-version">V1.1</span>
-                    <div class="menu-icon">🍎</div>
-                    <div class="menu-label">Tập Đếm</div>
-                </button>
-
-                <button class="menu-btn btn-color" type="button" onclick="startGame('color')">
-                    <!--<span class="menu-new-app">New</span>-->
-                    <span class="menu-version">V1.1</span>
-                    <div class="menu-icon">🎨</div>
-                    <div class="menu-label">Màu Sắc</div>
-                </button>
-
-                <button class="menu-btn btn-animal" type="button" onclick="startGame('match_animal')">
-                    <span class="menu-beta-badge">Beta</span>
-                    <div class="menu-icon">🐶</div>
-                    <div class="menu-label">Tìm Con Vật</div>
-                </button>
-
-                <button class="menu-btn btn-num" type="button" onclick="startGame('math')" style="background:linear-gradient(135deg,#ff9966 0%,#ff5e62 100%);">
-                    <!-- <span class="menu-beta-badge">Beta</span>-->
-                    <span class="menu-version">V1.0</span>
-                    <div class="menu-icon">➕➖</div>
-                    <div class="menu-label">Bé Tập Tính</div>
-                </button>
-
-                <button class="menu-btn btn-connect" onclick="startGame('alphabet_connect')" style="background:linear-gradient(135deg,#4facfe 0%,#43e97b 100%); ">
-                    <!--<span class="menu-new-app">New</span>-->
-                    <span class="menu-version">V1.1</span>
-                    <div class="menu-icon">🔗</div>
-                    <div class="menu-label">Nối Chữ</div>
-                </button>
-
-                <button class="menu-btn btn-num" type="button" onclick="startGame('math2')" style="background:linear-gradient(135deg,#4facfe 0%,#43e97b 100%);">
-                    <!--<span class="menu-beta-dev">Dev</span>-->
-                    <span class="menu-new-app">New</span>
-                    <div class="menu-icon">🧩</div>
-                    <div class="menu-label">Bé Tách Gộp</div>
-                </button>
-                
-                <button class="menu-btn" onclick="startGame('math_compare')" style="background: linear-gradient(135deg, #fbfe4f 0%, #e943db 100%);">
-                    <span class="menu-new-app">New</span>
-                    <div class="menu-icon">⚖️</div>
-                    <div class="menu-label">Lớn Bé</div>
-                </button>
-
-                <button class="menu-btn" onclick="startGame('math_missing')" style="background: linear-gradient(135deg, #fe784f 0%, #4e43e9 100%);">
-                    <span class="menu-new-app">New</span>
-                    <div class="menu-icon">❓</div>
-                    <div class="menu-label">Số Thiếu</div>
-                </button>
-
-                <button class="menu-btn" onclick="startGame('math_connect')" style="background: linear-gradient(135deg, #4facfe 0%, #43e97b 100%);">
-                    <span class="menu-new-app">New</span>
-                    <div class="menu-icon">🔗</div>
-                    <div class="menu-label">Nối Tính</div>
-                </button>
-
-                <button class="menu-btn" onclick="startGame('alphabet_listen')" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);">
-                    <span class="menu-new-app">New</span>
-                    <div class="menu-icon">👂🔤</div>
-                    <div class="menu-label">Nghe Chọn Chữ</div>
-                </button>
-
-                <button class="menu-btn" onclick="startGame('alphabet_first')" style="background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);">
-                    <span class="menu-new-app">New</span>
-                    <div class="menu-icon">🔤🖼️</div>
-                    <div class="menu-label">Chữ Đầu</div>
-                </button>
-
-                <button class="menu-btn" onclick="startGame('alphabet_odd')" style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);">
-                    <span class="menu-new-app">New</span>
-                    <div class="menu-icon">🔎</div>
-                    <div class="menu-label">Chữ Khác</div>
-                </button>
-
-                <button class="menu-btn" onclick="startGame('alphabet_order')" style="background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);">
-                    <span class="menu-new-app">New</span>
-                    <div class="menu-icon">🔠</div>
-                    <div class="menu-label">Thứ Tự Chữ</div>
-                </button>
-
-                <button class="menu-btn" onclick="startGame('number_neighbor')" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-                    <span class="menu-new-app">New</span>
-                    <div class="menu-icon">🔢</div>
-                    <div class="menu-label">Trước Sau</div>
-                </button>
-
-                <button class="menu-btn" onclick="startGame('number_countdown')" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
-                    <span class="menu-new-app">New</span>
-                    <div class="menu-icon">🔙</div>
-                    <div class="menu-label">Đếm Ngược</div>
-                </button>
-
-                <button class="menu-btn" onclick="startGame('number_more_less')" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
-                    <span class="menu-new-app">New</span>
-                    <div class="menu-icon">⚖️</div>
-                    <div class="menu-label">Nhiều Ít</div>
-                </button>
-
-                <button class="menu-btn" onclick="startGame('memory_position')" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
-                    <span class="menu-new-app">New</span>
-                    <div class="menu-icon">🧠</div>
-                    <div class="menu-label">Nhớ Vị Trí</div>
-                </button>
-
-                <button class="menu-btn" onclick="startGame('card_match')" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                    <span class="menu-new-app">New</span>
-                    <div class="menu-icon">🃏</div>
-                    <div class="menu-label">Lật Thẻ</div>
-                </button>
-
-                <button class="menu-btn" onclick="startGame('quick_reflex')" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);">
-                    <span class="menu-new-app">New</span>
-                    <div class="menu-icon">⚡</div>
-                    <div class="menu-label">Nhanh Tay</div>
-                </button>
-
-                <button class="menu-btn" onclick="startGame('pattern_rule')" style="background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);">
-                    <span class="menu-new-app">New</span>
-                    <div class="menu-icon">🧩</div>
-                    <div class="menu-label">Quy Luật</div>
-                </button>
-
-                <button class="menu-btn" onclick="startGame('classify_group')" style="background: linear-gradient(135deg, #fddb92 0%, #d1fdff 100%);">
-                    <span class="menu-new-app">New</span>
-                    <div class="menu-icon">📦</div>
-                    <div class="menu-label">Phân Loại</div>
-                </button>
-
-                <button class="menu-btn" onclick="startGame('times_table')" style="background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);">
-                    <span class="menu-new-app">New</span>
-                    <div class="menu-icon">✖️</div>
-                    <div class="menu-label">Cửu Chương</div>
-                </button>
-
-                <button class="menu-btn" onclick="startGame('division_basic')" style="background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);">
-                    <span class="menu-new-app">New</span>
-                    <div class="menu-icon">➗</div>
-                    <div class="menu-label">Phép Chia</div>
-                </button>
-
-                <button class="menu-btn" onclick="startGame('multiply_divide')" style="background: linear-gradient(135deg, #4facfe 0%, #43e97b 100%);">
-                    <span class="menu-new-app">New</span>
-                    <div class="menu-icon">🧮</div>
-                    <div class="menu-label">Nhân Chia</div>
-                </button>
-
-                <!--<button class="menu-btn btn-frame-test" type="button" onclick="startGame('frame_test')">
-                    <span class="menu-beta-badge">Test</span>
-                    <div class="menu-icon">🧪</div>
-                    <div class="menu-label">Test Khung</div>
-                </button> -->
-            </div>
+            <div id="smart-menu-root" class="smart-menu-root"></div>
         </div>
 
         <div class="game-view" id="game-screen" style="display:none;"></div>
@@ -227,6 +58,7 @@
     <script src="js/asset.js"></script>
     <script src="js/audio.js"></script>
     <script src="js/game-core.js"></script>
+    <script src="js/game-menu.js"></script>
     <script src="js/core.js"></script>
 </body>
 </html>

@@ -6,7 +6,7 @@
 // Ví dụ: 3.2.1 -> 3.2.2
 // =====================================================
 
-const APP_VERSION = '3.2.7';
+const APP_VERSION = '3.2.8';
 const APP_VERSION_KEY = 'behoc_app_version';
 
 
@@ -21,7 +21,9 @@ let currentQuestionData = null;
 let replayTimer = null;
 let questionTimer = null;
 let timerColorZone = '';
+let topTimerLength = 0;
 
+let noInteractionCount = 0;
 let gamePausedByNoInteraction = false;
 
 let gameStartedOnce = false;
@@ -324,6 +326,12 @@ function loadJsOnce(src) {
     });
 }
 
+function refreshSmartMenu() {
+    if (typeof renderGameMenu === 'function') {
+        renderGameMenu();
+    }
+}
+
 function unlockAudio() {
     unlockAudioPolicy();
 
@@ -333,6 +341,7 @@ function unlockAudio() {
 
     if (overlay) overlay.style.display = 'none';
     if (game) game.style.display = 'none';
+    refreshSmartMenu();
     if (menu) menu.style.display = 'flex';
 
     // Phát lời chào nếu có. Dù audio thiếu/bị chặn thì menu vẫn đã hiện.
@@ -353,6 +362,7 @@ function showMenuOnly() {
         game.innerHTML = '';
         game.className = 'game-view';
     }
+    refreshSmartMenu();
     if (menu) menu.style.display = 'flex';
 }
 
@@ -1075,6 +1085,54 @@ async function clearPwaCacheAndReload() {
         );
     }
 }
+
+
+// =====================================================
+// CHẶN THU PHÓNG TRÊN ĐIỆN THOẠI
+// -----------------------------------------------------
+// Hỗ trợ iPhone/Android: chặn pinch zoom, double-tap zoom
+// nhưng vẫn giữ thao tác chạm nút/game bình thường.
+// =====================================================
+
+function installMobileZoomBlock() {
+    let lastTouchEnd = 0;
+
+    document.addEventListener('touchstart', event => {
+        if (event.touches && event.touches.length > 1) {
+            event.preventDefault();
+        }
+    }, { passive: false });
+
+    document.addEventListener('touchmove', event => {
+        if (event.touches && event.touches.length > 1) {
+            event.preventDefault();
+        }
+    }, { passive: false });
+
+    document.addEventListener('touchend', event => {
+        const now = Date.now();
+        const target = event.target;
+        const isInteractive =
+            target &&
+            typeof target.closest === 'function' &&
+            target.closest('button, select, input, textarea, a, [onclick]');
+
+        // Không chặn double-click trên nút, để nút Vào Chơi vẫn nhấn đúp xoá cache được.
+        if (!isInteractive && now - lastTouchEnd <= 320) {
+            event.preventDefault();
+        }
+
+        lastTouchEnd = now;
+    }, { passive: false });
+
+    ['gesturestart', 'gesturechange', 'gestureend'].forEach(type => {
+        document.addEventListener(type, event => {
+            event.preventDefault();
+        }, { passive: false });
+    });
+}
+
+installMobileZoomBlock();
 
 // PWA: dùng đường dẫn tương đối để chạy được trong thư mục /behocv3.2/ hoặc khi test local.
 if ('serviceWorker' in navigator) {
