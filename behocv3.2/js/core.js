@@ -6,7 +6,7 @@
 // Ví dụ: 3.2.1 -> 3.2.2
 // =====================================================
 
-const APP_VERSION = '3.2.5';
+const APP_VERSION = '3.2.6';
 const APP_VERSION_KEY = 'behoc_app_version';
 
 
@@ -107,6 +107,37 @@ const GAME_CONFIG = {
         moduleId: 'math4',
         type: 'registered'
     },
+    math_compare: {
+        title: 'Lớn Bé',
+        folder: 'math-compare',
+        css: 'games/math-compare/math-compare.css',
+        js: 'games/math-compare/math-compare.js',
+        moduleId: 'math_compare',
+        type: 'registered'
+    },
+
+    math_missing: {
+        title: 'Số Thiếu',
+        folder: 'math-missing',
+        css: 'games/math-missing/math-missing.css',
+        js: 'games/math-missing/math-missing.js',
+        moduleId: 'math_missing',
+        type: 'registered'
+    },
+
+    math_connect: {
+        title: 'Nối Phép Tính',
+        folder: 'math-connect',
+        css: 'games/math-connect/math-connect.css',
+        js: 'games/math-connect/math-connect.js',
+        startFn: 'startMathConnectGame',
+        type: 'custom'
+    },
+
+
+
+
+
     frame_test: {
         title: 'Test Khung',
         folder: 'frame-test',
