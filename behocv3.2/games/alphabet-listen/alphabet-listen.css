@@ -1,0 +1,72 @@
+/* games/alphabet-listen/alphabet-listen.css */
+.game-alphabet-listen {
+    --question-ratio: 60fr;
+    --answer-ratio: 40fr;
+    --answer-cols-mobile: 2;
+    --answer-cols-pc: 4;
+    --answer-gap: 12px;
+    --answer-top-padding: 16px;
+
+    --abc-hand-font: cursive, "Segoe Print", "Comic Sans MS", "Andika";
+    --abc-upper-font: "Segoe UI", Tahoma, Arial, sans-serif;
+}
+
+.alphabet-listen-question {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.alphabet-listen-icon {
+    font-size: clamp(4rem, 18vw, 8rem);
+    line-height: 1;
+}
+
+.alphabet-listen-text {
+    font-size: clamp(1.7rem, 7vw, 3.4rem);
+    font-weight: 900;
+    color: #ff6f00;
+}
+
+.alphabet-listen-small {
+    font-size: clamp(0.95rem, 3.6vw, 1.25rem);
+    color: #777;
+}
+
+.alphabet-listen-option {
+    min-height: 92px;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.alphabet-listen-upper {
+    font-family: var(--abc-upper-font);
+    font-size: clamp(3rem, 13vw, 6.2rem);
+    font-weight: 900;
+    color: #333;
+}
+
+.alphabet-listen-lower {
+    font-family: var(--abc-hand-font);
+    font-size: clamp(1.6rem, 7vw, 3rem);
+    font-weight: 800;
+    color: #ff7043;
+}
+
+@media (orientation: landscape) {
+    .game-alphabet-listen {
+        --question-ratio: 55fr;
+        --answer-ratio: 45fr;
+        --answer-cols-mobile: 4;
+    }
+}

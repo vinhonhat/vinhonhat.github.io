@@ -1,0 +1,86 @@
+/* games/number-more-less/number-more-less.css */
+.game-number-more-less {
+    --question-ratio: 72fr;
+    --answer-ratio: 28fr;
+    --answer-cols-mobile: 3;
+    --answer-cols-pc: 3;
+    --answer-top-padding: 16px;
+    --answer-gap: 10px;
+}
+
+.more-less-question {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    gap: 8px;
+}
+
+.more-less-title {
+    text-align: center;
+    flex-shrink: 0;
+    font-size: clamp(1.4rem, 5.5vw, 2.7rem);
+    font-weight: 900;
+    color: #ff6f00;
+}
+
+.more-less-groups {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: stretch;
+    gap: 8px;
+}
+
+.more-less-side {
+    min-width: 0;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.86);
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.more-less-label {
+    text-align: center;
+    font-size: clamp(0.9rem, 3.4vw, 1.2rem);
+    font-weight: 900;
+    color: #555;
+}
+
+.more-less-items {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    place-items: center;
+    gap: 4px;
+}
+
+.more-less-items img {
+    width: clamp(38px, 11vw, 74px);
+    height: clamp(38px, 11vw, 74px);
+    object-fit: contain;
+}
+
+.more-less-vs {
+    display: grid;
+    place-items: center;
+    font-size: clamp(1.4rem, 6vw, 3rem);
+}
+
+.more-less-option {
+    font-size: clamp(1rem, 4.8vw, 2.2rem) !important;
+    font-weight: 900 !important;
+}
+
+@media (max-width: 430px) {
+    .more-less-groups {
+        gap: 4px;
+    }
+    .more-less-side {
+        padding: 5px;
+    }
+}

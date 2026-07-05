@@ -1,0 +1,84 @@
+/* games/alphabet-first/alphabet-first.css */
+.game-alphabet-first {
+    --question-ratio: 55fr;
+    --answer-ratio: 45fr;
+    --answer-cols-mobile: 2;
+    --answer-cols-pc: 4;
+    --answer-gap: 10px;
+    --answer-top-padding: 16px;
+
+    --abc-hand-font: cursive, "Segoe Print", "Comic Sans MS", "Andika";
+    --abc-upper-font: "Segoe UI", Tahoma, Arial, sans-serif;
+}
+
+.alphabet-first-question {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    place-items: center;
+    align-content: center;
+    gap: 12px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.alphabet-first-letter {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 18px;
+}
+
+.alphabet-first-upper {
+    font-family: var(--abc-upper-font);
+    font-size: clamp(5rem, 22vw, 10rem);
+    font-weight: 900;
+    color: #333;
+    line-height: 1;
+}
+
+.alphabet-first-lower {
+    font-family: var(--abc-hand-font);
+    font-size: clamp(3.7rem, 16vw, 7rem);
+    font-weight: 800;
+    color: #ff7043;
+    line-height: 1;
+}
+
+.alphabet-first-title {
+    font-size: clamp(1.2rem, 5vw, 2.2rem);
+    font-weight: 900;
+    color: #ff6f00;
+}
+
+.alphabet-first-option {
+    min-height: 112px;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 6px !important;
+}
+
+.alphabet-first-option img {
+    width: clamp(58px, 16vw, 104px);
+    height: clamp(58px, 16vw, 104px);
+    object-fit: contain;
+    pointer-events: none;
+}
+
+.alphabet-first-option span {
+    font-size: clamp(0.9rem, 3.3vw, 1.15rem);
+    font-weight: 800;
+    color: #444;
+}
+
+@media (orientation: landscape) {
+    .game-alphabet-first {
+        --question-ratio: 45fr;
+        --answer-ratio: 55fr;
+        --answer-cols-mobile: 4;
+    }
+}

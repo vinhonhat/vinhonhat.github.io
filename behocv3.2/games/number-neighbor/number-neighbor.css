@@ -1,0 +1,50 @@
+/* games/number-neighbor/number-neighbor.css */
+.game-number-neighbor {
+    --question-ratio: 65fr;
+    --answer-ratio: 35fr;
+    --answer-cols-mobile: 2;
+    --answer-cols-pc: 4;
+    --answer-top-padding: 16px;
+}
+
+.number-neighbor-question {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 18px;
+    text-align: center;
+}
+
+.number-neighbor-title {
+    font-size: clamp(1.5rem, 6vw, 3rem);
+    font-weight: 900;
+    color: #ff6f00;
+}
+
+.number-neighbor-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(10px, 4vw, 24px);
+}
+
+.number-neighbor-line span {
+    min-width: clamp(70px, 18vw, 130px);
+    min-height: clamp(70px, 18vw, 130px);
+    border-radius: 22px;
+    background: #fff;
+    display: grid;
+    place-items: center;
+    font-size: clamp(3rem, 14vw, 7rem);
+    font-weight: 900;
+    color: #333;
+    box-shadow: 0 5px 0 rgba(0,0,0,0.08);
+}
+
+.number-neighbor-option {
+    font-size: clamp(3rem, 13vw, 5.8rem) !important;
+    font-weight: 900 !important;
+    color: #ff7043;
+}

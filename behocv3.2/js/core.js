@@ -6,7 +6,7 @@
 // Ví dụ: 3.2.1 -> 3.2.2
 // =====================================================
 
-const APP_VERSION = '3.2.6';
+const APP_VERSION = '3.2.7';
 const APP_VERSION_KEY = 'behoc_app_version';
 
 
@@ -132,6 +132,140 @@ const GAME_CONFIG = {
         js: 'games/math-connect/math-connect.js',
         startFn: 'startMathConnectGame',
         type: 'custom'
+    },
+    alphabet_listen: {
+        title: 'Nghe Chọn Chữ',
+        folder: 'alphabet-listen',
+        css: 'games/alphabet-listen/alphabet-listen.css',
+        js: 'games/alphabet-listen/alphabet-listen.js',
+        moduleId: 'alphabet_listen',
+        type: 'registered'
+    },
+
+    alphabet_first: {
+        title: 'Chữ Đầu',
+        folder: 'alphabet-first',
+        css: 'games/alphabet-first/alphabet-first.css',
+        js: 'games/alphabet-first/alphabet-first.js',
+        moduleId: 'alphabet_first',
+        type: 'registered'
+    },
+
+    alphabet_odd: {
+        title: 'Chữ Khác',
+        folder: 'alphabet-odd',
+        css: 'games/alphabet-odd/alphabet-odd.css',
+        js: 'games/alphabet-odd/alphabet-odd.js',
+        moduleId: 'alphabet_odd',
+        type: 'registered'
+    },
+
+    alphabet_order: {
+        title: 'Thứ Tự Chữ',
+        folder: 'alphabet-order',
+        css: 'games/alphabet-order/alphabet-order.css',
+        js: 'games/alphabet-order/alphabet-order.js',
+        moduleId: 'alphabet_order',
+        type: 'registered'
+    },
+
+    number_neighbor: {
+        title: 'Trước Sau',
+        folder: 'number-neighbor',
+        css: 'games/number-neighbor/number-neighbor.css',
+        js: 'games/number-neighbor/number-neighbor.js',
+        moduleId: 'number_neighbor',
+        type: 'registered'
+    },
+
+    number_countdown: {
+        title: 'Đếm Ngược',
+        folder: 'number-countdown',
+        css: 'games/number-countdown/number-countdown.css',
+        js: 'games/number-countdown/number-countdown.js',
+        moduleId: 'number_countdown',
+        type: 'registered'
+    },
+
+    number_more_less: {
+        title: 'Nhiều Ít',
+        folder: 'number-more-less',
+        css: 'games/number-more-less/number-more-less.css',
+        js: 'games/number-more-less/number-more-less.js',
+        moduleId: 'number_more_less',
+        type: 'registered'
+    },
+
+    memory_position: {
+        title: 'Nhớ Vị Trí',
+        folder: 'memory-position',
+        css: 'games/memory-position/memory-position.css',
+        js: 'games/memory-position/memory-position.js',
+        moduleId: 'memory_position',
+        type: 'registered'
+    },
+
+    card_match: {
+        title: 'Lật Thẻ',
+        folder: 'card-match',
+        css: 'games/card-match/card-match.css',
+        js: 'games/card-match/card-match.js',
+        startFn: 'startCardMatchGame',
+        type: 'custom'
+    },
+
+    quick_reflex: {
+        title: 'Nhanh Tay',
+        folder: 'quick-reflex',
+        css: 'games/quick-reflex/quick-reflex.css',
+        js: 'games/quick-reflex/quick-reflex.js',
+        moduleId: 'quick_reflex',
+        type: 'registered'
+    },
+
+    pattern_rule: {
+        title: 'Quy Luật',
+        folder: 'pattern-rule',
+        css: 'games/pattern-rule/pattern-rule.css',
+        js: 'games/pattern-rule/pattern-rule.js',
+        moduleId: 'pattern_rule',
+        type: 'registered'
+    },
+
+    classify_group: {
+        title: 'Phân Loại',
+        folder: 'classify-group',
+        css: 'games/classify-group/classify-group.css',
+        js: 'games/classify-group/classify-group.js',
+        moduleId: 'classify_group',
+        type: 'registered'
+    },
+
+    times_table: {
+        title: 'Cửu Chương',
+        folder: 'times-table',
+        css: 'games/times-table/times-table.css',
+        js: 'games/times-table/times-table.js',
+        moduleId: 'times_table',
+        type: 'registered'
+    },
+
+    division_basic: {
+        title: 'Phép Chia',
+        folder: 'division-basic',
+        css: 'games/division-basic/division-basic.css',
+        js: 'games/division-basic/division-basic.js',
+        moduleId: 'division_basic',
+        type: 'registered'
+    },
+
+    multiply_divide: {
+        title: 'Nhân Chia',
+        folder: 'multiply-divide',
+        css: 'games/multiply-divide/multiply-divide.css',
+        js: 'games/multiply-divide/multiply-divide.js',
+        moduleId: 'multiply_divide',
+        type: 'registered'
     },
 
 

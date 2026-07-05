@@ -1,0 +1,55 @@
+/* games/number-countdown/number-countdown.css */
+.game-number-countdown {
+    --question-ratio: 65fr;
+    --answer-ratio: 35fr;
+    --answer-cols-mobile: 2;
+    --answer-cols-pc: 4;
+    --answer-top-padding: 16px;
+}
+
+.number-countdown-question {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 18px;
+    text-align: center;
+}
+
+.number-countdown-title {
+    font-size: clamp(1.5rem, 6vw, 3rem);
+    font-weight: 900;
+    color: #ff6f00;
+}
+
+.number-countdown-seq {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.number-countdown-card {
+    min-height: clamp(74px, 18vw, 130px);
+    border-radius: 20px;
+    background: #fff;
+    display: grid;
+    place-items: center;
+    font-size: clamp(3rem, 13vw, 6.5rem);
+    font-weight: 900;
+    color: #333;
+    box-shadow: 0 5px 0 rgba(0,0,0,0.08);
+}
+
+.number-countdown-card.is-missing {
+    background: #fff3cd;
+    color: #ff6f00;
+    border: 4px dashed #ffb74d;
+}
+
+.number-countdown-option {
+    font-size: clamp(3rem, 13vw, 5.8rem) !important;
+    font-weight: 900 !important;
+    color: #ff7043;
+}

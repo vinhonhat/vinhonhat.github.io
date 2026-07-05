@@ -1,0 +1,51 @@
+/* games/classify-group/classify-group.css */
+.game-classify-group {
+    --question-ratio: 68fr;
+    --answer-ratio: 32fr;
+    --answer-cols-mobile: 3;
+    --answer-cols-pc: 3;
+    --answer-top-padding: 16px;
+    --answer-gap: 10px;
+}
+
+.classify-question {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 8px;
+    text-align: center;
+}
+
+.classify-title {
+    font-size: clamp(1.3rem, 5vw, 2.4rem);
+    font-weight: 900;
+    color: #ff6f00;
+}
+
+.classify-img {
+    width: clamp(120px, 35vw, 240px);
+    height: clamp(120px, 35vw, 240px);
+    object-fit: contain;
+}
+
+.classify-name {
+    font-size: clamp(1.4rem, 5vw, 2.6rem);
+    font-weight: 900;
+    color: #444;
+}
+
+.classify-option {
+    display: flex !important;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(0.9rem, 4vw, 1.8rem) !important;
+    font-weight: 900 !important;
+}
+
+.classify-option span {
+    font-size: clamp(2rem, 9vw, 4rem);
+}
