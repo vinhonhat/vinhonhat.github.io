@@ -27,6 +27,7 @@
           dùng cho chữ in hoa: A, Ă, Â, B...
           Nên để font rõ, đứng thẳng, dễ nhìn.
 
+          
        3. --alphabet-word-font:
           dùng cho chữ minh họa: con trăn, cái ca...
           Có thể dùng chung với chữ thường.
@@ -486,7 +487,7 @@
     min-height: 1.2em;
 
     font-family: var(--alphabet-word-font);
-    
+
     font-size: clamp(1.75rem, 7.8vw, 3.2rem);
     font-weight: 900;
 
