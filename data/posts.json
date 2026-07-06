@@ -108,7 +108,20 @@
   "link": "/pages/pages-hoctap/hoctap/luyen_kanji_A4_fixed.html",
   "contentHtml": ""
 },
-
+{
+  "id": "post-20260706-1149",
+  "type": "post",
+  "status": 1,
+  "category": ["nihongo"],
+  "tags": [],
+  "date": "2026-07-06",
+  "featured": true,
+  "title": "Ứng dụng luyện tiếng nhật",
+  "summary": "Ứng dụng dạng web để học tiếng nhật cho các bạn từ nhập môn tới N1",
+  "imageUrl": "https://vinhonhat.github.io/nihongo/nihongo.png",
+  "link": "https://vinhonhat.github.io/nihongo",
+  "contentHtml": ""
+},
 {
   "id": "post--",
   "type": "post",
@@ -309,8 +322,8 @@
   "featured": true,
   "title": "Bé vừa học vừa chơi v3",
   "summary": "cho bé từ 3 tuổi trở lên tập làm quen với hình ảnh, bảng chử cái, con số....",
-  "imageUrl": "/behocv3.2/behoc.png",
-  "link": "/behocv3.2",
+  "imageUrl": "https://vinhonhat.github.io/behoc/behoc.png",
+  "link": "https://vinhonhat.github.io/behoc/",
   "contentHtml": ""
 },
 
