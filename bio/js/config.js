@@ -301,7 +301,7 @@ window.BIO_CONFIG = {
       "title": "Vinh ở Nhật",
       "description": "Bài viết, hướng dẫn và tiện ích mới nhất",
       "url": "https://vinhonhat.github.io/",
-      "badge": "Nổi bật",
+      "badge": "",
       "image": "",
       "showIconBackground": true,
       "id": "website",
