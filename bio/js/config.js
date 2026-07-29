@@ -3,7 +3,7 @@ window.BIO_CONFIG = {
   "profile": {
     "name": "Vinh ở Nhật",
     "handle": "@vinhonhat",
-    "bio": "iPhone, iPad, MacBook, Sim Data, Sim nghe gọi, Rakuten, Tokuei.\nChia sẻ cuộc sống tiện ích hữu ích tại Nhật Bản.",
+    "bio": "iPhone, iPad, MacBook, Sim Data, Sim nghe gọi, Rakuten, Tokuei.\nChia sẻ cuộc sống, công nghệ và những tiện ích hữu ích tại Nhật Bản.",
     "avatar": "/img/logoQV.png",
     "footerText": "Vinh ở Nhật • Made with ❤️",
     "badges": [
@@ -52,11 +52,15 @@ window.BIO_CONFIG = {
     "enabled": true,
     "logoTapCount": 5,
     "tapTimeout": 2500,
-    "storageKey": "vinh-bio-admin-config-v12",
-    "passwordHash": "5f3c731b478c8292b603e6dec59aaa2626f6fcb3c6d5e97bc3a844b8dc4e279b"
+    "storageKey": "vinh-bio-admin-config-v14",
+    "passwordHash": "5f3c731b478c8292b603e6dec59aaa2626f6fcb3c6d5e97bc3a844b8dc4e279b",
+    "serverSave": {
+      "enabled": true,
+      "endpoint": "api/save-config.php"
+    }
   },
   "settings": {
-    "defaultTheme": "auto",
+    "defaultTheme": "light",
     "showThemeButton": true,
     "showShareButton": true,
     "showQrButton": true,
@@ -91,7 +95,17 @@ window.BIO_CONFIG = {
       "bioFontSize": 15,
       "linkTitleFontSize": 15,
       "linkDescriptionFontSize": 12,
-      "footerFontSize": 12
+      "footerFontSize": 12,
+      "outerLightColor": "#fff8ed",
+      "outerDarkColor": "#16120d",
+      "innerLightColor": "#fffaf2",
+      "innerDarkColor": "#221c15",
+      "outerBackgroundImage": "",
+      "innerBackgroundImage": "",
+      "lightBorderColor": "#f39b19",
+      "darkBorderColor": "#f39b19",
+      "showDecorations": true,
+      "showCardBorder": true
     },
     "showLanguageButton": true,
     "defaultLanguage": "auto",

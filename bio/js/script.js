@@ -1,4 +1,4 @@
-/* Bio Link Admin V12 - nơ nổi bật đa ngôn ngữ, không tô vàng toàn bộ nút */
+/* Bio Link Admin V14 - lưu máy chủ PHP, giữ nền 3 đốm và tùy chỉnh viền/nền */
 (() => {
   "use strict";
 
@@ -18,7 +18,21 @@
     bioFontSize: 15,
     linkTitleFontSize: 15,
     linkDescriptionFontSize: 12,
-    footerFontSize: 12
+    footerFontSize: 12,
+    outerLightColor: "#fff8ed",
+    outerDarkColor: "#16120d",
+    innerLightColor: "#fffaf2",
+    innerDarkColor: "#221c15",
+    outerBackgroundImage: "",
+    innerBackgroundImage: "",
+    lightBorderColor: "#f39b19",
+    darkBorderColor: "#f39b19",
+    showDecorations: true,
+    showCardBorder: true
+  };
+  const DEFAULT_SERVER_SAVE = {
+    enabled: true,
+    endpoint: "api/save-config.php"
   };
 
   const I18N = {
@@ -27,6 +41,7 @@
     en: { code: "EN", flag: "assets/flag-en.svg", language: "Change language", themeLight: "Switch to light mode", themeDark: "Switch to dark mode", share: "Share page", connect: "Connect with me", qr: "QR code", qrTitle: "Share Bio page", qrDescription: "Scan the QR code or copy the link to open this page.", copy: "Copy link", copied: "Link copied", shareError: "Unable to share right now", qrAlt: "QR code for this Bio page" }
   };
   let currentLanguage = "vi";
+  let adminSessionPassword = "";
   const FEATURED_LABELS = { vi: "Nổi bật", ja: "おすすめ", en: "Featured" };
 
   const clampColumns = value => Math.min(3, Math.max(1, Number(value) || 1));
@@ -44,6 +59,7 @@
       item.translations ||= {};
     });
     cfg.admin ||= {};
+    cfg.admin.serverSave = { ...DEFAULT_SERVER_SAVE, ...(cfg.admin.serverSave || {}) };
     cfg.settings ||= {};
     cfg.settings.defaultTheme = ["auto", "light", "dark"].includes(cfg.settings.defaultTheme) ? cfg.settings.defaultTheme : "auto";
     cfg.settings.defaultLanguage = ["auto", "vi", "ja", "en"].includes(cfg.settings.defaultLanguage) ? cfg.settings.defaultLanguage : "auto";
@@ -111,6 +127,7 @@
     "eye-off": '<path d="m3 3 18 18"/><path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/><path d="M9.9 4.2A10.7 10.7 0 0 1 12 4c6.5 0 10 8 10 8a17.4 17.4 0 0 1-2.1 3.2"/><path d="M6.6 6.6C3.7 8.5 2 12 2 12s3.5 8 10 8a9.8 9.8 0 0 0 4.1-.9"/>',
     "facebook": '<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3.5l.5-4h-4V7a1 1 0 0 1 1-1h3z"/>',
     "file-down": '<path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/>',
+    "upload-cloud": '<path d="M16 16l-4-4-4 4"/><path d="M12 12v9"/><path d="M20.4 17.5A5 5 0 0 0 18 8.2 7 7 0 0 0 4.3 10.5 4.5 4.5 0 0 0 5.5 19H7"/><path d="M17 19h1.5"/>',
     "globe": '<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
     "grip-vertical": '<circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/>',
     "image": '<rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/>',
@@ -293,6 +310,13 @@
     return `rgba(${number >> 16}, ${(number >> 8) & 255}, ${number & 255}, ${alpha})`;
   };
 
+  const cssBackgroundImage = value => {
+    const source = String(value || "").trim();
+    if (!source) return "none";
+    const safe = source.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/[\r\n]/g, "");
+    return `url("${safe}")`;
+  };
+
   const applyAppearanceAndLayout = () => {
     const appearance = config.settings?.appearance || DEFAULT_APPEARANCE;
     const layout = config.settings?.layout || DEFAULT_LAYOUT;
@@ -307,6 +331,17 @@
     root.style.setProperty("--custom-light-muted", appearance.lightMutedColor || DEFAULT_APPEARANCE.lightMutedColor);
     root.style.setProperty("--custom-dark-text", appearance.darkTextColor || DEFAULT_APPEARANCE.darkTextColor);
     root.style.setProperty("--custom-dark-muted", appearance.darkMutedColor || DEFAULT_APPEARANCE.darkMutedColor);
+    root.style.setProperty("--custom-light-outer-bg", appearance.outerLightColor || DEFAULT_APPEARANCE.outerLightColor);
+    root.style.setProperty("--custom-dark-outer-bg", appearance.outerDarkColor || DEFAULT_APPEARANCE.outerDarkColor);
+    root.style.setProperty("--custom-light-inner-bg", appearance.innerLightColor || DEFAULT_APPEARANCE.innerLightColor);
+    root.style.setProperty("--custom-dark-inner-bg", appearance.innerDarkColor || DEFAULT_APPEARANCE.innerDarkColor);
+    root.style.setProperty("--outer-background-image", cssBackgroundImage(appearance.outerBackgroundImage));
+    root.style.setProperty("--inner-background-image", cssBackgroundImage(appearance.innerBackgroundImage));
+    root.style.setProperty("--custom-light-card-border", appearance.lightBorderColor || appearance.primaryColor || DEFAULT_APPEARANCE.lightBorderColor);
+    root.style.setProperty("--custom-dark-card-border", appearance.darkBorderColor || appearance.primaryColor || DEFAULT_APPEARANCE.darkBorderColor);
+    root.style.setProperty("--bio-card-border", appearance.showCardBorder === false ? "transparent" : "var(--theme-card-border)");
+    root.dataset.decorations = appearance.showDecorations ? "show" : "hide";
+    root.dataset.cardBorder = appearance.showCardBorder === false ? "hide" : "show";
     root.style.setProperty("--name-font-size", `${clampNumber(appearance.nameFontSize, 18, 52, 32)}px`);
     root.style.setProperty("--bio-font-size", `${clampNumber(appearance.bioFontSize, 11, 24, 15)}px`);
     root.style.setProperty("--link-title-font-size", `${clampNumber(appearance.linkTitleFontSize, 11, 24, 15)}px`);
@@ -828,12 +863,36 @@
             </section>
 
             <section class="admin-section">
+              <h3>Nền và khung trang</h3>
+              <p class="admin-help" style="margin:0 0 14px">Ba đốm tròn là nền trang trí mặc định. Ảnh nền là lớp tùy chọn thêm vào; có thể dùng đồng thời với các đốm. Nền ngoài áp dụng toàn trang, nền trong chỉ áp dụng cho khung Bio.</p>
+              <div class="admin-grid two">
+                <label class="admin-field"><span>Màu nền ngoài — sáng</span><input id="editOuterLightColor" type="color" /></label>
+                <label class="admin-field"><span>Màu nền ngoài — tối</span><input id="editOuterDarkColor" type="color" /></label>
+                <label class="admin-field"><span>Màu nền trong — sáng</span><input id="editInnerLightColor" type="color" /></label>
+                <label class="admin-field"><span>Màu nền trong — tối</span><input id="editInnerDarkColor" type="color" /></label>
+                <label class="admin-field"><span>Màu viền khung — sáng</span><input id="editLightBorderColor" type="color" /></label>
+                <label class="admin-field"><span>Màu viền khung — tối</span><input id="editDarkBorderColor" type="color" /></label>
+              </div>
+              <label class="admin-field"><span>Ảnh nền ngoài</span><input id="editOuterBackgroundImage" type="text" placeholder="assets/background.webp hoặc URL ảnh" /></label>
+              <label class="admin-field"><span>Ảnh nền trong khung Bio</span><input id="editInnerBackgroundImage" type="text" placeholder="assets/card-background.webp hoặc URL ảnh" /></label>
+              <div class="admin-upload-row">
+                <label class="admin-upload">${icon("image", 18)} Chọn ảnh nền ngoài<input id="outerBackgroundUpload" type="file" accept="image/png,image/webp,image/jpeg,image/svg+xml" /></label>
+                <label class="admin-upload">${icon("image", 18)} Chọn ảnh nền trong<input id="innerBackgroundUpload" type="file" accept="image/png,image/webp,image/jpeg,image/svg+xml" /></label>
+              </div>
+              <div class="admin-checks">
+                <label><input id="editShowDecorations" type="checkbox" /> Hiện các đốm tròn trang trí ngoài nền</label>
+                <label><input id="editShowCardBorder" type="checkbox" /> Hiện viền khung Bio theo màu chủ đạo</label>
+              </div>
+            </section>
+
+            <section class="admin-section">
               <h3>Đổi mật khẩu</h3>
               <div class="admin-grid two">
                 <label class="admin-field"><span>Mật khẩu mới</span><div class="password-wrap"><input id="editNewPassword" type="password" autocomplete="new-password" /><button class="password-toggle" type="button" data-password-toggle="editNewPassword" aria-label="Hiện mật khẩu" title="Hiện mật khẩu">${icon("eye", 18)}</button></div></label>
                 <label class="admin-field"><span>Nhập lại mật khẩu</span><div class="password-wrap"><input id="editConfirmPassword" type="password" autocomplete="new-password" /><button class="password-toggle" type="button" data-password-toggle="editConfirmPassword" aria-label="Hiện mật khẩu" title="Hiện mật khẩu">${icon("eye", 18)}</button></div></label>
               </div>
-              <p class="admin-help">Để trống nếu không muốn đổi. GitHub Pages là web tĩnh nên mật khẩu này chỉ giúp ẩn bảng chỉnh sửa với người dùng thông thường.</p>
+              <p class="admin-help">Để trống nếu không muốn đổi. Trên host PHP, mật khẩu này cũng được dùng để xác thực khi ghi cấu hình lên máy chủ.</p>
+              <div class="admin-server-note"><b>Lưu trực tiếp trên host:</b> nút “Lưu lên máy chủ” hoạt động khi host hỗ trợ PHP và thư mục <code>js</code> có quyền ghi.</div>
             </section>
           </div>
 
@@ -855,6 +914,7 @@
           <button id="resetConfigButton" class="admin-danger" type="button">${icon("rotate-ccw", 17)} Về cấu hình file</button>
           <div class="admin-footer-right">
             <button id="exportConfigButton" class="admin-secondary" type="button">${icon("file-down", 17)} Tải config.js</button>
+            <button id="serverSaveButton" class="admin-server" type="button">${icon("upload-cloud", 17)} Lưu lên máy chủ</button>
             <button id="saveConfigButton" class="admin-primary" type="button">${icon("save", 17)} Lưu & xem trước</button>
           </div>
         </footer>
@@ -895,6 +955,7 @@
     $$('[data-admin-close]').forEach(el => el.addEventListener("click", closeAdmin));
     $("#adminLoginForm").addEventListener("submit", handleAdminLogin);
     $("#saveConfigButton").addEventListener("click", saveEditorConfig);
+    $("#serverSaveButton").addEventListener("click", saveConfigToServer);
     $("#exportConfigButton").addEventListener("click", exportEditorConfig);
     $("#resetConfigButton").addEventListener("click", resetToSourceConfig);
     $("#sortLinksButton").addEventListener("click", () => openOrderModal("links"));
@@ -923,6 +984,8 @@
     $("#adminSocials").addEventListener("change", handleSocialSourceChange);
     $("#avatarUpload").addEventListener("change", handleAvatarUpload);
     $("#faviconUpload").addEventListener("change", handleFaviconUpload);
+    $("#outerBackgroundUpload").addEventListener("change", event => handleBackgroundUpload(event, "#editOuterBackgroundImage", "ảnh nền ngoài"));
+    $("#innerBackgroundUpload").addEventListener("change", event => handleBackgroundUpload(event, "#editInnerBackgroundImage", "ảnh nền trong"));
     $("#adminOverlay").addEventListener("click", handlePasswordToggle);
     $("#adminPassword").addEventListener("input", () => $("#adminLoginError").classList.add("hidden"));
   };
@@ -1069,17 +1132,20 @@
     if (!overlay) return;
     overlay.classList.remove("open");
     overlay.setAttribute("aria-hidden", "true");
+    adminSessionPassword = "";
     document.body.style.overflow = "";
   };
 
   const handleAdminLogin = async event => {
     event.preventDefault();
-    const enteredHash = await sha256($("#adminPassword").value);
+    const enteredPassword = $("#adminPassword").value;
+    const enteredHash = await sha256(enteredPassword);
     const expectedHash = config.admin?.passwordHash || sourceConfig.admin?.passwordHash;
     if (enteredHash !== expectedHash) {
       $("#adminLoginError").classList.remove("hidden");
       return;
     }
+    adminSessionPassword = enteredPassword;
     editorDraft = normalizeConfig(config);
     editorDraft.admin = { ...(sourceConfig.admin || {}), ...(editorDraft.admin || {}) };
     populateEditor();
@@ -1131,6 +1197,16 @@
     $("#editLinkTitleFontSize").value = appearance.linkTitleFontSize;
     $("#editLinkDescriptionFontSize").value = appearance.linkDescriptionFontSize;
     $("#editFooterFontSize").value = appearance.footerFontSize;
+    $("#editOuterLightColor").value = appearance.outerLightColor || DEFAULT_APPEARANCE.outerLightColor;
+    $("#editOuterDarkColor").value = appearance.outerDarkColor || DEFAULT_APPEARANCE.outerDarkColor;
+    $("#editInnerLightColor").value = appearance.innerLightColor || DEFAULT_APPEARANCE.innerLightColor;
+    $("#editInnerDarkColor").value = appearance.innerDarkColor || DEFAULT_APPEARANCE.innerDarkColor;
+    $("#editOuterBackgroundImage").value = appearance.outerBackgroundImage || "";
+    $("#editInnerBackgroundImage").value = appearance.innerBackgroundImage || "";
+    $("#editLightBorderColor").value = appearance.lightBorderColor || appearance.primaryColor || DEFAULT_APPEARANCE.lightBorderColor;
+    $("#editDarkBorderColor").value = appearance.darkBorderColor || appearance.primaryColor || DEFAULT_APPEARANCE.darkBorderColor;
+    $("#editShowDecorations").checked = appearance.showDecorations !== false;
+    $("#editShowCardBorder").checked = appearance.showCardBorder !== false;
     $("#editThemeButton").checked = editorDraft.settings.showThemeButton !== false;
     $("#editLanguageButton").checked = editorDraft.settings.showLanguageButton !== false;
     $("#editShareButton").checked = editorDraft.settings.showShareButton !== false;
@@ -1189,7 +1265,7 @@
         </details>`;
 
       return `
-      <article class="admin-item" data-type="${type}" data-index="${index}">
+      <article class="admin-item ${item.enabled ? "is-enabled" : "is-disabled"}" data-type="${type}" data-index="${index}">
         <div class="admin-item-top">
           <button class="admin-visibility-button ${item.enabled ? "is-visible" : "is-hidden"}" type="button" data-action="toggle-enabled" aria-pressed="${item.enabled ? "true" : "false"}" title="${item.enabled ? "Nhấn để ẩn mục này" : "Nhấn để hiện mục này"}">${icon(item.enabled ? "eye" : "eye-off", 17)}<b>${item.enabled ? "Đang hiện" : "Đang ẩn"}</b></button>
           <div class="admin-order">
@@ -1277,7 +1353,17 @@
       bioFontSize: clampNumber($("#editBioFontSize").value, 11, 24, 15),
       linkTitleFontSize: clampNumber($("#editLinkTitleFontSize").value, 11, 24, 15),
       linkDescriptionFontSize: clampNumber($("#editLinkDescriptionFontSize").value, 9, 20, 12),
-      footerFontSize: clampNumber($("#editFooterFontSize").value, 9, 18, 12)
+      footerFontSize: clampNumber($("#editFooterFontSize").value, 9, 18, 12),
+      outerLightColor: $("#editOuterLightColor").value || DEFAULT_APPEARANCE.outerLightColor,
+      outerDarkColor: $("#editOuterDarkColor").value || DEFAULT_APPEARANCE.outerDarkColor,
+      innerLightColor: $("#editInnerLightColor").value || DEFAULT_APPEARANCE.innerLightColor,
+      innerDarkColor: $("#editInnerDarkColor").value || DEFAULT_APPEARANCE.innerDarkColor,
+      outerBackgroundImage: $("#editOuterBackgroundImage").value.trim(),
+      innerBackgroundImage: $("#editInnerBackgroundImage").value.trim(),
+      lightBorderColor: $("#editLightBorderColor").value || $("#editPrimaryColor").value || DEFAULT_APPEARANCE.lightBorderColor,
+      darkBorderColor: $("#editDarkBorderColor").value || $("#editPrimaryColor").value || DEFAULT_APPEARANCE.darkBorderColor,
+      showDecorations: $("#editShowDecorations").checked,
+      showCardBorder: $("#editShowCardBorder").checked
     };
     editorDraft.settings.showThemeButton = $("#editThemeButton").checked;
     editorDraft.settings.showLanguageButton = $("#editLanguageButton").checked;
@@ -1387,6 +1473,16 @@
     showToast("Đã nạp icon trên tab web");
   };
 
+  const handleBackgroundUpload = async (event, targetSelector, label) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (file.size > 2_500_000) return showToast("Ảnh nền nên nhỏ hơn 2.5 MB");
+    const target = $(targetSelector);
+    if (!target) return;
+    target.value = await fileToDataUrl(file);
+    showToast(`Đã nạp ${label}`);
+  };
+
   const handlePasswordToggle = event => {
     const button = event.target.closest('[data-password-toggle]');
     if (!button) return;
@@ -1465,6 +1561,61 @@
     showToast("Đã lưu trên trình duyệt này");
     $("#editNewPassword").value = "";
     $("#editConfirmPassword").value = "";
+  };
+
+  const commitSavedConfigToPreview = () => {
+    config = normalizeConfig(editorDraft);
+    editorDraft = normalizeConfig(editorDraft);
+    safeStorageSet(storageKey, JSON.stringify(config));
+    safeStorageRemove("bio-theme");
+    safeStorageRemove(languageStorageKey);
+    currentLanguage = resolveInitialLanguage();
+    setTheme(resolveInitialTheme());
+    renderAll();
+    populateEditor();
+  };
+
+  const saveConfigToServer = async () => {
+    collectEditorFields();
+    if (!(await applyNewPassword())) return;
+    const server = editorDraft.admin?.serverSave || DEFAULT_SERVER_SAVE;
+    if (server.enabled === false) {
+      showToast("Chức năng lưu máy chủ đang tắt");
+      return;
+    }
+    if (location.protocol === "file:") {
+      showToast("Hãy mở trang qua host PHP để lưu lên máy chủ");
+      return;
+    }
+    if (!adminSessionPassword) {
+      showToast("Hãy đóng và mở lại cài đặt để xác thực mật khẩu");
+      return;
+    }
+    const button = $("#serverSaveButton");
+    const original = button.innerHTML;
+    button.disabled = true;
+    button.innerHTML = `${icon("upload-cloud", 17)} Đang lưu...`;
+    try {
+      const response = await fetch(server.endpoint || DEFAULT_SERVER_SAVE.endpoint, {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json", "X-Requested-With": "BioLinkAdmin" },
+        body: JSON.stringify({ password: adminSessionPassword, config: editorDraft })
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || result.ok !== true) throw new Error(result.message || `Lỗi máy chủ ${response.status}`);
+      commitSavedConfigToPreview();
+      if ($("#editNewPassword").value) adminSessionPassword = $("#editNewPassword").value;
+      $("#editNewPassword").value = "";
+      $("#editConfirmPassword").value = "";
+      showToast("Đã lưu trực tiếp lên máy chủ");
+    } catch (error) {
+      console.error(error);
+      showToast(error.message || "Không thể lưu lên máy chủ");
+    } finally {
+      button.disabled = false;
+      button.innerHTML = original;
+    }
   };
 
   const exportEditorConfig = async () => {

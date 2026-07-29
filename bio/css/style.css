@@ -1,6 +1,8 @@
 :root {
   color-scheme: light;
-  --page-bg: #fff8ed;
+  --page-bg: var(--custom-light-outer-bg, #fff8ed);
+  --bio-card-bg: var(--custom-light-inner-bg, #fffaf2);
+  --theme-card-border: var(--custom-light-card-border, #f39b19);
   --card-bg: rgba(255, 255, 255, 0.78);
   --card-border: rgba(255, 255, 255, 0.88);
   --text: var(--custom-light-text, #2c2118);
@@ -23,7 +25,9 @@
 
 [data-theme="dark"] {
   color-scheme: dark;
-  --page-bg: #16120d;
+  --page-bg: var(--custom-dark-outer-bg, #16120d);
+  --bio-card-bg: var(--custom-dark-inner-bg, #221c15);
+  --theme-card-border: var(--custom-dark-card-border, #f39b19);
   --card-bg: rgba(34, 28, 21, 0.82);
   --card-border: rgba(255, 255, 255, 0.08);
   --text: var(--custom-dark-text, #fff8ef);
@@ -52,7 +56,12 @@ body {
   overscroll-behavior-y: none;
   font-family: "Be Vietnam Pro", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--text);
-  background: var(--page-bg);
+  background-color: var(--page-bg);
+  background-image: var(--outer-background-image, none);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
   transition: background-color .25s ease, color .25s ease;
 }
 
@@ -74,12 +83,14 @@ button { font: inherit; }
 }
 
 
+html[data-decorations="hide"] .background { display: none; }
+
 .background {
   position: fixed;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
-  z-index: -1;
+  z-index: 0;
 }
 
 .blob {
@@ -124,6 +135,8 @@ button { font: inherit; }
 }
 
 .page-shell {
+  position: relative;
+  z-index: 1;
   width: 100%;
   min-height: var(--app-height, 100dvh);
   display: grid;
@@ -135,9 +148,13 @@ button { font: inherit; }
   position: relative;
   width: min(100%, var(--card-max-width, 610px));
   padding: 28px;
-  border: 1px solid var(--card-border);
+  border: 1.5px solid var(--bio-card-border, var(--card-border));
   border-radius: var(--radius-xl);
-  background: var(--card-bg);
+  background-color: var(--bio-card-bg);
+  background-image: var(--inner-background-image, none);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
   box-shadow: var(--shadow);
   backdrop-filter: blur(24px) saturate(140%);
   -webkit-backdrop-filter: blur(24px) saturate(140%);
@@ -928,6 +945,26 @@ svg { width: 21px; height: 21px; display: block; }
   border: 1px solid var(--link-border);
   border-radius: 16px;
   background: var(--card-bg);
+  box-shadow: none;
+  transition: border-color .2s ease, background-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+.admin-item.is-enabled {
+  border-color: color-mix(in srgb, var(--primary) 68%, transparent);
+  background: color-mix(in srgb, var(--primary) 8%, var(--card-bg));
+  box-shadow: 0 12px 30px color-mix(in srgb, var(--primary-strong) 12%, transparent), inset 0 0 0 1px color-mix(in srgb, var(--primary) 9%, transparent);
+}
+.admin-item.is-enabled:hover {
+  border-color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 12%, var(--card-bg));
+  box-shadow: 0 16px 36px color-mix(in srgb, var(--primary-strong) 20%, transparent), inset 0 0 0 1px color-mix(in srgb, var(--primary) 16%, transparent);
+}
+.admin-item.is-disabled {
+  border-color: var(--link-border);
+  background: var(--card-bg);
+  box-shadow: none;
+}
+[data-theme="dark"] .admin-item.is-enabled {
+  background: color-mix(in srgb, var(--primary) 6%, var(--card-bg));
 }
 .admin-item-top,
 .admin-item-options,
@@ -966,9 +1003,9 @@ svg { width: 21px; height: 21px; display: block; }
 .admin-visibility-button:hover { transform: translateY(-1px); }
 .admin-visibility-button b { font-size: .7rem; }
 .admin-visibility-button.is-visible {
-  color: #137f4d;
-  border-color: rgba(35,188,116,.28);
-  background: rgba(35,188,116,.11);
+  color: var(--primary-strong);
+  border-color: color-mix(in srgb, var(--primary) 32%, transparent);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
 }
 .admin-visibility-button.is-hidden {
   color: var(--muted);
@@ -1000,6 +1037,7 @@ svg { width: 21px; height: 21px; display: block; }
 .admin-switch b { color: var(--muted); font-size: .7rem; }
 .admin-error { margin: -4px 0 12px; color: #d64a4a; font-size: .74rem; }
 .admin-primary,
+.admin-server,
 .admin-secondary,
 .admin-danger {
   min-height: 42px;
@@ -1015,6 +1053,8 @@ svg { width: 21px; height: 21px; display: block; }
   font-weight: 800;
 }
 .admin-primary { color: white; background: linear-gradient(135deg, #ffa51f, #ee7814); }
+.admin-server { color: #fff; border: 1px solid color-mix(in srgb, var(--primary) 65%, transparent); background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 82%, #5f4100), var(--primary-strong)); box-shadow: 0 10px 24px color-mix(in srgb, var(--primary-strong) 18%, transparent); }
+.admin-server:disabled { opacity: .62; cursor: wait; }
 .admin-secondary { color: var(--text); border: 1px solid var(--link-border); background: var(--link-bg); }
 .admin-danger { color: #c93f3f; border: 1px solid rgba(201,63,63,.22); background: rgba(201,63,63,.08); }
 .admin-primary.wide { width: 100%; }
@@ -1263,4 +1303,24 @@ svg { width: 21px; height: 21px; display: block; }
   .order-row { grid-template-columns: 40px 26px minmax(0, 1fr) auto; min-height: 56px; }
   .order-row-actions button { width: 30px; height: 30px; }
   .order-modal-footer { padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+}
+
+html[data-card-border="hide"] .bio-card { border-color: transparent; }
+
+@media (max-width: 760px) {
+  body { background-attachment: scroll; }
+  .admin-item.is-enabled {
+    box-shadow: 0 9px 22px color-mix(in srgb, var(--primary-strong) 14%, transparent), inset 0 0 0 1px color-mix(in srgb, var(--primary) 10%, transparent);
+  }
+}
+
+.admin-server-note { margin-top: 12px; padding: 12px 14px; border: 1px solid color-mix(in srgb, var(--primary) 28%, var(--link-border)); border-radius: 13px; background: color-mix(in srgb, var(--primary) 7%, var(--link-bg)); color: var(--muted); font-size: 12px; line-height: 1.65; }
+.admin-server-note b { color: var(--text); }
+.admin-server-note code { color: var(--primary-strong); }
+
+@media (max-width: 720px) {
+  .admin-footer { align-items: stretch; gap: 9px; }
+  .admin-footer-right { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
+  .admin-footer-right .admin-primary { grid-column: 1 / -1; }
+  .admin-footer-right > button { width: 100%; }
 }

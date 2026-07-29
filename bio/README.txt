@@ -48,3 +48,23 @@ Nếu người xem tự chọn VI/JP/EN bằng nút ngôn ngữ, lựa chọn đ
 
 
 V12: “Nổi bật” chỉ hiện nơ/nhãn nhỏ đa ngôn ngữ cạnh tên liên kết; không tô vàng toàn bộ nút.
+
+CẬP NHẬT V13
+- Trong tab Icon liên kết và Icon bé, mục đang hiện có viền theo màu chủ đạo và nền nhạt trong toàn bộ khung chỉnh sửa.
+- Mục đang ẩn giữ khung trung tính, không có viền màu chủ đạo.
+- Cấu hình mới “Nền và khung trang” cho phép đổi màu nền ngoài, nền trong ở giao diện sáng/tối.
+- Có thể dùng ảnh PNG/WEBP/JPG/SVG thay cho màu nền ngoài hoặc nền trong.
+- Các đốm tròn trang trí ngoài nền mặc định được tắt và có thể bật lại.
+- Viền khung Bio lấy theo màu chủ đạo và có công tắc bật/tắt.
+
+
+=== LƯU TRỰC TIẾP TRÊN HOST PHP (V14) ===
+1. Tải toàn bộ thư mục lên host, giữ nguyên thư mục api và js.
+2. Host cần hỗ trợ PHP 7.4 trở lên.
+3. Đảm bảo PHP có quyền ghi file js/config.js và api/.admin-password.
+4. Mở trang, nhấn logo 5 lần, đăng nhập rồi chọn “Lưu lên máy chủ”.
+5. “Lưu & xem trước” chỉ lưu trên trình duyệt; “Tải config.js” là bản dự phòng.
+6. Nếu báo không có quyền ghi, đặt quyền thư mục js và api thành 755/775 tùy host; không nên dùng 777 nếu không cần.
+7. GitHub Pages không chạy PHP nên nút lưu máy chủ không dùng được trên GitHub Pages.
+
+Bảo mật: api/.htaccess chặn đọc file mật khẩu trên Apache. Với Nginx cần cấu hình chặn truy cập file bắt đầu bằng dấu chấm.
