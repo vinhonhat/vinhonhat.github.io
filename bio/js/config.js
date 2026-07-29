@@ -50,7 +50,7 @@ window.BIO_CONFIG = {
   },
   "admin": {
     "enabled": true,
-    "logoTapCount": 5,
+    "logoTapCount": 10,
     "tapTimeout": 2500,
     "storageKey": "vinh-bio-admin-config-v160",
     "passwordHash": "5f3c731b478c8292b603e6dec59aaa2626f6fcb3c6d5e97bc3a844b8dc4e279b",
