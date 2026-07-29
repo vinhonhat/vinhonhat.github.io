@@ -1,4 +1,4 @@
-/* Bio Link Admin V9 - chống chọn chữ và hiệu ứng chạm/nhấn giữ trên mobile */
+/* Bio Link Admin V10 - thêm popup sắp xếp kéo thả gọn */
 (() => {
   "use strict";
 
@@ -105,6 +105,7 @@
     "facebook": '<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3.5l.5-4h-4V7a1 1 0 0 1 1-1h3z"/>',
     "file-down": '<path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/>',
     "globe": '<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
+    "grip-vertical": '<circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/>',
     "image": '<rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/>',
     "lock": '<rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
     "mail": '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
@@ -223,6 +224,8 @@
 
   let config = loadConfig();
   let editorDraft = null;
+  let orderEditorType = "links";
+  let orderDragState = null;
 
   const media = (item, className, fallbackIcon = "globe") => {
     const fallback = icon(item?.icon || fallbackIcon);
@@ -652,6 +655,10 @@
     $$('[data-close-modal]').forEach(el => el.addEventListener("click", closeQrModal));
     document.addEventListener("keydown", event => {
       if (event.key === "Escape") {
+        if ($("#orderModal")?.classList.contains("open")) {
+          closeOrderModal();
+          return;
+        }
         closeQrModal();
         closeAdmin();
       }
@@ -808,14 +815,14 @@
 
           <div class="admin-panel hidden" data-admin-panel="links">
             <section class="admin-section">
-              <div class="admin-section-title"><div><h3>Icon liên kết lớn</h3><p>Sắp xếp bằng nút lên/xuống; bật hoặc ẩn từng mục. “Làm nổi bật” mới tạo nền vàng.</p></div><button id="addLinkButton" class="admin-secondary" type="button">${icon("plus", 17)} Thêm nút</button></div>
+              <div class="admin-section-title"><div><h3>Icon liên kết lớn</h3><p>Nhấn “Sắp xếp” để mở danh sách gọn và kéo một lần đến đúng vị trí.</p></div><div class="admin-section-actions"><button id="sortLinksButton" class="admin-secondary" type="button">${icon("grip-vertical", 17)} Sắp xếp</button><button id="addLinkButton" class="admin-secondary" type="button">${icon("plus", 17)} Thêm nút</button></div></div>
               <div id="adminLinks" class="admin-items"></div>
             </section>
           </div>
 
           <div class="admin-panel hidden" data-admin-panel="socials">
             <section class="admin-section">
-              <div class="admin-section-title"><div><h3>Icon bé dưới cùng</h3><p>Chọn icon lớn và sao chép một lần; sau đó vẫn chỉnh sửa từng ô bình thường.</p></div><button id="addSocialButton" class="admin-secondary" type="button">${icon("plus", 17)} Thêm icon</button></div>
+              <div class="admin-section-title"><div><h3>Icon bé dưới cùng</h3><p>Chọn icon lớn và sao chép một lần; dùng “Sắp xếp” để kéo nhanh trong bảng nhỏ.</p></div><div class="admin-section-actions"><button id="sortSocialsButton" class="admin-secondary" type="button">${icon("grip-vertical", 17)} Sắp xếp</button><button id="addSocialButton" class="admin-secondary" type="button">${icon("plus", 17)} Thêm icon</button></div></div>
               <div id="adminSocials" class="admin-items"></div>
             </section>
           </div>
@@ -828,6 +835,19 @@
           </div>
         </footer>
       </section>
+
+      <div id="orderModal" class="order-modal" aria-hidden="true">
+        <div class="order-modal-backdrop" data-order-close></div>
+        <section class="order-modal-card" role="dialog" aria-modal="true" aria-labelledby="orderModalTitle">
+          <header class="order-modal-header">
+            <div><span class="admin-kicker">THỨ TỰ HIỂN THỊ</span><h3 id="orderModalTitle">Sắp xếp liên kết</h3></div>
+            <button class="admin-close" type="button" data-order-close aria-label="Đóng">${icon("x")}</button>
+          </header>
+          <p class="order-modal-help">Giữ núm ${icon("grip-vertical", 16)} rồi kéo lên hoặc xuống. Có thể dùng mũi tên nếu không muốn kéo.</p>
+          <div id="orderList" class="order-list"></div>
+          <footer class="order-modal-footer"><button class="admin-primary" type="button" data-order-close>${icon("check", 17)} Xong</button></footer>
+        </section>
+      </div>
     </div>`;
 
   const setupAdmin = () => {
@@ -853,6 +873,13 @@
     $("#saveConfigButton").addEventListener("click", saveEditorConfig);
     $("#exportConfigButton").addEventListener("click", exportEditorConfig);
     $("#resetConfigButton").addEventListener("click", resetToSourceConfig);
+    $("#sortLinksButton").addEventListener("click", () => openOrderModal("links"));
+    $("#sortSocialsButton").addEventListener("click", () => openOrderModal("socials"));
+    $("#orderModal").addEventListener("click", handleOrderModalClick);
+    $("#orderList").addEventListener("pointerdown", handleOrderPointerDown);
+    document.addEventListener("pointermove", handleOrderPointerMove, { passive: false });
+    document.addEventListener("pointerup", handleOrderPointerEnd);
+    document.addEventListener("pointercancel", handleOrderPointerEnd);
     $("#addLinkButton").addEventListener("click", () => {
       collectEditorFields();
       editorDraft.links.push({ id: `link-${Date.now()}`, enabled: true, featured: false, icon: "globe", image: "", showIconBackground: true, title: "Liên kết mới", description: "", url: "https://", badge: "", translations: {} });
@@ -883,6 +910,122 @@
     $(".admin-body")?.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const getOrderList = () => orderEditorType === "links" ? editorDraft?.links || [] : editorDraft?.socialIcons || [];
+
+  const getOrderItemName = item => orderEditorType === "links"
+    ? (item.title || "Liên kết chưa đặt tên")
+    : (item.label || "Icon chưa đặt tên");
+
+  const renderOrderList = () => {
+    const container = $("#orderList");
+    if (!container) return;
+    const list = getOrderList();
+    container.innerHTML = list.map((item, index) => `
+      <div class="order-row" data-order-id="${escapeAttribute(item.id)}">
+        <button class="order-drag-handle" type="button" aria-label="Giữ và kéo ${escapeAttribute(getOrderItemName(item))}" title="Giữ và kéo">${icon("grip-vertical", 20)}</button>
+        <span class="order-position">${index + 1}</span>
+        <div class="order-row-info"><b>${escapeHtml(getOrderItemName(item))}</b><small>${item.enabled ? "Đang hiện" : "Đang ẩn"}</small></div>
+        <div class="order-row-actions">
+          <button type="button" data-order-action="up" title="Đưa lên" ${index === 0 ? "disabled" : ""}>${icon("chevron-up", 17)}</button>
+          <button type="button" data-order-action="down" title="Đưa xuống" ${index === list.length - 1 ? "disabled" : ""}>${icon("chevron-down", 17)}</button>
+        </div>
+      </div>`).join("") || '<p class="order-empty">Chưa có mục nào để sắp xếp.</p>';
+  };
+
+  const openOrderModal = type => {
+    collectEditorFields();
+    orderEditorType = type === "socials" ? "socials" : "links";
+    $("#orderModalTitle").textContent = orderEditorType === "links" ? "Sắp xếp icon liên kết" : "Sắp xếp icon bé dưới cùng";
+    renderOrderList();
+    const modal = $("#orderModal");
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+  };
+
+  const closeOrderModal = () => {
+    if (orderDragState) finishOrderDrag();
+    const modal = $("#orderModal");
+    if (!modal) return;
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+  };
+
+  const commitOrderFromDom = () => {
+    const list = getOrderList();
+    const byId = new Map(list.map(item => [String(item.id), item]));
+    const ordered = $$(".order-row", $("#orderList")).map(row => byId.get(row.dataset.orderId)).filter(Boolean);
+    if (ordered.length !== list.length) return;
+    if (orderEditorType === "links") editorDraft.links = ordered;
+    else editorDraft.socialIcons = ordered;
+    renderEditorItems(orderEditorType);
+    if (orderEditorType === "links") renderEditorItems("socials");
+  };
+
+  const moveOrderItem = (direction, row) => {
+    const list = getOrderList();
+    const index = list.findIndex(item => String(item.id) === row?.dataset.orderId);
+    if (index < 0) return;
+    const target = direction === "up" ? index - 1 : index + 1;
+    if (target < 0 || target >= list.length) return;
+    [list[index], list[target]] = [list[target], list[index]];
+    renderOrderList();
+    renderEditorItems(orderEditorType);
+    if (orderEditorType === "links") renderEditorItems("socials");
+  };
+
+  const handleOrderModalClick = event => {
+    if (event.target.closest("[data-order-close]")) {
+      closeOrderModal();
+      return;
+    }
+    const button = event.target.closest("[data-order-action]");
+    if (!button) return;
+    moveOrderItem(button.dataset.orderAction, button.closest(".order-row"));
+  };
+
+  const handleOrderPointerDown = event => {
+    const handle = event.target.closest(".order-drag-handle");
+    if (!handle || event.button > 0) return;
+    const row = handle.closest(".order-row");
+    if (!row) return;
+    event.preventDefault();
+    orderDragState = { pointerId: event.pointerId, handle, row, list: $("#orderList") };
+    row.classList.add("is-dragging");
+    handle.setPointerCapture?.(event.pointerId);
+  };
+
+  const handleOrderPointerMove = event => {
+    const state = orderDragState;
+    if (!state || event.pointerId !== state.pointerId) return;
+    event.preventDefault();
+    const rows = $$(".order-row:not(.is-dragging)", state.list);
+    const after = rows.find(row => event.clientY < row.getBoundingClientRect().top + row.getBoundingClientRect().height / 2);
+    if (after) state.list.insertBefore(state.row, after);
+    else state.list.appendChild(state.row);
+    const rect = state.list.getBoundingClientRect();
+    if (event.clientY < rect.top + 42) state.list.scrollTop -= 12;
+    if (event.clientY > rect.bottom - 42) state.list.scrollTop += 12;
+    $$(".order-row", state.list).forEach((row, index) => {
+      const position = $(".order-position", row);
+      if (position) position.textContent = String(index + 1);
+    });
+  };
+
+  const finishOrderDrag = () => {
+    const state = orderDragState;
+    if (!state) return;
+    state.row.classList.remove("is-dragging");
+    try { state.handle.releasePointerCapture?.(state.pointerId); } catch {}
+    orderDragState = null;
+    commitOrderFromDom();
+    renderOrderList();
+  };
+
+  const handleOrderPointerEnd = event => {
+    if (!orderDragState || event.pointerId !== orderDragState.pointerId) return;
+    finishOrderDrag();
+  };
+
   const openAdminLogin = () => {
     const overlay = $("#adminOverlay");
     overlay.classList.add("open");
@@ -897,6 +1040,7 @@
   };
 
   const closeAdmin = () => {
+    closeOrderModal();
     const overlay = $("#adminOverlay");
     if (!overlay) return;
     overlay.classList.remove("open");

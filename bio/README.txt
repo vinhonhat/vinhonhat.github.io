@@ -1,4 +1,4 @@
-BIO LINK ADMIN V8
+BIO LINK ADMIN V10
 
 - EN dùng cờ Anh (United Kingdom) và mã EN.
 - Icon bé: chọn icon lớn rồi nhấn “Đồng bộ ngay”.
@@ -23,3 +23,11 @@ CẬP NHẬT V9
 - Mobile: chạm nhanh chạy hiệu ứng khoảng nửa giây rồi mới mở link.
 - Mobile: chạm giữ khoảng 0,56 giây chỉ giữ trạng thái hiệu ứng, không mở link.
 - Vuốt để cuộn sẽ hủy thao tác chạm, không mở nhầm liên kết.
+
+
+CẬP NHẬT V10
+- Tab “Icon liên kết” và “Icon bé dưới cùng” có nút “Sắp xếp”.
+- Nhấn nút sẽ mở popup danh sách gọn chỉ gồm tên và trạng thái hiện/ẩn.
+- Giữ núm 6 chấm rồi kéo trực tiếp lên/xuống, dùng được cả chuột và cảm ứng.
+- Có thêm mũi tên lên/xuống làm phương án dự phòng.
+- Nhấn “Xong” đóng popup; thứ tự mới được giữ ngay trong bản chỉnh sửa và lưu vào config khi bấm “Lưu & xem trước” hoặc “Tải config.js”.

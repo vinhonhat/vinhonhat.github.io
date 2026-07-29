@@ -175,30 +175,6 @@ window.BIO_CONFIG = {
       }
     },
     {
-      "enabled": false,
-      "icon": "phone",
-      "title": "Số điện thoại",
-      "description": "Nhấn để gọi trực tiếp",
-      "url": "tel:+81XXXXXXXXXX",
-      "image": "assets/phone.webp",
-      "badge": "",
-      "featured": false,
-      "showIconBackground": false,
-      "id": "phone",
-      "translations": {
-        "ja": {
-          "title": "電話番号",
-          "description": "タップして直接電話",
-          "badge": ""
-        },
-        "en": {
-          "title": "Phone number",
-          "description": "Tap to call directly",
-          "badge": ""
-        }
-      }
-    },
-    {
       "enabled": true,
       "icon": "message-square",
       "title": "Zalo",
@@ -242,6 +218,54 @@ window.BIO_CONFIG = {
         "en": {
           "title": "LINE",
           "description": "Add or message me on LINE",
+          "badge": ""
+        }
+      }
+    },
+    {
+      "enabled": true,
+      "featured": false,
+      "icon": "globe",
+      "title": "Vinh ở Nhật",
+      "description": "Bài viết, hướng dẫn và tiện ích mới nhất",
+      "url": "https://vinhonhat.github.io/",
+      "badge": "",
+      "image": "assets/web.webp",
+      "showIconBackground": false,
+      "id": "website",
+      "translations": {
+        "ja": {
+          "title": "日本のVinh ウェブサイト",
+          "description": "最新記事、ガイド、便利なツール",
+          "badge": "おすすめ"
+        },
+        "en": {
+          "title": "Vinh in Japan Website",
+          "description": "Latest articles, guides, and useful tools",
+          "badge": "Featured"
+        }
+      }
+    },
+    {
+      "enabled": false,
+      "icon": "phone",
+      "title": "Số điện thoại",
+      "description": "Nhấn để gọi trực tiếp",
+      "url": "tel:+81XXXXXXXXXX",
+      "image": "assets/phone.webp",
+      "badge": "",
+      "featured": false,
+      "showIconBackground": false,
+      "id": "phone",
+      "translations": {
+        "ja": {
+          "title": "電話番号",
+          "description": "タップして直接電話",
+          "badge": ""
+        },
+        "en": {
+          "title": "Phone number",
+          "description": "Tap to call directly",
           "badge": ""
         }
       }
@@ -291,30 +315,6 @@ window.BIO_CONFIG = {
           "title": "Email",
           "description": "Send me an email",
           "badge": ""
-        }
-      }
-    },
-    {
-      "enabled": true,
-      "featured": false,
-      "icon": "globe",
-      "title": "Vinh ở Nhật",
-      "description": "Bài viết, hướng dẫn và tiện ích mới nhất",
-      "url": "https://vinhonhat.github.io/",
-      "badge": "",
-      "image": "",
-      "showIconBackground": true,
-      "id": "website",
-      "translations": {
-        "ja": {
-          "title": "日本のVinh ウェブサイト",
-          "description": "最新記事、ガイド、便利なツール",
-          "badge": "おすすめ"
-        },
-        "en": {
-          "title": "Vinh in Japan Website",
-          "description": "Latest articles, guides, and useful tools",
-          "badge": "Featured"
         }
       }
     },
