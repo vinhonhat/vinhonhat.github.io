@@ -60,7 +60,7 @@ window.BIO_CONFIG = {
     }
   },
   "settings": {
-    "defaultTheme": "light",
+    "defaultTheme": "auto",
     "showThemeButton": true,
     "showShareButton": true,
     "showQrButton": true,
