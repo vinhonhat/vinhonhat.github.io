@@ -43,39 +43,39 @@ window.BIO_CONFIG = {
       badge: "Nổi bật"
     },
     {
-      enabled: true,
+      enabled: false,
       icon: "book-open",
       title: "Bé Vui Học",
       description: "Kho trò chơi học tập dành cho bé",
       url: "https://vinhonhat.github.io/behoc/"
     },
     {
-      enabled: true,
+      enabled: false,
       icon: "download",
       title: "Tải công cụ miễn phí",
       description: "Phần mềm và công cụ do Vinh chia sẻ",
       url: "https://vinhonhat.github.io/#download"
     },
     {
-      enabled: false,
+      enabled: true,
       icon: "facebook",
       title: "Facebook",
       description: "Trang Facebook chính thức",
-      url: "https://facebook.com/THAY-LINK-CUA-ANH"
+      url: "https://facebook.com/tqv2022"
     },
     {
-      enabled: false,
+      enabled: true,
       icon: "message-circle",
       title: "Facebook Messenger",
       description: "Nhắn tin trực tiếp qua Messenger",
-      url: "https://m.me/THAY-TEN-NGUOI-DUNG"
+      url: "https://m.me/tqv2022"
     },
     {
-      enabled: false,
+      enabled: true,
       icon: "music-2",
       title: "TikTok",
       description: "Video ngắn và chia sẻ cuộc sống tại Nhật",
-      url: "https://www.tiktok.com/@THAY-TEN-TAI-KHOAN"
+      url: "https://www.tiktok.com/tqv2020"
     },
     {
       enabled: false,
@@ -92,18 +92,18 @@ window.BIO_CONFIG = {
       url: "tel:+81XXXXXXXXXX"
     },
     {
-      enabled: false,
+      enabled: true,
       icon: "message-square",
       title: "Zalo",
       description: "Liên hệ với tôi trên Zalo",
-      url: "https://zalo.me/84XXXXXXXXX"
+      url: "https://zalo.me/84966697926"
     },
     {
-      enabled: false,
+      enabled: true,
       icon: "message-circle-more",
       title: "LINE",
       description: "Kết bạn hoặc nhắn tin qua LINE",
-      url: "https://line.me/ti/p/~THAY-LINE-ID"
+      url: "https://line.me/ti/p/tqv0902"
     },
     {
       enabled: false,
