@@ -1,34 +1,62 @@
-/* Cấu hình Bio Link - Admin V5 */
+/* Cấu hình Bio Link - xuất từ bảng cài đặt */
 window.BIO_CONFIG = {
   "profile": {
     "name": "Vinh ở Nhật",
     "handle": "@vinhonhat",
     "bio": "Chia sẻ cuộc sống, công nghệ và những tiện ích hữu ích tại Nhật Bản.",
-    "avatar": "/img/logoQV.png",
+    "avatar": "img/logoQV.png",
     "footerText": "Vinh ở Nhật • Made with ❤️",
     "badges": [
       {
+        "enabled": true,
         "icon": "map-pin",
         "text": "Tokyo, Nhật Bản",
-        "enabled": true
+        "translations": {
+          "ja": {
+            "text": "東京、日本"
+          },
+          "en": {
+            "text": "Tokyo, Japan"
+          }
+        }
       },
       {
+        "enabled": true,
         "icon": "sparkles",
         "text": "Chia sẻ hữu ích",
-        "enabled": true
+        "translations": {
+          "ja": {
+            "text": "役立つ情報"
+          },
+          "en": {
+            "text": "Useful sharing"
+          }
+        }
       }
     ],
-    "favicon": "assets/favicon.png"
+    "favicon": "img/logoQV.png",
+    "translations": {
+      "ja": {
+        "name": "日本のVinh",
+        "bio": "日本での暮らし、テクノロジー、便利な情報を共有しています。",
+        "footerText": "日本のVinh • Made with ❤️"
+      },
+      "en": {
+        "name": "Vinh in Japan",
+        "bio": "Sharing life in Japan, technology, and useful tools.",
+        "footerText": "Vinh in Japan • Made with ❤️"
+      }
+    }
   },
   "admin": {
     "enabled": true,
     "logoTapCount": 5,
     "tapTimeout": 2500,
-    "storageKey": "vinh-bio-admin-config-v5",
+    "storageKey": "vinh-bio-admin-config-v7",
     "passwordHash": "5f3c731b478c8292b603e6dec59aaa2626f6fcb3c6d5e97bc3a844b8dc4e279b"
   },
   "settings": {
-    "defaultTheme": "auto",
+    "defaultTheme": "light",
     "showThemeButton": true,
     "showShareButton": true,
     "showQrButton": true,
@@ -37,10 +65,18 @@ window.BIO_CONFIG = {
     "announcement": {
       "enabled": false,
       "icon": "bell",
-      "text": "Nội dung thông báo mới sẽ hiển thị ở đây."
+      "text": "Nội dung thông báo mới sẽ hiển thị ở đây.",
+      "translations": {
+        "ja": {
+          "text": ""
+        },
+        "en": {
+          "text": ""
+        }
+      }
     },
     "layout": {
-      "mobileColumns": 1,
+      "mobileColumns": 2,
       "tabletColumns": 2,
       "desktopColumns": 2
     },
@@ -58,7 +94,12 @@ window.BIO_CONFIG = {
       "footerFontSize": 12
     },
     "showLanguageButton": true,
-    "defaultLanguage": "vi"
+    "defaultLanguage": "vi",
+    "languageFlags": {
+      "vi": "assets/flag-vi.svg",
+      "ja": "assets/flag-ja.svg",
+      "en": "assets/flag-en.svg"
+    }
   },
   "links": [
     {
@@ -70,7 +111,20 @@ window.BIO_CONFIG = {
       "image": "assets/fb.webp",
       "badge": "",
       "featured": false,
-      "showIconBackground": false
+      "showIconBackground": false,
+      "id": "facebook",
+      "translations": {
+        "ja": {
+          "title": "Facebook",
+          "description": "公式Facebookページ",
+          "badge": ""
+        },
+        "en": {
+          "title": "Facebook",
+          "description": "Official Facebook page",
+          "badge": ""
+        }
+      }
     },
     {
       "enabled": true,
@@ -81,18 +135,44 @@ window.BIO_CONFIG = {
       "image": "assets/mess.webp",
       "badge": "",
       "featured": false,
-      "showIconBackground": false
+      "showIconBackground": false,
+      "id": "messenger",
+      "translations": {
+        "ja": {
+          "title": "Messenger",
+          "description": "Messengerで直接メッセージ",
+          "badge": ""
+        },
+        "en": {
+          "title": "Messenger",
+          "description": "Message me directly on Messenger",
+          "badge": ""
+        }
+      }
     },
     {
       "enabled": true,
       "icon": "music-2",
       "title": "TikTok",
       "description": "Video ngắn và chia sẻ cuộc sống tại Nhật",
-      "url": "https://www.tiktok.com/tqv2020",
+      "url": "https://www.tiktok.com/@tqv2020?_r=1&_t=ZS-98QazQnE1p9",
       "image": "assets/tiktok.webp",
       "badge": "",
       "featured": false,
-      "showIconBackground": false
+      "showIconBackground": false,
+      "id": "tiktok",
+      "translations": {
+        "ja": {
+          "title": "TikTok",
+          "description": "日本での暮らしとショート動画",
+          "badge": ""
+        },
+        "en": {
+          "title": "TikTok",
+          "description": "Short videos and life in Japan",
+          "badge": ""
+        }
+      }
     },
     {
       "enabled": false,
@@ -103,7 +183,20 @@ window.BIO_CONFIG = {
       "image": "assets/phone.webp",
       "badge": "",
       "featured": false,
-      "showIconBackground": false
+      "showIconBackground": false,
+      "id": "phone",
+      "translations": {
+        "ja": {
+          "title": "電話番号",
+          "description": "タップして直接電話",
+          "badge": ""
+        },
+        "en": {
+          "title": "Phone number",
+          "description": "Tap to call directly",
+          "badge": ""
+        }
+      }
     },
     {
       "enabled": true,
@@ -114,18 +207,44 @@ window.BIO_CONFIG = {
       "image": "assets/zalo.webp",
       "badge": "",
       "featured": false,
-      "showIconBackground": false
+      "showIconBackground": false,
+      "id": "zalo",
+      "translations": {
+        "ja": {
+          "title": "Zalo",
+          "description": "Zaloで連絡する",
+          "badge": ""
+        },
+        "en": {
+          "title": "Zalo",
+          "description": "Contact me on Zalo",
+          "badge": ""
+        }
+      }
     },
     {
       "enabled": true,
       "icon": "message-circle-more",
       "title": "LINE",
       "description": "Kết bạn hoặc nhắn tin qua LINE",
-      "url": "https://line.me/ti/p/tqv0902",
+      "url": "https://line.me/ti/p/VNcwANYxzU",
       "image": "assets/line.webp",
       "badge": "",
       "featured": false,
-      "showIconBackground": false
+      "showIconBackground": false,
+      "id": "line",
+      "translations": {
+        "ja": {
+          "title": "LINE",
+          "description": "LINEで友だち追加・メッセージ",
+          "badge": ""
+        },
+        "en": {
+          "title": "LINE",
+          "description": "Add or message me on LINE",
+          "badge": ""
+        }
+      }
     },
     {
       "enabled": false,
@@ -136,7 +255,20 @@ window.BIO_CONFIG = {
       "image": "assets/youtobe.webp",
       "badge": "",
       "featured": false,
-      "showIconBackground": false
+      "showIconBackground": false,
+      "id": "youtube",
+      "translations": {
+        "ja": {
+          "title": "YouTube",
+          "description": "ガイド動画と体験",
+          "badge": ""
+        },
+        "en": {
+          "title": "YouTube",
+          "description": "Tutorials and experience videos",
+          "badge": ""
+        }
+      }
     },
     {
       "enabled": false,
@@ -147,7 +279,20 @@ window.BIO_CONFIG = {
       "image": "assets/gmail.webp",
       "badge": "",
       "featured": false,
-      "showIconBackground": false
+      "showIconBackground": false,
+      "id": "email",
+      "translations": {
+        "ja": {
+          "title": "メール",
+          "description": "メールで問い合わせる",
+          "badge": ""
+        },
+        "en": {
+          "title": "Email",
+          "description": "Send me an email",
+          "badge": ""
+        }
+      }
     },
     {
       "enabled": true,
@@ -157,8 +302,21 @@ window.BIO_CONFIG = {
       "description": "Bài viết, hướng dẫn và tiện ích mới nhất",
       "url": "https://vinhonhat.github.io/",
       "badge": "Nổi bật",
-      "image": "",
-      "showIconBackground": true
+      "image": "assets/web.webp",
+      "showIconBackground": false,
+      "id": "website",
+      "translations": {
+        "ja": {
+          "title": "日本のVinh ウェブサイト",
+          "description": "最新記事、ガイド、便利なツール",
+          "badge": "おすすめ"
+        },
+        "en": {
+          "title": "Vinh in Japan Website",
+          "description": "Latest articles, guides, and useful tools",
+          "badge": "Featured"
+        }
+      }
     },
     {
       "enabled": false,
@@ -169,7 +327,20 @@ window.BIO_CONFIG = {
       "image": "",
       "badge": "",
       "featured": false,
-      "showIconBackground": true
+      "showIconBackground": true,
+      "id": "address",
+      "translations": {
+        "ja": {
+          "title": "店舗住所",
+          "description": "Googleマップで経路を開く",
+          "badge": ""
+        },
+        "en": {
+          "title": "Store address",
+          "description": "Open directions in Google Maps",
+          "badge": ""
+        }
+      }
     },
     {
       "enabled": false,
@@ -180,7 +351,20 @@ window.BIO_CONFIG = {
       "image": "",
       "badge": "",
       "featured": false,
-      "showIconBackground": true
+      "showIconBackground": true,
+      "id": "kids-learning",
+      "translations": {
+        "ja": {
+          "title": "楽しく学ぼう",
+          "description": "子ども向け学習ゲーム",
+          "badge": ""
+        },
+        "en": {
+          "title": "Fun Learning for Kids",
+          "description": "Learning games for children",
+          "badge": ""
+        }
+      }
     },
     {
       "enabled": false,
@@ -191,57 +375,155 @@ window.BIO_CONFIG = {
       "image": "",
       "badge": "",
       "featured": false,
-      "showIconBackground": true
+      "showIconBackground": true,
+      "id": "downloads",
+      "translations": {
+        "ja": {
+          "title": "無料ツール",
+          "description": "Vinhが共有するソフトウェアとツール",
+          "badge": ""
+        },
+        "en": {
+          "title": "Free downloads",
+          "description": "Software and tools shared by Vinh",
+          "badge": ""
+        }
+      }
     }
   ],
   "socialIcons": [
     {
-      "enabled": false,
+      "enabled": true,
       "icon": "facebook",
       "label": "Facebook",
-      "url": "https://facebook.com/THAY-LINK-CUA-ANH",
+      "url": "https://facebook.com/tqv2022",
       "image": "",
-      "showIconBackground": true
+      "showIconBackground": false,
+      "id": "social-1",
+      "syncFromLink": false,
+      "sourceLinkId": "facebook",
+      "translations": {
+        "ja": {
+          "label": "Facebook"
+        },
+        "en": {
+          "label": "Facebook"
+        }
+      }
     },
     {
-      "enabled": false,
+      "id": "social-1785302854188",
+      "enabled": true,
+      "syncFromLink": false,
+      "sourceLinkId": "messenger",
+      "icon": "message-circle",
+      "image": "",
+      "showIconBackground": false,
+      "label": "Messenger",
+      "url": "https://m.me/tqv2022",
+      "translations": {
+        "ja": {
+          "label": "Messenger"
+        },
+        "en": {
+          "label": "Messenger"
+        }
+      }
+    },
+    {
+      "enabled": true,
       "icon": "music-2",
       "label": "TikTok",
-      "url": "https://www.tiktok.com/@THAY-TEN-TAI-KHOAN",
+      "url": "https://www.tiktok.com/@tqv2020?_r=1&_t=ZS-98QazQnE1p9",
       "image": "",
-      "showIconBackground": true
+      "showIconBackground": false,
+      "id": "social-2",
+      "syncFromLink": false,
+      "sourceLinkId": "tiktok",
+      "translations": {
+        "ja": {
+          "label": "TikTok"
+        },
+        "en": {
+          "label": "TikTok"
+        }
+      }
     },
     {
       "enabled": false,
       "icon": "youtube",
       "label": "YouTube",
       "url": "https://youtube.com/@THAY-KENH-CUA-ANH",
-      "image": "",
-      "showIconBackground": true
+      "image": "assets/youtobe.webp",
+      "showIconBackground": false,
+      "id": "social-3",
+      "syncFromLink": false,
+      "sourceLinkId": "youtube",
+      "translations": {
+        "ja": {
+          "label": "YouTube"
+        },
+        "en": {
+          "label": "YouTube"
+        }
+      }
     },
     {
-      "enabled": false,
+      "enabled": true,
       "icon": "message-square",
       "label": "Zalo",
-      "url": "https://zalo.me/84XXXXXXXXX",
+      "url": "https://zalo.me/84966697926",
       "image": "",
-      "showIconBackground": true
+      "showIconBackground": false,
+      "id": "social-4",
+      "syncFromLink": false,
+      "sourceLinkId": "zalo",
+      "translations": {
+        "ja": {
+          "label": "Zalo"
+        },
+        "en": {
+          "label": "Zalo"
+        }
+      }
     },
     {
-      "enabled": false,
+      "enabled": true,
       "icon": "message-circle-more",
       "label": "LINE",
-      "url": "https://line.me/ti/p/~THAY-LINE-ID",
+      "url": "https://line.me/ti/p/VNcwANYxzU",
       "image": "",
-      "showIconBackground": true
+      "showIconBackground": false,
+      "id": "social-5",
+      "syncFromLink": false,
+      "sourceLinkId": "line",
+      "translations": {
+        "ja": {
+          "label": "LINE"
+        },
+        "en": {
+          "label": "LINE"
+        }
+      }
     },
     {
       "enabled": false,
       "icon": "mail",
       "label": "Email",
       "url": "mailto:email@example.com",
-      "image": "",
-      "showIconBackground": true
+      "image": "assets/gmail.webp",
+      "showIconBackground": false,
+      "id": "social-6",
+      "syncFromLink": false,
+      "sourceLinkId": "email",
+      "translations": {
+        "ja": {
+          "label": "メール"
+        },
+        "en": {
+          "label": "Email"
+        }
+      }
     }
   ]
 };

@@ -29,11 +29,13 @@
     <section class="bio-card" aria-labelledby="profile-name">
       <div class="top-actions">
         <div class="language-control">
-          <button class="icon-button language-button" id="languageButton" type="button" aria-label="Đổi ngôn ngữ" title="Đổi ngôn ngữ"><span id="languageFlag" aria-hidden="true">🇻🇳</span></button>
+          <button class="icon-button language-button" id="languageButton" type="button" aria-label="Đổi ngôn ngữ" title="Đổi ngôn ngữ">
+            <img id="languageFlag" src="assets/flag-vi.svg" alt="VI" />
+          </button>
           <div id="languageMenu" class="language-menu hidden" role="menu" aria-label="Chọn ngôn ngữ">
-            <button type="button" data-language="vi" role="menuitem"><span>🇻🇳</span><b>Tiếng Việt</b></button>
-            <button type="button" data-language="ja" role="menuitem"><span>🇯🇵</span><b>日本語</b></button>
-            <button type="button" data-language="en" role="menuitem"><span>🇬🇧</span><b>English</b></button>
+            <button type="button" data-language="vi" role="menuitem" aria-label="Tiếng Việt" title="Tiếng Việt"><img src="assets/flag-vi.svg" alt="VI" /><b>VI</b></button>
+            <button type="button" data-language="ja" role="menuitem" aria-label="日本語" title="日本語"><img src="assets/flag-ja.svg" alt="JP" /><b>JP</b></button>
+            <button type="button" data-language="en" role="menuitem" aria-label="English" title="English"><img src="assets/flag-en.svg" alt="EN" /><b>EN</b></button>
           </div>
         </div>
         <button class="icon-button" id="themeButton" type="button" aria-label="Đổi giao diện" title="Đổi giao diện"></button>

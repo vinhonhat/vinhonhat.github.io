@@ -1,4 +1,4 @@
-/* Bio Link Admin V5 - tab cài đặt, huy hiệu, giao diện và đa ngôn ngữ */
+/* Bio Link Admin V7 - cờ Anh cho EN và sao chép icon bé một lần */
 (() => {
   "use strict";
 
@@ -22,9 +22,9 @@
   };
 
   const I18N = {
-    vi: { flag: "🇻🇳", language: "Đổi ngôn ngữ", themeLight: "Chuyển sang giao diện sáng", themeDark: "Chuyển sang giao diện tối", share: "Chia sẻ trang", connect: "Kết nối với tôi", qr: "Mã QR", qrTitle: "Chia sẻ trang Bio", qrDescription: "Quét mã QR hoặc sao chép đường dẫn để mở nhanh trang này.", copy: "Sao chép liên kết", copied: "Đã sao chép liên kết", shareError: "Không thể chia sẻ lúc này", qrAlt: "Mã QR dẫn đến trang Bio" },
-    ja: { flag: "🇯🇵", language: "言語を変更", themeLight: "ライトモードに切り替え", themeDark: "ダークモードに切り替え", share: "ページを共有", connect: "リンク一覧", qr: "QRコード", qrTitle: "Bioページを共有", qrDescription: "QRコードを読み取るか、リンクをコピーしてこのページを開けます。", copy: "リンクをコピー", copied: "リンクをコピーしました", shareError: "現在共有できません", qrAlt: "BioページのQRコード" },
-    en: { flag: "🇬🇧", language: "Change language", themeLight: "Switch to light mode", themeDark: "Switch to dark mode", share: "Share page", connect: "Connect with me", qr: "QR code", qrTitle: "Share Bio page", qrDescription: "Scan the QR code or copy the link to open this page.", copy: "Copy link", copied: "Link copied", shareError: "Unable to share right now", qrAlt: "QR code for this Bio page" }
+    vi: { code: "VI", flag: "assets/flag-vi.svg", language: "Đổi ngôn ngữ", themeLight: "Chuyển sang giao diện sáng", themeDark: "Chuyển sang giao diện tối", share: "Chia sẻ trang", connect: "Kết nối với tôi", qr: "Mã QR", qrTitle: "Chia sẻ trang Bio", qrDescription: "Quét mã QR hoặc sao chép đường dẫn để mở nhanh trang này.", copy: "Sao chép liên kết", copied: "Đã sao chép liên kết", shareError: "Không thể chia sẻ lúc này", qrAlt: "Mã QR dẫn đến trang Bio" },
+    ja: { code: "JP", flag: "assets/flag-ja.svg", language: "言語を変更", themeLight: "ライトモードに切り替え", themeDark: "ダークモードに切り替え", share: "ページを共有", connect: "リンク一覧", qr: "QRコード", qrTitle: "Bioページを共有", qrDescription: "QRコードを読み取るか、リンクをコピーしてこのページを開けます。", copy: "リンクをコピー", copied: "リンクをコピーしました", shareError: "現在共有できません", qrAlt: "BioページのQRコード" },
+    en: { code: "EN", flag: "assets/flag-en.svg", language: "Change language", themeLight: "Switch to light mode", themeDark: "Switch to dark mode", share: "Share page", connect: "Connect with me", qr: "QR code", qrTitle: "Share Bio page", qrDescription: "Scan the QR code or copy the link to open this page.", copy: "Copy link", copied: "Link copied", shareError: "Unable to share right now", qrAlt: "QR code for this Bio page" }
   };
   let currentLanguage = "vi";
 
@@ -37,7 +37,11 @@
     cfg.profile.favicon ||= "assets/favicon.png";
     cfg.profile.badges = Array.isArray(cfg.profile.badges) ? cfg.profile.badges : [];
     while (cfg.profile.badges.length < 2) cfg.profile.badges.push({ enabled: true, icon: "sparkles", text: "" });
-    cfg.profile.badges.forEach(item => { if (typeof item.enabled !== "boolean") item.enabled = true; });
+    cfg.profile.translations ||= {};
+    cfg.profile.badges.forEach(item => {
+      if (typeof item.enabled !== "boolean") item.enabled = true;
+      item.translations ||= {};
+    });
     cfg.admin ||= {};
     cfg.settings ||= {};
     cfg.settings.defaultTheme = ["auto", "light", "dark"].includes(cfg.settings.defaultTheme) ? cfg.settings.defaultTheme : "auto";
@@ -51,14 +55,40 @@
     cfg.settings.layout.desktopColumns = clampColumns(cfg.settings.layout.desktopColumns);
     cfg.links = Array.isArray(cfg.links) ? cfg.links : [];
     cfg.socialIcons = Array.isArray(cfg.socialIcons) ? cfg.socialIcons : [];
-    [...cfg.links, ...cfg.socialIcons].forEach(item => {
+    const usedLinkIds = new Set();
+    cfg.links.forEach((item, index) => {
+      let candidate = String(item.id || `link-${index + 1}`).trim() || `link-${index + 1}`;
+      while (usedLinkIds.has(candidate)) candidate = `${candidate}-${index + 1}`;
+      item.id = candidate;
+      usedLinkIds.add(candidate);
+      item.translations ||= {};
+      if (typeof item.showIconBackground !== "boolean") item.showIconBackground = !item.image;
+    });
+    cfg.socialIcons.forEach((item, index) => {
+      item.id ||= `social-${index + 1}`;
+      item.translations ||= {};
+      item.sourceLinkId ||= "";
+      const legacySource = item.syncFromLink ? cfg.links.find(link => link.id === item.sourceLinkId) : null;
+      if (legacySource) {
+        item.label = legacySource.title || item.label || "Liên kết";
+        item.url = legacySource.url || item.url || "#";
+        item.icon = legacySource.icon || item.icon || "globe";
+        item.image = legacySource.image || "";
+        item.showIconBackground = typeof legacySource.showIconBackground === "boolean" ? legacySource.showIconBackground : !legacySource.image;
+        ["ja", "en"].forEach(language => {
+          item.translations[language] ||= {};
+          item.translations[language].label = legacySource.translations?.[language]?.title || legacySource.title || item.label;
+        });
+      }
+      // V7 chỉ sao chép một lần; không khóa trường và không phụ thuộc liên tục vào icon lớn.
+      item.syncFromLink = false;
       if (typeof item.showIconBackground !== "boolean") item.showIconBackground = !item.image;
     });
     return cfg;
   };
 
   const sourceConfig = normalizeConfig(window.BIO_CONFIG || {});
-  const storageKey = sourceConfig.admin?.storageKey || "vinh-bio-admin-config-v2";
+  const storageKey = sourceConfig.admin?.storageKey || "vinh-bio-admin-config-v7";
 
   const ICONS = {
     "arrow-up-right": '<path d="M7 17 17 7"/><path d="M7 7h10v10"/>',
@@ -107,6 +137,34 @@
     "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#039;", '"': "&quot;"
   })[char]);
   const escapeAttribute = escapeHtml;
+
+  const localizedValue = (item, field, fallback = "") => {
+    const translated = item?.translations?.[currentLanguage]?.[field];
+    if (currentLanguage !== "vi" && typeof translated === "string" && translated.trim()) return translated;
+    const original = item?.[field];
+    return typeof original === "string" && original.trim() ? original : fallback;
+  };
+
+  const findSourceLink = (sourceLinkId, list = config.links || []) => list.find(link => link.id === sourceLinkId) || null;
+
+  const copySocialFromLink = (target, source) => {
+    if (!target || !source) return false;
+    target.sourceLinkId = source.id || "";
+    target.label = source.title || target.label || "Liên kết";
+    target.url = source.url || target.url || "#";
+    target.icon = source.icon || target.icon || "globe";
+    target.image = source.image || "";
+    target.showIconBackground = typeof source.showIconBackground === "boolean" ? source.showIconBackground : !source.image;
+    target.translations ||= {};
+    ["ja", "en"].forEach(language => {
+      target.translations[language] ||= {};
+      target.translations[language].label = source.translations?.[language]?.title || source.title || target.label;
+    });
+    target.syncFromLink = false;
+    return true;
+  };
+
+  const resolveSocialItem = item => ({ ...item, label: localizedValue(item, "label", "Liên kết") });
 
   const safeStorageGet = key => {
     try { return localStorage.getItem(key); } catch { return null; }
@@ -157,12 +215,15 @@
 
   const applyProfile = () => {
     const profile = config.profile || {};
-    $("#profileName").textContent = profile.name || "Bio Link";
+    const name = localizedValue(profile, "name", "Bio Link");
+    const bio = localizedValue(profile, "bio", "");
+    const footer = localizedValue(profile, "footerText", name);
+    $("#profileName").textContent = name;
     $("#profileHandle").textContent = profile.handle || "";
-    $("#profileBio").textContent = profile.bio || "";
-    $("#footerText").textContent = profile.footerText || profile.name || "Bio Link";
+    $("#profileBio").textContent = bio;
+    $("#footerText").textContent = footer;
     if (profile.avatar) $("#profileAvatar").src = profile.avatar;
-    document.title = `${profile.name || "Bio Link"} | Bio Link`;
+    document.title = `${name} | Bio Link`;
 
     const favicon = profile.favicon || profile.avatar || "assets/favicon.png";
     const faviconLink = $("#faviconLink");
@@ -170,9 +231,11 @@
     if (faviconLink) faviconLink.href = favicon;
     if (appleIcon) appleIcon.href = favicon;
 
-    const badges = Array.isArray(profile.badges) ? profile.badges.filter(item => item.enabled !== false && item.text) : [];
+    const badges = Array.isArray(profile.badges)
+      ? profile.badges.filter(item => item.enabled !== false && localizedValue(item, "text", ""))
+      : [];
     $("#profileBadges").innerHTML = badges.map(item => `
-      <span class="badge">${icon(item.icon, 15)}<span>${escapeHtml(item.text)}</span></span>
+      <span class="badge">${icon(item.icon, 15)}<span>${escapeHtml(localizedValue(item, "text", ""))}</span></span>
     `).join("");
   };
 
@@ -210,14 +273,17 @@
     const target = config.settings?.openLinksInNewTab ? 'target="_blank" rel="noopener noreferrer"' : "";
     const container = $("#linksContainer");
     container.innerHTML = links.map(item => {
+      const title = localizedValue(item, "title", "Liên kết");
+      const description = localizedValue(item, "description", "");
+      const badge = localizedValue(item, "badge", "");
       const hasImage = !!item.image;
       const showBackground = typeof item.showIconBackground === "boolean" ? item.showIconBackground : !hasImage;
       return `
       <a class="link-card${item.featured ? " featured" : ""}" href="${escapeAttribute(item.url || "#")}" ${target}>
         <span class="link-icon${hasImage ? " has-image" : ""}${showBackground ? " with-bg" : " no-bg"}">${media(item, "link-image")}</span>
         <span class="link-copy">
-          <span class="link-title">${escapeHtml(item.title)}${item.badge ? `<span class="tag-new">${escapeHtml(item.badge)}</span>` : ""}</span>
-          ${item.description ? `<span class="link-description">${escapeHtml(item.description)}</span>` : ""}
+          <span class="link-title">${escapeHtml(title)}${badge ? `<span class="tag-new">${escapeHtml(badge)}</span>` : ""}</span>
+          ${description ? `<span class="link-description">${escapeHtml(description)}</span>` : ""}
         </span>
         <span class="link-arrow">${icon("arrow-up-right", 19)}</span>
       </a>`;
@@ -226,7 +292,7 @@
   };
 
   const renderSocials = () => {
-    const socials = (config.socialIcons || []).filter(item => item.enabled);
+    const socials = (config.socialIcons || []).filter(item => item.enabled).map(item => resolveSocialItem(item));
     const section = $("#socialSection");
     section.classList.toggle("hidden", !socials.length);
     if (!socials.length) {
@@ -245,9 +311,10 @@
 
   const renderAnnouncement = () => {
     const item = config.settings?.announcement;
+    const text = localizedValue(item, "text", "");
     const el = $("#announcement");
-    el.classList.toggle("hidden", !item?.enabled || !item?.text);
-    el.innerHTML = item?.enabled && item?.text ? `${icon(item.icon || "bell", 18)}<span>${escapeHtml(item.text)}</span>` : "";
+    el.classList.toggle("hidden", !item?.enabled || !text);
+    el.innerHTML = item?.enabled && text ? `${icon(item.icon || "bell", 18)}<span>${escapeHtml(text)}</span>` : "";
   };
 
   const renderAll = () => {
@@ -278,7 +345,11 @@
     const text = I18N[currentLanguage] || I18N.vi;
     document.documentElement.lang = currentLanguage;
     const flag = $("#languageFlag");
-    if (flag) flag.textContent = text.flag;
+    const flagPath = config.settings?.languageFlags?.[currentLanguage] || text.flag;
+    if (flag) {
+      flag.src = flagPath;
+      flag.alt = text.code;
+    }
     const languageButton = $("#languageButton");
     if (languageButton) { languageButton.title = text.language; languageButton.setAttribute("aria-label", text.language); }
     const themeButton = $("#themeButton");
@@ -306,7 +377,7 @@
     currentLanguage = ["vi", "ja", "en"].includes(language) ? language : "vi";
     safeStorageSet("bio-language", currentLanguage);
     $("#languageMenu")?.classList.add("hidden");
-    applyLanguage();
+    renderAll();
   };
 
   const setTheme = theme => {
@@ -450,6 +521,23 @@
                 <label class="admin-upload">${icon("image", 18)} Chọn icon tab<input id="faviconUpload" type="file" accept="image/png,image/webp,image/x-icon,image/svg+xml" /></label>
               </div>
               <p class="admin-help">Ảnh PNG/WEBP trong suốt sẽ giữ nền trong suốt. Nên chép ảnh vào thư mục <b>assets</b> rồi nhập đường dẫn để file nhẹ.</p>
+              <details class="admin-translation-box">
+                <summary>${icon("globe", 16)} Nội dung tiếng Nhật và tiếng Anh</summary>
+                <div class="admin-translation-content">
+                  <p class="admin-language-title"><img src="assets/flag-ja.svg" alt="JP" /> JP — 日本語</p>
+                  <div class="admin-grid two">
+                    <label class="admin-field"><span>Tên hiển thị JP</span><input id="editNameJa" type="text" /></label>
+                    <label class="admin-field"><span>Chữ cuối trang JP</span><input id="editFooterJa" type="text" /></label>
+                  </div>
+                  <label class="admin-field"><span>Mô tả JP</span><textarea id="editBioJa" rows="2"></textarea></label>
+                  <p class="admin-language-title"><img src="assets/flag-en.svg" alt="EN" /> EN — English</p>
+                  <div class="admin-grid two">
+                    <label class="admin-field"><span>Tên hiển thị EN</span><input id="editNameEn" type="text" /></label>
+                    <label class="admin-field"><span>Chữ cuối trang EN</span><input id="editFooterEn" type="text" /></label>
+                  </div>
+                  <label class="admin-field"><span>Mô tả EN</span><textarea id="editBioEn" rows="2"></textarea></label>
+                </div>
+              </details>
             </section>
 
             <section class="admin-section">
@@ -459,11 +547,15 @@
                   <label class="admin-switch"><input id="editLocationBadgeEnabled" type="checkbox" /><span></span><b>Hiện địa chỉ</b></label>
                   <label class="admin-field"><span>Nội dung địa chỉ</span><input id="editLocationBadgeText" type="text" placeholder="Tokyo, Nhật Bản" /></label>
                   <label class="admin-field"><span>Icon</span><input id="editLocationBadgeIcon" type="text" placeholder="map-pin" /></label>
+                  <label class="admin-field"><span>Địa chỉ JP</span><input id="editLocationBadgeTextJa" type="text" placeholder="東京、日本" /></label>
+                  <label class="admin-field"><span>Địa chỉ EN</span><input id="editLocationBadgeTextEn" type="text" placeholder="Tokyo, Japan" /></label>
                 </div>
                 <div class="admin-badge-row">
                   <label class="admin-switch"><input id="editUsefulBadgeEnabled" type="checkbox" /><span></span><b>Hiện “Chia sẻ hữu ích”</b></label>
                   <label class="admin-field"><span>Nội dung nhãn</span><input id="editUsefulBadgeText" type="text" placeholder="Chia sẻ hữu ích" /></label>
                   <label class="admin-field"><span>Icon</span><input id="editUsefulBadgeIcon" type="text" placeholder="sparkles" /></label>
+                  <label class="admin-field"><span>Nhãn JP</span><input id="editUsefulBadgeTextJa" type="text" placeholder="役立つ情報" /></label>
+                  <label class="admin-field"><span>Nhãn EN</span><input id="editUsefulBadgeTextEn" type="text" placeholder="Useful sharing" /></label>
                 </div>
               </div>
             </section>
@@ -472,7 +564,7 @@
               <h3>Giao diện, ngôn ngữ và nút</h3>
               <div class="admin-grid two">
                 <label class="admin-field"><span>Giao diện mặc định</span><select id="editDefaultTheme"><option value="auto">Theo hệ thống</option><option value="light">Luôn sáng</option><option value="dark">Luôn tối</option></select></label>
-                <label class="admin-field"><span>Ngôn ngữ mặc định</span><select id="editDefaultLanguage"><option value="vi">🇻🇳 Tiếng Việt</option><option value="ja">🇯🇵 日本語</option><option value="en">🇬🇧 English</option></select></label>
+                <label class="admin-field"><span>Ngôn ngữ mặc định</span><select id="editDefaultLanguage"><option value="vi">VI — Tiếng Việt</option><option value="ja">JP — 日本語</option><option value="en">EN — English</option></select></label>
               </div>
               <div class="admin-checks">
                 <label><input id="editThemeButton" type="checkbox" /> Hiện nút sáng/tối</label>
@@ -482,7 +574,11 @@
                 <label><input id="editNewTab" type="checkbox" /> Mở liên kết ở tab mới</label>
                 <label><input id="editAnnouncementEnabled" type="checkbox" /> Hiện thông báo</label>
               </div>
-              <label class="admin-field"><span>Nội dung thông báo</span><input id="editAnnouncementText" type="text" /></label>
+              <label class="admin-field"><span>Nội dung thông báo VI</span><input id="editAnnouncementText" type="text" /></label>
+              <div class="admin-grid two">
+                <label class="admin-field"><span>Thông báo JP</span><input id="editAnnouncementTextJa" type="text" /></label>
+                <label class="admin-field"><span>Thông báo EN</span><input id="editAnnouncementTextEn" type="text" /></label>
+              </div>
             </section>
 
             <section class="admin-section">
@@ -532,7 +628,7 @@
 
           <div class="admin-panel hidden" data-admin-panel="socials">
             <section class="admin-section">
-              <div class="admin-section-title"><div><h3>Icon bé dưới cùng</h3><p>Hàng icon nhỏ bên dưới các nút liên kết. Bật/ẩn từng icon không ảnh hưởng bảng cài đặt.</p></div><button id="addSocialButton" class="admin-secondary" type="button">${icon("plus", 17)} Thêm icon</button></div>
+              <div class="admin-section-title"><div><h3>Icon bé dưới cùng</h3><p>Chọn icon lớn và sao chép một lần; sau đó vẫn chỉnh sửa từng ô bình thường.</p></div><button id="addSocialButton" class="admin-secondary" type="button">${icon("plus", 17)} Thêm icon</button></div>
               <div id="adminSocials" class="admin-items"></div>
             </section>
           </div>
@@ -572,12 +668,12 @@
     $("#resetConfigButton").addEventListener("click", resetToSourceConfig);
     $("#addLinkButton").addEventListener("click", () => {
       collectEditorFields();
-      editorDraft.links.push({ enabled: true, featured: false, icon: "globe", image: "", showIconBackground: true, title: "Liên kết mới", description: "", url: "https://", badge: "" });
+      editorDraft.links.push({ id: `link-${Date.now()}`, enabled: true, featured: false, icon: "globe", image: "", showIconBackground: true, title: "Liên kết mới", description: "", url: "https://", badge: "", translations: {} });
       renderEditorItems("links");
     });
     $("#addSocialButton").addEventListener("click", () => {
       collectEditorFields();
-      editorDraft.socialIcons.push({ enabled: true, icon: "globe", image: "", showIconBackground: true, label: "Mạng xã hội", url: "https://" });
+      editorDraft.socialIcons.push({ id: `social-${Date.now()}`, enabled: true, syncFromLink: false, sourceLinkId: "", icon: "globe", image: "", showIconBackground: true, label: "Website", url: "https://", translations: {} });
       renderEditorItems("socials");
     });
     $("#adminLinks").addEventListener("click", handleItemAction);
@@ -586,6 +682,7 @@
     $("#adminSocials").addEventListener("change", handleImageUpload);
     $("#adminLinks").addEventListener("input", handleEditorItemInput);
     $("#adminSocials").addEventListener("input", handleEditorItemInput);
+    $("#adminSocials").addEventListener("change", handleSocialSourceChange);
     $("#avatarUpload").addEventListener("change", handleAvatarUpload);
     $("#faviconUpload").addEventListener("change", handleFaviconUpload);
     $("#adminOverlay").addEventListener("click", handlePasswordToggle);
@@ -643,15 +740,25 @@
     $("#editAvatar").value = editorDraft.profile.avatar || "";
     $("#editFavicon").value = editorDraft.profile.favicon || "assets/favicon.png";
     $("#editFooter").value = editorDraft.profile.footerText || "";
+    $("#editNameJa").value = editorDraft.profile.translations?.ja?.name || "";
+    $("#editBioJa").value = editorDraft.profile.translations?.ja?.bio || "";
+    $("#editFooterJa").value = editorDraft.profile.translations?.ja?.footerText || "";
+    $("#editNameEn").value = editorDraft.profile.translations?.en?.name || "";
+    $("#editBioEn").value = editorDraft.profile.translations?.en?.bio || "";
+    $("#editFooterEn").value = editorDraft.profile.translations?.en?.footerText || "";
     const profileBadges = editorDraft.profile.badges || [];
     const locationBadge = profileBadges[0] || { enabled: true, icon: "map-pin", text: "" };
     const usefulBadge = profileBadges[1] || { enabled: true, icon: "sparkles", text: "" };
     $("#editLocationBadgeEnabled").checked = locationBadge.enabled !== false;
     $("#editLocationBadgeText").value = locationBadge.text || "";
     $("#editLocationBadgeIcon").value = locationBadge.icon || "map-pin";
+    $("#editLocationBadgeTextJa").value = locationBadge.translations?.ja?.text || "";
+    $("#editLocationBadgeTextEn").value = locationBadge.translations?.en?.text || "";
     $("#editUsefulBadgeEnabled").checked = usefulBadge.enabled !== false;
     $("#editUsefulBadgeText").value = usefulBadge.text || "";
     $("#editUsefulBadgeIcon").value = usefulBadge.icon || "sparkles";
+    $("#editUsefulBadgeTextJa").value = usefulBadge.translations?.ja?.text || "";
+    $("#editUsefulBadgeTextEn").value = usefulBadge.translations?.en?.text || "";
     $("#editDefaultTheme").value = editorDraft.settings.defaultTheme || "auto";
     $("#editDefaultLanguage").value = editorDraft.settings.defaultLanguage || "vi";
     $("#editMobileColumns").value = String(editorDraft.settings.layout.mobileColumns || 1);
@@ -676,6 +783,8 @@
     $("#editNewTab").checked = editorDraft.settings.openLinksInNewTab !== false;
     $("#editAnnouncementEnabled").checked = !!editorDraft.settings.announcement?.enabled;
     $("#editAnnouncementText").value = editorDraft.settings.announcement?.text || "";
+    $("#editAnnouncementTextJa").value = editorDraft.settings.announcement?.translations?.ja?.text || "";
+    $("#editAnnouncementTextEn").value = editorDraft.settings.announcement?.translations?.en?.text || "";
     $("#editNewPassword").value = "";
     $("#editConfirmPassword").value = "";
     resetPasswordVisibility("editNewPassword");
@@ -688,7 +797,38 @@
     const isLinks = type === "links";
     const list = isLinks ? editorDraft.links : editorDraft.socialIcons;
     const container = isLinks ? $("#adminLinks") : $("#adminSocials");
-    container.innerHTML = list.map((item, index) => `
+    const sourceOptions = (editorDraft.links || []).map(link => `<option value="${escapeAttribute(link.id)}">${escapeHtml(link.title || "Liên kết")}</option>`).join("");
+
+    container.innerHTML = list.map((item, index) => {
+      const translationFields = isLinks ? `
+        <details class="admin-translation-box">
+          <summary>${icon("globe", 15)} Tên và mô tả JP / EN</summary>
+          <div class="admin-translation-content">
+            <p class="admin-language-title"><img src="assets/flag-ja.svg" alt="JP" /> JP — 日本語</p>
+            <div class="admin-grid two">
+              <label class="admin-field"><span>Tên JP</span><input data-translation-language="ja" data-translation-field="title" type="text" value="${escapeAttribute(item.translations?.ja?.title || "")}" /></label>
+              <label class="admin-field"><span>Nhãn JP</span><input data-translation-language="ja" data-translation-field="badge" type="text" value="${escapeAttribute(item.translations?.ja?.badge || "")}" /></label>
+            </div>
+            <label class="admin-field"><span>Mô tả JP</span><input data-translation-language="ja" data-translation-field="description" type="text" value="${escapeAttribute(item.translations?.ja?.description || "")}" /></label>
+            <p class="admin-language-title"><img src="assets/flag-en.svg" alt="EN" /> EN — English</p>
+            <div class="admin-grid two">
+              <label class="admin-field"><span>Tên EN</span><input data-translation-language="en" data-translation-field="title" type="text" value="${escapeAttribute(item.translations?.en?.title || "")}" /></label>
+              <label class="admin-field"><span>Nhãn EN</span><input data-translation-language="en" data-translation-field="badge" type="text" value="${escapeAttribute(item.translations?.en?.badge || "")}" /></label>
+            </div>
+            <label class="admin-field"><span>Mô tả EN</span><input data-translation-language="en" data-translation-field="description" type="text" value="${escapeAttribute(item.translations?.en?.description || "")}" /></label>
+          </div>
+        </details>` : `
+        <details class="admin-translation-box">
+          <summary>${icon("globe", 15)} Tên icon JP / EN</summary>
+          <div class="admin-translation-content">
+            <div class="admin-grid two">
+              <label class="admin-field"><span>Tên JP</span><input data-translation-language="ja" data-translation-field="label" type="text" value="${escapeAttribute(item.translations?.ja?.label || "")}" /></label>
+              <label class="admin-field"><span>Tên EN</span><input data-translation-language="en" data-translation-field="label" type="text" value="${escapeAttribute(item.translations?.en?.label || "")}" /></label>
+            </div>
+          </div>
+        </details>`;
+
+      return `
       <article class="admin-item" data-type="${type}" data-index="${index}">
         <div class="admin-item-top">
           <button class="admin-visibility-button ${item.enabled ? "is-visible" : "is-hidden"}" type="button" data-action="toggle-enabled" aria-pressed="${item.enabled ? "true" : "false"}" title="${item.enabled ? "Nhấn để ẩn mục này" : "Nhấn để hiện mục này"}">${icon(item.enabled ? "eye" : "eye-off", 17)}<b>${item.enabled ? "Đang hiện" : "Đang ẩn"}</b></button>
@@ -698,25 +838,41 @@
             <button type="button" data-action="delete" class="delete" title="Xóa">${icon("trash-2", 17)}</button>
           </div>
         </div>
-        <div class="admin-grid two">
-          <label class="admin-field"><span>${isLinks ? "Tên nút" : "Tên icon"}</span><input data-field="${isLinks ? "title" : "label"}" type="text" value="${escapeAttribute(isLinks ? item.title : item.label)}" /></label>
-          <label class="admin-field"><span>Tên icon SVG</span><input data-field="icon" type="text" value="${escapeAttribute(item.icon || "globe")}" placeholder="facebook, phone, mail..." /></label>
-        </div>
-        ${isLinks ? `<label class="admin-field"><span>Mô tả</span><input data-field="description" type="text" value="${escapeAttribute(item.description || "")}" /></label>` : ""}
-        <label class="admin-field"><span>Đường dẫn</span><input data-field="url" type="text" value="${escapeAttribute(item.url || "")}" /></label>
-        <div class="admin-grid two">
-          <label class="admin-field"><span>Ảnh thay icon</span><input data-field="image" type="text" value="${escapeAttribute(item.image || "")}" placeholder="assets/facebook.png hoặc URL" /></label>
-          ${isLinks ? `<label class="admin-field"><span>Nhãn nhỏ</span><input data-field="badge" type="text" value="${escapeAttribute(item.badge || "")}" placeholder="Nổi bật" /></label>` : `<span></span>`}
-        </div>
-        <div class="admin-item-options">
-          <div class="admin-option-group">
-            ${isLinks ? `<label><input data-field="featured" type="checkbox" ${item.featured ? "checked" : ""}/> Làm nổi bật</label>` : ""}
-            <label><input data-field="showIconBackground" type="checkbox" ${item.showIconBackground ? "checked" : ""}/> Hiện nền icon</label>
+        ${!isLinks ? `
+          <div class="admin-sync-row">
+            <label class="admin-field"><span>Chọn icon lớn để sao chép</span><select data-field="sourceLinkId"><option value="">Chọn liên kết</option>${sourceOptions}</select></label>
+            <button class="admin-sync-button" type="button" data-action="copy-from-link">${icon("copy", 16)} Đồng bộ ngay</button>
           </div>
-          <label class="admin-upload small">${icon("image", 16)} Chọn ảnh PNG/WEBP<input data-action="item-image-upload" type="file" accept="image/png,image/webp,image/jpeg,image/svg+xml" /></label>
+          <p class="admin-sync-note">Nút “Đồng bộ ngay” sẽ sao chép một lần tên, đường dẫn, icon/ảnh, nền và bản dịch. Sau đó tất cả ô bên dưới vẫn sửa được bình thường.</p>
+        ` : ""}
+        <div class="admin-manual-fields">
+          <div class="admin-grid two">
+            <label class="admin-field"><span>${isLinks ? "Tên nút" : "Tên icon"}</span><input data-field="${isLinks ? "title" : "label"}" type="text" value="${escapeAttribute(isLinks ? item.title : item.label)}" /></label>
+            <label class="admin-field"><span>Tên icon SVG</span><input data-field="icon" type="text" value="${escapeAttribute(item.icon || "globe")}" placeholder="facebook, phone, mail..." /></label>
+          </div>
+          ${isLinks ? `<label class="admin-field"><span>Mô tả</span><input data-field="description" type="text" value="${escapeAttribute(item.description || "")}" /></label>` : ""}
+          <label class="admin-field"><span>Đường dẫn</span><input data-field="url" type="text" value="${escapeAttribute(item.url || "")}" /></label>
+          <div class="admin-grid two">
+            <label class="admin-field"><span>Ảnh thay icon</span><input data-field="image" type="text" value="${escapeAttribute(item.image || "")}" placeholder="assets/facebook.png hoặc URL" /></label>
+            ${isLinks ? `<label class="admin-field"><span>Nhãn nhỏ</span><input data-field="badge" type="text" value="${escapeAttribute(item.badge || "")}" placeholder="Nổi bật" /></label>` : `<span></span>`}
+          </div>
+          ${translationFields}
+          <div class="admin-item-options">
+            <div class="admin-option-group">
+              ${isLinks ? `<label><input data-field="featured" type="checkbox" ${item.featured ? "checked" : ""}/> Làm nổi bật</label>` : ""}
+              <label><input data-field="showIconBackground" type="checkbox" ${item.showIconBackground ? "checked" : ""}/> Hiện nền icon</label>
+            </div>
+            <label class="admin-upload small">${icon("image", 16)} Chọn ảnh PNG/WEBP<input data-action="item-image-upload" type="file" accept="image/png,image/webp,image/jpeg,image/svg+xml" /></label>
+          </div>
         </div>
-      </article>
-    `).join("");
+      </article>`;
+    }).join("");
+
+    if (!isLinks) {
+      $$('select[data-field="sourceLinkId"]', container).forEach((select, index) => {
+        select.value = list[index]?.sourceLinkId || "";
+      });
+    }
   };
 
   const collectEditorFields = () => {
@@ -727,9 +883,23 @@
     editorDraft.profile.avatar = $("#editAvatar").value.trim();
     editorDraft.profile.favicon = $("#editFavicon").value.trim() || "assets/favicon.png";
     editorDraft.profile.footerText = $("#editFooter").value.trim();
+    editorDraft.profile.translations = {
+      ja: { name: $("#editNameJa").value.trim(), bio: $("#editBioJa").value.trim(), footerText: $("#editFooterJa").value.trim() },
+      en: { name: $("#editNameEn").value.trim(), bio: $("#editBioEn").value.trim(), footerText: $("#editFooterEn").value.trim() }
+    };
     editorDraft.profile.badges = [
-      { enabled: $("#editLocationBadgeEnabled").checked, icon: $("#editLocationBadgeIcon").value.trim() || "map-pin", text: $("#editLocationBadgeText").value.trim() },
-      { enabled: $("#editUsefulBadgeEnabled").checked, icon: $("#editUsefulBadgeIcon").value.trim() || "sparkles", text: $("#editUsefulBadgeText").value.trim() }
+      {
+        enabled: $("#editLocationBadgeEnabled").checked,
+        icon: $("#editLocationBadgeIcon").value.trim() || "map-pin",
+        text: $("#editLocationBadgeText").value.trim(),
+        translations: { ja: { text: $("#editLocationBadgeTextJa").value.trim() }, en: { text: $("#editLocationBadgeTextEn").value.trim() } }
+      },
+      {
+        enabled: $("#editUsefulBadgeEnabled").checked,
+        icon: $("#editUsefulBadgeIcon").value.trim() || "sparkles",
+        text: $("#editUsefulBadgeText").value.trim(),
+        translations: { ja: { text: $("#editUsefulBadgeTextJa").value.trim() }, en: { text: $("#editUsefulBadgeTextEn").value.trim() } }
+      }
     ];
     editorDraft.settings.defaultTheme = $("#editDefaultTheme").value;
     editorDraft.settings.defaultLanguage = $("#editDefaultLanguage").value;
@@ -756,6 +926,10 @@
     editorDraft.settings.openLinksInNewTab = $("#editNewTab").checked;
     editorDraft.settings.announcement.enabled = $("#editAnnouncementEnabled").checked;
     editorDraft.settings.announcement.text = $("#editAnnouncementText").value.trim();
+    editorDraft.settings.announcement.translations = {
+      ja: { text: $("#editAnnouncementTextJa").value.trim() },
+      en: { text: $("#editAnnouncementTextEn").value.trim() }
+    };
 
     $$(".admin-item").forEach(card => {
       const type = card.dataset.type;
@@ -765,6 +939,13 @@
       if (!item) return;
       $$('[data-field]', card).forEach(field => {
         item[field.dataset.field] = field.type === "checkbox" ? field.checked : field.value.trim();
+      });
+      item.translations ||= {};
+      $$('[data-translation-language]', card).forEach(field => {
+        const language = field.dataset.translationLanguage;
+        const translationField = field.dataset.translationField;
+        item.translations[language] ||= {};
+        item.translations[language][translationField] = field.value.trim();
       });
     });
   };
@@ -776,6 +957,12 @@
       const backgroundField = $('[data-field="showIconBackground"]', card);
       if (backgroundField) backgroundField.checked = false;
     }
+  };
+
+  const handleSocialSourceChange = event => {
+    const select = event.target.closest('select[data-field="sourceLinkId"]');
+    if (!select) return;
+    collectEditorFields();
   };
 
   const handleItemAction = event => {
@@ -791,10 +978,30 @@
       renderEditorItems(type);
       return;
     }
+    if (button.dataset.action === "copy-from-link" && type === "socials") {
+      const source = findSourceLink(list[index].sourceLinkId, editorDraft.links);
+      if (!source) {
+        showToast("Hãy chọn icon lớn cần sao chép");
+        return;
+      }
+      copySocialFromLink(list[index], source);
+      renderEditorItems("socials");
+      showToast(`Đã sao chép từ ${source.title || "icon lớn"}`);
+      return;
+    }
     if (button.dataset.action === "up" && index > 0) [list[index - 1], list[index]] = [list[index], list[index - 1]];
     if (button.dataset.action === "down" && index < list.length - 1) [list[index + 1], list[index]] = [list[index], list[index + 1]];
-    if (button.dataset.action === "delete" && confirm("Xóa mục này?")) list.splice(index, 1);
+    if (button.dataset.action === "delete" && confirm("Xóa mục này?")) {
+      const removed = list[index];
+      list.splice(index, 1);
+      if (type === "links") {
+        editorDraft.socialIcons.forEach(social => {
+          if (social.sourceLinkId === removed?.id) social.sourceLinkId = "";
+        });
+      }
+    }
     renderEditorItems(type);
+    if (type === "links") renderEditorItems("socials");
   };
 
   const fileToDataUrl = file => new Promise((resolve, reject) => {
