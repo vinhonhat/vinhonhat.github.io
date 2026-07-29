@@ -1,4 +1,4 @@
-/* Bio Link Admin V8 - icon thương hiệu đơn sắc và hover sáng rõ hơn */
+/* Bio Link Admin V9 - chống chọn chữ và hiệu ứng chạm/nhấn giữ trên mobile */
 (() => {
   "use strict";
 
@@ -489,6 +489,142 @@
     modal.classList.remove("open");
     modal.setAttribute("aria-hidden", "true");
     document.body.style.overflow = "";
+  };
+
+  const TOUCH_LINK_SELECTOR = ".link-card, .social-button";
+  const LONG_PRESS_DELAY = 560;
+  const TAP_EFFECT_DURATION = 520;
+  const MOVE_CANCEL_DISTANCE = 14;
+  let touchInteraction = null;
+  let blockedClickTarget = null;
+  let blockedClickUntil = 0;
+
+  const clearTouchState = (element, keepHeld = false) => {
+    if (!element) return;
+    element.classList.remove("is-touch-active");
+    if (!keepHeld) element.classList.remove("is-touch-held");
+  };
+
+  const clearHeldTouchEffects = except => {
+    $$(TOUCH_LINK_SELECTOR).forEach(element => {
+      if (element !== except) element.classList.remove("is-touch-held", "is-touch-active");
+    });
+  };
+
+  const isUsableHref = href => href && href !== "#" && !href.startsWith("javascript:");
+
+  const openTouchLink = element => {
+    const href = element?.href;
+    if (!isUsableHref(href)) return;
+
+    // Điều hướng trong tab hiện tại để bảo đảm hiệu ứng được nhìn thấy đầy đủ
+    // và tránh trình duyệt mobile chặn tab mới sau khoảng trễ hiệu ứng.
+    window.location.assign(href);
+  };
+
+  const cancelTouchInteraction = (keepHeld = false) => {
+    if (!touchInteraction) return;
+    clearTimeout(touchInteraction.longPressTimer);
+    clearTouchState(touchInteraction.element, keepHeld);
+    touchInteraction = null;
+  };
+
+  const setupPublicTouchInteractions = () => {
+    document.addEventListener("pointerdown", event => {
+      if (event.pointerType === "mouse" || !event.isPrimary) return;
+      const element = event.target.closest(TOUCH_LINK_SELECTOR);
+      clearHeldTouchEffects(element);
+      if (!element) return;
+
+      cancelTouchInteraction();
+      element.classList.remove("is-touch-held");
+      // Khởi động lại vệt sáng ngay cả khi chạm liên tiếp cùng một nút.
+      void element.offsetWidth;
+      element.classList.add("is-touch-active");
+
+      const state = {
+        element,
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startY: event.clientY,
+        startedAt: performance.now(),
+        moved: false,
+        longPressed: false,
+        longPressTimer: 0
+      };
+      state.longPressTimer = window.setTimeout(() => {
+        if (touchInteraction !== state || state.moved) return;
+        state.longPressed = true;
+        element.classList.remove("is-touch-active");
+        element.classList.add("is-touch-held");
+        blockedClickTarget = element;
+        blockedClickUntil = Date.now() + 1200;
+        if (navigator.vibrate) navigator.vibrate(12);
+      }, LONG_PRESS_DELAY);
+      touchInteraction = state;
+    }, { passive: true });
+
+    document.addEventListener("pointermove", event => {
+      const state = touchInteraction;
+      if (!state || event.pointerId !== state.pointerId) return;
+      const distance = Math.hypot(event.clientX - state.startX, event.clientY - state.startY);
+      if (distance <= MOVE_CANCEL_DISTANCE) return;
+      state.moved = true;
+      clearTimeout(state.longPressTimer);
+      clearTouchState(state.element);
+    }, { passive: true });
+
+    document.addEventListener("pointerup", event => {
+      const state = touchInteraction;
+      if (!state || event.pointerId !== state.pointerId) return;
+      clearTimeout(state.longPressTimer);
+      touchInteraction = null;
+
+      blockedClickTarget = state.element;
+      blockedClickUntil = Date.now() + 1400;
+
+      if (state.moved) {
+        clearTouchState(state.element);
+        return;
+      }
+
+      if (state.longPressed) {
+        clearTouchState(state.element, true);
+        return;
+      }
+
+      const elapsed = performance.now() - state.startedAt;
+      const remaining = Math.max(120, TAP_EFFECT_DURATION - elapsed);
+      window.setTimeout(() => {
+        clearTouchState(state.element);
+        openTouchLink(state.element);
+      }, remaining);
+    }, { passive: true });
+
+    document.addEventListener("pointercancel", event => {
+      if (touchInteraction?.pointerId === event.pointerId) cancelTouchInteraction();
+    }, { passive: true });
+
+    // Chặn click mặc định sau pointerup để link không mở trước khi hiệu ứng kết thúc.
+    document.addEventListener("click", event => {
+      const element = event.target.closest(TOUCH_LINK_SELECTOR);
+      if (!element) return;
+      if (element === blockedClickTarget && Date.now() < blockedClickUntil) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      }
+    }, true);
+
+    // Tránh menu nhấn giữ, bôi đen chữ và kéo ảnh ở phần công khai.
+    document.addEventListener("contextmenu", event => {
+      if (event.target.closest(".page-shell, #qrModal")) event.preventDefault();
+    });
+    document.addEventListener("selectstart", event => {
+      if (event.target.closest(".page-shell, #qrModal")) event.preventDefault();
+    });
+    document.addEventListener("dragstart", event => {
+      if (event.target.closest(".page-shell, #qrModal")) event.preventDefault();
+    });
   };
 
   const setupActions = () => {
@@ -1203,6 +1339,7 @@
     window.addEventListener("resize", updateViewportHeight, { passive: true });
     window.addEventListener("orientationchange", updateViewportHeight, { passive: true });
     setupActions();
+    setupPublicTouchInteractions();
     currentLanguage = resolveInitialLanguage();
     renderAll();
     setTheme(resolveInitialTheme());

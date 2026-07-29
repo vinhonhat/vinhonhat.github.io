@@ -4,7 +4,7 @@ window.BIO_CONFIG = {
     "name": "Vinh ở Nhật",
     "handle": "@vinhonhat",
     "bio": "Chia sẻ cuộc sống, công nghệ và những tiện ích hữu ích tại Nhật Bản.",
-    "avatar": "img/logoQV.png",
+    "avatar": "/img/logoQV.png",
     "footerText": "Vinh ở Nhật • Made with ❤️",
     "badges": [
       {
@@ -34,7 +34,7 @@ window.BIO_CONFIG = {
         }
       }
     ],
-    "favicon": "img/logoQV.png",
+    "favicon": "/img/logoQV.png",
     "translations": {
       "ja": {
         "name": "日本のVinh",
@@ -56,7 +56,7 @@ window.BIO_CONFIG = {
     "passwordHash": "5f3c731b478c8292b603e6dec59aaa2626f6fcb3c6d5e97bc3a844b8dc4e279b"
   },
   "settings": {
-    "defaultTheme": "light",
+    "defaultTheme": "dark",
     "showThemeButton": true,
     "showShareButton": true,
     "showQrButton": true,
@@ -298,7 +298,7 @@ window.BIO_CONFIG = {
       "enabled": true,
       "featured": false,
       "icon": "globe",
-      "title": "Website Vinh ở Nhật",
+      "title": "Vinh ở Nhật",
       "description": "Bài viết, hướng dẫn và tiện ích mới nhất",
       "url": "https://vinhonhat.github.io/",
       "badge": "Nổi bật",

@@ -59,6 +59,21 @@ body {
 button, a { -webkit-tap-highlight-color: transparent; }
 button { font: inherit; }
 
+/* Giao diện công khai: tránh bôi đen chữ, menu nhấn giữ và kéo ảnh.
+   Bảng quản trị nằm ngoài .page-shell nên các ô nhập vẫn chọn/sao chép bình thường. */
+.page-shell,
+#qrModal {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+.page-shell img,
+#qrModal img {
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+
 .background {
   position: fixed;
   inset: 0;
@@ -331,7 +346,8 @@ h1 {
   background: transparent;
   box-shadow: none;
   text-decoration: none;
-  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease, background-color .22s ease;
+  touch-action: pan-y;
 }
 
 .link-card::before {
@@ -344,7 +360,9 @@ h1 {
   transition: opacity .2s ease;
 }
 
-.link-card:hover {
+.link-card:hover,
+.link-card.is-touch-active,
+.link-card.is-touch-held {
   transform: translateY(-3px);
   border-color: var(--light-hover-border);
   background: var(--light-hover-bg);
@@ -352,13 +370,21 @@ h1 {
 }
 
 [data-theme="dark"] .link-card::before { background: linear-gradient(105deg, transparent 0 27%, rgba(255, 191, 91, .20) 48%, transparent 69%); }
-[data-theme="dark"] .link-card:hover {
+[data-theme="dark"] .link-card:hover,
+[data-theme="dark"] .link-card.is-touch-active,
+[data-theme="dark"] .link-card.is-touch-held {
   border-color: rgba(255, 184, 75, .45);
   background: rgba(255, 178, 61, .075);
   box-shadow: 0 18px 40px rgba(0, 0, 0, .32);
 }
 
-.link-card:hover::before { opacity: 1; animation: shine .8s ease; }
+.link-card:hover::before,
+.link-card.is-touch-active::before { opacity: 1; animation: shine .8s ease; }
+.link-card.is-touch-held::before {
+  opacity: .34;
+  transform: translateX(110%);
+  animation: none;
+}
 .link-card:active { transform: scale(.985); }
 .link-card.featured { color: #fff; border-color: transparent; background: linear-gradient(135deg, #ffa51f, #ee7814); }
 .link-card.featured .link-description,
@@ -416,7 +442,9 @@ h1 {
 
 .link-card.featured .tag-new { color: #c75e00; background: white; }
 .link-arrow { color: var(--muted); transition: transform .2s ease; }
-.link-card:hover .link-arrow { transform: translateX(3px); }
+.link-card:hover .link-arrow,
+.link-card.is-touch-active .link-arrow,
+.link-card.is-touch-held .link-arrow { transform: translateX(3px); }
 
 .social-section { margin-top: 27px; text-align: center; }
 .section-label { margin: 0 0 13px; color: var(--muted); font-size: .75rem; font-weight: 600; }
@@ -433,20 +461,27 @@ h1 {
   box-shadow: var(--button-shadow);
   text-decoration: none;
   transition: transform .2s ease, color .2s ease, border-color .2s ease, background-color .2s ease, box-shadow .2s ease;
+  touch-action: pan-y;
 }
 .social-button.with-bg { background: var(--link-bg); box-shadow: var(--button-shadow); }
 .social-button.no-bg { border-color: transparent; background: transparent; box-shadow: none; }
 .social-button.has-image.no-bg { border-radius: 0; }
-.social-button:hover {
+.social-button:hover,
+.social-button.is-touch-active,
+.social-button.is-touch-held {
   transform: translateY(-3px);
   color: var(--primary-strong);
   border-color: var(--light-hover-border);
   background: var(--light-hover-bg);
   box-shadow: 0 12px 26px var(--light-hover-shadow);
 }
-[data-theme="dark"] .social-button:hover { border-color: rgba(255,184,75,.42); background: rgba(255,178,61,.08); box-shadow: 0 12px 28px rgba(0,0,0,.28); }
+[data-theme="dark"] .social-button:hover,
+[data-theme="dark"] .social-button.is-touch-active,
+[data-theme="dark"] .social-button.is-touch-held { border-color: rgba(255,184,75,.42); background: rgba(255,178,61,.08); box-shadow: 0 12px 28px rgba(0,0,0,.28); }
 .social-button.has-brand { color: var(--text); }
-.social-button.has-brand:hover { color: var(--primary-strong); }
+.social-button.has-brand:hover,
+.social-button.has-brand.is-touch-active,
+.social-button.has-brand.is-touch-held { color: var(--primary-strong); }
 .brand-svg { width: 23px; height: 23px; display: block; }
 .brand-svg.brand-facebook { width: 18px; }
 .brand-svg.brand-line { width: 24px; height: 24px; }
@@ -566,6 +601,20 @@ svg { width: 21px; height: 21px; display: block; }
   0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
   50% { transform: translate3d(22px, 18px, 0) scale(1.05); }
 }
+/* Hiệu ứng chạm trên màn hình cảm ứng. Chạm nhanh: chạy rồi mở link.
+   Chạm giữ: chạy xong và giữ trạng thái nổi, không mở link. */
+@media (hover: none) and (pointer: coarse) {
+  .link-card.is-touch-active,
+  .social-button.is-touch-active {
+    transition-duration: .16s;
+  }
+
+  .link-card.is-touch-held,
+  .social-button.is-touch-held {
+    transform: translateY(-2px) scale(.992);
+  }
+}
+
 @keyframes shine { to { transform: translateX(110%); } }
 
 @media (min-width: 581px) and (max-width: 899px) {
