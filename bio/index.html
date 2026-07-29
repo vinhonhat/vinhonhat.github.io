@@ -10,7 +10,8 @@
   <meta property="og:image" content="assets/share-card.svg" />
   <meta property="og:type" content="website" />
   <title>Vinh ở Nhật | Bio Link</title>
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link id="faviconLink" rel="icon" href="assets/favicon.png" type="image/png" />
+  <link id="appleTouchIcon" rel="apple-touch-icon" href="assets/favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -27,6 +28,14 @@
   <main class="page-shell">
     <section class="bio-card" aria-labelledby="profile-name">
       <div class="top-actions">
+        <div class="language-control">
+          <button class="icon-button language-button" id="languageButton" type="button" aria-label="Đổi ngôn ngữ" title="Đổi ngôn ngữ"><span id="languageFlag" aria-hidden="true">🇻🇳</span></button>
+          <div id="languageMenu" class="language-menu hidden" role="menu" aria-label="Chọn ngôn ngữ">
+            <button type="button" data-language="vi" role="menuitem"><span>🇻🇳</span><b>Tiếng Việt</b></button>
+            <button type="button" data-language="ja" role="menuitem"><span>🇯🇵</span><b>日本語</b></button>
+            <button type="button" data-language="en" role="menuitem"><span>🇬🇧</span><b>English</b></button>
+          </div>
+        </div>
         <button class="icon-button" id="themeButton" type="button" aria-label="Đổi giao diện" title="Đổi giao diện"></button>
         <button class="icon-button" id="shareButton" type="button" aria-label="Chia sẻ trang" title="Chia sẻ trang"></button>
       </div>
@@ -52,7 +61,7 @@
       <section id="linksContainer" class="links" aria-label="Danh sách liên kết"></section>
 
       <section id="socialSection" class="social-section hidden" aria-label="Mạng xã hội">
-        <p class="section-label">Kết nối với tôi</p>
+        <p id="socialSectionLabel" class="section-label">Kết nối với tôi</p>
         <div id="socialContainer" class="social-row"></div>
       </section>
 
@@ -72,7 +81,7 @@
       <button class="modal-close" type="button" data-close-modal aria-label="Đóng"></button>
       <div class="modal-icon"></div>
       <h2 id="qrTitle">Chia sẻ trang Bio</h2>
-      <p>Quét mã QR hoặc sao chép đường dẫn để mở nhanh trang này.</p>
+      <p id="qrDescription">Quét mã QR hoặc sao chép đường dẫn để mở nhanh trang này.</p>
       <div id="qrCanvas" class="qr-box" aria-label="Mã QR của trang"></div>
       <button id="copyLinkButton" class="copy-button" type="button"></button>
     </section>
