@@ -1,4 +1,4 @@
-/* Bio Link Admin V11 - tự nhận diện ngôn ngữ và bật/tắt nhãn đa ngôn ngữ */
+/* Bio Link Admin V12 - nơ nổi bật đa ngôn ngữ, không tô vàng toàn bộ nút */
 (() => {
   "use strict";
 
@@ -27,6 +27,7 @@
     en: { code: "EN", flag: "assets/flag-en.svg", language: "Change language", themeLight: "Switch to light mode", themeDark: "Switch to dark mode", share: "Share page", connect: "Connect with me", qr: "QR code", qrTitle: "Share Bio page", qrDescription: "Scan the QR code or copy the link to open this page.", copy: "Copy link", copied: "Link copied", shareError: "Unable to share right now", qrAlt: "QR code for this Bio page" }
   };
   let currentLanguage = "vi";
+  const FEATURED_LABELS = { vi: "Nổi bật", ja: "おすすめ", en: "Featured" };
 
   const clampColumns = value => Math.min(3, Math.max(1, Number(value) || 1));
   const clampNumber = (value, min, max, fallback) => Math.min(max, Math.max(min, Number(value) || fallback));
@@ -62,10 +63,11 @@
       item.id = candidate;
       usedLinkIds.add(candidate);
       item.translations ||= {};
-      // Nhãn nhỏ dùng một công tắc chung cho cả VI / JP / EN.
-      // Với cấu hình cũ chưa có showBadge, lấy trạng thái từ nhãn tiếng Việt để
-      // tránh trường hợp đã xóa “Nổi bật” ở VI nhưng JP/EN vẫn còn hiển thị.
-      if (typeof item.showBadge !== "boolean") item.showBadge = Boolean(String(item.badge || "").trim());
+      // Từ V12, featured chỉ điều khiển nơ/nhãn nổi bật; không đổi nền toàn bộ nút.
+      // Tương thích bản V11: nếu showBadge từng được bật thì chuyển thành nơ nổi bật.
+      if (item.featured !== true && item.showBadge === true) item.featured = true;
+      item.featured = item.featured === true;
+      delete item.showBadge;
       if (typeof item.showIconBackground !== "boolean") item.showIconBackground = !item.image;
     });
     cfg.socialIcons.forEach((item, index) => {
@@ -331,14 +333,15 @@
     container.innerHTML = links.map(item => {
       const title = localizedValue(item, "title", "Liên kết");
       const description = localizedValue(item, "description", "");
-      const badge = item.showBadge !== false ? localizedValue(item, "badge", "") : "";
+      const customBadge = localizedValue(item, "badge", "");
+      const badge = item.featured ? (customBadge || FEATURED_LABELS[currentLanguage] || FEATURED_LABELS.en) : "";
       const hasImage = !!item.image;
       const showBackground = typeof item.showIconBackground === "boolean" ? item.showIconBackground : !hasImage;
       return `
-      <a class="link-card${item.featured ? " featured" : ""}" href="${escapeAttribute(item.url || "#")}" ${target}>
+      <a class="link-card" href="${escapeAttribute(item.url || "#")}" ${target}>
         <span class="link-icon${hasImage ? " has-image" : ""}${showBackground ? " with-bg" : " no-bg"}">${media(item, "link-image")}</span>
         <span class="link-copy">
-          <span class="link-title">${escapeHtml(title)}${badge ? `<span class="tag-new">${escapeHtml(badge)}</span>` : ""}</span>
+          <span class="link-title">${escapeHtml(title)}${badge ? `<span class="tag-new" aria-label="${escapeAttribute(badge)}">${escapeHtml(badge)}</span>` : ""}</span>
           ${description ? `<span class="link-description">${escapeHtml(description)}</span>` : ""}
         </span>
         <span class="link-arrow">${icon("arrow-up-right", 19)}</span>
@@ -903,7 +906,7 @@
     document.addEventListener("pointercancel", handleOrderPointerEnd);
     $("#addLinkButton").addEventListener("click", () => {
       collectEditorFields();
-      editorDraft.links.push({ id: `link-${Date.now()}`, enabled: true, featured: false, showBadge: false, icon: "globe", image: "", showIconBackground: true, title: "Liên kết mới", description: "", url: "https://", badge: "", translations: {} });
+      editorDraft.links.push({ id: `link-${Date.now()}`, enabled: true, featured: false, icon: "globe", image: "", showIconBackground: true, title: "Liên kết mới", description: "", url: "https://", badge: "", translations: {} });
       renderEditorItems("links");
     });
     $("#addSocialButton").addEventListener("click", () => {
@@ -1164,13 +1167,13 @@
             <p class="admin-language-title"><img src="assets/flag-ja.svg" alt="JP" /> JP — 日本語</p>
             <div class="admin-grid two">
               <label class="admin-field"><span>Tên JP</span><input data-translation-language="ja" data-translation-field="title" type="text" value="${escapeAttribute(item.translations?.ja?.title || "")}" /></label>
-              <label class="admin-field"><span>Nhãn JP</span><input data-translation-language="ja" data-translation-field="badge" type="text" value="${escapeAttribute(item.translations?.ja?.badge || "")}" /></label>
+              <label class="admin-field"><span>Chữ trên nơ JP</span><input data-translation-language="ja" data-translation-field="badge" type="text" value="${escapeAttribute(item.translations?.ja?.badge || "")}" /></label>
             </div>
             <label class="admin-field"><span>Mô tả JP</span><input data-translation-language="ja" data-translation-field="description" type="text" value="${escapeAttribute(item.translations?.ja?.description || "")}" /></label>
             <p class="admin-language-title"><img src="assets/flag-en.svg" alt="EN" /> EN — English</p>
             <div class="admin-grid two">
               <label class="admin-field"><span>Tên EN</span><input data-translation-language="en" data-translation-field="title" type="text" value="${escapeAttribute(item.translations?.en?.title || "")}" /></label>
-              <label class="admin-field"><span>Nhãn EN</span><input data-translation-language="en" data-translation-field="badge" type="text" value="${escapeAttribute(item.translations?.en?.badge || "")}" /></label>
+              <label class="admin-field"><span>Chữ trên nơ EN</span><input data-translation-language="en" data-translation-field="badge" type="text" value="${escapeAttribute(item.translations?.en?.badge || "")}" /></label>
             </div>
             <label class="admin-field"><span>Mô tả EN</span><input data-translation-language="en" data-translation-field="description" type="text" value="${escapeAttribute(item.translations?.en?.description || "")}" /></label>
           </div>
@@ -1211,12 +1214,12 @@
           <label class="admin-field"><span>Đường dẫn</span><input data-field="url" type="text" value="${escapeAttribute(item.url || "")}" /></label>
           <div class="admin-grid two">
             <label class="admin-field"><span>Ảnh thay icon</span><input data-field="image" type="text" value="${escapeAttribute(item.image || "")}" placeholder="assets/facebook.png hoặc URL" /></label>
-            ${isLinks ? `<label class="admin-field"><span>Nhãn nhỏ</span><input data-field="badge" type="text" value="${escapeAttribute(item.badge || "")}" placeholder="Nổi bật" /></label>` : `<span></span>`}
+            ${isLinks ? `<label class="admin-field"><span>Chữ trên nơ VI</span><input data-field="badge" type="text" value="${escapeAttribute(item.badge || "")}" placeholder="Để trống sẽ dùng: Nổi bật" /></label>` : `<span></span>`}
           </div>
           ${translationFields}
           <div class="admin-item-options">
             <div class="admin-option-group">
-              ${isLinks ? `<label><input data-field="featured" type="checkbox" ${item.featured ? "checked" : ""}/> Làm nổi bật nền nút</label><label><input data-field="showBadge" type="checkbox" ${item.showBadge ? "checked" : ""}/> Hiện nhãn nhỏ ở cả VI / JP / EN</label>` : ""}
+              ${isLinks ? `<label><input data-field="featured" type="checkbox" ${item.featured ? "checked" : ""}/> Hiện nơ nổi bật ở cả VI / JP / EN</label>` : ""}
               <label><input data-field="showIconBackground" type="checkbox" ${item.showIconBackground ? "checked" : ""}/> Hiện nền icon</label>
             </div>
             <label class="admin-upload small">${icon("image", 16)} Chọn ảnh PNG/WEBP<input data-action="item-image-upload" type="file" accept="image/png,image/webp,image/jpeg,image/svg+xml" /></label>

@@ -44,4 +44,7 @@ Nếu người xem tự chọn VI/JP/EN bằng nút ngôn ngữ, lựa chọn đ
 
 - Mỗi nút liên kết có công tắc “Hiện nhãn nhỏ ở cả VI / JP / EN”.
 - Tắt công tắc này sẽ ẩn nhãn ở mọi ngôn ngữ, kể cả khi ô JP/EN còn chữ cũ.
-- “Làm nổi bật nền nút” và “Hiện nhãn nhỏ” là hai tùy chọn độc lập.
+- “Hiện nơ nổi bật” bật/tắt cùng lúc nhãn VI / JP / EN; nút không bị tô vàng toàn bộ.
+
+
+V12: “Nổi bật” chỉ hiện nơ/nhãn nhỏ đa ngôn ngữ cạnh tên liên kết; không tô vàng toàn bộ nút.

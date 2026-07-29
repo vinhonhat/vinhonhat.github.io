@@ -386,11 +386,7 @@ h1 {
   animation: none;
 }
 .link-card:active { transform: scale(.985); }
-.link-card.featured { color: #fff; border-color: transparent; background: linear-gradient(135deg, #ffa51f, #ee7814); }
-.link-card.featured .link-description,
-.link-card.featured .link-arrow { color: rgba(255,255,255,.86); }
-.link-card.featured .link-icon.with-bg { color: #ef7e14; background: #fff; }
-.link-card.featured .link-icon.no-bg { color: #fff; }
+/* V12: mục nổi bật chỉ hiện nơ nhỏ cạnh tên; nền và viền nút giữ nguyên. */
 
 .link-icon {
   width: 48px;
@@ -430,17 +426,38 @@ h1 {
 }
 
 .tag-new {
+  position: relative;
   flex: 0 0 auto;
-  padding: 3px 7px;
-  border-radius: 999px;
-  color: #9a4d00;
-  background: #ffe9ba;
+  margin-left: 3px;
+  padding: 3px 8px 3px 9px;
+  border: 1px solid color-mix(in srgb, var(--primary-strong) 42%, transparent);
+  border-radius: 5px 5px 5px 1px;
+  color: #7d3d00;
+  background: linear-gradient(135deg, #fff0c9, #ffd98d);
+  box-shadow: 0 4px 10px rgba(217, 120, 0, .16);
   font-size: .62rem;
-  font-weight: 800;
-  text-transform: uppercase;
+  font-weight: 850;
+  line-height: 1.1;
+  text-transform: none;
 }
-
-.link-card.featured .tag-new { color: #c75e00; background: white; }
+.tag-new::before {
+  content: "";
+  position: absolute;
+  left: -5px;
+  bottom: -1px;
+  width: 7px;
+  height: 7px;
+  background: #ffd98d;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  filter: drop-shadow(-1px 1px 0 color-mix(in srgb, var(--primary-strong) 42%, transparent));
+}
+[data-theme="dark"] .tag-new {
+  color: #ffe7bd;
+  border-color: rgba(255, 184, 75, .42);
+  background: linear-gradient(135deg, rgba(243, 155, 25, .30), rgba(217, 120, 0, .20));
+  box-shadow: 0 5px 13px rgba(0, 0, 0, .23);
+}
+[data-theme="dark"] .tag-new::before { background: rgba(217, 120, 0, .45); }
 .link-arrow { color: var(--muted); transition: transform .2s ease; }
 .link-card:hover .link-arrow,
 .link-card.is-touch-active .link-arrow,
