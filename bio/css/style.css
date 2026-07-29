@@ -1324,3 +1324,9 @@ html[data-card-border="hide"] .bio-card { border-color: transparent; }
   .admin-footer-right .admin-primary { grid-column: 1 / -1; }
   .admin-footer-right > button { width: 100%; }
 }
+
+/* Bio Link Manager version */
+.admin-version{display:inline-flex;align-items:center;margin-left:8px;padding:3px 8px;border:1px solid color-mix(in srgb,var(--primary) 38%,transparent);border-radius:999px;color:var(--primary-strong);background:color-mix(in srgb,var(--primary) 10%,transparent);font-size:.68rem;font-weight:900;letter-spacing:.04em;vertical-align:middle}
+.admin-version-card{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 16px;border:1px solid color-mix(in srgb,var(--primary) 32%,transparent);border-radius:16px;background:color-mix(in srgb,var(--primary) 7%,transparent)}
+.admin-version-card strong{font-size:1rem}.admin-version-card small{display:block;margin-top:4px;color:var(--muted)}
+.admin-field input[readonly],.admin-field input:disabled{opacity:.78;cursor:not-allowed}

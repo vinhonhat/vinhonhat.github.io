@@ -1,7 +1,0 @@
-Options -Indexes
-<FilesMatch "^\.">
-  Require all denied
-</FilesMatch>
-<Files "server-settings.php">
-  Require all denied
-</Files>

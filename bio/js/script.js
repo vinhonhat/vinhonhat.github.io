@@ -59,6 +59,7 @@
       item.translations ||= {};
     });
     cfg.admin ||= {};
+    cfg.admin.logoTapCount = Math.min(12, Math.max(2, Number(cfg.admin.logoTapCount) || 5));
     cfg.admin.serverSave = { ...DEFAULT_SERVER_SAVE, ...(cfg.admin.serverSave || {}) };
     cfg.settings ||= {};
     cfg.settings.defaultTheme = ["auto", "light", "dark"].includes(cfg.settings.defaultTheme) ? cfg.settings.defaultTheme : "auto";
@@ -736,7 +737,7 @@
       <section id="adminLogin" class="admin-login-card" role="dialog" aria-modal="true" aria-labelledby="adminLoginTitle">
         <button class="admin-close" type="button" data-admin-close aria-label="Đóng">${icon("x")}</button>
         <div class="admin-lock">${icon("lock", 28)}</div>
-        <h2 id="adminLoginTitle">Mở cài đặt Bio Link</h2>
+        <h2 id="adminLoginTitle">Mở cài đặt Bio Link <span class="admin-version">V1.6.0</span></h2>
         <p>Nhập mật khẩu quản trị để chỉnh sửa nội dung.</p>
         <form id="adminLoginForm">
           <label class="admin-field"><span>Mật khẩu</span><div class="password-wrap"><input id="adminPassword" type="password" autocomplete="current-password" required /><button class="password-toggle" type="button" data-password-toggle="adminPassword" aria-label="Hiện mật khẩu" title="Hiện mật khẩu">${icon("eye", 18)}</button></div></label>
@@ -747,7 +748,7 @@
 
       <section id="adminEditor" class="admin-editor hidden" role="dialog" aria-modal="true" aria-labelledby="adminTitle">
         <header class="admin-header">
-          <div><span class="admin-kicker">BIO LINK</span><h2 id="adminTitle">Cài đặt trang</h2></div>
+          <div><span class="admin-kicker">BIO LINK</span><span class="admin-version">V1.6.0</span><h2 id="adminTitle">Cài đặt trang</h2></div>
           <button class="admin-close" type="button" data-admin-close aria-label="Đóng">${icon("x")}</button>
         </header>
         <nav class="admin-tabs" aria-label="Nhóm cài đặt">
@@ -757,6 +758,16 @@
         </nav>
         <div class="admin-body">
           <div class="admin-panel" data-admin-panel="config">
+            <section class="admin-section">
+              <div class="admin-version-card">
+                <div><strong>Bio Link Manager <span class="admin-version">V1.6.0</span></strong><small>Giao diện và chức năng kế thừa bản 14.</small></div>
+              </div>
+              <div class="admin-grid two" style="margin-top:14px">
+                <label class="admin-field"><span>Phiên bản</span><input type="text" value="V1.6.0" readonly /></label>
+                <label class="admin-field"><span>Số lần nhấn logo để mở cài đặt</span><input id="editLogoTapCount" type="number" min="2" max="12" step="1" /></label>
+              </div>
+              <p id="logoTapHelp" class="admin-help">Chỉ áp dụng cho bản GitHub có admin nằm trong trang. Nên đặt từ 3 đến 8 lần.</p>
+            </section>
             <section class="admin-section">
               <h3>Thông tin chính</h3>
               <div class="admin-grid two">
@@ -937,6 +948,12 @@
   const setupAdmin = () => {
     if (sourceConfig.admin?.enabled === false) return;
     document.body.insertAdjacentHTML("beforeend", adminMarkup());
+    if (sourceConfig.admin?.mode === "embedded") {
+      const serverButton = $("#serverSaveButton");
+      if (serverButton) serverButton.style.display = "none";
+      const serverNote = $(".admin-server-note");
+      if (serverNote) serverNote.innerHTML = "<b>Chế độ GitHub:</b> lưu xem trước chỉ nằm trên trình duyệt. Muốn cập nhật trang thật, hãy bấm <code>Tải config.js</code> rồi thay file <code>js/config.js</code> trong GitHub.";
+    }
     $$("[data-admin-tab]").forEach(button => button.addEventListener("click", () => switchAdminTab(button.dataset.adminTab)));
 
     let taps = 0;
@@ -1180,6 +1197,11 @@
     $("#editUsefulBadgeIcon").value = usefulBadge.icon || "sparkles";
     $("#editUsefulBadgeTextJa").value = usefulBadge.translations?.ja?.text || "";
     $("#editUsefulBadgeTextEn").value = usefulBadge.translations?.en?.text || "";
+    $("#editLogoTapCount").value = editorDraft.admin?.logoTapCount || 5;
+    const tapInput = $("#editLogoTapCount");
+    const tapHelp = $("#logoTapHelp");
+    if (tapInput) tapInput.disabled = editorDraft.admin?.mode !== "embedded";
+    if (tapHelp && editorDraft.admin?.mode !== "embedded") tapHelp.textContent = "Bản này mở admin bằng đường dẫn riêng; số lần nhấn logo chỉ được dùng trong gói GitHub có admin nằm trong trang.";
     $("#editDefaultTheme").value = editorDraft.settings.defaultTheme || "auto";
     $("#editDefaultLanguage").value = editorDraft.settings.defaultLanguage || "auto";
     $("#editMobileColumns").value = String(editorDraft.settings.layout.mobileColumns || 1);
@@ -1337,6 +1359,8 @@
         translations: { ja: { text: $("#editUsefulBadgeTextJa").value.trim() }, en: { text: $("#editUsefulBadgeTextEn").value.trim() } }
       }
     ];
+    editorDraft.admin ||= {};
+    editorDraft.admin.logoTapCount = clampNumber($("#editLogoTapCount")?.value, 2, 12, 5);
     editorDraft.settings.defaultTheme = $("#editDefaultTheme").value;
     editorDraft.settings.defaultLanguage = $("#editDefaultLanguage").value;
     editorDraft.settings.layout.mobileColumns = clampColumns($("#editMobileColumns").value);

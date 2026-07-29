@@ -52,12 +52,14 @@ window.BIO_CONFIG = {
     "enabled": true,
     "logoTapCount": 5,
     "tapTimeout": 2500,
-    "storageKey": "vinh-bio-admin-config-v14",
+    "storageKey": "vinh-bio-admin-config-v160",
     "passwordHash": "5f3c731b478c8292b603e6dec59aaa2626f6fcb3c6d5e97bc3a844b8dc4e279b",
     "serverSave": {
-      "enabled": true,
+      "enabled": false,
       "endpoint": "api/save-config.php"
-    }
+    },
+    "mode": "embedded",
+    "version": "V1.6.0"
   },
   "settings": {
     "defaultTheme": "auto",
