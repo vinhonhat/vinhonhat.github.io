@@ -3,7 +3,7 @@ window.BIO_CONFIG = {
   "profile": {
     "name": "Vinh ở Nhật",
     "handle": "@vinhonhat",
-    "bio": "iPhone, iPad, MacBook, Sim Data, Sim nghe gọi, Rakuten, Tokuei.\nChia sẻ cuộc sống, công nghệ và những tiện ích hữu ích tại Nhật Bản.",
+    "bio": "iPhone, iPad, MacBook, Sim Data, Sim nghe gọi, Rakuten, Tokuei.\nChia sẻ cuộc sống, tiện ích hữu ích tại Nhật Bản.",
     "avatar": "/img/logoQV.png",
     "footerText": "Vinh ở Nhật • Made with ❤️",
     "badges": [
