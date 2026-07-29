@@ -1,4 +1,4 @@
-/* Bio Link Admin V7 - cờ Anh cho EN và sao chép icon bé một lần */
+/* Bio Link Admin V8 - icon thương hiệu đơn sắc và hover sáng rõ hơn */
 (() => {
   "use strict";
 
@@ -80,15 +80,16 @@
           item.translations[language].label = legacySource.translations?.[language]?.title || legacySource.title || item.label;
         });
       }
-      // V7 chỉ sao chép một lần; không khóa trường và không phụ thuộc liên tục vào icon lớn.
+      // V8 chỉ sao chép một lần; các trường vẫn chỉnh thủ công sau khi đồng bộ.
       item.syncFromLink = false;
-      if (typeof item.showIconBackground !== "boolean") item.showIconBackground = !item.image;
+      if (typeof item.brandIcon !== "string") item.brandIcon = "auto";
+      if (typeof item.showIconBackground !== "boolean") item.showIconBackground = item.brandIcon && item.brandIcon !== "none" ? false : !item.image;
     });
     return cfg;
   };
 
   const sourceConfig = normalizeConfig(window.BIO_CONFIG || {});
-  const storageKey = sourceConfig.admin?.storageKey || "vinh-bio-admin-config-v7";
+  const storageKey = sourceConfig.admin?.storageKey || "vinh-bio-admin-config-v8";
 
   const ICONS = {
     "arrow-up-right": '<path d="M7 17 17 7"/><path d="M7 7h10v10"/>',
@@ -128,6 +129,22 @@
     "youtube": '<path d="M2.5 17a24.1 24.1 0 0 1 0-10 2.1 2.1 0 0 1 1.5-1.5 49.5 49.5 0 0 1 16 0A2.1 2.1 0 0 1 21.5 7a24.1 24.1 0 0 1 0 10 2.1 2.1 0 0 1-1.5 1.5 49.5 49.5 0 0 1-16 0A2.1 2.1 0 0 1 2.5 17Z"/><path d="m10 15 5-3-5-3z"/>'
   };
 
+  const BRAND_ICONS = {
+    facebook: { viewBox: "0 0 320 512", body: '<path d="M80 299.3V512H196V299.3h86.5l18-97.8H196V166.9c0-51.7 20.3-71.5 72.7-71.5c16.3 0 29.4.4 37 1.2V7.9C291.4 4 256.4 0 236.2 0C129.3 0 80 50.5 80 159.4v42.1H14v97.8H80z"/>' },
+    messenger: { viewBox: "0 0 512 512", body: '<path d="M256.55 8C116.52 8 8 110.34 8 248.57c0 72.3 29.71 134.78 78.07 177.94 8.35 7.51 6.63 11.86 8.05 58.23A19.92 19.92 0 0 0 122 502.31c52.91-23.3 53.59-25.14 62.56-22.7C337.85 521.8 504 423.7 504 248.57 504 110.34 396.59 8 256.55 8zm149.24 185.13-73 115.57a37.37 37.37 0 0 1-53.91 9.93l-58.08-43.47a15 15 0 0 0-18 0l-78.37 59.44c-10.46 7.93-24.16-4.6-17.11-15.67l73-115.57a37.36 37.36 0 0 1 53.91-9.93l58.06 43.46a15 15 0 0 0 18 0l78.41-59.38c10.44-7.98 24.14 4.54 17.09 15.62z"/>' },
+    tiktok: { viewBox: "0 0 448 512", body: '<path d="M448 209.91a210.06 210.06 0 0 1-122.77-39.25V349.38A162.55 162.55 0 1 1 185 188.31V278.2a74.62 74.62 0 1 0 52.23 71.18V0h88a121.18 121.18 0 0 0 1.86 22.17A122.18 122.18 0 0 0 381 102.39a121.43 121.43 0 0 0 67 20.14Z"/>' },
+    line: { viewBox: "0 0 512 512", body: '<path d="M311 196.8v81.3c0 2.1-1.6 3.7-3.7 3.7h-13c-1.3 0-2.4-.7-3-1.5L254 230v48.2c0 2.1-1.6 3.7-3.7 3.7h-13c-2.1 0-3.7-1.6-3.7-3.7v-81.3c0-2.1 1.6-3.7 3.7-3.7h12.9c1.1 0 2.4.6 3 1.6l37.3 50.3v-48.2c0-2.1 1.6-3.7 3.7-3.7h13c2.1-.1 3.8 1.6 3.8 3.5zm-93.7-3.7h-13c-2.1 0-3.7 1.6-3.7 3.7v81.3c0 2.1 1.6 3.7 3.7 3.7h13c2.1 0 3.7-1.6 3.7-3.7v-81.3c0-1.9-1.6-3.7-3.7-3.7zm-31.4 68.1h-35.6v-64.4c0-2.1-1.6-3.7-3.7-3.7h-13c-2.1 0-3.7 1.6-3.7 3.7v81.3c0 1 .3 1.8 1 2.5.7.6 1.5 1 2.5 1h52.2c2.1 0 3.7-1.6 3.7-3.7v-13c0-1.9-1.6-3.7-3.5-3.7zm193.7-68.1h-52.3c-1.9 0-3.7 1.6-3.7 3.7v81.3c0 1.9 1.6 3.7 3.7 3.7h52.2c2.1 0 3.7-1.6 3.7-3.7V265c0-2.1-1.6-3.7-3.7-3.7H344v-13.6h35.5c2.1 0 3.7-1.6 3.7-3.7v-13.1c0-2.1-1.6-3.7-3.7-3.7H344v-13.7h35.5c2.1 0 3.7-1.6 3.7-3.7v-13c-.1-1.9-1.7-3.7-3.7-3.7zM512 93.4v326c-.1 51.2-42.1 92.7-93.4 92.6h-326C41.4 511.9-.1 469.8 0 418.6v-326C.1 41.4 42.2-.1 93.4 0h326c51.2.1 92.7 42.1 92.6 93.4zM441.6 233.5c0-83.4-83.7-151.3-186.4-151.3S68.8 150.1 68.8 233.5c0 74.7 66.3 137.4 155.9 149.3 21.8 4.7 19.3 12.7 14.4 42.1-.8 4.7-3.8 18.4 16.1 10.1s107.3-63.2 146.5-108.2c27-29.7 39.9-59.8 39.9-93.1z"/>' },
+    youtube: { viewBox: "0 0 576 512", body: '<path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zM232.145 337.591V175.185l142.739 81.205-142.739 81.201z"/>' },
+    zalo: { viewBox: "0 0 24 24", body: '<path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 4h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-7l-5 3v-3H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M8 8h8l-8 6h8"/>' },
+    gmail: { viewBox: "0 0 24 24", body: '<path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 7.5 12 14l9-6.5V19H3Z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m3 7.5 9 6.5 9-6.5"/>' }
+  };
+
+  const brandIcon = (name, size = 23) => {
+    const item = BRAND_ICONS[name];
+    if (!item) return icon("globe", size);
+    return `<svg class="brand-svg brand-${name}" xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="${item.viewBox}" fill="currentColor" aria-hidden="true">${item.body}</svg>`;
+  };
+
   const icon = (name, size = 21) => {
     const content = ICONS[name] || ICONS.globe;
     return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${content}</svg>`;
@@ -147,6 +164,24 @@
 
   const findSourceLink = (sourceLinkId, list = config.links || []) => list.find(link => link.id === sourceLinkId) || null;
 
+  const detectBrandIcon = item => {
+    const value = [item?.id, item?.sourceLinkId, item?.label, item?.title, item?.url, item?.icon].filter(Boolean).join(" ").toLowerCase();
+    if (value.includes("messenger") || value.includes("m.me/")) return "messenger";
+    if (value.includes("facebook") || value.includes("fb.com")) return "facebook";
+    if (value.includes("tiktok")) return "tiktok";
+    if (value.includes("zalo")) return "zalo";
+    if (value.includes("line.me") || /(^|[^a-z])line([^a-z]|$)/.test(value)) return "line";
+    if (value.includes("youtube") || value.includes("youtu.be")) return "youtube";
+    if (value.includes("gmail") || value.includes("mailto:")) return "gmail";
+    return "";
+  };
+
+  const resolveBrandIcon = item => {
+    if (item?.brandIcon === "none") return "";
+    if (item?.brandIcon && item.brandIcon !== "auto" && BRAND_ICONS[item.brandIcon]) return item.brandIcon;
+    return detectBrandIcon(item);
+  };
+
   const copySocialFromLink = (target, source) => {
     if (!target || !source) return false;
     target.sourceLinkId = source.id || "";
@@ -154,7 +189,8 @@
     target.url = source.url || target.url || "#";
     target.icon = source.icon || target.icon || "globe";
     target.image = source.image || "";
-    target.showIconBackground = typeof source.showIconBackground === "boolean" ? source.showIconBackground : !source.image;
+    target.brandIcon = detectBrandIcon(source) || "none";
+    target.showIconBackground = target.brandIcon !== "none" ? false : (typeof source.showIconBackground === "boolean" ? source.showIconBackground : !source.image);
     target.translations ||= {};
     ["ja", "en"].forEach(language => {
       target.translations[language] ||= {};
@@ -239,12 +275,24 @@
     `).join("");
   };
 
+  const hexToRgba = (hex, alpha, fallback) => {
+    const value = String(hex || "").trim().replace("#", "");
+    const normalized = value.length === 3 ? value.split("").map(char => char + char).join("") : value;
+    if (!/^[0-9a-f]{6}$/i.test(normalized)) return fallback;
+    const number = Number.parseInt(normalized, 16);
+    return `rgba(${number >> 16}, ${(number >> 8) & 255}, ${number & 255}, ${alpha})`;
+  };
+
   const applyAppearanceAndLayout = () => {
     const appearance = config.settings?.appearance || DEFAULT_APPEARANCE;
     const layout = config.settings?.layout || DEFAULT_LAYOUT;
     const root = document.documentElement;
     root.style.setProperty("--custom-primary", appearance.primaryColor || DEFAULT_APPEARANCE.primaryColor);
     root.style.setProperty("--custom-primary-strong", appearance.primaryStrongColor || DEFAULT_APPEARANCE.primaryStrongColor);
+    root.style.setProperty("--light-hover-bg", hexToRgba(appearance.primaryColor || DEFAULT_APPEARANCE.primaryColor, .09, "rgba(243, 155, 25, .09)"));
+    root.style.setProperty("--light-hover-border", hexToRgba(appearance.primaryColor || DEFAULT_APPEARANCE.primaryColor, .72, "rgba(243, 155, 25, .72)"));
+    root.style.setProperty("--light-shine", hexToRgba(appearance.primaryStrongColor || DEFAULT_APPEARANCE.primaryStrongColor, .24, "rgba(217, 120, 0, .24)"));
+    root.style.setProperty("--light-hover-shadow", hexToRgba(appearance.primaryStrongColor || DEFAULT_APPEARANCE.primaryStrongColor, .20, "rgba(217, 120, 0, .20)"));
     root.style.setProperty("--custom-light-text", appearance.lightTextColor || DEFAULT_APPEARANCE.lightTextColor);
     root.style.setProperty("--custom-light-muted", appearance.lightMutedColor || DEFAULT_APPEARANCE.lightMutedColor);
     root.style.setProperty("--custom-dark-text", appearance.darkTextColor || DEFAULT_APPEARANCE.darkTextColor);
@@ -302,9 +350,12 @@
     const target = config.settings?.openLinksInNewTab ? 'target="_blank" rel="noopener noreferrer"' : "";
     const container = $("#socialContainer");
     container.innerHTML = socials.map(item => {
-      const hasImage = !!item.image;
-      const showBackground = typeof item.showIconBackground === "boolean" ? item.showIconBackground : !hasImage;
-      return `<a class="social-button${hasImage ? " has-image" : ""}${showBackground ? " with-bg" : " no-bg"}" href="${escapeAttribute(item.url || "#")}" aria-label="${escapeAttribute(item.label)}" title="${escapeAttribute(item.label)}" ${target}>${media(item, "social-image")}</a>`;
+      const brandKey = resolveBrandIcon(item);
+      const hasBrand = !!brandKey;
+      const hasImage = !hasBrand && !!item.image;
+      const showBackground = typeof item.showIconBackground === "boolean" ? item.showIconBackground : !(hasBrand || hasImage);
+      const content = hasBrand ? brandIcon(brandKey, 23) : media(item, "social-image");
+      return `<a class="social-button${hasBrand ? " has-brand" : ""}${hasImage ? " has-image" : ""}${showBackground ? " with-bg" : " no-bg"}" href="${escapeAttribute(item.url || "#")}" aria-label="${escapeAttribute(item.label)}" title="${escapeAttribute(item.label)}" ${target}>${content}</a>`;
     }).join("");
     bindMediaImages(container);
   };
@@ -673,7 +724,7 @@
     });
     $("#addSocialButton").addEventListener("click", () => {
       collectEditorFields();
-      editorDraft.socialIcons.push({ id: `social-${Date.now()}`, enabled: true, syncFromLink: false, sourceLinkId: "", icon: "globe", image: "", showIconBackground: true, label: "Website", url: "https://", translations: {} });
+      editorDraft.socialIcons.push({ id: `social-${Date.now()}`, enabled: true, syncFromLink: false, sourceLinkId: "", brandIcon: "auto", icon: "globe", image: "", showIconBackground: false, label: "Website", url: "https://", translations: {} });
       renderEditorItems("socials");
     });
     $("#adminLinks").addEventListener("click", handleItemAction);
@@ -798,6 +849,11 @@
     const list = isLinks ? editorDraft.links : editorDraft.socialIcons;
     const container = isLinks ? $("#adminLinks") : $("#adminSocials");
     const sourceOptions = (editorDraft.links || []).map(link => `<option value="${escapeAttribute(link.id)}">${escapeHtml(link.title || "Liên kết")}</option>`).join("");
+    const brandOptions = [
+      ["auto", "Tự nhận diện"], ["none", "Không dùng icon thương hiệu"],
+      ["facebook", "Facebook"], ["messenger", "Messenger"], ["tiktok", "TikTok"],
+      ["zalo", "Zalo"], ["line", "LINE"], ["youtube", "YouTube"], ["gmail", "Gmail / Email"]
+    ];
 
     container.innerHTML = list.map((item, index) => {
       const translationFields = isLinks ? `
@@ -843,14 +899,14 @@
             <label class="admin-field"><span>Chọn icon lớn để sao chép</span><select data-field="sourceLinkId"><option value="">Chọn liên kết</option>${sourceOptions}</select></label>
             <button class="admin-sync-button" type="button" data-action="copy-from-link">${icon("copy", 16)} Đồng bộ ngay</button>
           </div>
-          <p class="admin-sync-note">Nút “Đồng bộ ngay” sẽ sao chép một lần tên, đường dẫn, icon/ảnh, nền và bản dịch. Sau đó tất cả ô bên dưới vẫn sửa được bình thường.</p>
+          <p class="admin-sync-note">Nút “Đồng bộ ngay” sẽ sao chép một lần tên, đường dẫn, icon/ảnh, icon thương hiệu, nền và bản dịch. Sau đó tất cả ô bên dưới vẫn sửa được bình thường.</p>
         ` : ""}
         <div class="admin-manual-fields">
           <div class="admin-grid two">
             <label class="admin-field"><span>${isLinks ? "Tên nút" : "Tên icon"}</span><input data-field="${isLinks ? "title" : "label"}" type="text" value="${escapeAttribute(isLinks ? item.title : item.label)}" /></label>
             <label class="admin-field"><span>Tên icon SVG</span><input data-field="icon" type="text" value="${escapeAttribute(item.icon || "globe")}" placeholder="facebook, phone, mail..." /></label>
           </div>
-          ${isLinks ? `<label class="admin-field"><span>Mô tả</span><input data-field="description" type="text" value="${escapeAttribute(item.description || "")}" /></label>` : ""}
+          ${isLinks ? `<label class="admin-field"><span>Mô tả</span><input data-field="description" type="text" value="${escapeAttribute(item.description || "")}" /></label>` : `<label class="admin-field"><span>Icon thương hiệu đen trắng</span><select data-field="brandIcon">${brandOptions.map(([value, label]) => `<option value="${value}" ${(item.brandIcon || "auto") === value ? "selected" : ""}>${label}</option>`).join("")}</select></label>`}
           <label class="admin-field"><span>Đường dẫn</span><input data-field="url" type="text" value="${escapeAttribute(item.url || "")}" /></label>
           <div class="admin-grid two">
             <label class="admin-field"><span>Ảnh thay icon</span><input data-field="image" type="text" value="${escapeAttribute(item.image || "")}" placeholder="assets/facebook.png hoặc URL" /></label>

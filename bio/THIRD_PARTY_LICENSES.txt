@@ -1,0 +1,9 @@
+THIRD-PARTY ICON NOTICE
+
+Facebook, Messenger, TikTok, LINE and YouTube brand icon path data are adapted from Font Awesome Free 6.7.2.
+Copyright 2024 Fonticons, Inc.
+Icons license: Creative Commons Attribution 4.0 International (CC BY 4.0)
+https://fontawesome.com/license/free
+
+The monochrome Zalo-style and email icons in this project are custom simplified interface drawings.
+All product names and trademarks belong to their respective owners.

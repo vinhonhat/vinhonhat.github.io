@@ -52,7 +52,7 @@ window.BIO_CONFIG = {
     "enabled": true,
     "logoTapCount": 5,
     "tapTimeout": 2500,
-    "storageKey": "vinh-bio-admin-config-v7",
+    "storageKey": "vinh-bio-admin-config-v8",
     "passwordHash": "5f3c731b478c8292b603e6dec59aaa2626f6fcb3c6d5e97bc3a844b8dc4e279b"
   },
   "settings": {
@@ -302,8 +302,8 @@ window.BIO_CONFIG = {
       "description": "Bài viết, hướng dẫn và tiện ích mới nhất",
       "url": "https://vinhonhat.github.io/",
       "badge": "Nổi bật",
-      "image": "assets/web.webp",
-      "showIconBackground": false,
+      "image": "",
+      "showIconBackground": true,
       "id": "website",
       "translations": {
         "ja": {
@@ -397,7 +397,7 @@ window.BIO_CONFIG = {
       "icon": "facebook",
       "label": "Facebook",
       "url": "https://facebook.com/tqv2022",
-      "image": "",
+      "image": "assets/fb.webp",
       "showIconBackground": false,
       "id": "social-1",
       "syncFromLink": false,
@@ -409,18 +409,20 @@ window.BIO_CONFIG = {
         "en": {
           "label": "Facebook"
         }
-      }
+      },
+      "brandIcon": "facebook"
     },
     {
-      "id": "social-1785302854188",
       "enabled": true,
-      "syncFromLink": false,
-      "sourceLinkId": "messenger",
       "icon": "message-circle",
-      "image": "",
-      "showIconBackground": false,
       "label": "Messenger",
       "url": "https://m.me/tqv2022",
+      "image": "assets/mess.webp",
+      "showIconBackground": false,
+      "id": "social-messenger",
+      "syncFromLink": false,
+      "sourceLinkId": "messenger",
+      "brandIcon": "messenger",
       "translations": {
         "ja": {
           "label": "Messenger"
@@ -435,7 +437,7 @@ window.BIO_CONFIG = {
       "icon": "music-2",
       "label": "TikTok",
       "url": "https://www.tiktok.com/@tqv2020?_r=1&_t=ZS-98QazQnE1p9",
-      "image": "",
+      "image": "assets/tiktok.webp",
       "showIconBackground": false,
       "id": "social-2",
       "syncFromLink": false,
@@ -447,7 +449,48 @@ window.BIO_CONFIG = {
         "en": {
           "label": "TikTok"
         }
-      }
+      },
+      "brandIcon": "tiktok"
+    },
+    {
+      "enabled": true,
+      "icon": "message-square",
+      "label": "Zalo",
+      "url": "https://zalo.me/84966697926",
+      "image": "assets/zalo.webp",
+      "showIconBackground": false,
+      "id": "social-4",
+      "syncFromLink": false,
+      "sourceLinkId": "zalo",
+      "translations": {
+        "ja": {
+          "label": "Zalo"
+        },
+        "en": {
+          "label": "Zalo"
+        }
+      },
+      "brandIcon": "zalo"
+    },
+    {
+      "enabled": true,
+      "icon": "message-circle-more",
+      "label": "LINE",
+      "url": "https://line.me/ti/p/VNcwANYxzU",
+      "image": "assets/line.webp",
+      "showIconBackground": false,
+      "id": "social-5",
+      "syncFromLink": false,
+      "sourceLinkId": "line",
+      "translations": {
+        "ja": {
+          "label": "LINE"
+        },
+        "en": {
+          "label": "LINE"
+        }
+      },
+      "brandIcon": "line"
     },
     {
       "enabled": false,
@@ -466,45 +509,8 @@ window.BIO_CONFIG = {
         "en": {
           "label": "YouTube"
         }
-      }
-    },
-    {
-      "enabled": true,
-      "icon": "message-square",
-      "label": "Zalo",
-      "url": "https://zalo.me/84966697926",
-      "image": "",
-      "showIconBackground": false,
-      "id": "social-4",
-      "syncFromLink": false,
-      "sourceLinkId": "zalo",
-      "translations": {
-        "ja": {
-          "label": "Zalo"
-        },
-        "en": {
-          "label": "Zalo"
-        }
-      }
-    },
-    {
-      "enabled": true,
-      "icon": "message-circle-more",
-      "label": "LINE",
-      "url": "https://line.me/ti/p/VNcwANYxzU",
-      "image": "",
-      "showIconBackground": false,
-      "id": "social-5",
-      "syncFromLink": false,
-      "sourceLinkId": "line",
-      "translations": {
-        "ja": {
-          "label": "LINE"
-        },
-        "en": {
-          "label": "LINE"
-        }
-      }
+      },
+      "brandIcon": "youtube"
     },
     {
       "enabled": false,
@@ -523,7 +529,8 @@ window.BIO_CONFIG = {
         "en": {
           "label": "Email"
         }
-      }
+      },
+      "brandIcon": "gmail"
     }
   ]
 };
