@@ -103,7 +103,7 @@ window.BIO_CONFIG = {
       icon: "message-circle-more",
       title: "LINE",
       description: "Kết bạn hoặc nhắn tin qua LINE",
-      url: "https://line.me/ti/p/tqv0902"
+      url: "https://line.me/ti/p/VNcwANYxzU"
     },
     {
       enabled: false,
