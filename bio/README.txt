@@ -1,4 +1,4 @@
-BIO LINK ADMIN V10
+BIO LINK ADMIN V11
 
 - EN dùng cờ Anh (United Kingdom) và mã EN.
 - Icon bé: chọn icon lớn rồi nhấn “Đồng bộ ngay”.
@@ -31,3 +31,17 @@ CẬP NHẬT V10
 - Giữ núm 6 chấm rồi kéo trực tiếp lên/xuống, dùng được cả chuột và cảm ứng.
 - Có thêm mũi tên lên/xuống làm phương án dự phòng.
 - Nhấn “Xong” đóng popup; thứ tự mới được giữ ngay trong bản chỉnh sửa và lưu vào config khi bấm “Lưu & xem trước” hoặc “Tải config.js”.
+
+
+CẬP NHẬT V11 - TỰ NHẬN DIỆN NGÔN NGỮ
+----------------------------------------
+Trong Cấu hình > Ngôn ngữ mặc định, chọn “Tự nhận diện theo máy”.
+- Trình duyệt/máy dùng tiếng Việt (vi, vi-VN...) -> Tiếng Việt.
+- Trình duyệt/máy dùng tiếng Nhật (ja, ja-JP...) -> Tiếng Nhật.
+- Mọi ngôn ngữ khác -> Tiếng Anh.
+
+Nếu người xem tự chọn VI/JP/EN bằng nút ngôn ngữ, lựa chọn đó được nhớ riêng trên trình duyệt của họ.
+
+- Mỗi nút liên kết có công tắc “Hiện nhãn nhỏ ở cả VI / JP / EN”.
+- Tắt công tắc này sẽ ẩn nhãn ở mọi ngôn ngữ, kể cả khi ô JP/EN còn chữ cũ.
+- “Làm nổi bật nền nút” và “Hiện nhãn nhỏ” là hai tùy chọn độc lập.

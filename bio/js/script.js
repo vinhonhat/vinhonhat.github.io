@@ -1,4 +1,4 @@
-/* Bio Link Admin V10 - thêm popup sắp xếp kéo thả gọn */
+/* Bio Link Admin V11 - tự nhận diện ngôn ngữ và bật/tắt nhãn đa ngôn ngữ */
 (() => {
   "use strict";
 
@@ -45,7 +45,7 @@
     cfg.admin ||= {};
     cfg.settings ||= {};
     cfg.settings.defaultTheme = ["auto", "light", "dark"].includes(cfg.settings.defaultTheme) ? cfg.settings.defaultTheme : "auto";
-    cfg.settings.defaultLanguage = ["vi", "ja", "en"].includes(cfg.settings.defaultLanguage) ? cfg.settings.defaultLanguage : "vi";
+    cfg.settings.defaultLanguage = ["auto", "vi", "ja", "en"].includes(cfg.settings.defaultLanguage) ? cfg.settings.defaultLanguage : "auto";
     if (typeof cfg.settings.showLanguageButton !== "boolean") cfg.settings.showLanguageButton = true;
     cfg.settings.announcement ||= { enabled: false, icon: "bell", text: "" };
     cfg.settings.layout = { ...DEFAULT_LAYOUT, ...(cfg.settings.layout || {}) };
@@ -62,6 +62,10 @@
       item.id = candidate;
       usedLinkIds.add(candidate);
       item.translations ||= {};
+      // Nhãn nhỏ dùng một công tắc chung cho cả VI / JP / EN.
+      // Với cấu hình cũ chưa có showBadge, lấy trạng thái từ nhãn tiếng Việt để
+      // tránh trường hợp đã xóa “Nổi bật” ở VI nhưng JP/EN vẫn còn hiển thị.
+      if (typeof item.showBadge !== "boolean") item.showBadge = Boolean(String(item.badge || "").trim());
       if (typeof item.showIconBackground !== "boolean") item.showIconBackground = !item.image;
     });
     cfg.socialIcons.forEach((item, index) => {
@@ -89,7 +93,8 @@
   };
 
   const sourceConfig = normalizeConfig(window.BIO_CONFIG || {});
-  const storageKey = sourceConfig.admin?.storageKey || "vinh-bio-admin-config-v8";
+  const storageKey = sourceConfig.admin?.storageKey || "vinh-bio-admin-config-v11";
+  const languageStorageKey = `${storageKey}-language`;
 
   const ICONS = {
     "arrow-up-right": '<path d="M7 17 17 7"/><path d="M7 7h10v10"/>',
@@ -326,7 +331,7 @@
     container.innerHTML = links.map(item => {
       const title = localizedValue(item, "title", "Liên kết");
       const description = localizedValue(item, "description", "");
-      const badge = localizedValue(item, "badge", "");
+      const badge = item.showBadge !== false ? localizedValue(item, "badge", "") : "";
       const hasImage = !!item.image;
       const showBackground = typeof item.showIconBackground === "boolean" ? item.showIconBackground : !hasImage;
       return `
@@ -389,10 +394,26 @@
     return matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   };
 
+  const detectDeviceLanguage = () => {
+    const deviceLanguage = String(
+      (Array.isArray(navigator.languages) && navigator.languages[0]) ||
+      navigator.language ||
+      navigator.userLanguage ||
+      ""
+    ).toLowerCase();
+
+    if (deviceLanguage === "vi" || deviceLanguage.startsWith("vi-")) return "vi";
+    if (deviceLanguage === "ja" || deviceLanguage.startsWith("ja-")) return "ja";
+    return "en";
+  };
+
   const resolveInitialLanguage = () => {
-    const saved = safeStorageGet("bio-language");
+    const saved = safeStorageGet(languageStorageKey);
     if (["vi", "ja", "en"].includes(saved)) return saved;
-    return config.settings?.defaultLanguage || "vi";
+
+    const configured = config.settings?.defaultLanguage || "auto";
+    if (["vi", "ja", "en"].includes(configured)) return configured;
+    return detectDeviceLanguage();
   };
 
   const applyLanguage = () => {
@@ -429,7 +450,7 @@
 
   const setLanguage = language => {
     currentLanguage = ["vi", "ja", "en"].includes(language) ? language : "vi";
-    safeStorageSet("bio-language", currentLanguage);
+    safeStorageSet(languageStorageKey, currentLanguage);
     $("#languageMenu")?.classList.add("hidden");
     renderAll();
   };
@@ -758,7 +779,7 @@
               <h3>Giao diện, ngôn ngữ và nút</h3>
               <div class="admin-grid two">
                 <label class="admin-field"><span>Giao diện mặc định</span><select id="editDefaultTheme"><option value="auto">Theo hệ thống</option><option value="light">Luôn sáng</option><option value="dark">Luôn tối</option></select></label>
-                <label class="admin-field"><span>Ngôn ngữ mặc định</span><select id="editDefaultLanguage"><option value="vi">VI — Tiếng Việt</option><option value="ja">JP — 日本語</option><option value="en">EN — English</option></select></label>
+                <label class="admin-field"><span>Ngôn ngữ mặc định</span><select id="editDefaultLanguage"><option value="auto">Tự nhận diện theo máy</option><option value="vi">VI — Tiếng Việt</option><option value="ja">JP — 日本語</option><option value="en">EN — English</option></select><small>Máy tiếng Việt → VI, máy tiếng Nhật → JP, ngôn ngữ khác → EN.</small></label>
               </div>
               <div class="admin-checks">
                 <label><input id="editThemeButton" type="checkbox" /> Hiện nút sáng/tối</label>
@@ -882,7 +903,7 @@
     document.addEventListener("pointercancel", handleOrderPointerEnd);
     $("#addLinkButton").addEventListener("click", () => {
       collectEditorFields();
-      editorDraft.links.push({ id: `link-${Date.now()}`, enabled: true, featured: false, icon: "globe", image: "", showIconBackground: true, title: "Liên kết mới", description: "", url: "https://", badge: "", translations: {} });
+      editorDraft.links.push({ id: `link-${Date.now()}`, enabled: true, featured: false, showBadge: false, icon: "globe", image: "", showIconBackground: true, title: "Liên kết mới", description: "", url: "https://", badge: "", translations: {} });
       renderEditorItems("links");
     });
     $("#addSocialButton").addEventListener("click", () => {
@@ -1091,7 +1112,7 @@
     $("#editUsefulBadgeTextJa").value = usefulBadge.translations?.ja?.text || "";
     $("#editUsefulBadgeTextEn").value = usefulBadge.translations?.en?.text || "";
     $("#editDefaultTheme").value = editorDraft.settings.defaultTheme || "auto";
-    $("#editDefaultLanguage").value = editorDraft.settings.defaultLanguage || "vi";
+    $("#editDefaultLanguage").value = editorDraft.settings.defaultLanguage || "auto";
     $("#editMobileColumns").value = String(editorDraft.settings.layout.mobileColumns || 1);
     $("#editTabletColumns").value = String(editorDraft.settings.layout.tabletColumns || 2);
     $("#editDesktopColumns").value = String(editorDraft.settings.layout.desktopColumns || 2);
@@ -1195,7 +1216,7 @@
           ${translationFields}
           <div class="admin-item-options">
             <div class="admin-option-group">
-              ${isLinks ? `<label><input data-field="featured" type="checkbox" ${item.featured ? "checked" : ""}/> Làm nổi bật</label>` : ""}
+              ${isLinks ? `<label><input data-field="featured" type="checkbox" ${item.featured ? "checked" : ""}/> Làm nổi bật nền nút</label><label><input data-field="showBadge" type="checkbox" ${item.showBadge ? "checked" : ""}/> Hiện nhãn nhỏ ở cả VI / JP / EN</label>` : ""}
               <label><input data-field="showIconBackground" type="checkbox" ${item.showIconBackground ? "checked" : ""}/> Hiện nền icon</label>
             </div>
             <label class="admin-upload small">${icon("image", 16)} Chọn ảnh PNG/WEBP<input data-action="item-image-upload" type="file" accept="image/png,image/webp,image/jpeg,image/svg+xml" /></label>
@@ -1424,8 +1445,8 @@
     safeStorageSet(storageKey, JSON.stringify(config));
     const selectedTab = $("[data-admin-tab].active")?.dataset.adminTab || "config";
     safeStorageRemove("bio-theme");
-    safeStorageRemove("bio-language");
-    currentLanguage = config.settings.defaultLanguage || "vi";
+    safeStorageRemove(languageStorageKey);
+    currentLanguage = resolveInitialLanguage();
     setTheme(resolveInitialTheme());
     const overlay = $("#adminOverlay");
     const keepEditorOpen = overlay?.classList.contains("open") && !$("#adminEditor")?.classList.contains("hidden");
@@ -1463,10 +1484,10 @@
     if (!confirm("Xóa cấu hình đã lưu trên trình duyệt và quay về file js/config.js?")) return;
     safeStorageRemove(storageKey);
     safeStorageRemove("bio-theme");
-    safeStorageRemove("bio-language");
+    safeStorageRemove(languageStorageKey);
     config = normalizeConfig(sourceConfig);
     editorDraft = normalizeConfig(sourceConfig);
-    currentLanguage = config.settings.defaultLanguage || "vi";
+    currentLanguage = resolveInitialLanguage();
     setTheme(resolveInitialTheme());
     renderAll();
     populateEditor();

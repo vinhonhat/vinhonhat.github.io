@@ -3,7 +3,7 @@ window.BIO_CONFIG = {
   "profile": {
     "name": "Vinh ở Nhật",
     "handle": "@vinhonhat",
-    "bio": "Chia sẻ cuộc sống, công nghệ và những tiện ích hữu ích tại Nhật Bản.",
+    "bio": "iPhone, iPad, MacBook, Sim Data, Sim nghe gọi, Rakuten, Tokuei.\nChia sẻ cuộc sống, công nghệ và những tiện ích hữu ích tại Nhật Bản.",
     "avatar": "/img/logoQV.png",
     "footerText": "Vinh ở Nhật • Made with ❤️",
     "badges": [
@@ -38,12 +38,12 @@ window.BIO_CONFIG = {
     "translations": {
       "ja": {
         "name": "日本のVinh",
-        "bio": "日本での暮らし、テクノロジー、便利な情報を共有しています。",
+        "bio": "iPhone、iPad、MacBook、データSIM、音声通話SIM、楽天SIM、特定技能試験。\n日本での暮らし、テクノロジー、便利な情報を共有しています。",
         "footerText": "日本のVinh • Made with ❤️"
       },
       "en": {
         "name": "Vinh in Japan",
-        "bio": "Sharing life in Japan, technology, and useful tools.",
+        "bio": "iPhone, iPad, MacBook, Data SIMs, Voice SIMs, Rakuten SIM, Tokutei Exam.\nSharing life in Japan, technology, and useful tools.",
         "footerText": "Vinh in Japan • Made with ❤️"
       }
     }
@@ -52,7 +52,7 @@ window.BIO_CONFIG = {
     "enabled": true,
     "logoTapCount": 5,
     "tapTimeout": 2500,
-    "storageKey": "vinh-bio-admin-config-v8",
+    "storageKey": "vinh-bio-admin-config-v11",
     "passwordHash": "5f3c731b478c8292b603e6dec59aaa2626f6fcb3c6d5e97bc3a844b8dc4e279b"
   },
   "settings": {
@@ -94,7 +94,7 @@ window.BIO_CONFIG = {
       "footerFontSize": 12
     },
     "showLanguageButton": true,
-    "defaultLanguage": "vi",
+    "defaultLanguage": "auto",
     "languageFlags": {
       "vi": "assets/flag-vi.svg",
       "ja": "assets/flag-ja.svg",
@@ -124,7 +124,8 @@ window.BIO_CONFIG = {
           "description": "Official Facebook page",
           "badge": ""
         }
-      }
+      },
+      "showBadge": false
     },
     {
       "enabled": true,
@@ -148,7 +149,8 @@ window.BIO_CONFIG = {
           "description": "Message me directly on Messenger",
           "badge": ""
         }
-      }
+      },
+      "showBadge": false
     },
     {
       "enabled": true,
@@ -172,7 +174,8 @@ window.BIO_CONFIG = {
           "description": "Short videos and life in Japan",
           "badge": ""
         }
-      }
+      },
+      "showBadge": false
     },
     {
       "enabled": true,
@@ -196,7 +199,8 @@ window.BIO_CONFIG = {
           "description": "Contact me on Zalo",
           "badge": ""
         }
-      }
+      },
+      "showBadge": false
     },
     {
       "enabled": true,
@@ -220,11 +224,12 @@ window.BIO_CONFIG = {
           "description": "Add or message me on LINE",
           "badge": ""
         }
-      }
+      },
+      "showBadge": false
     },
     {
       "enabled": true,
-      "featured": false,
+      "featured": true,
       "icon": "globe",
       "title": "Vinh ở Nhật",
       "description": "Bài viết, hướng dẫn và tiện ích mới nhất",
@@ -244,7 +249,8 @@ window.BIO_CONFIG = {
           "description": "Latest articles, guides, and useful tools",
           "badge": "Featured"
         }
-      }
+      },
+      "showBadge": false
     },
     {
       "enabled": false,
@@ -268,7 +274,8 @@ window.BIO_CONFIG = {
           "description": "Tap to call directly",
           "badge": ""
         }
-      }
+      },
+      "showBadge": false
     },
     {
       "enabled": false,
@@ -292,7 +299,8 @@ window.BIO_CONFIG = {
           "description": "Tutorials and experience videos",
           "badge": ""
         }
-      }
+      },
+      "showBadge": false
     },
     {
       "enabled": false,
@@ -316,7 +324,8 @@ window.BIO_CONFIG = {
           "description": "Send me an email",
           "badge": ""
         }
-      }
+      },
+      "showBadge": false
     },
     {
       "enabled": false,
@@ -340,7 +349,8 @@ window.BIO_CONFIG = {
           "description": "Open directions in Google Maps",
           "badge": ""
         }
-      }
+      },
+      "showBadge": false
     },
     {
       "enabled": false,
@@ -364,7 +374,8 @@ window.BIO_CONFIG = {
           "description": "Learning games for children",
           "badge": ""
         }
-      }
+      },
+      "showBadge": false
     },
     {
       "enabled": false,
@@ -388,7 +399,8 @@ window.BIO_CONFIG = {
           "description": "Software and tools shared by Vinh",
           "badge": ""
         }
-      }
+      },
+      "showBadge": false
     }
   ],
   "socialIcons": [
