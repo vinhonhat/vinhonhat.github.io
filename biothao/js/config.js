@@ -82,9 +82,9 @@ window.BIO_CONFIG = {
       }
     },
     "layout": {
-      "mobileColumns": 2,
-      "tabletColumns": 2,
-      "desktopColumns": 2
+      "mobileColumns": 1,
+      "tabletColumns": 1,
+      "desktopColumns": 1
     },
     "appearance": {
       "primaryColor": "#f39b19",
@@ -123,7 +123,7 @@ window.BIO_CONFIG = {
       "icon": "facebook",
       "title": "Facebook",
       "description": "Trang Facebook chính thức",
-      "url": "https://facebook.com/tqv2022",
+      "url": "https://facebook.com/61590400792468",
       "image": "assets/fb.webp",
       "badge": "",
       "featured": false,
@@ -147,7 +147,7 @@ window.BIO_CONFIG = {
       "icon": "message-circle",
       "title": "Messenger",
       "description": "Nhắn tin trực tiếp qua Messenger",
-      "url": "https://m.me/tqv2022",
+      "url": "https://m.me/61590400792468",
       "image": "assets/mess.webp",
       "badge": "",
       "featured": false,
@@ -168,34 +168,10 @@ window.BIO_CONFIG = {
     },
     {
       "enabled": true,
-      "icon": "music-2",
-      "title": "TikTok",
-      "description": "Video ngắn và chia sẻ cuộc sống tại Nhật",
-      "url": "https://www.tiktok.com/@tqv2020?_r=1&_t=ZS-98QazQnE1p9",
-      "image": "assets/tiktok.webp",
-      "badge": "",
-      "featured": false,
-      "showIconBackground": false,
-      "id": "tiktok",
-      "translations": {
-        "ja": {
-          "title": "TikTok",
-          "description": "日本での暮らしとショート動画",
-          "badge": ""
-        },
-        "en": {
-          "title": "TikTok",
-          "description": "Short videos and life in Japan",
-          "badge": ""
-        }
-      }
-    },
-    {
-      "enabled": true,
       "icon": "message-square",
       "title": "Zalo",
       "description": "Liên hệ với tôi trên Zalo",
-      "url": "https://zalo.me/84966697926",
+      "url": "https://zalo.me/819092951402",
       "image": "assets/zalo.webp",
       "badge": "",
       "featured": false,
@@ -219,7 +195,7 @@ window.BIO_CONFIG = {
       "icon": "message-circle-more",
       "title": "LINE",
       "description": "Kết bạn hoặc nhắn tin qua LINE",
-      "url": "https://line.me/ti/p/VNcwANYxzU",
+      "url": "https://line.me/ti/p/_Vjb1ng-z7",
       "image": "assets/line.webp",
       "badge": "",
       "featured": false,
@@ -242,23 +218,47 @@ window.BIO_CONFIG = {
       "enabled": true,
       "featured": false,
       "icon": "globe",
-      "title": "Vinh ở Nhật",
-      "description": "Bài viết, hướng dẫn và tiện ích mới nhất",
-      "url": "https://vinhonhat.github.io/",
+      "title": "Tokyo Sakura International School",
+      "description": "trang chủ của trường Sakura",
+      "url": "Tsis.jp",
       "badge": "",
       "image": "assets/web.webp",
       "showIconBackground": false,
       "id": "website",
       "translations": {
         "ja": {
-          "title": "日本のVinh ウェブサイト",
-          "description": "最新記事、ガイド、便利なツール",
+          "title": "東京さくらインタナショナルスクール",
+          "description": "",
           "badge": "おすすめ"
         },
         "en": {
-          "title": "Vinh in Japan Website",
-          "description": "Latest articles, guides, and useful tools",
+          "title": "Tokyo Sakura International School",
+          "description": "",
           "badge": "Featured"
+        }
+      }
+    },
+    {
+      "enabled": false,
+      "icon": "music-2",
+      "title": "TikTok",
+      "description": "Video ngắn và chia sẻ cuộc sống tại Nhật",
+      "url": "https://www.tiktok.com/@tqv2020?_r=1&_t=ZS-98QazQnE1p9",
+      "image": "assets/tiktok.webp",
+      "badge": "",
+      "featured": false,
+      "showIconBackground": false,
+      "id": "tiktok",
+      "translations": {
+        "ja": {
+          "title": "TikTok",
+          "description": "日本での暮らしとショート動画",
+          "badge": ""
+        },
+        "en": {
+          "title": "TikTok",
+          "description": "Short videos and life in Japan",
+          "badge": ""
         }
       }
     },
@@ -412,7 +412,7 @@ window.BIO_CONFIG = {
       "enabled": true,
       "icon": "facebook",
       "label": "Facebook",
-      "url": "https://facebook.com/tqv2022",
+      "url": "https://facebook.com/61590400792468",
       "image": "assets/fb.webp",
       "showIconBackground": false,
       "id": "social-1",
@@ -432,7 +432,7 @@ window.BIO_CONFIG = {
       "enabled": true,
       "icon": "message-circle",
       "label": "Messenger",
-      "url": "https://m.me/tqv2022",
+      "url": "https://m.me/61590400792468",
       "image": "assets/mess.webp",
       "showIconBackground": false,
       "id": "social-messenger",
@@ -450,29 +450,9 @@ window.BIO_CONFIG = {
     },
     {
       "enabled": true,
-      "icon": "music-2",
-      "label": "TikTok",
-      "url": "https://www.tiktok.com/@tqv2020?_r=1&_t=ZS-98QazQnE1p9",
-      "image": "assets/tiktok.webp",
-      "showIconBackground": false,
-      "id": "social-2",
-      "syncFromLink": false,
-      "sourceLinkId": "tiktok",
-      "translations": {
-        "ja": {
-          "label": "TikTok"
-        },
-        "en": {
-          "label": "TikTok"
-        }
-      },
-      "brandIcon": "tiktok"
-    },
-    {
-      "enabled": true,
       "icon": "message-square",
       "label": "Zalo",
-      "url": "https://zalo.me/84966697926",
+      "url": "https://zalo.me/819092951402",
       "image": "assets/zalo.webp",
       "showIconBackground": false,
       "id": "social-4",
@@ -492,7 +472,7 @@ window.BIO_CONFIG = {
       "enabled": true,
       "icon": "message-circle-more",
       "label": "LINE",
-      "url": "https://line.me/ti/p/VNcwANYxzU",
+      "url": "https://line.me/ti/p/_Vjb1ng-z7",
       "image": "assets/line.webp",
       "showIconBackground": false,
       "id": "social-5",
@@ -507,6 +487,26 @@ window.BIO_CONFIG = {
         }
       },
       "brandIcon": "line"
+    },
+    {
+      "enabled": false,
+      "icon": "music-2",
+      "label": "TikTok",
+      "url": "https://www.tiktok.com/@tqv2020?_r=1&_t=ZS-98QazQnE1p9",
+      "image": "assets/tiktok.webp",
+      "showIconBackground": false,
+      "id": "social-2",
+      "syncFromLink": false,
+      "sourceLinkId": "tiktok",
+      "translations": {
+        "ja": {
+          "label": "TikTok"
+        },
+        "en": {
+          "label": "TikTok"
+        }
+      },
+      "brandIcon": "tiktok"
     },
     {
       "enabled": false,
