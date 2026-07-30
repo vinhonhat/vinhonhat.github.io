@@ -218,8 +218,8 @@ window.BIO_CONFIG = {
       "enabled": true,
       "featured": false,
       "icon": "globe",
-      "title": "Tokyo Sakura International School",
-      "description": "trang chủ của trường Sakura",
+      "title": "Trường Nhật ngữ Tokyo Sakura",
+      "description": "Trang chủ trường Tokyo Sakura",
       "url": "Tsis.jp",
       "badge": "",
       "image": "assets/web.webp",
@@ -228,12 +228,12 @@ window.BIO_CONFIG = {
       "translations": {
         "ja": {
           "title": "東京さくらインタナショナルスクール",
-          "description": "",
+          "description": "東京さくらインタナショナルスクールのホームページ",
           "badge": "おすすめ"
         },
         "en": {
           "title": "Tokyo Sakura International School",
-          "description": "",
+          "description": "Tokyo Sakura International School Website",
           "badge": "Featured"
         }
       }
@@ -243,7 +243,7 @@ window.BIO_CONFIG = {
       "icon": "music-2",
       "title": "TikTok",
       "description": "Video ngắn và chia sẻ cuộc sống tại Nhật",
-      "url": "https://www.tiktok.com/@tqv2020?_r=1&_t=ZS-98QazQnE1p9",
+      "url": "https://www.tiktok.com/@",
       "image": "assets/tiktok.webp",
       "badge": "",
       "featured": false,
