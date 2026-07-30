@@ -220,7 +220,7 @@ window.BIO_CONFIG = {
       "icon": "globe",
       "title": "Trường Nhật ngữ Tokyo Sakura",
       "description": "Trang chủ trường Tokyo Sakura",
-      "url": "Tsis.jp",
+      "url": "https://tsis.jp/",
       "badge": "",
       "image": "assets/web.webp",
       "showIconBackground": false,
