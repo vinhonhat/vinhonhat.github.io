@@ -357,54 +357,6 @@ window.BIO_CONFIG = {
           "badge": ""
         }
       }
-    },
-    {
-      "enabled": false,
-      "icon": "book-open",
-      "title": "Bé Vui Học",
-      "description": "Kho trò chơi học tập dành cho bé",
-      "url": "https://vinhonhat.github.io/behoc/",
-      "image": "",
-      "badge": "",
-      "featured": false,
-      "showIconBackground": true,
-      "id": "kids-learning",
-      "translations": {
-        "ja": {
-          "title": "楽しく学ぼう",
-          "description": "子ども向け学習ゲーム",
-          "badge": ""
-        },
-        "en": {
-          "title": "Fun Learning for Kids",
-          "description": "Learning games for children",
-          "badge": ""
-        }
-      }
-    },
-    {
-      "enabled": false,
-      "icon": "download",
-      "title": "Tải công cụ miễn phí",
-      "description": "Phần mềm và công cụ do Vinh chia sẻ",
-      "url": "https://vinhonhat.github.io/#download",
-      "image": "",
-      "badge": "",
-      "featured": false,
-      "showIconBackground": true,
-      "id": "downloads",
-      "translations": {
-        "ja": {
-          "title": "無料ツール",
-          "description": "Vinhが共有するソフトウェアとツール",
-          "badge": ""
-        },
-        "en": {
-          "title": "Free downloads",
-          "description": "Software and tools shared by Vinh",
-          "badge": ""
-        }
-      }
     }
   ],
   "socialIcons": [
@@ -429,7 +381,7 @@ window.BIO_CONFIG = {
       "brandIcon": "facebook"
     },
     {
-      "enabled": true,
+      "enabled": false,
       "icon": "message-circle",
       "label": "Messenger",
       "url": "https://m.me/61590400792468",
@@ -487,6 +439,26 @@ window.BIO_CONFIG = {
         }
       },
       "brandIcon": "line"
+    },
+    {
+      "id": "social-1785395847221",
+      "enabled": true,
+      "syncFromLink": false,
+      "sourceLinkId": "website",
+      "brandIcon": "none",
+      "icon": "globe",
+      "image": "",
+      "showIconBackground": false,
+      "label": "Trường Nhật ngữ Tokyo Sakura",
+      "url": "https://tsis.jp/",
+      "translations": {
+        "ja": {
+          "label": "東京さくらインタナショナルスクール"
+        },
+        "en": {
+          "label": "Tokyo Sakura International School"
+        }
+      }
     },
     {
       "enabled": false,
