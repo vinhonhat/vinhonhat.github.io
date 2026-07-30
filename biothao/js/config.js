@@ -3,9 +3,9 @@ window.BIO_CONFIG = {
   "profile": {
     "name": "Thảo Sakura",
     "handle": "@thaosakura",
-    "bio": "ghi mô tả vào đây e nhé",
-    "avatar": "/img/logoQV.png",
-    "footerText": "Vinh ở Nhật • Made with ❤️",
+    "bio": "Làm việc tại trường Nhật ngữ Tokyo Sakura",
+    "avatar": "/biothao/img/logothao.jpeg",
+    "footerText": "Thảo Sakura • Made with ❤️",
     "badges": [
       {
         "enabled": true,
@@ -34,7 +34,7 @@ window.BIO_CONFIG = {
         }
       }
     ],
-    "favicon": "/img/logoQV.png",
+    "favicon": "/biothao/img/logothao.jpeg",
     "translations": {
       "ja": {
         "name": "日本のVinh",
