@@ -1,9 +1,9 @@
 /* Cấu hình Bio Link - xuất từ bảng cài đặt */
 window.BIO_CONFIG = {
   "profile": {
-    "name": "Vinh ở Nhật",
-    "handle": "@vinhonhat",
-    "bio": "iPhone, iPad, MacBook, Sim Data, Sim nghe gọi, Rakuten, Tokuei.\nChia sẻ cuộc sống, tiện ích hữu ích tại Nhật Bản.",
+    "name": "Thảo Sakura",
+    "handle": "@thaosakura",
+    "bio": "ghi mô tả vào đây e nhé",
     "avatar": "/img/logoQV.png",
     "footerText": "Vinh ở Nhật • Made with ❤️",
     "badges": [
@@ -50,10 +50,10 @@ window.BIO_CONFIG = {
   },
   "admin": {
     "enabled": true,
-    "logoTapCount": 10,
+    "logoTapCount": 3,
     "tapTimeout": 2500,
     "storageKey": "vinh-bio-admin-config-v160",
-    "passwordHash": "5f3c731b478c8292b603e6dec59aaa2626f6fcb3c6d5e97bc3a844b8dc4e279b",
+    "passwordHash": "5994fceb32789ea9beb12f4233d556b070ca94f279e73f0c8c3272b7daa0625f",
     "serverSave": {
       "enabled": false,
       "endpoint": "api/save-config.php"
