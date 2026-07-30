@@ -143,7 +143,7 @@ window.BIO_CONFIG = {
       }
     },
     {
-      "enabled": true,
+      "enabled": false,
       "icon": "message-circle",
       "title": "Messenger",
       "description": "Nhắn tin trực tiếp qua Messenger",
