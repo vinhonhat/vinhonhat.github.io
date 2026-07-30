@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff4dd"/><stop offset="1" stop-color="#ffb238"/></linearGradient>
+    <linearGradient id="av" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffcb62"/><stop offset="1" stop-color="#ed7214"/></linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="1040" cy="100" r="220" fill="#fff" opacity=".18"/>
+  <circle cx="110" cy="590" r="270" fill="#fff" opacity=".22"/>
+  <rect x="145" y="85" width="910" height="460" rx="52" fill="#fff" opacity=".82"/>
+  <circle cx="600" cy="225" r="82" fill="url(#av)"/>
+  <text x="600" y="267" text-anchor="middle" font-family="Arial" font-weight="800" font-size="116" fill="#fff">V</text>
+  <text x="600" y="365" text-anchor="middle" font-family="Arial" font-weight="800" font-size="58" fill="#2d2117">Vinh ở Nhật</text>
+  <text x="600" y="418" text-anchor="middle" font-family="Arial" font-size="28" fill="#756555">Tất cả liên kết chính thức tại một nơi</text>
+  <rect x="448" y="457" width="304" height="54" rx="27" fill="#f49419"/>
+  <text x="600" y="493" text-anchor="middle" font-family="Arial" font-weight="700" font-size="22" fill="#fff">vinhonhat.github.io/bio</text>
+</svg>
