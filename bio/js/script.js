@@ -1,4 +1,4 @@
-/* Bio Link V1.7.0 - mỗi tài khoản một thư mục: index.html + profile.js + avatar */
+/* Bio Link V1.7.1 - mỗi tài khoản một thư mục: index.html + profile.js + avatar */
 (() => {
   "use strict";
 
@@ -109,7 +109,7 @@
       Math.max(0, Number(cfg.admin.logoRingDelaySeconds) || 0.6)
     );
     cfg.admin.serverSave = { ...DEFAULT_SERVER_SAVE, ...(cfg.admin.serverSave || {}) };
-    cfg.admin.version = "V1.7.0";
+    cfg.admin.version = "V1.7.1";
     cfg.admin.mode = IS_SERVER_MODE ? "server" : "embedded";
     cfg.admin.serverSave.enabled = IS_SERVER_MODE;
     cfg.admin.serverSave.endpoint = "api/save-profile.php";
@@ -963,7 +963,7 @@
 
   const TOUCH_LINK_SELECTOR = ".link-card, .social-button";
   const LONG_PRESS_DELAY = 560;
-  const TAP_EFFECT_DURATION = 520;
+  const TAP_OPEN_DELAY = 140;
   const MOVE_CANCEL_DISTANCE = 14;
   let touchInteraction = null;
   let blockedClickTarget = null;
@@ -1063,12 +1063,12 @@
         return;
       }
 
-      const elapsed = performance.now() - state.startedAt;
-      const remaining = Math.max(120, TAP_EFFECT_DURATION - elapsed);
+      // Giữ vệt sáng bắt đầu ngay khi chạm nhưng chỉ chờ rất ngắn sau khi thả.
+      // Bản cũ đợi gần hết hiệu ứng nên tạo cảm giác link bị trễ trên mobile.
       window.setTimeout(() => {
         clearTouchState(state.element);
         openTouchLink(state.element);
-      }, remaining);
+      }, TAP_OPEN_DELAY);
     }, { passive: true });
 
     document.addEventListener("pointercancel", event => {
@@ -1325,7 +1325,7 @@
       <section id="adminLogin" class="admin-login-card" role="dialog" aria-modal="true" aria-labelledby="adminLoginTitle">
         <button class="admin-close" type="button" data-admin-close aria-label="Đóng">${icon("x")}</button>
         <div class="admin-lock">${icon("lock", 28)}</div>
-        <h2 id="adminLoginTitle">Mở cài đặt Bio Link <span class="admin-version">V1.7.0</span></h2>
+        <h2 id="adminLoginTitle">Mở cài đặt Bio Link <span class="admin-version">V1.7.1</span></h2>
         <p>Nhập mật khẩu quản trị để chỉnh sửa nội dung.</p>
         <form id="adminLoginForm">
           <label class="admin-field"><span>Mật khẩu</span><div class="password-wrap"><input id="adminPassword" type="password" autocomplete="current-password" required /><button class="password-toggle" type="button" data-password-toggle="adminPassword" aria-label="Hiện mật khẩu" title="Hiện mật khẩu">${icon("eye", 18)}</button></div></label>
@@ -1336,7 +1336,7 @@
 
       <section id="adminEditor" class="admin-editor hidden" role="dialog" aria-modal="true" aria-labelledby="adminTitle">
         <header class="admin-header">
-          <div><span class="admin-kicker">BIO LINK</span><span class="admin-version">V1.7.0</span><h2 id="adminTitle">Cài đặt trang</h2></div>
+          <div><span class="admin-kicker">BIO LINK</span><span class="admin-version">V1.7.1</span><h2 id="adminTitle">Cài đặt trang</h2></div>
           <button class="admin-close" type="button" data-admin-close aria-label="Đóng">${icon("x")}</button>
         </header>
         <nav class="admin-tabs" aria-label="Nhóm cài đặt">
@@ -1348,10 +1348,10 @@
           <div class="admin-panel" data-admin-panel="config">
             <section class="admin-section">
               <div class="admin-version-card">
-                <div><strong>Bio Link Manager <span class="admin-version">V1.7.0</span></strong><small>Hồ sơ: <b>/${escapeHtml(profileSlug)}/</b> • Dữ liệu: <code>${escapeHtml(profileDataFile)}</code></small></div>
+                <div><strong>Bio Link Manager <span class="admin-version">V1.7.1</span></strong><small>Hồ sơ: <b>/${escapeHtml(profileSlug)}/</b> • Dữ liệu: <code>${escapeHtml(profileDataFile)}</code></small></div>
               </div>
               <div class="admin-grid two" style="margin-top:14px">
-                <label class="admin-field"><span>Phiên bản</span><input type="text" value="V1.7.0" readonly /></label>
+                <label class="admin-field"><span>Phiên bản</span><input type="text" value="V1.7.1" readonly /></label>
                 <label class="admin-field"><span>Cách dùng logo</span><select id="editLogoGestureMode"><option value="tap-cache-hold-admin">Nhấn nhiều lần: xóa cache · Giữ: mở Admin</option><option value="tap-admin-hold-cache">Nhấn nhiều lần: mở Admin · Giữ: xóa cache</option></select></label>
                 <label class="admin-field"><span>Số lần nhấn</span><input id="editLogoTapCount" type="number" min="2" max="12" step="1" /></label>
                 <label class="admin-field"><span>Thời gian giữ logo (giây)</span><input id="editLogoHoldSeconds" type="number" min="1" max="8" step="0.1" /></label>
@@ -2339,7 +2339,7 @@
   const profileZipFolder = () => profileSlug === "vinh" ? "bio" : `bio/${profileSlug}`;
 
   const buildSharedAssetsConfig = exported => ({
-    version: "V1.7.0",
+    version: "V1.7.1",
     linkImages: Object.fromEntries((exported.links || []).map(item => [item.id, item.image || ""])),
     socialImages: Object.fromEntries((exported.socialIcons || []).map(item => [item.sourceLinkId || item.id, item.image || ""]))
   });
@@ -2425,15 +2425,15 @@
       const { exported, assets, shared } = preparePortableProfileExport(editorDraft);
       const zip = new window.JSZip();
       const folder = profileZipFolder();
-      const profileContent = `/* Cấu hình Bio Link - gói cập nhật V1.7.0 */\nwindow.BIO_CONFIG = ${JSON.stringify(exported, null, 2)};\n`;
+      const profileContent = `/* Cấu hình Bio Link - gói cập nhật V1.7.1 */\nwindow.BIO_CONFIG = ${JSON.stringify(exported, null, 2)};\n`;
       zip.file(`${folder}/profile.js`, profileContent);
       if (isPrimaryProfile && shared) {
-        const sharedContent = `/* Ảnh dùng chung Bio Link V1.7.0 - chỉ tài khoản chính cập nhật */\nwindow.BIO_SHARED_ASSETS = ${JSON.stringify(shared, null, 2)};\n`;
+        const sharedContent = `/* Ảnh dùng chung Bio Link V1.7.1 - chỉ tài khoản chính cập nhật */\nwindow.BIO_SHARED_ASSETS = ${JSON.stringify(shared, null, 2)};\n`;
         zip.file("bio/shared-assets.js", sharedContent);
       }
       assets.forEach(asset => zip.file(`${folder}/${asset.relativePath}`, asset.bytes));
       const guide = [
-        "BIO LINK V1.7.0 - GOI CAP NHAT RIENG HO SO",
+        "BIO LINK V1.7.1 - GOI CAP NHAT RIENG HO SO",
         "",
         `Ho so: ${exported.profile?.name || profileSlug}`,
         `Thu muc dich: ${folder}/`,
@@ -2446,7 +2446,7 @@
       ].join("\n");
       zip.file("HUONG-DAN-CAP-NHAT.txt", guide);
       const blob = await zip.generateAsync({ type: "blob", compression: "DEFLATE", compressionOptions: { level: 6 } });
-      downloadBlob(blob, `${safeAssetName(profileSlug)}-cap-nhat-v1.7.0.zip`);
+      downloadBlob(blob, `${safeAssetName(profileSlug)}-cap-nhat-v1.7.1.zip`);
       showToast(isPrimaryProfile ? (assets.length ? `Đã tạo ZIP gồm profile.js, shared-assets.js và ${assets.length} ảnh` : "Đã tạo ZIP gồm profile.js và shared-assets.js") : (assets.length ? `Đã tạo ZIP gồm profile.js và ${assets.length} ảnh riêng` : "Đã tạo ZIP chỉ gồm profile.js"));
     } catch (error) {
       console.error(error);

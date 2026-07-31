@@ -63,7 +63,7 @@ window.BIO_CONFIG = {
       "endpoint": "api/save-config.php"
     },
     "mode": "embedded",
-    "version": "V1.7.0"
+    "version": "V1.7.1"
   },
   "settings": {
     "defaultTheme": "auto",
