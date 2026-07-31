@@ -1,4 +1,4 @@
-/* Cấu hình Bio Link V1.6.8 */
+/* Cấu hình Bio Link V1.6.10 */
 window.BIO_CONFIG = {
   "profile": {
     "name": "Vinh ở Nhật",
@@ -63,7 +63,7 @@ window.BIO_CONFIG = {
       "endpoint": "api/save-config.php"
     },
     "mode": "embedded",
-    "version": "V1.6.8"
+    "version": "V1.7.0"
   },
   "settings": {
     "defaultTheme": "auto",

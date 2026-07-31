@@ -1,4 +1,4 @@
-/* Bio Link V1.6.10 - mỗi tài khoản một thư mục: index.html + profile.js + avatar */
+/* Bio Link V1.7.0 - mỗi tài khoản một thư mục: index.html + profile.js + avatar */
 (() => {
   "use strict";
 
@@ -30,9 +30,10 @@
     showDecorations: true,
     showCardBorder: true
   };
+  const IS_SERVER_MODE = window.BIO_SERVER_MODE === true;
   const DEFAULT_SERVER_SAVE = {
-    enabled: true,
-    endpoint: "api/save-config.php"
+    enabled: IS_SERVER_MODE,
+    endpoint: "api/save-profile.php"
   };
   const DEFAULT_QR_DESIGN = {
     linkPreset: "current-current",
@@ -108,6 +109,10 @@
       Math.max(0, Number(cfg.admin.logoRingDelaySeconds) || 0.6)
     );
     cfg.admin.serverSave = { ...DEFAULT_SERVER_SAVE, ...(cfg.admin.serverSave || {}) };
+    cfg.admin.version = "V1.7.0";
+    cfg.admin.mode = IS_SERVER_MODE ? "server" : "embedded";
+    cfg.admin.serverSave.enabled = IS_SERVER_MODE;
+    cfg.admin.serverSave.endpoint = "api/save-profile.php";
     cfg.settings ||= {};
     cfg.settings.qrUrl = String(cfg.settings.qrUrl || "").trim();
     cfg.settings.qrDesign = { ...DEFAULT_QR_DESIGN, ...(cfg.settings.qrDesign || {}) };
@@ -174,7 +179,7 @@
   };
 
   const sourceConfig = normalizeConfig(window.BIO_CONFIG || {});
-  const storageKeyBase = `${sourceConfig.admin?.storageKey || "vinh-bio-admin-config"}-v1610`;
+  const storageKeyBase = `${sourceConfig.admin?.storageKey || "vinh-bio-admin-config"}-v170`;
   const storageKey = `${storageKeyBase}-${profileSlug}`;
   const languageStorageKey = `${storageKey}-language`;
   const profileDataFile = String(window.BIO_PROFILE_DATA_FILE || `${profileDir}profile.js`);
@@ -1320,7 +1325,7 @@
       <section id="adminLogin" class="admin-login-card" role="dialog" aria-modal="true" aria-labelledby="adminLoginTitle">
         <button class="admin-close" type="button" data-admin-close aria-label="Đóng">${icon("x")}</button>
         <div class="admin-lock">${icon("lock", 28)}</div>
-        <h2 id="adminLoginTitle">Mở cài đặt Bio Link <span class="admin-version">V1.6.10</span></h2>
+        <h2 id="adminLoginTitle">Mở cài đặt Bio Link <span class="admin-version">V1.7.0</span></h2>
         <p>Nhập mật khẩu quản trị để chỉnh sửa nội dung.</p>
         <form id="adminLoginForm">
           <label class="admin-field"><span>Mật khẩu</span><div class="password-wrap"><input id="adminPassword" type="password" autocomplete="current-password" required /><button class="password-toggle" type="button" data-password-toggle="adminPassword" aria-label="Hiện mật khẩu" title="Hiện mật khẩu">${icon("eye", 18)}</button></div></label>
@@ -1331,7 +1336,7 @@
 
       <section id="adminEditor" class="admin-editor hidden" role="dialog" aria-modal="true" aria-labelledby="adminTitle">
         <header class="admin-header">
-          <div><span class="admin-kicker">BIO LINK</span><span class="admin-version">V1.6.10</span><h2 id="adminTitle">Cài đặt trang</h2></div>
+          <div><span class="admin-kicker">BIO LINK</span><span class="admin-version">V1.7.0</span><h2 id="adminTitle">Cài đặt trang</h2></div>
           <button class="admin-close" type="button" data-admin-close aria-label="Đóng">${icon("x")}</button>
         </header>
         <nav class="admin-tabs" aria-label="Nhóm cài đặt">
@@ -1343,10 +1348,10 @@
           <div class="admin-panel" data-admin-panel="config">
             <section class="admin-section">
               <div class="admin-version-card">
-                <div><strong>Bio Link Manager <span class="admin-version">V1.6.10</span></strong><small>Hồ sơ: <b>/${escapeHtml(profileSlug)}/</b> • Dữ liệu: <code>${escapeHtml(profileDataFile)}</code></small></div>
+                <div><strong>Bio Link Manager <span class="admin-version">V1.7.0</span></strong><small>Hồ sơ: <b>/${escapeHtml(profileSlug)}/</b> • Dữ liệu: <code>${escapeHtml(profileDataFile)}</code></small></div>
               </div>
               <div class="admin-grid two" style="margin-top:14px">
-                <label class="admin-field"><span>Phiên bản</span><input type="text" value="V1.6.10" readonly /></label>
+                <label class="admin-field"><span>Phiên bản</span><input type="text" value="V1.7.0" readonly /></label>
                 <label class="admin-field"><span>Cách dùng logo</span><select id="editLogoGestureMode"><option value="tap-cache-hold-admin">Nhấn nhiều lần: xóa cache · Giữ: mở Admin</option><option value="tap-admin-hold-cache">Nhấn nhiều lần: mở Admin · Giữ: xóa cache</option></select></label>
                 <label class="admin-field"><span>Số lần nhấn</span><input id="editLogoTapCount" type="number" min="2" max="12" step="1" /></label>
                 <label class="admin-field"><span>Thời gian giữ logo (giây)</span><input id="editLogoHoldSeconds" type="number" min="1" max="8" step="0.1" /></label>
@@ -1506,7 +1511,7 @@
                 <label class="admin-field"><span>Nhập lại mật khẩu</span><div class="password-wrap"><input id="editConfirmPassword" type="password" autocomplete="new-password" /><button class="password-toggle" type="button" data-password-toggle="editConfirmPassword" aria-label="Hiện mật khẩu" title="Hiện mật khẩu">${icon("eye", 18)}</button></div></label>
               </div>
               <p class="admin-help">Để trống nếu không muốn đổi. Trên host PHP, mật khẩu này cũng được dùng để xác thực khi ghi cấu hình lên máy chủ.</p>
-              <div class="admin-server-note"><b>Lưu trực tiếp trên host:</b> nút “Lưu lên máy chủ” hoạt động khi host hỗ trợ PHP và thư mục <code>js</code> có quyền ghi.</div>
+              <div class="admin-server-note"><b>Lưu trực tiếp trên host:</b> nút “Lưu lên máy chủ” hoạt động khi host hỗ trợ PHP và thư mục <code>bio</code> có quyền ghi.</div>
             </section>
           </div>
 
@@ -1552,13 +1557,16 @@
   const setupAdmin = () => {
     if (sourceConfig.admin?.enabled === false) return;
     document.body.insertAdjacentHTML("beforeend", adminMarkup());
-    if (sourceConfig.admin?.mode === "embedded") {
+    {
       const serverButton = $("#serverSaveButton");
-      if (serverButton) serverButton.style.display = "none";
       const serverNote = $(".admin-server-note");
-      if (serverNote) {
-        const profileLabel = sourceConfig.profile?.name || profileSlug;
-        serverNote.innerHTML = `<b>Hồ sơ ${escapeHtml(profileLabel)} (/${escapeHtml(profileSlug)}/):</b> lưu xem trước chỉ nằm trên trình duyệt. Muốn cập nhật trang thật, hãy tải <code>profile.js</code> rồi thay file <code>${escapeHtml(profileDataFile)}</code> trên GitHub. ${isPrimaryProfile ? `Ảnh icon lớn/bé do hồ sơ chính quản lý chung; avatar và hai ảnh nền vẫn là của riêng hồ sơ chính.` : `Hồ sơ phụ được tải avatar và hai ảnh nền riêng; ảnh icon lớn/bé tự dùng theo hồ sơ chính.`}`;
+      const profileLabel = sourceConfig.profile?.name || profileSlug;
+      if (!IS_SERVER_MODE) {
+        if (serverButton) serverButton.style.display = "none";
+        if (serverNote) serverNote.innerHTML = `<b>Hồ sơ ${escapeHtml(profileLabel)} (/${escapeHtml(profileSlug)}/):</b> lưu xem trước chỉ nằm trên trình duyệt. Muốn cập nhật trang thật, hãy tải <code>profile.js</code> hoặc gói ZIP rồi thay đúng file <code>${escapeHtml(profileDataFile)}</code> trên GitHub. ${isPrimaryProfile ? `Ảnh icon lớn/bé do hồ sơ chính quản lý chung; avatar và hai ảnh nền vẫn là của riêng hồ sơ chính.` : `Hồ sơ phụ được tải avatar và hai ảnh nền riêng; ảnh icon lớn/bé tự dùng theo hồ sơ chính.`}`;
+      } else {
+        if (serverButton) serverButton.style.display = "inline-flex";
+        if (serverNote) serverNote.innerHTML = `<b>Hồ sơ ${escapeHtml(profileLabel)} (/${escapeHtml(profileSlug)}/):</b> nút <b>Lưu lên máy chủ</b> sẽ ghi trực tiếp vào <code>${escapeHtml(profileDataFile)}</code>. Avatar và hai ảnh nền được lưu trong thư mục hồ sơ; ảnh icon lớn/bé chỉ tài khoản chính được cập nhật dùng chung.`;
       }
     }
     $$("[data-admin-tab]").forEach(button => button.addEventListener("click", () => switchAdminTab(button.dataset.adminTab)));
@@ -2020,8 +2028,8 @@
       outerDarkColor: $("#editOuterDarkColor").value || DEFAULT_APPEARANCE.outerDarkColor,
       innerLightColor: $("#editInnerLightColor").value || DEFAULT_APPEARANCE.innerLightColor,
       innerDarkColor: $("#editInnerDarkColor").value || DEFAULT_APPEARANCE.innerDarkColor,
-      outerBackgroundImage: isPrimaryProfile ? $("#editOuterBackgroundImage").value.trim() : (sharedAssets.appearance?.outerBackgroundImage || ""),
-      innerBackgroundImage: isPrimaryProfile ? $("#editInnerBackgroundImage").value.trim() : (sharedAssets.appearance?.innerBackgroundImage || ""),
+      outerBackgroundImage: $("#editOuterBackgroundImage").value.trim(),
+      innerBackgroundImage: $("#editInnerBackgroundImage").value.trim(),
       lightBorderColor: $("#editLightBorderColor").value || $("#editPrimaryColor").value || DEFAULT_APPEARANCE.lightBorderColor,
       darkBorderColor: $("#editDarkBorderColor").value || $("#editPrimaryColor").value || DEFAULT_APPEARANCE.darkBorderColor,
       showDecorations: $("#editShowDecorations").checked,
@@ -2264,10 +2272,16 @@
         method: "POST",
         credentials: "same-origin",
         headers: { "Content-Type": "application/json", "X-Requested-With": "BioLinkAdmin" },
-        body: JSON.stringify({ password: adminSessionPassword, config: editorDraft })
+        body: JSON.stringify({
+          password: adminSessionPassword,
+          profileSlug,
+          config: editorDraft,
+          newPasswordHash: editorDraft.admin?.passwordHash || ""
+        })
       });
       const result = await response.json().catch(() => ({}));
       if (!response.ok || result.ok !== true) throw new Error(result.message || `Lỗi máy chủ ${response.status}`);
+      if (result.config && typeof result.config === "object") editorDraft = normalizeConfig(result.config);
       commitSavedConfigToPreview();
       if ($("#editNewPassword").value) adminSessionPassword = $("#editNewPassword").value;
       $("#editNewPassword").value = "";
@@ -2325,7 +2339,7 @@
   const profileZipFolder = () => profileSlug === "vinh" ? "bio" : `bio/${profileSlug}`;
 
   const buildSharedAssetsConfig = exported => ({
-    version: "V1.6.10",
+    version: "V1.7.0",
     linkImages: Object.fromEntries((exported.links || []).map(item => [item.id, item.image || ""])),
     socialImages: Object.fromEntries((exported.socialIcons || []).map(item => [item.sourceLinkId || item.id, item.image || ""]))
   });
@@ -2411,15 +2425,15 @@
       const { exported, assets, shared } = preparePortableProfileExport(editorDraft);
       const zip = new window.JSZip();
       const folder = profileZipFolder();
-      const profileContent = `/* Cấu hình Bio Link - gói cập nhật V1.6.10 */\nwindow.BIO_CONFIG = ${JSON.stringify(exported, null, 2)};\n`;
+      const profileContent = `/* Cấu hình Bio Link - gói cập nhật V1.7.0 */\nwindow.BIO_CONFIG = ${JSON.stringify(exported, null, 2)};\n`;
       zip.file(`${folder}/profile.js`, profileContent);
       if (isPrimaryProfile && shared) {
-        const sharedContent = `/* Ảnh dùng chung Bio Link V1.6.10 - chỉ tài khoản chính cập nhật */\nwindow.BIO_SHARED_ASSETS = ${JSON.stringify(shared, null, 2)};\n`;
+        const sharedContent = `/* Ảnh dùng chung Bio Link V1.7.0 - chỉ tài khoản chính cập nhật */\nwindow.BIO_SHARED_ASSETS = ${JSON.stringify(shared, null, 2)};\n`;
         zip.file("bio/shared-assets.js", sharedContent);
       }
       assets.forEach(asset => zip.file(`${folder}/${asset.relativePath}`, asset.bytes));
       const guide = [
-        "BIO LINK V1.6.10 - GOI CAP NHAT RIENG HO SO",
+        "BIO LINK V1.7.0 - GOI CAP NHAT RIENG HO SO",
         "",
         `Ho so: ${exported.profile?.name || profileSlug}`,
         `Thu muc dich: ${folder}/`,
@@ -2432,7 +2446,7 @@
       ].join("\n");
       zip.file("HUONG-DAN-CAP-NHAT.txt", guide);
       const blob = await zip.generateAsync({ type: "blob", compression: "DEFLATE", compressionOptions: { level: 6 } });
-      downloadBlob(blob, `${safeAssetName(profileSlug)}-cap-nhat-v1.6.10.zip`);
+      downloadBlob(blob, `${safeAssetName(profileSlug)}-cap-nhat-v1.7.0.zip`);
       showToast(isPrimaryProfile ? (assets.length ? `Đã tạo ZIP gồm profile.js, shared-assets.js và ${assets.length} ảnh` : "Đã tạo ZIP gồm profile.js và shared-assets.js") : (assets.length ? `Đã tạo ZIP gồm profile.js và ${assets.length} ảnh riêng` : "Đã tạo ZIP chỉ gồm profile.js"));
     } catch (error) {
       console.error(error);

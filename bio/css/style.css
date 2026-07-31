@@ -1479,7 +1479,7 @@ html[data-card-border="hide"] .bio-card { border-color: transparent; }
 }
 
 
-/* ===== V1.6.8: QR tùy màu, 3 chế độ link trong Admin và lưu danh thiếp PNG ===== */
+/* ===== V1.6.9: QR tùy màu, 3 chế độ link trong Admin và lưu danh thiếp PNG ===== */
 .qr-action-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 .download-qr-button {
   width: 100%;
@@ -1504,7 +1504,7 @@ html[data-card-border="hide"] .bio-card { border-color: transparent; }
 }
 
 
-/* ===== V1.6.8: form Admin gọn 3 cột + xuất gói ảnh ===== */
+/* ===== V1.6.9: form Admin gọn 3 cột + xuất gói ảnh ===== */
 .admin-aligned-selects .admin-field { margin-bottom: 0; }
 .admin-language-detection-help { margin: 8px 0 12px; }
 .admin-item-field-grid {
@@ -1551,4 +1551,30 @@ html[data-card-border="hide"] .bio-card { border-color: transparent; }
   .admin-upload-with-help small { max-width: none; }
   .admin-footer-right { grid-template-columns: 1fr 1fr; }
   .admin-footer-right .admin-primary { grid-column: 1 / -1; }
+}
+
+
+/* V1.6.9: tài nguyên ảnh dùng chung cho hồ sơ phụ */
+.admin-field input[readonly] {
+  cursor: not-allowed;
+  opacity: .72;
+  border-style: dashed;
+}
+.admin-shared-assets-note,
+.admin-shared-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--admin-muted, #8b7d70);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.admin-shared-assets-note {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border: 1px dashed color-mix(in srgb, var(--primary-color, #f39b19) 44%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--primary-color, #f39b19) 7%, transparent);
 }
