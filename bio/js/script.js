@@ -1549,11 +1549,10 @@
                 <div><strong>Bio Link Manager <span class="admin-version">${escapeHtml(SYSTEM_VERSION)}</span></strong><small>Hồ sơ: <b>/${escapeHtml(profileSlug)}/</b> • Dữ liệu: <code>${escapeHtml(profileDataFile)}</code> • Admin: <code>${escapeHtml(adminDataFile)}</code></small></div>
               </div>
               <div class="admin-grid two" style="margin-top:14px">
-                <label class="admin-field"><span>Phiên bản</span><input type="text" value="${SYSTEM_VERSION}" readonly /></label>
                 <label class="admin-field"><span>Cách dùng logo</span><select id="editLogoGestureMode"><option value="tap-cache-hold-admin">Nhấn nhiều lần: xóa cache · Giữ: mở Admin</option><option value="tap-admin-hold-cache">Nhấn nhiều lần: mở Admin · Giữ: xóa cache</option></select></label>
+                <label class="admin-field"><span>Trễ hiện vòng tiến trình (giây)</span><input id="editLogoRingDelaySeconds" type="number" min="0" max="2" step="0.1" /></label>
                 <label class="admin-field"><span>Số lần nhấn</span><input id="editLogoTapCount" type="number" min="2" max="12" step="1" /></label>
                 <label class="admin-field"><span>Thời gian giữ logo (giây)</span><input id="editLogoHoldSeconds" type="number" min="1" max="8" step="0.1" /></label>
-                <label class="admin-field"><span>Trễ hiện vòng tiến trình (giây)</span><input id="editLogoRingDelaySeconds" type="number" min="0" max="2" step="0.1" /></label>
               </div>
               <p id="logoTapHelp" class="admin-help">Mặc định: nhấn 2 lần để xóa cache; giữ 2 giây để mở Admin. Vòng tiến trình chỉ hiện sau 0,6 giây nên thao tác nhấn nhanh không còn lóe vòng.</p>
             </section>
