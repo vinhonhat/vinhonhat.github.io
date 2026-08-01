@@ -555,7 +555,7 @@ h1 {
   position: fixed;
   left: 50%;
   bottom: calc(24px + env(safe-area-inset-bottom));
-  z-index: 30;
+  z-index: 2147483000;
   max-width: calc(100vw - 32px);
   padding: 12px 17px;
   border-radius: 999px;
@@ -570,6 +570,23 @@ h1 {
   transition: opacity .25s ease, transform .25s ease;
 }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
+.toast.over-overlay {
+  top: max(16px, env(safe-area-inset-top));
+  bottom: auto;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(24, 19, 14, .96);
+  box-shadow: 0 14px 42px rgba(0,0,0,.38);
+  transform: translate(-50%, -18px);
+}
+.toast.over-overlay.show { transform: translate(-50%, 0); }
+@media (max-width: 430px) {
+  .toast.over-overlay {
+    top: max(10px, env(safe-area-inset-top));
+    max-width: calc(100vw - 20px);
+    padding: 10px 14px;
+    font-size: .76rem;
+  }
+}
 
 .modal {
   position: fixed;
