@@ -472,10 +472,21 @@
 
   const showToast = message => {
     const toast = $("#toast");
+    if (!toast) return;
+    const overlayOpen = Boolean(
+      $("#qrModal")?.classList.contains("open") ||
+      $("#adminOverlay")?.classList.contains("open") ||
+      $("#orderModal")?.classList.contains("open") ||
+      $("#linkHelpModal")?.classList.contains("open")
+    );
     toast.textContent = message;
+    toast.classList.toggle("over-overlay", overlayOpen);
     toast.classList.add("show");
     clearTimeout(showToast.timer);
-    showToast.timer = setTimeout(() => toast.classList.remove("show"), 2200);
+    showToast.timer = setTimeout(() => {
+      toast.classList.remove("show");
+      setTimeout(() => toast.classList.remove("over-overlay"), 260);
+    }, 2200);
   };
 
   const applyProfile = () => {
@@ -1007,7 +1018,7 @@
     const isDark = document.documentElement.dataset.theme === "dark";
     const primary = config.settings?.appearance?.primaryColor || "#f39b19";
     const width = 900;
-    const height = 1120;
+    const height = 1200;
     const canvas = document.createElement("canvas");
     canvas.width = width;
     canvas.height = height;
@@ -1046,6 +1057,11 @@
       }
     }
     context.restore();
+    // Vẽ viền sau cùng và lùi vào trong canvas để không bị cắt hoặc bị họa tiết che mất cạnh dưới.
+    roundedRectPath(context, cardX + 1.5, cardY + 1.5, cardWidth - 3, cardHeight - 3, cardRadius - 1.5);
+    context.lineWidth = 3;
+    context.strokeStyle = isDark ? "rgba(243,155,25,.58)" : "rgba(243,155,25,.58)";
+    context.stroke();
     const avatarY = 150;
     try {
       const avatarImage = await loadCanvasImage(avatarSource);
@@ -1094,17 +1110,17 @@
     context.font = "800 25px 'Be Vietnam Pro', system-ui, sans-serif";
     context.strokeStyle = "rgba(255,255,255,.94)";
     context.lineWidth = 7;
-    context.strokeText(text.qrCardHint, width / 2, 1060);
+    context.strokeText(text.qrCardHint, width / 2, 1080);
     context.fillStyle = isDark ? "#fff3e2" : "#5c3d17";
-    context.fillText(text.qrCardHint, width / 2, 1060);
+    context.fillText(text.qrCardHint, width / 2, 1080);
     context.font = "650 22px 'Be Vietnam Pro', system-ui, sans-serif";
     const displayUrl = formatQrDisplayUrl(activeQrDisplayUrl || getQrLinkSelection().displayUrl);
     const displayText = truncateCanvasText(context, displayUrl, 720);
     context.strokeStyle = "rgba(255,255,255,.94)";
     context.lineWidth = 6;
-    context.strokeText(displayText, width / 2, 1100);
+    context.strokeText(displayText, width / 2, 1122);
     context.fillStyle = isDark ? "#e7d8c1" : "#8a6b46";
-    context.fillText(displayText, width / 2, 1100);
+    context.fillText(displayText, width / 2, 1122);
     const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png", 1));
     if (!blob) throw new Error("Không thể tạo ảnh PNG");
     return { blob, fileName: `${getPreferredExportBaseName()}-qr-card.png`, profileName };
