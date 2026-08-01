@@ -1,4 +1,4 @@
-/* Dữ liệu và thiết lập riêng của hồ sơ thao. Mã giao diện/phiên bản nằm trong file hệ thống dùng chung. */
+/* Dữ liệu và thiết lập riêng Bio Link - gói cập nhật V1.7.8-beta */
 window.BIO_CONFIG = {
   "profile": {
     "name": "Thảo Sakura",
@@ -107,8 +107,8 @@ window.BIO_CONFIG = {
     "qrDesign": {
       "linkPreset": "current-custom",
       "colorMode": "gradient",
-      "color1": "#004cff",
-      "color2": "#ff00dd",
+      "color1": "#0062ff",
+      "color2": "#ff0095",
       "backgroundColor": "#ffffff",
       "gradientDirection": "diagonal"
     }
@@ -361,7 +361,7 @@ window.BIO_CONFIG = {
       "icon": "facebook",
       "label": "Facebook",
       "url": "https://facebook.com/61590400792468",
-      "image": "assets/fb.webp",
+      "image": "",
       "showIconBackground": false,
       "id": "social-1",
       "syncFromLink": false,
@@ -381,7 +381,7 @@ window.BIO_CONFIG = {
       "icon": "message-circle",
       "label": "Messenger",
       "url": "https://m.me/61590400792468",
-      "image": "assets/mess.webp",
+      "image": "",
       "showIconBackground": false,
       "id": "social-messenger",
       "syncFromLink": false,
@@ -401,7 +401,7 @@ window.BIO_CONFIG = {
       "icon": "message-square",
       "label": "Zalo",
       "url": "https://zalo.me/819092951402",
-      "image": "assets/zalo.webp",
+      "image": "",
       "showIconBackground": false,
       "id": "social-4",
       "syncFromLink": false,
@@ -421,7 +421,7 @@ window.BIO_CONFIG = {
       "icon": "message-circle-more",
       "label": "LINE",
       "url": "https://line.me/ti/p/_Vjb1ng-z7",
-      "image": "assets/line.webp",
+      "image": "",
       "showIconBackground": false,
       "id": "social-5",
       "syncFromLink": false,
@@ -443,7 +443,7 @@ window.BIO_CONFIG = {
       "sourceLinkId": "website",
       "brandIcon": "none",
       "icon": "globe",
-      "image": "assets/web.webp",
+      "image": "",
       "showIconBackground": false,
       "label": "Trường Nhật ngữ Tokyo Sakura",
       "url": "https://tsis.jp/",
@@ -461,7 +461,7 @@ window.BIO_CONFIG = {
       "icon": "music-2",
       "label": "TikTok",
       "url": "https://www.tiktok.com/@tqv2020?_r=1&_t=ZS-98QazQnE1p9",
-      "image": "assets/tiktok.webp",
+      "image": "",
       "showIconBackground": false,
       "id": "social-2",
       "syncFromLink": false,
@@ -481,7 +481,7 @@ window.BIO_CONFIG = {
       "icon": "youtube",
       "label": "YouTube",
       "url": "https://youtube.com/@THAY-KENH-CUA-ANH",
-      "image": "assets/youtobe.webp",
+      "image": "",
       "showIconBackground": false,
       "id": "social-3",
       "syncFromLink": false,
@@ -501,7 +501,7 @@ window.BIO_CONFIG = {
       "icon": "mail",
       "label": "Email",
       "url": "mailto:email@example.com",
-      "image": "assets/gmail.webp",
+      "image": "",
       "showIconBackground": false,
       "id": "social-6",
       "syncFromLink": false,

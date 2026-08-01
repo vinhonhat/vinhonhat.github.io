@@ -1804,3 +1804,87 @@ html[data-card-border="hide"] .bio-card { border-color: transparent; }
   .qr-action-row { grid-template-columns: 1fr 1fr; }
   .qr-action-row .copy-button { grid-column: 1 / -1; }
 }
+
+
+.avatar-initials,
+.qr-avatar-initials {
+  position: absolute;
+  inset: 4px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--primary-strong));
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  user-select: none;
+}
+.avatar-initials { font-size: 30px; border: 4px solid var(--card-bg); }
+.qr-avatar-initials { inset: 0; font-size: 20px; }
+.avatar.is-missing,
+.qr-profile-avatar.is-missing { opacity: 0; }
+
+.admin-avatar-manager {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  padding: 14px;
+  border: 1px solid var(--link-border);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--card-bg) 92%, var(--primary) 8%);
+}
+.admin-avatar-preview {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--primary) 18%, var(--card-bg));
+  border: 2px solid color-mix(in srgb, var(--primary) 55%, var(--link-border));
+}
+.admin-avatar-preview img,
+.admin-avatar-preview span {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.admin-avatar-preview img { display: block; object-fit: cover; }
+.admin-avatar-preview span {
+  display: grid;
+  place-items: center;
+  font-size: 25px;
+  font-weight: 800;
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), var(--primary-strong));
+}
+.admin-avatar-preview img.is-missing { opacity: 0; }
+.admin-avatar-meta { display: grid; gap: 7px; min-width: 0; }
+.admin-avatar-meta strong { overflow-wrap: anywhere; }
+.admin-avatar-meta small { color: var(--muted); line-height: 1.5; }
+.admin-avatar-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.admin-avatar-actions .admin-upload,
+.admin-avatar-actions button { margin: 0; }
+.admin-asset-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  padding: 5px 9px;
+  border-radius: 999px;
+  color: var(--primary-strong);
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--primary) 35%, transparent);
+  font-size: 12px;
+  font-weight: 700;
+}
+.admin-zip-export.hidden,
+.admin-secondary.hidden { display: none !important; }
+
+@media (max-width: 520px) {
+  .admin-avatar-manager { grid-template-columns: 72px minmax(0, 1fr); padding: 12px; }
+  .admin-avatar-preview { width: 72px; height: 72px; }
+  .admin-avatar-preview span { font-size: 21px; }
+}

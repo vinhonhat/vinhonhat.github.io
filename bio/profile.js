@@ -55,7 +55,7 @@ window.BIO_CONFIG = {
     "showShareButton": true,
     "showQrButton": true,
     "openLinksInNewTab": true,
-    "qrUrl": "https://bit.ly/vinhbio",
+    "qrUrl": "",
     "announcement": {
       "enabled": false,
       "icon": "bell",
@@ -107,7 +107,7 @@ window.BIO_CONFIG = {
     "qrDesign": {
       "linkPreset": "current-current",
       "colorMode": "solid",
-      "color1": "#f39b19",
+      "color1": "#111111",
       "color2": "#f39b19",
       "backgroundColor": "#ffffff",
       "gradientDirection": "diagonal"
@@ -549,9 +549,9 @@ window.BIO_CONFIG = {
     "enabled": true,
     "logoGestureMode": "tap-cache-hold-admin",
     "logoTapCount": 2,
-    "tapTimeout": 2500,
     "logoHoldSeconds": 2,
     "logoRingDelaySeconds": 0.6,
+    "tapTimeout": 2500,
     "storageKey": "vinh-bio-admin-config-v168",
     "passwordHash": "5f3c731b478c8292b603e6dec59aaa2626f6fcb3c6d5e97bc3a844b8dc4e279b",
     "serverSave": {

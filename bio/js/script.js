@@ -23,6 +23,22 @@
     if (!element.querySelector(".verified-badge-svg")) element.innerHTML = VERIFIED_BADGE_SVG;
   };
 
+  const getProfileInitials = value => {
+    const words = String(value || "Bio Link")
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean);
+    if (!words.length) return "BL";
+    if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+    return `${words[0][0] || ""}${words[words.length - 1][0] || ""}`.toUpperCase();
+  };
+
+  const createInitialsFavicon = (name, primary = "#f39b19", strong = "#d97800") => {
+    const initials = getProfileInitials(name);
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${primary}"/><stop offset="1" stop-color="${strong}"/></linearGradient></defs><circle cx="64" cy="64" r="62" fill="url(#g)"/><text x="64" y="70" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-family="Arial,sans-serif" font-size="44" font-weight="800">${initials}</text></svg>`;
+    return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+  };
+
   const DEFAULT_APPEARANCE = {
     primaryColor: "#f39b19",
     primaryStrongColor: "#d97800",
@@ -69,6 +85,7 @@
   let adminSessionPassword = "";
   let activeQrUrl = "";
   let activeQrDisplayUrl = "";
+  let avatarUploadSourceName = "";
   const FEATURED_LABELS = { vi: "Nổi bật", ja: "おすすめ", en: "Featured" };
 
   const clampColumns = value => Math.min(3, Math.max(1, Number(value) || 1));
@@ -99,23 +116,18 @@
 
   const applySharedAssetsToSecondaryProfile = cfg => {
     if (isPrimaryProfile) return cfg;
-    cfg.profile.favicon = cfg.profile.avatar || "avatar.png";
+    cfg.profile.favicon = cfg.profile.avatar || "";
     cfg.settings ||= {};
     cfg.settings.appearance ||= { ...DEFAULT_APPEARANCE };
 
-    // Chỉ ảnh icon lớn/bé phụ thuộc tài khoản chính.
+    // Chỉ ảnh icon lớn phụ thuộc tài khoản chính.
     // Avatar, favicon tự theo avatar, nền ngoài và nền trong là riêng từng hồ sơ.
+    // Icon bé luôn hiển thị đơn sắc bằng brand icon hoặc SVG, không dùng ảnh màu.
     const linkImages = sharedAssets.linkImages || {};
     (cfg.links || []).forEach(item => {
       if (item?.id && hasOwn(linkImages, item.id)) item.image = linkImages[item.id] || "";
     });
-
-    const socialImages = sharedAssets.socialImages || {};
-    (cfg.socialIcons || []).forEach(item => {
-      const sourceKey = item?.sourceLinkId || item?.id || "";
-      if (sourceKey && hasOwn(socialImages, sourceKey)) item.image = socialImages[sourceKey] || "";
-      else if (sourceKey && hasOwn(linkImages, sourceKey)) item.image = linkImages[sourceKey] || "";
-    });
+    (cfg.socialIcons || []).forEach(item => { item.image = ""; });
     return cfg;
   };
 
@@ -123,7 +135,9 @@
     const cfg = deepClone(input || {});
     cfg.profile ||= {};
     if (typeof cfg.profile.verified !== "boolean") cfg.profile.verified = true;
-    cfg.profile.favicon ||= cfg.profile.avatar || "assets/favicon.png";
+    const rawAvatar = String(cfg.profile.avatar || "").trim();
+    cfg.profile.avatar = rawAvatar && !/^data:image\//i.test(rawAvatar) ? "avatar.png" : rawAvatar;
+    cfg.profile.favicon = cfg.profile.avatar || "";
     cfg.profile.badges = Array.isArray(cfg.profile.badges) ? cfg.profile.badges : [];
     while (cfg.profile.badges.length < 2) cfg.profile.badges.push({ enabled: true, icon: "sparkles", text: "" });
     cfg.profile.translations ||= {};
@@ -203,7 +217,7 @@
         item.label = legacySource.title || item.label || "Liên kết";
         item.url = legacySource.url || item.url || "#";
         item.icon = legacySource.icon || item.icon || "globe";
-        item.image = legacySource.image || "";
+        item.image = "";
         item.showIconBackground = typeof legacySource.showIconBackground === "boolean" ? legacySource.showIconBackground : !legacySource.image;
         ["ja", "en"].forEach(language => {
           item.translations[language] ||= {};
@@ -213,7 +227,8 @@
       // V8 chỉ sao chép một lần; các trường vẫn chỉnh thủ công sau khi đồng bộ.
       item.syncFromLink = false;
       if (typeof item.brandIcon !== "string") item.brandIcon = "auto";
-      if (typeof item.showIconBackground !== "boolean") item.showIconBackground = item.brandIcon && item.brandIcon !== "none" ? false : !item.image;
+      item.image = "";
+      if (typeof item.showIconBackground !== "boolean") item.showIconBackground = false;
     });
     return applySharedAssetsToSecondaryProfile(cfg);
   };
@@ -257,6 +272,41 @@
     if (!source || isAbsoluteAsset(source)) return source;
     if (/^(?:assets|img|css|js)\//i.test(source)) return source;
     return `${profileDir}${source}`;
+  };
+
+  const applyAvatarSource = ({ image, fallback, source, initials, alt = "", onState = null }) => {
+    if (!image) return;
+    if (fallback) fallback.textContent = initials;
+    image.alt = alt;
+    const showFallback = () => {
+      image.classList.add("is-missing");
+      if (fallback) fallback.classList.remove("hidden");
+      onState?.(false);
+    };
+    const showImage = () => {
+      image.classList.remove("is-missing");
+      if (fallback) fallback.classList.add("hidden");
+      onState?.(true);
+    };
+    image.onload = showImage;
+    image.onerror = showFallback;
+    if (!source) {
+      image.removeAttribute("src");
+      showFallback();
+      return;
+    }
+    image.src = source;
+  };
+
+  const ensureAvatarFallbackElement = (image, id, className) => {
+    let fallback = document.getElementById(id);
+    if (fallback || !image?.parentElement) return fallback;
+    fallback = document.createElement("span");
+    fallback.id = id;
+    fallback.className = className;
+    fallback.setAttribute("aria-hidden", "true");
+    image.parentElement.insertBefore(fallback, image);
+    return fallback;
   };
 
   const ICONS = {
@@ -359,7 +409,7 @@
     target.label = source.title || target.label || "Liên kết";
     target.url = source.url || target.url || "#";
     target.icon = source.icon || target.icon || "globe";
-    target.image = source.image || "";
+    target.image = "";
     target.brandIcon = detectBrandIcon(source) || "none";
     target.showIconBackground = target.brandIcon !== "none" ? false : (typeof source.showIconBackground === "boolean" ? source.showIconBackground : !source.image);
     target.translations ||= {};
@@ -371,7 +421,12 @@
     return true;
   };
 
-  const resolveSocialItem = item => ({ ...item, label: localizedValue(item, "label", "Liên kết") });
+  const resolveSocialItem = item => {
+    const resolved = { ...item, label: localizedValue(item, "label", "Liên kết") };
+    const source = resolved.sourceLinkId ? findSourceLink(resolved.sourceLinkId, config.links || []) : null;
+    if (source?.image && resolved.image && resolved.image === source.image) resolved.image = "";
+    return resolved;
+  };
 
   const safeStorageGet = key => {
     try { return localStorage.getItem(key); } catch { return null; }
@@ -431,19 +486,32 @@
     $("#profileHandle").textContent = profile.handle || "";
     $("#profileBio").textContent = bio;
     $("#footerText").textContent = footer;
-    if (profile.avatar) $("#profileAvatar").src = resolveProfileAsset(profile.avatar);
+    const initials = getProfileInitials(name);
+    const appearance = config.settings?.appearance || DEFAULT_APPEARANCE;
+    const fallbackFavicon = createInitialsFavicon(name, appearance.primaryColor, appearance.primaryStrongColor);
+    const avatarSource = profile.avatar ? resolveProfileAsset(profile.avatar) : "";
+    const faviconLink = $("#faviconLink");
+    const appleIcon = $("#appleTouchIcon");
+    if (faviconLink) faviconLink.href = avatarSource || fallbackFavicon;
+    if (appleIcon) appleIcon.href = avatarSource || fallbackFavicon;
+    applyAvatarSource({
+      image: $("#profileAvatar"),
+      fallback: ensureAvatarFallbackElement($("#profileAvatar"), "profileAvatarInitials", "avatar-initials"),
+      source: avatarSource,
+      initials,
+      alt: `Ảnh đại diện ${name}`,
+      onState: valid => {
+        if (valid) return;
+        if (faviconLink) faviconLink.href = fallbackFavicon;
+        if (appleIcon) appleIcon.href = fallbackFavicon;
+      }
+    });
     const verified = $(".name-line .verified");
     if (verified) {
       ensureVerifiedBadge(verified);
       verified.classList.toggle("hidden", profile.verified === false);
     }
     document.title = `${name} | Bio Link`;
-
-    const favicon = resolveProfileAsset(profile.favicon || profile.avatar || "assets/favicon.png");
-    const faviconLink = $("#faviconLink");
-    const appleIcon = $("#appleTouchIcon");
-    if (faviconLink) faviconLink.href = favicon;
-    if (appleIcon) appleIcon.href = favicon;
 
     const badges = Array.isArray(profile.badges)
       ? profile.badges.filter(item => item.enabled !== false && localizedValue(item, "text", ""))
@@ -549,10 +617,9 @@
     container.innerHTML = socials.map(item => {
       const brandKey = resolveBrandIcon(item);
       const hasBrand = !!brandKey;
-      const hasImage = !hasBrand && !!item.image;
-      const showBackground = typeof item.showIconBackground === "boolean" ? item.showIconBackground : !(hasBrand || hasImage);
-      const content = hasBrand ? brandIcon(brandKey, 23) : media(item, "social-image");
-      return `<a class="social-button${hasBrand ? " has-brand" : ""}${hasImage ? " has-image" : ""}${showBackground ? " with-bg" : " no-bg"}" href="${escapeAttribute(item.url || "#")}" aria-label="${escapeAttribute(item.label)}" title="${escapeAttribute(item.label)}" ${target}>${content}</a>`;
+      const showBackground = typeof item.showIconBackground === "boolean" ? item.showIconBackground : false;
+      const content = hasBrand ? brandIcon(brandKey, 23) : icon(item.icon || "globe", 23);
+      return `<a class="social-button${hasBrand ? " has-brand" : " has-system-icon"}${showBackground ? " with-bg" : " no-bg"}" href="${escapeAttribute(item.url || "#")}" aria-label="${escapeAttribute(item.label)}" title="${escapeAttribute(item.label)}" ${target}>${content}</a>`;
     }).join("");
     bindMediaImages(container);
   };
@@ -825,9 +892,15 @@
     const text = I18N[currentLanguage] || I18N.vi;
     const profile = config.profile || {};
     const profileName = localizedValue(profile, "name", "Bio Link");
-    const avatar = resolveProfileAsset(profile.avatar || profile.favicon || "assets/avatar.svg");
+    const avatar = profile.avatar ? resolveProfileAsset(profile.avatar) : "";
     const qrAvatar = $("#qrProfileAvatar");
-    if (qrAvatar) { qrAvatar.src = avatar; qrAvatar.alt = profileName; }
+    applyAvatarSource({
+      image: qrAvatar,
+      fallback: ensureAvatarFallbackElement(qrAvatar, "qrProfileAvatarInitials", "qr-avatar-initials"),
+      source: avatar,
+      initials: getProfileInitials(profileName),
+      alt: profileName
+    });
     const qrName = $("#qrProfileName");
     if (qrName) qrName.textContent = profileName;
     const qrHandle = $("#qrProfileHandle");
@@ -925,7 +998,7 @@
     const profile = config.profile || {};
     const profileName = localizedValue(profile, "name", "Bio Link");
     const handle = profile.handle || "";
-    const avatarSource = resolveProfileAsset(profile.avatar || profile.favicon || "assets/avatar.svg");
+    const avatarSource = profile.avatar ? resolveProfileAsset(profile.avatar) : "";
     const isDark = document.documentElement.dataset.theme === "dark";
     const primary = config.settings?.appearance?.primaryColor || "#f39b19";
     const width = 900;
@@ -976,7 +1049,7 @@
       context.font = "800 52px 'Be Vietnam Pro', system-ui, sans-serif";
       context.textAlign = "center";
       context.textBaseline = "middle";
-      context.fillText((profileName.trim()[0] || "B").toUpperCase(), width / 2, avatarY + 2);
+      context.fillText(getProfileInitials(profileName), width / 2, avatarY + 2);
     }
     context.textAlign = "center";
     context.textBaseline = "alphabetic";
@@ -1011,7 +1084,7 @@
     context.fillText(truncateCanvasText(context, displayUrl, 720), width / 2, 1072);
     const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png", 1));
     if (!blob) throw new Error("Không thể tạo ảnh PNG");
-    return { blob, fileName: `${profileSlug || "bio"}-qr-card.png`, profileName };
+    return { blob, fileName: `${getPreferredExportBaseName()}-qr-card.png`, profileName };
   };
 
   const copyQrCardImage = async () => {
@@ -1501,9 +1574,22 @@
               </div>
               <label class="admin-switch admin-inline-switch"><input id="editVerified" type="checkbox" /><span></span><b>Hiện dấu tích xanh xác minh cạnh tên</b></label>
               <label class="admin-field"><span>Mô tả</span><textarea id="editBio" rows="3"></textarea></label>
-              <div class="admin-grid two">
-                <label class="admin-field"><span>Logo / ảnh đại diện</span><input id="editAvatar" type="text" placeholder="avatar.png hoặc URL ảnh" /></label>
-                <label class="admin-field"><span>${isPrimaryProfile ? "Icon trên tab web" : "Icon trên tab (tự dùng avatar)"}</span><input id="editFavicon" type="text" placeholder="avatar.png hoặc URL icon" ${isPrimaryProfile ? "" : "readonly"} /></label>
+              <div class="admin-avatar-manager">
+                <div class="admin-avatar-preview" aria-label="Xem trước avatar">
+                  <span id="editAvatarPreviewInitials" aria-hidden="true">BL</span>
+                  <img id="editAvatarPreview" alt="Xem trước avatar" />
+                </div>
+                <div class="admin-avatar-meta">
+                  <strong id="editAvatarFileName">avatar.png</strong>
+                  <span id="editAvatarAssetState" class="admin-asset-state">Đang dùng file trong thư mục hồ sơ</span>
+                  <small>Avatar luôn lưu thành <code>avatar.png</code> trong thư mục tài khoản và tự dùng cho tab trình duyệt. Nếu file không tồn tại, trang sẽ hiện 2 chữ cái lấy từ tên hồ sơ.</small>
+                  <div class="admin-avatar-actions">
+                    <label class="admin-upload">${icon("image", 18)} Chọn ảnh từ máy / album<input id="avatarUpload" type="file" accept="image/png,image/webp,image/jpeg" /></label>
+                    <button id="removeAvatarButton" class="admin-secondary" type="button">${icon("trash-2", 16)} Bỏ avatar</button>
+                  </div>
+                </div>
+                <input id="editAvatar" type="hidden" />
+                <input id="editFavicon" type="hidden" />
               </div>
               <label class="admin-field"><span>Chữ cuối trang</span><input id="editFooter" type="text" /></label>
               <div class="admin-grid two">
@@ -1518,13 +1604,9 @@
                 <label class="admin-field"><span>Hướng pha màu</span><select id="editQrGradientDirection"><option value="diagonal">Chéo trái → phải</option><option value="reverse-diagonal">Chéo phải → trái</option><option value="horizontal">Trái → phải</option><option value="vertical">Trên → dưới</option><option value="radial">Từ giữa ra ngoài</option></select></label>
               </div>
               <p class="admin-help">Việc chọn link chỉ thực hiện trong Admin. Có thể nhập <code>bit.ly/ten</code>; hệ thống tự thêm <code>https://</code>. Ở chế độ thứ ba, QR dẫn đến trang thật nhưng dòng chữ và nút sao chép dùng link rút gọn. Nền QR nên sáng, màu mã nên đậm để quét ổn định.</p>
-              <div class="admin-upload-row">
-                <label class="admin-upload">${icon("image", 18)} Chọn ảnh logo<input id="avatarUpload" type="file" accept="image/png,image/webp,image/jpeg,image/svg+xml" /></label>
-                ${isPrimaryProfile ? `<label class="admin-upload">${icon("image", 18)} Chọn icon tab<input id="faviconUpload" type="file" accept="image/png,image/webp,image/x-icon,image/svg+xml" /></label>` : ""}
-              </div>
               <p class="admin-help">${isPrimaryProfile
-                ? `Avatar/logo hồ sơ luôn riêng từng tài khoản: thay avatar tài khoản chính không làm đổi avatar của tài khoản phụ. Tài khoản chính quản lý ảnh icon lớn/bé dùng chung qua <code>shared-assets.js</code>; icon tab của tài khoản chính có thể chọn riêng.`
-                : `Tài khoản phụ được thay <b>avatar, nền ngoài và nền trong</b> riêng. Ảnh icon lớn/bé phụ thuộc tài khoản chính; icon trên tab tự dùng avatar để tránh phải quản lý thêm một ảnh.`}</p>
+                ? `Avatar của hồ sơ chính vẫn riêng với các tài khoản phụ. Ảnh icon lớn dùng chung qua <code>shared-assets.js</code>; icon bé luôn hiển thị dạng đơn sắc.`
+                : `Tài khoản phụ được thay <b>avatar, nền ngoài và nền trong</b> riêng. Ảnh icon lớn phụ thuộc tài khoản chính; icon bé luôn hiển thị dạng đơn sắc.`}</p>
               <details class="admin-translation-box">
                 <summary>${icon("globe", 16)} Nội dung tiếng Nhật và tiếng Anh</summary>
                 <div class="admin-translation-content">
@@ -1658,7 +1740,7 @@
 
           <div class="admin-panel hidden" data-admin-panel="socials">
             <section class="admin-section">
-              <div class="admin-section-title"><div><h3>Icon bé dưới cùng</h3><p>Chọn icon lớn rồi sao chép một lần. PC hiển thị ô nhập theo 3 cột; ảnh chọn từ máy sẽ được đóng cùng profile.js khi tải gói ZIP.</p></div><div class="admin-section-actions"><button id="sortSocialsButton" class="admin-secondary" type="button">${icon("grip-vertical", 17)} Sắp xếp</button><button id="addSocialButton" class="admin-secondary" type="button">${icon("plus", 17)} Thêm icon</button></div></div>
+              <div class="admin-section-title"><div><h3>Icon bé dưới cùng</h3><p>Chọn icon lớn rồi sao chép một lần. Icon bé luôn hiển thị dạng đơn sắc bằng icon thương hiệu hoặc SVG; không dùng ảnh màu của icon lớn.</p></div><div class="admin-section-actions"><button id="sortSocialsButton" class="admin-secondary" type="button">${icon("grip-vertical", 17)} Sắp xếp</button><button id="addSocialButton" class="admin-secondary" type="button">${icon("plus", 17)} Thêm icon</button></div></div>
               <div id="adminSocials" class="admin-items"></div>
             </section>
           </div>
@@ -1667,7 +1749,7 @@
           <button id="resetConfigButton" class="admin-danger" type="button">${icon("rotate-ccw", 17)} Về cấu hình file</button>
           <div class="admin-footer-right">
             <button id="exportConfigButton" class="admin-secondary" type="button">${icon("file-down", 17)} Tải profile.js</button>
-            <button id="exportUpdateZipButton" class="admin-secondary admin-zip-export" type="button">${icon("archive", 17)} Tải gói cập nhật ZIP</button>
+            <button id="exportUpdateZipButton" class="admin-secondary admin-zip-export hidden" type="button">${icon("archive", 17)} Tải gói cập nhật ZIP</button>
             <button id="serverSaveButton" class="admin-server" type="button">${icon("upload-cloud", 17)} Lưu lên máy chủ</button>
             <button id="saveConfigButton" class="admin-primary" type="button">${icon("save", 17)} Lưu & xem trước</button>
           </div>
@@ -1706,10 +1788,10 @@
       const profileLabel = sourceConfig.profile?.name || profileSlug;
       if (!IS_SERVER_MODE) {
         if (serverButton) serverButton.style.display = "none";
-        if (serverNote) serverNote.innerHTML = `<b>Hồ sơ ${escapeHtml(profileLabel)} (/${escapeHtml(profileSlug)}/):</b> lưu xem trước chỉ nằm trên trình duyệt. Muốn cập nhật trang thật, hãy tải <code>profile.js</code> hoặc gói ZIP rồi thay đúng file <code>${escapeHtml(profileDataFile)}</code>. File này gồm cả nội dung, màu sắc, mật khẩu và cách dùng logo; cập nhật file hệ thống sẽ không ghi đè dữ liệu cá nhân. ${HAS_SEPARATE_ADMIN_CONFIG ? `<br><b>Tương thích cấu trúc cũ:</b> thiết lập từ <code>${escapeHtml(adminDataFile)}</code> đang được đọc tạm. Hãy tải lại <code>profile.js</code> một lần để gộp chúng vào dữ liệu hồ sơ.` : ``} ${isPrimaryProfile ? `Ảnh icon lớn/bé do hồ sơ chính quản lý chung; avatar và hai ảnh nền vẫn là của riêng hồ sơ chính.` : `Hồ sơ phụ được tải avatar và hai ảnh nền riêng; ảnh icon lớn/bé tự dùng theo hồ sơ chính.`}`;
+        if (serverNote) serverNote.innerHTML = `<b>Hồ sơ ${escapeHtml(profileLabel)} (/${escapeHtml(profileSlug)}/):</b> lưu xem trước chỉ nằm trên trình duyệt. Muốn cập nhật trang thật, hãy tải <code>profile.js</code> hoặc gói ZIP rồi thay đúng file <code>${escapeHtml(profileDataFile)}</code>. File này gồm cả nội dung, màu sắc, mật khẩu và cách dùng logo; cập nhật file hệ thống sẽ không ghi đè dữ liệu cá nhân. ${HAS_SEPARATE_ADMIN_CONFIG ? `<br><b>Tương thích cấu trúc cũ:</b> thiết lập từ <code>${escapeHtml(adminDataFile)}</code> đang được đọc tạm. Hãy tải lại <code>profile.js</code> một lần để gộp chúng vào dữ liệu hồ sơ.` : ``} ${isPrimaryProfile ? `Ảnh icon lớn do hồ sơ chính quản lý chung; icon bé luôn đơn sắc. Avatar và hai ảnh nền vẫn là của riêng hồ sơ chính.` : `Hồ sơ phụ được tải avatar và hai ảnh nền riêng; ảnh icon lớn dùng theo hồ sơ chính, icon bé luôn đơn sắc.`}`;
       } else {
         if (serverButton) serverButton.style.display = "inline-flex";
-        if (serverNote) serverNote.innerHTML = `<b>Hồ sơ ${escapeHtml(profileLabel)} (/${escapeHtml(profileSlug)}/):</b> nút <b>Lưu lên máy chủ</b> sẽ ghi trực tiếp toàn bộ nội dung và thiết lập cá nhân vào <code>${escapeHtml(profileDataFile)}</code>. Avatar và hai ảnh nền được lưu trong thư mục hồ sơ; ảnh icon lớn/bé chỉ tài khoản chính được cập nhật dùng chung.`;
+        if (serverNote) serverNote.innerHTML = `<b>Hồ sơ ${escapeHtml(profileLabel)} (/${escapeHtml(profileSlug)}/):</b> nút <b>Lưu lên máy chủ</b> sẽ ghi trực tiếp toàn bộ nội dung và thiết lập cá nhân vào <code>${escapeHtml(profileDataFile)}</code>. Avatar và hai ảnh nền được lưu trong thư mục hồ sơ; ảnh icon lớn chỉ tài khoản chính được cập nhật dùng chung, icon bé luôn đơn sắc.`;
       }
     }
     $$("[data-admin-tab]").forEach(button => button.addEventListener("click", () => switchAdminTab(button.dataset.adminTab)));
@@ -1744,7 +1826,6 @@
     $("#adminLinks").addEventListener("click", handleItemAction);
     $("#adminSocials").addEventListener("click", handleItemAction);
     $("#adminLinks").addEventListener("change", handleImageUpload);
-    $("#adminSocials").addEventListener("change", handleImageUpload);
     $("#adminLinks").addEventListener("input", handleEditorItemInput);
     $("#adminSocials").addEventListener("input", handleEditorItemInput);
     const normalizeVisibleUrlField = event => {
@@ -1761,7 +1842,8 @@
     $("#editQrUrl")?.addEventListener("blur", event => { event.target.value = normalizeExternalUrl(event.target.value); });
     $("#adminSocials").addEventListener("change", handleSocialSourceChange);
     $("#avatarUpload").addEventListener("change", handleAvatarUpload);
-    $("#faviconUpload")?.addEventListener("change", handleFaviconUpload);
+    $("#removeAvatarButton")?.addEventListener("click", handleRemoveAvatar);
+    $("#editName")?.addEventListener("input", renderAdminAvatarPreview);
     $("#outerBackgroundUpload")?.addEventListener("change", event => handleBackgroundUpload(event, "#editOuterBackgroundImage", "ảnh nền ngoài"));
     $("#innerBackgroundUpload")?.addEventListener("change", event => handleBackgroundUpload(event, "#editInnerBackgroundImage", "ảnh nền trong"));
     $("#adminOverlay").addEventListener("click", handlePasswordToggle);
@@ -1937,8 +2019,9 @@
     $("#editHandle").value = editorDraft.profile.handle || "";
     $("#editVerified").checked = editorDraft.profile.verified !== false;
     $("#editBio").value = editorDraft.profile.bio || "";
-    $("#editAvatar").value = editorDraft.profile.avatar || "";
-    $("#editFavicon").value = isPrimaryProfile ? (editorDraft.profile.favicon || "assets/favicon.png") : (editorDraft.profile.avatar || "avatar.png");
+    setAssetFieldDisplay($("#editAvatar"), editorDraft.profile.avatar || "", formatEmbeddedAssetLabel("Avatar PNG tròn", "avatar.png"));
+    setAssetFieldDisplay($("#editFavicon"), editorDraft.profile.avatar || "", formatEmbeddedAssetLabel("Icon tab", "avatar.png"));
+    renderAdminAvatarPreview();
     $("#editFooter").value = editorDraft.profile.footerText || "";
     $("#editQrUrl").value = editorDraft.settings.qrUrl || "";
     const qrDesign = editorDraft.settings.qrDesign || DEFAULT_QR_DESIGN;
@@ -2000,8 +2083,10 @@
     $("#editOuterDarkColor").value = appearance.outerDarkColor || DEFAULT_APPEARANCE.outerDarkColor;
     $("#editInnerLightColor").value = appearance.innerLightColor || DEFAULT_APPEARANCE.innerLightColor;
     $("#editInnerDarkColor").value = appearance.innerDarkColor || DEFAULT_APPEARANCE.innerDarkColor;
-    $("#editOuterBackgroundImage").value = appearance.outerBackgroundImage || "";
-    $("#editInnerBackgroundImage").value = appearance.innerBackgroundImage || "";
+    setAssetFieldDisplay($("#editOuterBackgroundImage"), appearance.outerBackgroundImage || "", formatEmbeddedAssetLabel("Nền ngoài", "background-outer.webp"));
+    bindAssetFieldEditing($("#editOuterBackgroundImage"));
+    setAssetFieldDisplay($("#editInnerBackgroundImage"), appearance.innerBackgroundImage || "", formatEmbeddedAssetLabel("Nền trong", "background-inner.webp"));
+    bindAssetFieldEditing($("#editInnerBackgroundImage"));
     $("#editLightBorderColor").value = appearance.lightBorderColor || appearance.primaryColor || DEFAULT_APPEARANCE.lightBorderColor;
     $("#editDarkBorderColor").value = appearance.darkBorderColor || appearance.primaryColor || DEFAULT_APPEARANCE.darkBorderColor;
     $("#editShowDecorations").checked = appearance.showDecorations !== false;
@@ -2078,7 +2163,7 @@
             <label class="admin-field"><span>Chọn icon lớn để sao chép</span><select data-field="sourceLinkId"><option value="">Chọn liên kết</option>${sourceOptions}</select></label>
             <button class="admin-sync-button" type="button" data-action="copy-from-link">${icon("copy", 16)} Đồng bộ ngay</button>
           </div>
-          <p class="admin-sync-note">Nút “Đồng bộ ngay” sẽ sao chép một lần tên, đường dẫn, icon/ảnh, icon thương hiệu, nền và bản dịch. Sau đó tất cả ô bên dưới vẫn sửa được bình thường.</p>
+          <p class="admin-sync-note">Nút “Đồng bộ ngay” sao chép tên, đường dẫn, icon SVG, icon thương hiệu, nền và bản dịch. Icon bé không sao chép ảnh màu và luôn giữ kiểu đơn sắc.</p>
         ` : ""}
         <div class="admin-manual-fields">
           <div class="admin-item-field-grid">
@@ -2088,10 +2173,9 @@
               : `<label class="admin-field"><span>Icon thương hiệu</span><select data-field="brandIcon">${brandOptions.map(([value, label]) => `<option value="${value}" ${(item.brandIcon || "auto") === value ? "selected" : ""}>${label}</option>`).join("")}</select></label>`}
             <div class="admin-field"><div class="admin-field-label-row"><span>Đường dẫn</span><button class="admin-help-dot" type="button" data-action="show-link-help" aria-label="Hướng dẫn lấy đường dẫn" title="Cách lấy đường dẫn">?</button></div><input data-field="url" type="text" inputmode="url" autocomplete="url" value="${escapeAttribute(item.url || "")}" placeholder="https://facebook.com/ten hoặc facebook.com/ten" /></div>
             <label class="admin-field"><span>Tên icon SVG</span><input data-field="icon" type="text" value="${escapeAttribute(item.icon || "globe")}" placeholder="facebook, phone, mail..." /></label>
-            <label class="admin-field"><span>Ảnh thay icon</span><input data-field="image" type="text" value="${escapeAttribute(item.image || "")}" placeholder="assets/facebook.webp hoặc URL" ${isPrimaryProfile ? "" : "readonly"} /></label>
             ${isLinks
-              ? `<label class="admin-field"><span>Chữ trên nơ VI</span><input data-field="badge" type="text" value="${escapeAttribute(item.badge || "")}" placeholder="Để trống: Nổi bật" /></label>`
-              : `<div class="admin-field admin-field-note"><span>Chọn ảnh</span><small>Dùng nút bên dưới để nạp PNG/WEBP từ máy.</small></div>`}
+              ? `<label class="admin-field"><span>Ảnh thay icon lớn</span><input data-field="image" type="text" value="${escapeAttribute(item.image || "")}" placeholder="assets/facebook.webp hoặc URL" ${isPrimaryProfile ? "" : "readonly"} /></label><label class="admin-field"><span>Chữ trên nơ VI</span><input data-field="badge" type="text" value="${escapeAttribute(item.badge || "")}" placeholder="Để trống: Nổi bật" /></label>`
+              : `<div class="admin-field admin-field-note"><span>Kiểu hiển thị</span><small>Icon bé luôn đơn sắc; dùng icon thương hiệu hoặc tên icon SVG ở trên.</small></div>`}
           </div>
           ${translationFields}
           <div class="admin-item-options">
@@ -2100,9 +2184,11 @@
               <label><input data-field="showIconBackground" type="checkbox" ${item.showIconBackground ? "checked" : ""}/> Hiện nền icon</label>
             </div>
             <div class="admin-upload-with-help">
-              ${isPrimaryProfile
-                ? `<label class="admin-upload small">${icon("image", 16)} ${isLinks ? "Chọn ảnh icon lớn" : "Chọn ảnh icon bé"}<input data-action="item-image-upload" type="file" accept="image/png,image/webp,image/jpeg,image/svg+xml" /></label><small>Chỉ thay hình của ${isLinks ? "nút liên kết lớn" : "icon bé dưới cùng"}, không thay avatar/logo hồ sơ. Ảnh này được dùng chung cho các tài khoản phụ sau khi cập nhật gói ZIP.</small>`
-                : `<span class="admin-shared-inline">${icon("lock", 15)} Ảnh icon dùng chung từ tài khoản chính /bio/</span>`}
+              ${isLinks
+                ? (isPrimaryProfile
+                  ? `<label class="admin-upload small">${icon("image", 16)} Chọn ảnh icon lớn<input data-action="item-image-upload" type="file" accept="image/png,image/webp,image/jpeg,image/svg+xml" /></label><small>Chỉ thay hình của nút liên kết lớn, không thay avatar/logo hồ sơ. Ảnh này được dùng chung cho các tài khoản phụ sau khi cập nhật gói ZIP.</small>`
+                  : `<span class="admin-shared-inline">${icon("lock", 15)} Ảnh icon lớn dùng chung từ tài khoản chính /bio/</span>`)
+                : `<span class="admin-shared-inline">${icon("sparkles", 15)} Icon bé đơn sắc, không dùng ảnh màu</span>`}
             </div>
           </div>
         </div>
@@ -2114,6 +2200,10 @@
         select.value = list[index]?.sourceLinkId || "";
       });
     }
+    $$('[data-field="image"]', container).forEach((input, index) => {
+      const item = list[index] || {};
+      setItemAssetValue(input, item.image || "", isLinks ? "Ảnh icon lớn" : "Ảnh icon bé", item);
+    });
   };
 
   const collectEditorFields = () => {
@@ -2122,8 +2212,8 @@
     editorDraft.profile.handle = $("#editHandle").value.trim();
     editorDraft.profile.verified = $("#editVerified").checked;
     editorDraft.profile.bio = $("#editBio").value.trim();
-    editorDraft.profile.avatar = $("#editAvatar").value.trim();
-    editorDraft.profile.favicon = isPrimaryProfile ? ($("#editFavicon").value.trim() || "assets/favicon.png") : (editorDraft.profile.avatar || "avatar.png");
+    editorDraft.profile.avatar = readAssetFieldValue($("#editAvatar"));
+    editorDraft.profile.favicon = editorDraft.profile.avatar || "";
     editorDraft.profile.footerText = $("#editFooter").value.trim();
     editorDraft.profile.translations = {
       ja: { name: $("#editNameJa").value.trim(), bio: $("#editBioJa").value.trim(), footerText: $("#editFooterJa").value.trim() },
@@ -2184,8 +2274,8 @@
       outerDarkColor: $("#editOuterDarkColor").value || DEFAULT_APPEARANCE.outerDarkColor,
       innerLightColor: $("#editInnerLightColor").value || DEFAULT_APPEARANCE.innerLightColor,
       innerDarkColor: $("#editInnerDarkColor").value || DEFAULT_APPEARANCE.innerDarkColor,
-      outerBackgroundImage: $("#editOuterBackgroundImage").value.trim(),
-      innerBackgroundImage: $("#editInnerBackgroundImage").value.trim(),
+      outerBackgroundImage: readAssetFieldValue($("#editOuterBackgroundImage")),
+      innerBackgroundImage: readAssetFieldValue($("#editInnerBackgroundImage")),
       lightBorderColor: $("#editLightBorderColor").value || $("#editPrimaryColor").value || DEFAULT_APPEARANCE.lightBorderColor,
       darkBorderColor: $("#editDarkBorderColor").value || $("#editPrimaryColor").value || DEFAULT_APPEARANCE.darkBorderColor,
       showDecorations: $("#editShowDecorations").checked,
@@ -2322,12 +2412,154 @@
     reader.readAsDataURL(file);
   });
 
+  const fileToCircularPngDataUrl = file => new Promise((resolve, reject) => {
+    const objectUrl = URL.createObjectURL(file);
+    const image = new Image();
+    image.onload = () => {
+      try {
+        const size = 512;
+        const canvas = document.createElement("canvas");
+        canvas.width = size;
+        canvas.height = size;
+        const context = canvas.getContext("2d");
+        const side = Math.min(image.naturalWidth || image.width, image.naturalHeight || image.height);
+        const sx = ((image.naturalWidth || image.width) - side) / 2;
+        const sy = ((image.naturalHeight || image.height) - side) / 2;
+        context.clearRect(0, 0, size, size);
+        context.save();
+        context.beginPath();
+        context.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+        context.closePath();
+        context.clip();
+        context.drawImage(image, sx, sy, side, side, 0, 0, size, size);
+        context.restore();
+        URL.revokeObjectURL(objectUrl);
+        resolve(canvas.toDataURL("image/png"));
+      } catch (error) {
+        URL.revokeObjectURL(objectUrl);
+        reject(error);
+      }
+    };
+    image.onerror = error => {
+      URL.revokeObjectURL(objectUrl);
+      reject(error);
+    };
+    image.src = objectUrl;
+  });
+
+  const formatEmbeddedAssetLabel = (kind, fileName = "") => {
+    const clean = String(fileName || "").split(/[\/]/).pop();
+    return clean ? `[${kind}: ${clean}]` : `[${kind}]`;
+  };
+
+  const setAssetFieldDisplay = (input, value, label) => {
+    if (!input) return;
+    if (isEmbeddedDataUrl(value)) {
+      input.dataset.assetValue = value;
+      input.value = label || formatEmbeddedAssetLabel("Ảnh đã nạp");
+      input.classList.add("is-virtual-asset");
+    } else {
+      delete input.dataset.assetValue;
+      input.value = value || "";
+      input.classList.remove("is-virtual-asset");
+    }
+  };
+
+  const readAssetFieldValue = input => {
+    if (!input) return "";
+    return input.dataset.assetValue || input.value.trim();
+  };
+
+  const bindAssetFieldEditing = input => {
+    if (!input || input.dataset.assetBindReady === "1") return;
+    input.dataset.assetBindReady = "1";
+    input.addEventListener("input", () => {
+      if (!input.dataset.assetValue) return;
+      const current = input.value.trim();
+      if (!current.startsWith("[")) {
+        delete input.dataset.assetValue;
+        input.classList.remove("is-virtual-asset");
+      }
+    });
+  };
+
+  const setItemAssetValue = (input, value, prefix, item) => {
+    const labelBase = item?.title || item?.label || item?.id || "icon";
+    setAssetFieldDisplay(input, value, formatEmbeddedAssetLabel(prefix, `${safeAssetName(labelBase)}.png`));
+    bindAssetFieldEditing(input);
+  };
+
+  const hasEmbeddedAssetsInDraft = draft => {
+    if (!draft) return false;
+    const values = [
+      draft.profile?.avatar,
+      draft.settings?.appearance?.outerBackgroundImage,
+      draft.settings?.appearance?.innerBackgroundImage,
+      ...(draft.links || []).map(item => item?.image)
+    ];
+    return values.some(isEmbeddedDataUrl);
+  };
+
+  const updateExportActionVisibility = () => {
+    const hasAssets = hasEmbeddedAssetsInDraft(editorDraft);
+    const profileButton = $("#exportConfigButton");
+    const zipButton = $("#exportUpdateZipButton");
+    profileButton?.classList.toggle("hidden", hasAssets);
+    zipButton?.classList.toggle("hidden", !hasAssets);
+    if (profileButton) profileButton.title = hasAssets ? "Có ảnh mới: hãy tải gói ZIP" : "Tải riêng profile.js";
+    if (zipButton) zipButton.title = hasAssets ? "Gồm profile.js và file ảnh mới" : "Chỉ hiện khi có ảnh mới";
+  };
+
+  const renderAdminAvatarPreview = () => {
+    const name = $("#editName")?.value.trim() || editorDraft?.profile?.name || "Bio Link";
+    const initials = getProfileInitials(name);
+    const value = readAssetFieldValue($("#editAvatar"));
+    const preview = $("#editAvatarPreview");
+    const fallback = $("#editAvatarPreviewInitials");
+    const fileName = $("#editAvatarFileName");
+    const state = $("#editAvatarAssetState");
+    const source = isEmbeddedDataUrl(value) ? value : (value ? resolveProfileAsset(value) : "");
+    applyAvatarSource({ image: preview, fallback, source, initials, alt: `Avatar ${name}` });
+    if (fileName) fileName.textContent = value ? "avatar.png" : "Không có avatar.png";
+    if (state) {
+      if (isEmbeddedDataUrl(value)) state.textContent = avatarUploadSourceName ? `Ảnh mới: ${avatarUploadSourceName} → avatar.png` : "Ảnh mới đã xử lý → avatar.png";
+      else if (value) state.textContent = "Đang dùng avatar.png trong thư mục hồ sơ";
+      else state.textContent = `Không có ảnh — hiển thị chữ ${initials}`;
+    }
+    updateExportActionVisibility();
+  };
+
+  const handleRemoveAvatar = () => {
+    avatarUploadSourceName = "";
+    setAssetFieldDisplay($("#editAvatar"), "", "");
+    setAssetFieldDisplay($("#editFavicon"), "", "");
+    if (editorDraft?.profile) {
+      editorDraft.profile.avatar = "";
+      editorDraft.profile.favicon = "";
+    }
+    renderAdminAvatarPreview();
+    showToast("Đã bỏ avatar; trang sẽ dùng 2 chữ cái từ tên hồ sơ");
+  };
+
   const handleAvatarUpload = async event => {
     const file = event.target.files?.[0];
     if (!file) return;
-    if (file.size > 1_500_000) return showToast("Ảnh nên nhỏ hơn 1.5 MB");
-    $("#editAvatar").value = await fileToDataUrl(file);
-    showToast("Đã nạp ảnh logo");
+    if (file.size > 8_000_000) return showToast("Ảnh gốc nên nhỏ hơn 8 MB");
+    try {
+      avatarUploadSourceName = file.name || "ảnh từ thiết bị";
+      const dataUrl = await fileToCircularPngDataUrl(file);
+      setAssetFieldDisplay($("#editAvatar"), dataUrl, formatEmbeddedAssetLabel("Avatar PNG tròn", "avatar.png"));
+      setAssetFieldDisplay($("#editFavicon"), dataUrl, formatEmbeddedAssetLabel("Icon tab", "avatar.png"));
+      editorDraft.profile.avatar = dataUrl;
+      editorDraft.profile.favicon = dataUrl;
+      renderAdminAvatarPreview();
+      showToast("Đã crop ảnh tròn; hãy tải gói ZIP để nhận avatar.png");
+    } catch (error) {
+      console.error(error);
+      showToast("Không thể xử lý ảnh này");
+    } finally {
+      event.target.value = "";
+    }
   };
 
   const handleFaviconUpload = async event => {
@@ -2335,7 +2567,8 @@
     const file = event.target.files?.[0];
     if (!file) return;
     if (file.size > 800_000) return showToast("Icon tab nên nhỏ hơn 800 KB");
-    $("#editFavicon").value = await fileToDataUrl(file);
+    setAssetFieldDisplay($("#editFavicon"), await fileToDataUrl(file), formatEmbeddedAssetLabel("Icon tab", "favicon.png"));
+    bindAssetFieldEditing($("#editFavicon"));
     showToast("Đã nạp icon trên tab web");
   };
 
@@ -2345,8 +2578,11 @@
     if (file.size > 2_500_000) return showToast("Ảnh nền nên nhỏ hơn 2.5 MB");
     const target = $(targetSelector);
     if (!target) return;
-    target.value = await fileToDataUrl(file);
-    showToast(`Đã nạp ${label}`);
+    setAssetFieldDisplay(target, await fileToDataUrl(file), formatEmbeddedAssetLabel(label, label.includes("ngoài") ? "background-outer.webp" : "background-inner.webp"));
+    bindAssetFieldEditing(target);
+    collectEditorFields();
+    updateExportActionVisibility();
+    showToast(`Đã nạp ${label}; hãy tải gói ZIP`);
   };
 
   const handlePasswordToggle = event => {
@@ -2381,7 +2617,9 @@
     if (file.size > 1_500_000) return showToast("Ảnh nên nhỏ hơn 1.5 MB");
     const card = input.closest(".admin-item");
     const imageField = $('[data-field="image"]', card);
-    imageField.value = await fileToDataUrl(file);
+    setItemAssetValue(imageField, await fileToDataUrl(file), "Ảnh icon lớn", {});
+    collectEditorFields();
+    updateExportActionVisibility();
     const backgroundField = $('[data-field="showIconBackground"]', card);
     if (backgroundField) backgroundField.checked = false;
     showToast("Đã nạp ảnh và tắt nền icon");
@@ -2425,7 +2663,8 @@
       document.body.style.overflow = "hidden";
       switchAdminTab(selectedTab);
     }
-    showToast("Đã lưu trên trình duyệt này");
+    updateExportActionVisibility();
+    showToast(hasEmbeddedAssetsInDraft(editorDraft) ? "Đã lưu xem trước; có ảnh mới nên hãy tải gói ZIP" : "Đã lưu trên trình duyệt này");
     $("#editNewPassword").value = "";
     $("#editConfirmPassword").value = "";
   };
@@ -2440,6 +2679,7 @@
     setTheme(resolveInitialTheme());
     renderAll();
     populateEditor();
+    updateExportActionVisibility();
   };
 
   const saveConfigToServer = async () => {
@@ -2519,13 +2759,17 @@
   const exportEditorConfig = async () => {
     collectEditorFields();
     if (!(await applyNewPassword())) return;
+    if (hasEmbeddedAssetsInDraft(editorDraft)) {
+      updateExportActionVisibility();
+      showToast("Có ảnh mới; bắt buộc tải gói ZIP để nhận profile.js và file ảnh thật");
+      return;
+    }
     const finalOutput = profileDataFromConfig(editorDraft);
     const content = `/* Dữ liệu và thiết lập riêng của hồ sơ ${profileSlug}. Mã giao diện/phiên bản nằm trong file hệ thống dùng chung. */
 window.BIO_CONFIG = ${JSON.stringify(finalOutput, null, 2)};
 `;
     downloadTextFile(content, "profile.js");
-    const hasImages = JSON.stringify(finalOutput).includes('"data:image/');
-    showToast(hasImages ? "Đã tải profile.js có ảnh nhúng; nên dùng gói ZIP để file gọn hơn" : "Đã tải profile.js gồm cả mật khẩu và thiết lập logo");
+    showToast("Đã tải profile.js");
   };
 
   const DATA_URL_RE = /^data:([^;,]+)(?:;[^,]*)?;base64,(.+)$/i;
@@ -2550,11 +2794,16 @@ window.BIO_CONFIG = ${JSON.stringify(finalOutput, null, 2)};
   const safeAssetName = value => String(value || "asset")
     .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
     .toLowerCase().replace(/[^a-z0-9_-]+/g, "-").replace(/^-+|-+$/g, "") || "asset";
+  const getPreferredExportBaseName = () => {
+    const profile = config?.profile || sourceConfig?.profile || {};
+    const handle = String(profile.handle || "").replace(/^@+/, "").trim();
+    return safeAssetName(handle || profile.name || profileSlug || "bio");
+  };
   const profileZipFolder = () => profileSlug === "vinh" ? "bio" : `bio/${profileSlug}`;
 
   const buildSharedAssetsConfig = exported => ({
     linkImages: Object.fromEntries((exported.links || []).map(item => [item.id, item.image || ""])),
-    socialImages: Object.fromEntries((exported.socialIcons || []).map(item => [item.sourceLinkId || item.id, item.image || ""]))
+    socialImages: {}
   });
 
   const preparePortableProfileExport = draft => {
@@ -2587,28 +2836,21 @@ window.BIO_CONFIG = ${JSON.stringify(finalOutput, null, 2)};
     exported.settings.appearance.innerBackgroundImage = extract(exported.settings.appearance.innerBackgroundImage, "uploads/background-inner");
 
     if (isPrimaryProfile) {
-      exported.profile.favicon = extract(exported.profile.favicon, "favicon");
+      exported.profile.favicon = exported.profile.avatar || "";
       exported.links.forEach((item, index) => {
         item.image = extract(item.image, `assets/shared/link-${safeAssetName(item.id || item.title || index + 1)}`);
       });
-      exported.socialIcons.forEach((item, index) => {
-        item.image = extract(item.image, `assets/shared/social-${safeAssetName(item.sourceLinkId || item.id || item.label || index + 1)}`);
-      });
+      exported.socialIcons.forEach(item => { item.image = ""; });
       return { exported, assets, shared: buildSharedAssetsConfig(exported) };
     }
 
-    // Hồ sơ phụ có avatar và nền riêng; chỉ ảnh icon lớn/bé lấy từ shared-assets.js.
-    exported.profile.favicon = exported.profile.avatar || "avatar.png";
+    // Hồ sơ phụ có avatar và nền riêng; chỉ ảnh icon lớn lấy từ shared-assets.js. Icon bé luôn đơn sắc.
+    exported.profile.favicon = exported.profile.avatar || "";
     const linkImages = sharedAssets.linkImages || {};
     exported.links.forEach(item => {
       if (item?.id && hasOwn(linkImages, item.id)) item.image = linkImages[item.id] || "";
     });
-    const socialImages = sharedAssets.socialImages || {};
-    exported.socialIcons.forEach(item => {
-      const sourceKey = item?.sourceLinkId || item?.id || "";
-      if (sourceKey && hasOwn(socialImages, sourceKey)) item.image = socialImages[sourceKey] || "";
-      else if (sourceKey && hasOwn(linkImages, sourceKey)) item.image = linkImages[sourceKey] || "";
-    });
+    exported.socialIcons.forEach(item => { item.image = ""; });
     return { exported, assets, shared: null };
   };
 
@@ -2654,14 +2896,14 @@ window.BIO_CONFIG = ${JSON.stringify(finalOutput, null, 2)};
         `Thu muc dich: ${folder}/`,
         `File du lieu va thiet lap ca nhan: ${folder}/profile.js`,
         `Số file ảnh mới: ${assets.length}`,
-        isPrimaryProfile ? "Có kèm bio/shared-assets.js để các tài khoản phụ dùng chung ảnh icon lớn/bé." : "Hồ sơ phụ có thể chứa avatar và ảnh nền riêng; ảnh icon lớn/bé lấy từ bio/shared-assets.js.",
+        isPrimaryProfile ? "Có kèm bio/shared-assets.js để các tài khoản phụ dùng chung ảnh icon lớn. Icon bé luôn đơn sắc." : "Hồ sơ phụ có thể chứa avatar và ảnh nền riêng; ảnh icon lớn lấy từ bio/shared-assets.js, icon bé luôn đơn sắc.",
         "",
         "Giai nen tai thu muc goc repository (noi dang co thu muc bio).",
         "Gói này chỉ chứa dữ liệu/ảnh cần cập nhật; không chứa lại index.html, CSS hoặc JS dùng chung."
       ].join("\n");
       zip.file("HUONG-DAN-CAP-NHAT.txt", guide);
       const blob = await zip.generateAsync({ type: "blob", compression: "DEFLATE", compressionOptions: { level: 6 } });
-      downloadBlob(blob, `${safeAssetName(profileSlug)}-cap-nhat-${SYSTEM_ASSET_VERSION}.zip`);
+      downloadBlob(blob, `${getPreferredExportBaseName()}-cap-nhat-${SYSTEM_ASSET_VERSION}.zip`);
       showToast(isPrimaryProfile ? (assets.length ? `Đã tạo ZIP gồm profile.js, shared-assets.js và ${assets.length} ảnh` : "Đã tạo ZIP gồm profile.js và shared-assets.js") : (assets.length ? `Đã tạo ZIP gồm profile.js và ${assets.length} ảnh riêng` : "Đã tạo ZIP chỉ gồm profile.js"));
     } catch (error) {
       console.error(error);

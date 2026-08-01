@@ -19,6 +19,9 @@
   } catch { /* dùng file profile.js */ }
 
   config.profile ||= {};
+  const rawAvatar = String(config.profile.avatar || "").trim();
+  config.profile.avatar = rawAvatar && !/^data:image\//i.test(rawAvatar) ? "avatar.png" : rawAvatar;
+  config.profile.favicon = config.profile.avatar || "";
   config.settings ||= {};
   config.settings.appearance ||= {};
   config.settings.layout ||= {};
@@ -27,17 +30,11 @@
 
   if (!isPrimary) {
     const linkImages = shared.linkImages || {};
-    const socialImages = shared.socialImages || {};
-    config.profile.favicon = config.profile.avatar || "avatar.png";
     config.links.forEach(item => {
       if (item?.id && Object.prototype.hasOwnProperty.call(linkImages, item.id)) item.image = linkImages[item.id] || "";
     });
-    config.socialIcons.forEach(item => {
-      const key = item?.sourceLinkId || item?.id || "";
-      if (key && Object.prototype.hasOwnProperty.call(socialImages, key)) item.image = socialImages[key] || "";
-      else if (key && Object.prototype.hasOwnProperty.call(linkImages, key)) item.image = linkImages[key] || "";
-    });
   }
+  config.socialIcons.forEach(item => { item.image = ""; });
 
   const detectLanguage = () => {
     const value = String((navigator.languages && navigator.languages[0]) || navigator.language || "").toLowerCase();
@@ -74,8 +71,30 @@
     if (/^(?:assets|img|css|js)\//i.test(sourcePath)) return sourcePath;
     return `${profileDir}${sourcePath}`;
   };
+  const initialsOf = value => {
+    const words = String(value || "Bio Link").trim().split(/\s+/).filter(Boolean);
+    if (!words.length) return "BL";
+    if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+    return `${words[0][0] || ""}${words[words.length - 1][0] || ""}`.toUpperCase();
+  };
+  const initialsFavicon = (name, primary = "#f39b19", strong = "#d97800") => {
+    const initials = initialsOf(name);
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${primary}"/><stop offset="1" stop-color="${strong}"/></linearGradient></defs><circle cx="64" cy="64" r="62" fill="url(#g)"/><text x="64" y="70" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-family="Arial,sans-serif" font-size="44" font-weight="800">${initials}</text></svg>`;
+    return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+  };
   const verifiedSvg = `<svg class="verified-badge-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid meet"><polygon points="12.00,1.20 13.79,2.98 16.13,2.02 17.11,4.35 19.64,4.36 19.65,6.89 21.98,7.87 21.02,10.21 22.80,12.00 21.02,13.79 21.98,16.13 19.65,17.11 19.64,19.64 17.11,19.65 16.13,21.98 13.79,21.02 12.00,22.80 10.21,21.02 7.87,21.98 6.89,19.65 4.36,19.64 4.35,17.11 2.02,16.13 2.98,13.79 1.20,12.00 2.98,10.21 2.02,7.87 4.35,6.89 4.36,4.36 6.89,4.35 7.87,2.02 10.21,2.98" fill="#1b74e4"></polygon><path d="M7.35 12.2 10.45 15.15 16.85 8.75" fill="none" stroke="#fff" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"></path></svg>`;
   const fallbackIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`;
+  const socialBrandIcon = item => {
+    const value = [item?.brandIcon, item?.id, item?.sourceLinkId, item?.label, item?.url, item?.icon].filter(Boolean).join(" ").toLowerCase();
+    if (value.includes("messenger") || value.includes("m.me/")) return `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.5 2 2 6.1 2 11.2c0 2.9 1.4 5.4 3.7 7.1V22l3.4-1.9c.9.2 1.9.4 2.9.4 5.5 0 10-4.1 10-9.2S17.5 2 12 2Zm1 12.4-2.5-2.7-4.8 2.7 5.3-5.6 2.5 2.7 4.8-2.7-5.3 5.6Z"/></svg>`;
+    if (value.includes("facebook")) return `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 8h3V4h-3c-3.3 0-5 2-5 5v2H6v4h3v7h4v-7h3l1-4h-4V9c0-.8.3-1 1-1Z"/></svg>`;
+    if (value.includes("tiktok")) return `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15 3c.5 2.5 1.9 4 4 4.5V11c-1.5-.1-2.8-.6-4-1.4V16a6 6 0 1 1-5-5.9v3.7a2.5 2.5 0 1 0 1.5 2.2V3H15Z"/></svg>`;
+    if (value.includes("zalo")) return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-7l-5 3v-3H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/><path d="M8 8h8l-8 6h8"/></svg>`;
+    if (value.includes("line.me") || value.includes(" line")) return `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 11.2c0-4-3.8-7.2-8.5-7.2s-8.5 3.2-8.5 7.2c0 3.6 3.2 6.6 7.4 7.1.3.1.7.3.8.6.1.3 0 .8 0 1.1l-.2 1.2c0 .4-.3 1.5 1.3.8 1.7-.7 4.5-2.6 6.2-4.5 1.1-1.3 1.5-2.7 1.5-4.3Z"/></svg>`;
+    if (value.includes("youtube")) return `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.6 7.2a3 3 0 0 0-2.1-2.1C17.6 4.6 12 4.6 12 4.6s-5.6 0-7.5.5a3 3 0 0 0-2.1 2.1A31 31 0 0 0 2 12a31 31 0 0 0 .4 4.8 3 3 0 0 0 2.1 2.1c1.9.5 7.5.5 7.5.5s5.6 0 7.5-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 22 12a31 31 0 0 0-.4-4.8ZM10 15.5v-7l6 3.5-6 3.5Z"/></svg>`;
+    if (value.includes("mail")) return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18v12H3z"/><path d="m3 7 9 7 9-7"/></svg>`;
+    return fallbackIcon;
+  };
   const media = (item, className) => item.image
     ? `<span class="media-stack"><span class="media-fallback">${fallbackIcon}</span><img class="${className}" src="${escapeAttr(asset(item.image))}" alt="" onload="this.parentElement.classList.add('loaded')" onerror="this.remove()" /></span>`
     : fallbackIcon;
@@ -117,16 +136,31 @@
 
   const profile = config.profile;
   const name = localized(profile, "name", "Bio Link");
-  const avatar = asset(profile.avatar || "assets/avatar.svg");
+  const initials = initialsOf(name);
+  const avatar = profile.avatar ? asset(profile.avatar) : "";
   const avatarEl = $("#profileAvatar");
-  if (avatarEl) { avatarEl.src = avatar; avatarEl.alt = `Ảnh đại diện ${name}`; }
+  let avatarFallback = $("#profileAvatarInitials");
+  if (!avatarFallback && avatarEl?.parentElement) {
+    avatarFallback = document.createElement("span");
+    avatarFallback.id = "profileAvatarInitials";
+    avatarFallback.className = "avatar-initials";
+    avatarFallback.setAttribute("aria-hidden", "true");
+    avatarEl.parentElement.insertBefore(avatarFallback, avatarEl);
+  }
+  if (avatarFallback) avatarFallback.textContent = initials;
+  if (avatarEl) {
+    avatarEl.alt = `Ảnh đại diện ${name}`;
+    avatarEl.onload = () => { avatarEl.classList.remove("is-missing"); avatarFallback?.classList.add("hidden"); };
+    avatarEl.onerror = () => { avatarEl.classList.add("is-missing"); avatarFallback?.classList.remove("hidden"); const fallback = initialsFavicon(name, appearance.primaryColor, appearance.primaryStrongColor); if ($("#faviconLink")) $("#faviconLink").href = fallback; if ($("#appleTouchIcon")) $("#appleTouchIcon").href = fallback; };
+    if (avatar) avatarEl.src = avatar; else { avatarEl.removeAttribute("src"); avatarEl.onerror(); }
+  }
   if ($("#profileName")) $("#profileName").textContent = name;
   if ($("#profileHandle")) $("#profileHandle").textContent = profile.handle || "";
   if ($("#profileBio")) $("#profileBio").textContent = localized(profile, "bio", "");
   if ($("#footerText")) $("#footerText").textContent = localized(profile, "footerText", name);
   const verified = document.querySelector(".name-line .verified");
   if (verified) { verified.hidden = profile.verified === false; verified.innerHTML = profile.verified === false ? "" : verifiedSvg; }
-  const favicon = asset(profile.favicon || profile.avatar || "assets/favicon.png");
+  const favicon = avatar || initialsFavicon(name, appearance.primaryColor, appearance.primaryStrongColor);
   if ($("#faviconLink")) $("#faviconLink").href = favicon;
   if ($("#appleTouchIcon")) $("#appleTouchIcon").href = favicon;
   document.title = `${name} | Bio Link`;
@@ -149,7 +183,7 @@
   const socialSection = $("#socialSection");
   if (socialSection) socialSection.classList.toggle("hidden", !socials.length);
   if ($("#socialSectionLabel")) $("#socialSectionLabel").textContent = ({ vi: "Kết nối với tôi", ja: "リンク一覧", en: "Connect with me" })[language];
-  if ($("#socialContainer")) $("#socialContainer").innerHTML = socials.map(item => `<a class="social-button${item.image ? " has-image no-bg" : ""}" href="${escapeAttr(normalizeUrl(item.url))}" aria-label="${escapeAttr(localized(item, "label", item.label || "Liên kết"))}"${target}>${media(item, "social-image")}</a>`).join("");
+  if ($("#socialContainer")) $("#socialContainer").innerHTML = socials.map(item => `<a class="social-button has-system-icon${item.showIconBackground ? " with-bg" : " no-bg"}" href="${escapeAttr(normalizeUrl(item.url))}" aria-label="${escapeAttr(localized(item, "label", item.label || "Liên kết"))}"${target}>${socialBrandIcon(item)}</a>`).join("");
 
   if ($("#qrButton")) $("#qrButton").textContent = ({ vi: "Mã QR", ja: "QRコード", en: "QR code" })[language];
   if ($("#languageButton")) $("#languageButton").hidden = config.settings.showLanguageButton === false;
