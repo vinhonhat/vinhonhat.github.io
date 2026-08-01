@@ -77,14 +77,17 @@
   };
 
   const I18N = {
-    vi: { code: "VI", flag: "assets/flag-vi.svg", language: "Đổi ngôn ngữ", themeLight: "Chuyển sang giao diện sáng", themeDark: "Chuyển sang giao diện tối", share: "Chia sẻ trang", connect: "Kết nối với tôi", qr: "Mã QR", qrTitle: "Chia sẻ trang Bio", qrDescription: "Quét mã QR hoặc sao chép đường dẫn để mở nhanh trang này.", copy: "Sao chép liên kết", copied: "Đã sao chép liên kết", shareError: "Không thể chia sẻ lúc này", qrAlt: "Mã QR dẫn đến trang Bio", qrCardHint: "Quét mã để kết nối", cacheResetting: "Đang xóa cache Bio...", saveQr: "Lưu ảnh QR", savingQr: "Đang tạo ảnh...", savedQr: "Đã lưu ảnh QR", copyQrImage: "Sao chép ảnh", copyingQrImage: "Đang sao chép...", copiedQrImage: "Đã sao chép ảnh QR", copyQrImageUnsupported: "Trình duyệt chưa hỗ trợ sao chép ảnh; hãy dùng Lưu ảnh QR", shareQrImage: "Chia sẻ ảnh", sharingQrImage: "Đang mở chia sẻ...", sharedQrImage: "Đã mở chia sẻ ảnh", currentLink: "Link đang mở", shortLink: "Link rút gọn" },
-    ja: { code: "JP", flag: "assets/flag-ja.svg", language: "言語を変更", themeLight: "ライトモードに切り替え", themeDark: "ダークモードに切り替え", share: "ページを共有", connect: "リンク一覧", qr: "QRコード", qrTitle: "Bioページを共有", qrDescription: "QRコードを読み取るか、リンクをコピーしてこのページを開けます。", copy: "リンクをコピー", copied: "リンクをコピーしました", shareError: "現在共有できません", qrAlt: "BioページのQRコード", qrCardHint: "QRコードを読み取って接続", cacheResetting: "Bioキャッシュを削除しています...", saveQr: "QR画像を保存", savingQr: "画像を作成中...", savedQr: "QR画像を保存しました", copyQrImage: "画像をコピー", copyingQrImage: "コピー中...", copiedQrImage: "QR画像をコピーしました", copyQrImageUnsupported: "画像コピーに未対応です。QR画像を保存してください", shareQrImage: "画像を共有", sharingQrImage: "共有を開いています...", sharedQrImage: "画像共有を開きました", currentLink: "現在のリンク", shortLink: "短縮リンク" },
-    en: { code: "EN", flag: "assets/flag-en.svg", language: "Change language", themeLight: "Switch to light mode", themeDark: "Switch to dark mode", share: "Share page", connect: "Connect with me", qr: "QR code", qrTitle: "Share Bio page", qrDescription: "Scan the QR code or copy the link to open this page.", copy: "Copy link", copied: "Link copied", shareError: "Unable to share right now", qrAlt: "QR code for this Bio page", qrCardHint: "Scan to connect", cacheResetting: "Clearing Bio cache...", saveQr: "Save QR image", savingQr: "Creating image...", savedQr: "QR image saved", copyQrImage: "Copy image", copyingQrImage: "Copying...", copiedQrImage: "QR image copied", copyQrImageUnsupported: "Image clipboard is not supported; use Save QR image", shareQrImage: "Share image", sharingQrImage: "Opening share...", sharedQrImage: "Image share opened", currentLink: "Current link", shortLink: "Short link" }
+    vi: { code: "VI", flag: "assets/flag-vi.svg", language: "Đổi ngôn ngữ", themeLight: "Chuyển sang giao diện sáng", themeDark: "Chuyển sang giao diện tối", share: "Chia sẻ trang", connect: "Kết nối với tôi", qr: "Mã QR", qrTitle: "Chia sẻ trang Bio", qrDescription: "Quét mã QR hoặc sao chép đường dẫn để mở nhanh trang này.", copy: "Sao chép liên kết", copied: "Đã sao chép liên kết", shareError: "Không thể chia sẻ lúc này", qrAlt: "Mã QR dẫn đến trang Bio", qrCardHint: "Quét mã để kết nối", cacheResetting: "Đang xóa cache Bio...", saveQr: "Lưu ảnh QR", savingQr: "Đang tạo ảnh...", savedQr: "Đã lưu ảnh QR", copyQrImage: "Sao chép ảnh", copyingQrImage: "Đang sao chép...", copiedQrImage: "Đã sao chép ảnh QR", copyQrImageUnsupported: "Trình duyệt chưa hỗ trợ sao chép ảnh; hãy dùng Lưu ảnh QR", shareQrImage: "Chia sẻ ảnh", sharingQrImage: "Đang mở chia sẻ...", sharedQrImage: "Đã mở chia sẻ ảnh", shareSaveQrImage: "Chia sẻ / lưu ảnh QR", currentLink: "Link đang mở", shortLink: "Link rút gọn" },
+    ja: { code: "JP", flag: "assets/flag-ja.svg", language: "言語を変更", themeLight: "ライトモードに切り替え", themeDark: "ダークモードに切り替え", share: "ページを共有", connect: "リンク一覧", qr: "QRコード", qrTitle: "Bioページを共有", qrDescription: "QRコードを読み取るか、リンクをコピーしてこのページを開けます。", copy: "リンクをコピー", copied: "リンクをコピーしました", shareError: "現在共有できません", qrAlt: "BioページのQRコード", qrCardHint: "QRコードを読み取って接続", cacheResetting: "Bioキャッシュを削除しています...", saveQr: "QR画像を保存", savingQr: "画像を作成中...", savedQr: "QR画像を保存しました", copyQrImage: "画像をコピー", copyingQrImage: "コピー中...", copiedQrImage: "QR画像をコピーしました", copyQrImageUnsupported: "画像コピーに未対応です。QR画像を保存してください", shareQrImage: "画像を共有", sharingQrImage: "共有を開いています...", sharedQrImage: "画像共有を開きました", shareSaveQrImage: "QR画像を共有・保存", currentLink: "現在のリンク", shortLink: "短縮リンク" },
+    en: { code: "EN", flag: "assets/flag-en.svg", language: "Change language", themeLight: "Switch to light mode", themeDark: "Switch to dark mode", share: "Share page", connect: "Connect with me", qr: "QR code", qrTitle: "Share Bio page", qrDescription: "Scan the QR code or copy the link to open this page.", copy: "Copy link", copied: "Link copied", shareError: "Unable to share right now", qrAlt: "QR code for this Bio page", qrCardHint: "Scan to connect", cacheResetting: "Clearing Bio cache...", saveQr: "Save QR image", savingQr: "Creating image...", savedQr: "QR image saved", copyQrImage: "Copy image", copyingQrImage: "Copying...", copiedQrImage: "QR image copied", copyQrImageUnsupported: "Image clipboard is not supported; use Save QR image", shareQrImage: "Share image", sharingQrImage: "Opening share...", sharedQrImage: "Image share opened", shareSaveQrImage: "Share / save QR image", currentLink: "Current link", shortLink: "Short link" }
   };
   let currentLanguage = "vi";
   let adminSessionPassword = "";
   let activeQrUrl = "";
   let activeQrDisplayUrl = "";
+  let qrCardImageCacheKey = "";
+  let qrCardImageCachePromise = null;
+  let qrCardImageCacheResult = null;
   let avatarUploadSourceName = "";
   const IS_IOS_DEVICE = /iP(?:hone|ad|od)/i.test(navigator.userAgent) ||
     (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
@@ -174,9 +177,10 @@
     if (!cfg.settings.qrDesign.linkPreset) {
       cfg.settings.qrDesign.linkPreset = cfg.settings.qrDesign.linkMode === "custom" ? "custom-custom" : "current-current";
     }
-    cfg.settings.qrDesign.linkPreset = ["current-current", "custom-custom", "current-custom"].includes(cfg.settings.qrDesign.linkPreset)
+    cfg.settings.qrDesign.linkPreset = ["current-current", "custom-custom", "current-custom", "fixed-custom"].includes(cfg.settings.qrDesign.linkPreset)
       ? cfg.settings.qrDesign.linkPreset
       : "current-current";
+    cfg.settings.qrFixedUrl = normalizeExternalUrl(cfg.settings.qrFixedUrl || "");
     delete cfg.settings.qrDesign.linkMode;
     cfg.settings.qrDesign.colorMode = ["solid", "gradient"].includes(cfg.settings.qrDesign.colorMode) ? cfg.settings.qrDesign.colorMode : "solid";
     cfg.settings.qrDesign.gradientDirection = ["horizontal", "vertical", "diagonal", "reverse-diagonal", "radial"].includes(cfg.settings.qrDesign.gradientDirection) ? cfg.settings.qrDesign.gradientDirection : "diagonal";
@@ -718,8 +722,12 @@
       button.dataset.label = label;
     };
     setQrActionButton($("#copyLinkButton"), "link-2", text.copy);
-    setQrActionButton($("#copyQrImageButton"), IS_IOS_DEVICE ? "share-2" : "copy", IS_IOS_DEVICE ? text.shareQrImage : text.copyQrImage);
-    setQrActionButton($("#downloadQrCardButton"), "download", text.saveQr);
+    const copyImageButton = $("#copyQrImageButton");
+    if (copyImageButton) {
+      copyImageButton.classList.remove("hidden");
+      setQrActionButton(copyImageButton, "copy", text.copyQrImage);
+    }
+    setQrActionButton($("#downloadQrCardButton"), IS_IOS_DEVICE ? "share-2" : "download", IS_IOS_DEVICE ? text.shareSaveQrImage : text.saveQr);
     const qrCardHint = $("#qrCardHint");
     if (qrCardHint) qrCardHint.textContent = text.qrCardHint;
     const qrTitle = $("#qrTitle");
@@ -763,12 +771,19 @@
     return custom ? new URL(custom, window.location.href).href : "";
   };
 
+  const getFixedQrUrl = () => {
+    const fixed = String(config.settings?.qrFixedUrl || "").trim();
+    return fixed ? new URL(fixed, window.location.href).href : "";
+  };
+
   const getQrLinkSelection = () => {
     const current = getCurrentPageUrl();
     const custom = getShortUrl();
+    const fixed = getFixedQrUrl();
     const preset = config.settings?.qrDesign?.linkPreset || "current-current";
     if (preset === "custom-custom" && custom) return { qrUrl: custom, displayUrl: custom, preset };
     if (preset === "current-custom" && custom) return { qrUrl: current, displayUrl: custom, preset };
+    if (preset === "fixed-custom" && fixed) return { qrUrl: fixed, displayUrl: custom || fixed, preset };
     return { qrUrl: current, displayUrl: current, preset: "current-current" };
   };
 
@@ -1009,7 +1024,21 @@
     return `${value}…`;
   };
 
-  const createQrCardImageBlob = async () => {
+  const getQrCardImageCacheKey = () => JSON.stringify({
+    theme: document.documentElement.dataset.theme || "light",
+    language: currentLanguage,
+    profileName: localizedValue(config.profile || {}, "name", "Bio Link"),
+    handle: config.profile?.handle || "",
+    avatar: config.profile?.avatar || "",
+    verified: config.profile?.verified !== false,
+    qrUrl: activeQrUrl || getQrLinkSelection().qrUrl,
+    displayUrl: activeQrDisplayUrl || getQrLinkSelection().displayUrl,
+    primary: config.settings?.appearance?.primaryColor || "#f39b19",
+    primaryStrong: config.settings?.appearance?.primaryStrongColor || "#d97800",
+    qrDesign: config.settings?.qrDesign || {}
+  });
+
+  const buildQrCardImageBlob = async () => {
     await ensureQrLibrary();
     const qrSource = $("#qrCanvas canvas");
     if (!(qrSource instanceof HTMLCanvasElement)) throw new Error("QR chưa sẵn sàng");
@@ -1128,30 +1157,46 @@
     return { blob, fileName: `${getPreferredExportBaseName()}-qr-card.png`, profileName };
   };
 
+  const createQrCardImageBlob = async (force = false) => {
+    const cacheKey = getQrCardImageCacheKey();
+    if (!force && qrCardImageCacheResult && qrCardImageCacheKey === cacheKey) return qrCardImageCacheResult;
+    if (!force && qrCardImageCachePromise && qrCardImageCacheKey === cacheKey) return qrCardImageCachePromise;
+    qrCardImageCacheKey = cacheKey;
+    qrCardImageCacheResult = null;
+    qrCardImageCachePromise = buildQrCardImageBlob()
+      .then(result => {
+        qrCardImageCacheResult = result;
+        return result;
+      })
+      .finally(() => {
+        qrCardImageCachePromise = null;
+      });
+    return qrCardImageCachePromise;
+  };
+
+  const prepareQrCardImage = () => {
+    createQrCardImageBlob().catch(() => null);
+  };
+
   const copyQrCardImage = async () => {
     const button = $("#copyQrImageButton");
     const text = I18N[currentLanguage] || I18N.vi;
     const original = button?.innerHTML || "";
     if (button) {
       button.disabled = true;
-      button.innerHTML = icon(IS_IOS_DEVICE ? "share-2" : "copy", 21);
+      button.innerHTML = icon("copy", 21);
     }
     try {
-      const { blob, fileName, profileName } = await createQrCardImageBlob();
-      if (IS_IOS_DEVICE) {
-        const imageFile = new File([blob], fileName, { type: "image/png" });
-        const canShareFile = typeof navigator.share === "function" &&
-          typeof navigator.canShare === "function" &&
-          navigator.canShare({ files: [imageFile] });
-        if (!canShareFile) throw new Error(text.copyQrImageUnsupported);
-        await navigator.share({ files: [imageFile], title: profileName });
-        showToast(text.sharedQrImage);
-        return;
-      }
       if (!window.isSecureContext || !navigator.clipboard?.write || typeof window.ClipboardItem !== "function") {
         throw new Error(text.copyQrImageUnsupported);
       }
-      await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
+      const qrCardPromise = createQrCardImageBlob();
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          "image/png": qrCardPromise.then(result => result.blob)
+        })
+      ]);
+      await qrCardPromise;
       showToast(text.copiedQrImage);
     } catch (error) {
       if (error?.name !== "AbortError") {
@@ -1161,7 +1206,7 @@
     } finally {
       if (button) {
         button.disabled = false;
-        button.innerHTML = original || icon(IS_IOS_DEVICE ? "share-2" : "copy", 21);
+        button.innerHTML = original || icon("copy", 21);
       }
     }
   };
@@ -1172,18 +1217,18 @@
     const original = button?.innerHTML || "";
     if (button) {
       button.disabled = true;
-      button.innerHTML = icon("download", 21);
+      button.innerHTML = icon(IS_IOS_DEVICE ? "share-2" : "download", 21);
     }
     try {
-      const { blob, fileName, profileName } = await createQrCardImageBlob();
+      const { blob, fileName } = await createQrCardImageBlob();
       const qrFile = new File([blob], fileName, { type: "image/png" });
       const canShareFile = IS_IOS_DEVICE &&
         typeof navigator.share === "function" &&
         typeof navigator.canShare === "function" &&
         navigator.canShare({ files: [qrFile] });
       if (canShareFile) {
-        // iPhone/iPad cần bảng chia sẻ để lưu ảnh vào Photos.
-        await navigator.share({ files: [qrFile], title: profileName });
+        // iPhone/iPad cần bảng chia sẻ để lưu ảnh vào Photos hoặc gửi ảnh.
+        await navigator.share({ files: [qrFile] });
       } else {
         // Windows, macOS, Android và trình duyệt desktop: tải PNG trực tiếp.
         const objectUrl = URL.createObjectURL(blob);
@@ -1195,7 +1240,7 @@
         link.remove();
         setTimeout(() => URL.revokeObjectURL(objectUrl), 1500);
       }
-      showToast(text.savedQr);
+      showToast(IS_IOS_DEVICE ? text.sharedQrImage : text.savedQr);
     } catch (error) {
       if (error?.name !== "AbortError") {
         console.error(error);
@@ -1204,7 +1249,7 @@
     } finally {
       if (button) {
         button.disabled = false;
-        button.innerHTML = original || icon("download", 21);
+        button.innerHTML = original || icon(IS_IOS_DEVICE ? "share-2" : "download", 21);
       }
     }
   };
@@ -1641,9 +1686,10 @@
                 <input id="editFavicon" type="hidden" />
               </div>
               <label class="admin-field"><span>Chữ cuối trang</span><input id="editFooter" type="text" /></label>
-              <div class="admin-grid two">
-                <label class="admin-field"><span>Cách dùng link trong danh thiếp QR</span><select id="editQrLinkPreset"><option value="current-current">QR và chữ dưới: cùng link trang đang mở</option><option value="custom-custom">QR và chữ dưới: cùng link rút gọn</option><option value="current-custom">QR: link trang đang mở · Chữ dưới: link rút gọn</option></select></label>
-                <label class="admin-field"><span>Đường dẫn rút gọn</span><input id="editQrUrl" type="text" inputmode="url" autocomplete="url" placeholder="https://bit.ly/ten-cua-ban hoặc bit.ly/ten-cua-ban" /></label>
+              <div class="admin-grid three">
+                <label class="admin-field"><span>Cách dùng link trong danh thiếp QR</span><select id="editQrLinkPreset"><option value="current-current">QR và chữ dưới: cùng link trang đang mở</option><option value="custom-custom">QR và chữ dưới: cùng link rút gọn</option><option value="current-custom">QR: link trang đang mở · Chữ dưới: link rút gọn</option><option value="fixed-custom">QR: link cố định · Chữ dưới: link rút gọn</option></select></label>
+                <label class="admin-field"><span>Đường dẫn rút gọn / link hiển thị</span><input id="editQrUrl" type="text" inputmode="url" autocomplete="url" placeholder="https://bit.ly/ten-cua-ban hoặc bit.ly/ten-cua-ban" /></label>
+                <label class="admin-field"><span>Đường dẫn cố định cho QR</span><input id="editQrFixedUrl" type="text" inputmode="url" autocomplete="url" placeholder="https://vinhonhat.github.io/bio/ hoặc link chính thức" /></label>
               </div>
               <div class="admin-grid three color-grid">
                 <label class="admin-field"><span>Kiểu màu QR</span><select id="editQrColorMode"><option value="solid">Một màu</option><option value="gradient">Hai màu pha</option></select></label>
@@ -1652,7 +1698,7 @@
                 <label class="admin-field"><span>Màu nền QR</span><input id="editQrBackgroundColor" type="color" /></label>
                 <label class="admin-field"><span>Hướng pha màu</span><select id="editQrGradientDirection"><option value="diagonal">Chéo trái → phải</option><option value="reverse-diagonal">Chéo phải → trái</option><option value="horizontal">Trái → phải</option><option value="vertical">Trên → dưới</option><option value="radial">Từ giữa ra ngoài</option></select></label>
               </div>
-              <p class="admin-help">Việc chọn link chỉ thực hiện trong Admin. Có thể nhập <code>bit.ly/ten</code>; hệ thống tự thêm <code>https://</code>. Ở chế độ thứ ba, QR dẫn đến trang thật nhưng dòng chữ và nút sao chép dùng link rút gọn. Nền QR nên sáng, màu mã nên đậm để quét ổn định.</p>
+              <p class="admin-help">Việc chọn link chỉ thực hiện trong Admin. Có thể nhập <code>bit.ly/ten</code>; hệ thống tự thêm <code>https://</code>. Chế độ thứ tư dùng link QR cố định để tránh URL dài có tham số khi trang được mở trong Messenger; dòng chữ và nút sao chép vẫn dùng link rút gọn. Nền QR nên sáng, màu mã nên đậm để quét ổn định.</p>
               <p class="admin-help">${isPrimaryProfile
                 ? `Avatar của hồ sơ chính vẫn riêng với các tài khoản phụ. Ảnh icon lớn dùng chung qua <code>shared-assets.js</code>; icon bé luôn hiển thị dạng đơn sắc.`
                 : `Tài khoản phụ được thay <b>avatar, nền ngoài và nền trong</b> riêng. Ảnh icon lớn phụ thuộc tài khoản chính; icon bé luôn hiển thị dạng đơn sắc.`}</p>
@@ -1889,6 +1935,7 @@
     $("#adminLinks").addEventListener("focusout", normalizeVisibleUrlField, true);
     $("#adminSocials").addEventListener("focusout", normalizeVisibleUrlField, true);
     $("#editQrUrl")?.addEventListener("blur", event => { event.target.value = normalizeExternalUrl(event.target.value); });
+    $("#editQrFixedUrl")?.addEventListener("blur", event => { event.target.value = normalizeExternalUrl(event.target.value); });
     $("#adminSocials").addEventListener("change", handleSocialSourceChange);
     $("#avatarUpload").addEventListener("change", handleAvatarUpload);
     $("#removeAvatarButton")?.addEventListener("click", handleRemoveAvatar);
@@ -2073,6 +2120,7 @@
     renderAdminAvatarPreview();
     $("#editFooter").value = editorDraft.profile.footerText || "";
     $("#editQrUrl").value = editorDraft.settings.qrUrl || "";
+    $("#editQrFixedUrl").value = editorDraft.settings.qrFixedUrl || "";
     const qrDesign = editorDraft.settings.qrDesign || DEFAULT_QR_DESIGN;
     $("#editQrLinkPreset").value = qrDesign.linkPreset || "current-current";
     $("#editQrColorMode").value = qrDesign.colorMode || "solid";
@@ -2291,6 +2339,7 @@
       clampNumber($("#editLogoRingDelaySeconds")?.value, 0, 2, 0.6)
     );
     editorDraft.settings.qrUrl = normalizeExternalUrl($("#editQrUrl").value);
+    editorDraft.settings.qrFixedUrl = normalizeExternalUrl($("#editQrFixedUrl").value);
     editorDraft.settings.qrDesign = {
       linkPreset: $("#editQrLinkPreset").value,
       colorMode: $("#editQrColorMode").value,
@@ -2301,6 +2350,9 @@
     };
     if (["custom-custom", "current-custom"].includes(editorDraft.settings.qrDesign.linkPreset) && !editorDraft.settings.qrUrl) {
       editorDraft.settings.qrDesign.linkPreset = "current-current";
+    }
+    if (editorDraft.settings.qrDesign.linkPreset === "fixed-custom" && !editorDraft.settings.qrFixedUrl) {
+      editorDraft.settings.qrDesign.linkPreset = editorDraft.settings.qrUrl ? "custom-custom" : "current-current";
     }
     editorDraft.settings.defaultTheme = $("#editDefaultTheme").value;
     editorDraft.settings.defaultLanguage = $("#editDefaultLanguage").value;

@@ -1,7 +1,7 @@
 /* Nguồn phiên bản và thiết lập hệ thống dùng chung. Chỉ sửa phiên bản tại file này. */
 window.BIO_SYSTEM_CONFIG = {
-  "version": "V1.8.2",
-  "assetVersion": "1.8.2",
+  "version": "V1.8.4",
+  "assetVersion": "1.8.4",
   "adminDefaults": {
     "enabled": true,
     "logoGestureMode": "tap-cache-hold-admin",
