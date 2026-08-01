@@ -77,15 +77,17 @@
   };
 
   const I18N = {
-    vi: { code: "VI", flag: "assets/flag-vi.svg", language: "Đổi ngôn ngữ", themeLight: "Chuyển sang giao diện sáng", themeDark: "Chuyển sang giao diện tối", share: "Chia sẻ trang", connect: "Kết nối với tôi", qr: "Mã QR", qrTitle: "Chia sẻ trang Bio", qrDescription: "Quét mã QR hoặc sao chép đường dẫn để mở nhanh trang này.", copy: "Sao chép liên kết", copied: "Đã sao chép liên kết", shareError: "Không thể chia sẻ lúc này", qrAlt: "Mã QR dẫn đến trang Bio", qrCardHint: "Quét mã để kết nối", cacheResetting: "Đang xóa cache Bio...", saveQr: "Lưu ảnh QR", savingQr: "Đang tạo ảnh...", savedQr: "Đã lưu ảnh QR", copyQrImage: "Sao chép ảnh", copyingQrImage: "Đang sao chép...", copiedQrImage: "Đã sao chép ảnh QR", copyQrImageUnsupported: "Trình duyệt chưa hỗ trợ sao chép ảnh; hãy dùng Lưu ảnh QR", currentLink: "Link đang mở", shortLink: "Link rút gọn" },
-    ja: { code: "JP", flag: "assets/flag-ja.svg", language: "言語を変更", themeLight: "ライトモードに切り替え", themeDark: "ダークモードに切り替え", share: "ページを共有", connect: "リンク一覧", qr: "QRコード", qrTitle: "Bioページを共有", qrDescription: "QRコードを読み取るか、リンクをコピーしてこのページを開けます。", copy: "リンクをコピー", copied: "リンクをコピーしました", shareError: "現在共有できません", qrAlt: "BioページのQRコード", qrCardHint: "QRコードを読み取って接続", cacheResetting: "Bioキャッシュを削除しています...", saveQr: "QR画像を保存", savingQr: "画像を作成中...", savedQr: "QR画像を保存しました", copyQrImage: "画像をコピー", copyingQrImage: "コピー中...", copiedQrImage: "QR画像をコピーしました", copyQrImageUnsupported: "画像コピーに未対応です。QR画像を保存してください", currentLink: "現在のリンク", shortLink: "短縮リンク" },
-    en: { code: "EN", flag: "assets/flag-en.svg", language: "Change language", themeLight: "Switch to light mode", themeDark: "Switch to dark mode", share: "Share page", connect: "Connect with me", qr: "QR code", qrTitle: "Share Bio page", qrDescription: "Scan the QR code or copy the link to open this page.", copy: "Copy link", copied: "Link copied", shareError: "Unable to share right now", qrAlt: "QR code for this Bio page", qrCardHint: "Scan to connect", cacheResetting: "Clearing Bio cache...", saveQr: "Save QR image", savingQr: "Creating image...", savedQr: "QR image saved", copyQrImage: "Copy image", copyingQrImage: "Copying...", copiedQrImage: "QR image copied", copyQrImageUnsupported: "Image clipboard is not supported; use Save QR image", currentLink: "Current link", shortLink: "Short link" }
+    vi: { code: "VI", flag: "assets/flag-vi.svg", language: "Đổi ngôn ngữ", themeLight: "Chuyển sang giao diện sáng", themeDark: "Chuyển sang giao diện tối", share: "Chia sẻ trang", connect: "Kết nối với tôi", qr: "Mã QR", qrTitle: "Chia sẻ trang Bio", qrDescription: "Quét mã QR hoặc sao chép đường dẫn để mở nhanh trang này.", copy: "Sao chép liên kết", copied: "Đã sao chép liên kết", shareError: "Không thể chia sẻ lúc này", qrAlt: "Mã QR dẫn đến trang Bio", qrCardHint: "Quét mã để kết nối", cacheResetting: "Đang xóa cache Bio...", saveQr: "Lưu ảnh QR", savingQr: "Đang tạo ảnh...", savedQr: "Đã lưu ảnh QR", copyQrImage: "Sao chép ảnh", copyingQrImage: "Đang sao chép...", copiedQrImage: "Đã sao chép ảnh QR", copyQrImageUnsupported: "Trình duyệt chưa hỗ trợ sao chép ảnh; hãy dùng Lưu ảnh QR", shareQrImage: "Chia sẻ ảnh", sharingQrImage: "Đang mở chia sẻ...", sharedQrImage: "Đã mở chia sẻ ảnh", currentLink: "Link đang mở", shortLink: "Link rút gọn" },
+    ja: { code: "JP", flag: "assets/flag-ja.svg", language: "言語を変更", themeLight: "ライトモードに切り替え", themeDark: "ダークモードに切り替え", share: "ページを共有", connect: "リンク一覧", qr: "QRコード", qrTitle: "Bioページを共有", qrDescription: "QRコードを読み取るか、リンクをコピーしてこのページを開けます。", copy: "リンクをコピー", copied: "リンクをコピーしました", shareError: "現在共有できません", qrAlt: "BioページのQRコード", qrCardHint: "QRコードを読み取って接続", cacheResetting: "Bioキャッシュを削除しています...", saveQr: "QR画像を保存", savingQr: "画像を作成中...", savedQr: "QR画像を保存しました", copyQrImage: "画像をコピー", copyingQrImage: "コピー中...", copiedQrImage: "QR画像をコピーしました", copyQrImageUnsupported: "画像コピーに未対応です。QR画像を保存してください", shareQrImage: "画像を共有", sharingQrImage: "共有を開いています...", sharedQrImage: "画像共有を開きました", currentLink: "現在のリンク", shortLink: "短縮リンク" },
+    en: { code: "EN", flag: "assets/flag-en.svg", language: "Change language", themeLight: "Switch to light mode", themeDark: "Switch to dark mode", share: "Share page", connect: "Connect with me", qr: "QR code", qrTitle: "Share Bio page", qrDescription: "Scan the QR code or copy the link to open this page.", copy: "Copy link", copied: "Link copied", shareError: "Unable to share right now", qrAlt: "QR code for this Bio page", qrCardHint: "Scan to connect", cacheResetting: "Clearing Bio cache...", saveQr: "Save QR image", savingQr: "Creating image...", savedQr: "QR image saved", copyQrImage: "Copy image", copyingQrImage: "Copying...", copiedQrImage: "QR image copied", copyQrImageUnsupported: "Image clipboard is not supported; use Save QR image", shareQrImage: "Share image", sharingQrImage: "Opening share...", sharedQrImage: "Image share opened", currentLink: "Current link", shortLink: "Short link" }
   };
   let currentLanguage = "vi";
   let adminSessionPassword = "";
   let activeQrUrl = "";
   let activeQrDisplayUrl = "";
   let avatarUploadSourceName = "";
+  const IS_IOS_DEVICE = /iP(?:hone|ad|od)/i.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
   const FEATURED_LABELS = { vi: "Nổi bật", ja: "おすすめ", en: "Featured" };
 
   const clampColumns = value => Math.min(3, Math.max(1, Number(value) || 1));
@@ -716,7 +718,7 @@
       button.dataset.label = label;
     };
     setQrActionButton($("#copyLinkButton"), "link-2", text.copy);
-    setQrActionButton($("#copyQrImageButton"), "copy", text.copyQrImage);
+    setQrActionButton($("#copyQrImageButton"), IS_IOS_DEVICE ? "share-2" : "copy", IS_IOS_DEVICE ? text.shareQrImage : text.copyQrImage);
     setQrActionButton($("#downloadQrCardButton"), "download", text.saveQr);
     const qrCardHint = $("#qrCardHint");
     if (qrCardHint) qrCardHint.textContent = text.qrCardHint;
@@ -1082,16 +1084,16 @@
     const nameWidth = context.measureText(name).width;
     const nameY = 265;
     context.lineJoin = "round";
-    context.strokeStyle = "rgba(255,255,255,.94)";
-    context.lineWidth = 9;
+    context.strokeStyle = isDark ? "rgba(38,22,10,.96)" : "rgba(255,255,255,.94)";
+    context.lineWidth = isDark ? 10 : 9;
     context.strokeText(name, width / 2, nameY);
-    context.fillStyle = isDark ? "#fff7ef" : "#2c2118";
+    context.fillStyle = isDark ? "#fffaf4" : "#2c2118";
     context.fillText(name, width / 2, nameY);
     if (profile.verified !== false) drawVerifiedBadge(context, width / 2 + nameWidth / 2 + 31, nameY - 15, 21);
     context.font = "750 27px 'Be Vietnam Pro', system-ui, sans-serif";
     const handleText = truncateCanvasText(context, handle, 650);
-    context.strokeStyle = "rgba(255,255,255,.94)";
-    context.lineWidth = 7;
+    context.strokeStyle = isDark ? "rgba(38,22,10,.96)" : "rgba(255,255,255,.94)";
+    context.lineWidth = isDark ? 8 : 7;
     context.strokeText(handleText, width / 2, 308);
     context.fillStyle = config.settings?.appearance?.primaryStrongColor || "#d97800";
     context.fillText(handleText, width / 2, 308);
@@ -1108,18 +1110,18 @@
     context.drawImage(qrSource, qrBoxX + 34, qrBoxY + 34, qrBoxSize - 68, qrBoxSize - 68);
     const text = I18N[currentLanguage] || I18N.vi;
     context.font = "800 25px 'Be Vietnam Pro', system-ui, sans-serif";
-    context.strokeStyle = "rgba(255,255,255,.94)";
-    context.lineWidth = 7;
+    context.strokeStyle = isDark ? "rgba(38,22,10,.96)" : "rgba(255,255,255,.94)";
+    context.lineWidth = isDark ? 8 : 7;
     context.strokeText(text.qrCardHint, width / 2, 1080);
-    context.fillStyle = isDark ? "#fff3e2" : "#5c3d17";
+    context.fillStyle = isDark ? "#fff6eb" : "#5c3d17";
     context.fillText(text.qrCardHint, width / 2, 1080);
     context.font = "650 22px 'Be Vietnam Pro', system-ui, sans-serif";
     const displayUrl = formatQrDisplayUrl(activeQrDisplayUrl || getQrLinkSelection().displayUrl);
     const displayText = truncateCanvasText(context, displayUrl, 720);
-    context.strokeStyle = "rgba(255,255,255,.94)";
-    context.lineWidth = 6;
+    context.strokeStyle = isDark ? "rgba(38,22,10,.96)" : "rgba(255,255,255,.94)";
+    context.lineWidth = isDark ? 7 : 6;
     context.strokeText(displayText, width / 2, 1122);
-    context.fillStyle = isDark ? "#e7d8c1" : "#8a6b46";
+    context.fillStyle = isDark ? "#f2e8d8" : "#8a6b46";
     context.fillText(displayText, width / 2, 1122);
     const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png", 1));
     if (!blob) throw new Error("Không thể tạo ảnh PNG");
@@ -1130,25 +1132,36 @@
     const button = $("#copyQrImageButton");
     const text = I18N[currentLanguage] || I18N.vi;
     const original = button?.innerHTML || "";
-    if (!window.isSecureContext || !navigator.clipboard?.write || typeof window.ClipboardItem !== "function") {
-      showToast(text.copyQrImageUnsupported);
-      return;
-    }
     if (button) {
       button.disabled = true;
-      button.innerHTML = icon("copy", 21);
+      button.innerHTML = icon(IS_IOS_DEVICE ? "share-2" : "copy", 21);
     }
     try {
-      const { blob } = await createQrCardImageBlob();
+      const { blob, fileName, profileName } = await createQrCardImageBlob();
+      if (IS_IOS_DEVICE) {
+        const imageFile = new File([blob], fileName, { type: "image/png" });
+        const canShareFile = typeof navigator.share === "function" &&
+          typeof navigator.canShare === "function" &&
+          navigator.canShare({ files: [imageFile] });
+        if (!canShareFile) throw new Error(text.copyQrImageUnsupported);
+        await navigator.share({ files: [imageFile], title: profileName });
+        showToast(text.sharedQrImage);
+        return;
+      }
+      if (!window.isSecureContext || !navigator.clipboard?.write || typeof window.ClipboardItem !== "function") {
+        throw new Error(text.copyQrImageUnsupported);
+      }
       await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
       showToast(text.copiedQrImage);
     } catch (error) {
-      console.error(error);
-      showToast(error?.message || text.copyQrImageUnsupported);
+      if (error?.name !== "AbortError") {
+        console.error(error);
+        showToast(error?.message || text.copyQrImageUnsupported);
+      }
     } finally {
       if (button) {
         button.disabled = false;
-        button.innerHTML = original || icon("copy", 21);
+        button.innerHTML = original || icon(IS_IOS_DEVICE ? "share-2" : "copy", 21);
       }
     }
   };
@@ -1164,9 +1177,7 @@
     try {
       const { blob, fileName, profileName } = await createQrCardImageBlob();
       const qrFile = new File([blob], fileName, { type: "image/png" });
-      const isIOSDevice = /iP(?:hone|ad|od)/i.test(navigator.userAgent) ||
-        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-      const canShareFile = isIOSDevice &&
+      const canShareFile = IS_IOS_DEVICE &&
         typeof navigator.share === "function" &&
         typeof navigator.canShare === "function" &&
         navigator.canShare({ files: [qrFile] });
