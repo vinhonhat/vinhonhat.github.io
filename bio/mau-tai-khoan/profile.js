@@ -1,4 +1,4 @@
-/* Cấu hình Bio Link V1.6.10 */
+/* Dữ liệu và thiết lập riêng của hồ sơ mau-tai-khoan. Mã giao diện/phiên bản nằm trong file hệ thống dùng chung. */
 window.BIO_CONFIG = {
   "profile": {
     "name": "Tên người dùng",
@@ -48,22 +48,6 @@ window.BIO_CONFIG = {
         "footerText": "Thao • Bio Link"
       }
     }
-  },
-  "admin": {
-    "enabled": true,
-    "logoGestureMode": "tap-cache-hold-admin",
-    "logoTapCount": 2,
-    "logoHoldSeconds": 2,
-    "logoRingDelaySeconds": 0.6,
-    "tapTimeout": 2500,
-    "storageKey": "vinh-bio-admin-config-v168",
-    "passwordHash": "5f3c731b478c8292b603e6dec59aaa2626f6fcb3c6d5e97bc3a844b8dc4e279b",
-    "serverSave": {
-      "enabled": false,
-      "endpoint": "api/save-config.php"
-    },
-    "mode": "embedded",
-    "version": "V1.7.1"
   },
   "settings": {
     "defaultTheme": "auto",
@@ -560,5 +544,19 @@ window.BIO_CONFIG = {
       },
       "brandIcon": "gmail"
     }
-  ]
+  ],
+  "admin": {
+    "enabled": true,
+    "logoGestureMode": "tap-cache-hold-admin",
+    "logoTapCount": 2,
+    "logoHoldSeconds": 2,
+    "logoRingDelaySeconds": 0.6,
+    "tapTimeout": 2500,
+    "storageKey": "vinh-bio-admin-config-v168",
+    "passwordHash": "5f3c731b478c8292b603e6dec59aaa2626f6fcb3c6d5e97bc3a844b8dc4e279b",
+    "serverSave": {
+      "enabled": false,
+      "endpoint": "api/save-profile.php"
+    }
+  }
 };

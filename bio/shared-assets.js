@@ -1,6 +1,5 @@
-/* Ảnh icon dùng chung Bio Link V1.7.1 - chỉ tài khoản chính cập nhật */
+/* Ảnh icon dùng chung - chỉ tài khoản chính cập nhật. */
 window.BIO_SHARED_ASSETS = {
-  "version": "V1.7.1",
   "linkImages": {
     "facebook": "assets/fb.webp",
     "messenger": "assets/mess.webp",

@@ -1,28 +1,12 @@
-/* Bio Link - mã hệ thống dùng chung. Phiên bản lấy từ system-config.js. */
+/* Bio Link Admin V14 - lưu máy chủ PHP, giữ nền 3 đốm và tùy chỉnh viền/nền */
 (() => {
   "use strict";
 
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
   const deepClone = value => JSON.parse(JSON.stringify(value));
-  const SYSTEM_CONFIG = deepClone(window.BIO_SYSTEM_CONFIG || {});
-  const SYSTEM_VERSION = String(SYSTEM_CONFIG.version || "V-beta");
-  const SYSTEM_ASSET_VERSION = String(SYSTEM_CONFIG.assetVersion || SYSTEM_VERSION.replace(/^V/i, ""));
-  const EXTERNAL_ADMIN_CONFIG = deepClone(window.BIO_ADMIN_CONFIG || {});
-  const HAS_SEPARATE_ADMIN_CONFIG = Object.keys(EXTERNAL_ADMIN_CONFIG).length > 0;
 
   const DEFAULT_LAYOUT = { mobileColumns: 1, tabletColumns: 2, desktopColumns: 2 };
-  const VERIFIED_BADGE_SVG = `
-    <svg class="verified-badge-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid meet">
-      <polygon points="12.00,1.20 13.79,2.98 16.13,2.02 17.11,4.35 19.64,4.36 19.65,6.89 21.98,7.87 21.02,10.21 22.80,12.00 21.02,13.79 21.98,16.13 19.65,17.11 19.64,19.64 17.11,19.65 16.13,21.98 13.79,21.02 12.00,22.80 10.21,21.02 7.87,21.98 6.89,19.65 4.36,19.64 4.35,17.11 2.02,16.13 2.98,13.79 1.20,12.00 2.98,10.21 2.02,7.87 4.35,6.89 4.36,4.36 6.89,4.35 7.87,2.02 10.21,2.98" fill="#1b74e4"></polygon>
-      <path d="M7.35 12.2 10.45 15.15 16.85 8.75" fill="none" stroke="#fff" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"></path>
-    </svg>`;
-
-  const ensureVerifiedBadge = element => {
-    if (!element) return;
-    if (!element.querySelector(".verified-badge-svg")) element.innerHTML = VERIFIED_BADGE_SVG;
-  };
-
   const DEFAULT_APPEARANCE = {
     primaryColor: "#f39b19",
     primaryStrongColor: "#d97800",
@@ -46,84 +30,27 @@
     showDecorations: true,
     showCardBorder: true
   };
-  const IS_SERVER_MODE = window.BIO_SERVER_MODE === true;
   const DEFAULT_SERVER_SAVE = {
-    enabled: IS_SERVER_MODE,
-    endpoint: "api/save-profile.php"
-  };
-  const DEFAULT_QR_DESIGN = {
-    linkPreset: "current-current",
-    colorMode: "solid",
-    color1: "#111111",
-    color2: "#f39b19",
-    backgroundColor: "#ffffff",
-    gradientDirection: "diagonal"
+    enabled: true,
+    endpoint: "api/save-config.php"
   };
 
   const I18N = {
-    vi: { code: "VI", flag: "assets/flag-vi.svg", language: "Đổi ngôn ngữ", themeLight: "Chuyển sang giao diện sáng", themeDark: "Chuyển sang giao diện tối", share: "Chia sẻ trang", connect: "Kết nối với tôi", qr: "Mã QR", qrTitle: "Chia sẻ trang Bio", qrDescription: "Quét mã QR hoặc sao chép đường dẫn để mở nhanh trang này.", copy: "Sao chép liên kết", copied: "Đã sao chép liên kết", shareError: "Không thể chia sẻ lúc này", qrAlt: "Mã QR dẫn đến trang Bio", qrCardHint: "Quét mã để kết nối", cacheResetting: "Đang xóa cache Bio...", saveQr: "Lưu ảnh QR", savingQr: "Đang tạo ảnh...", savedQr: "Đã lưu ảnh QR", copyQrImage: "Sao chép ảnh", copyingQrImage: "Đang sao chép...", copiedQrImage: "Đã sao chép ảnh QR", copyQrImageUnsupported: "Trình duyệt chưa hỗ trợ sao chép ảnh; hãy dùng Lưu ảnh QR", currentLink: "Link đang mở", shortLink: "Link rút gọn" },
-    ja: { code: "JP", flag: "assets/flag-ja.svg", language: "言語を変更", themeLight: "ライトモードに切り替え", themeDark: "ダークモードに切り替え", share: "ページを共有", connect: "リンク一覧", qr: "QRコード", qrTitle: "Bioページを共有", qrDescription: "QRコードを読み取るか、リンクをコピーしてこのページを開けます。", copy: "リンクをコピー", copied: "リンクをコピーしました", shareError: "現在共有できません", qrAlt: "BioページのQRコード", qrCardHint: "QRコードを読み取って接続", cacheResetting: "Bioキャッシュを削除しています...", saveQr: "QR画像を保存", savingQr: "画像を作成中...", savedQr: "QR画像を保存しました", copyQrImage: "画像をコピー", copyingQrImage: "コピー中...", copiedQrImage: "QR画像をコピーしました", copyQrImageUnsupported: "画像コピーに未対応です。QR画像を保存してください", currentLink: "現在のリンク", shortLink: "短縮リンク" },
-    en: { code: "EN", flag: "assets/flag-en.svg", language: "Change language", themeLight: "Switch to light mode", themeDark: "Switch to dark mode", share: "Share page", connect: "Connect with me", qr: "QR code", qrTitle: "Share Bio page", qrDescription: "Scan the QR code or copy the link to open this page.", copy: "Copy link", copied: "Link copied", shareError: "Unable to share right now", qrAlt: "QR code for this Bio page", qrCardHint: "Scan to connect", cacheResetting: "Clearing Bio cache...", saveQr: "Save QR image", savingQr: "Creating image...", savedQr: "QR image saved", copyQrImage: "Copy image", copyingQrImage: "Copying...", copiedQrImage: "QR image copied", copyQrImageUnsupported: "Image clipboard is not supported; use Save QR image", currentLink: "Current link", shortLink: "Short link" }
+    vi: { code: "VI", flag: "assets/flag-vi.svg", language: "Đổi ngôn ngữ", themeLight: "Chuyển sang giao diện sáng", themeDark: "Chuyển sang giao diện tối", share: "Chia sẻ trang", connect: "Kết nối với tôi", qr: "Mã QR", qrTitle: "Chia sẻ trang Bio", qrDescription: "Quét mã QR hoặc sao chép đường dẫn để mở nhanh trang này.", copy: "Sao chép liên kết", copied: "Đã sao chép liên kết", shareError: "Không thể chia sẻ lúc này", qrAlt: "Mã QR dẫn đến trang Bio" },
+    ja: { code: "JP", flag: "assets/flag-ja.svg", language: "言語を変更", themeLight: "ライトモードに切り替え", themeDark: "ダークモードに切り替え", share: "ページを共有", connect: "リンク一覧", qr: "QRコード", qrTitle: "Bioページを共有", qrDescription: "QRコードを読み取るか、リンクをコピーしてこのページを開けます。", copy: "リンクをコピー", copied: "リンクをコピーしました", shareError: "現在共有できません", qrAlt: "BioページのQRコード" },
+    en: { code: "EN", flag: "assets/flag-en.svg", language: "Change language", themeLight: "Switch to light mode", themeDark: "Switch to dark mode", share: "Share page", connect: "Connect with me", qr: "QR code", qrTitle: "Share Bio page", qrDescription: "Scan the QR code or copy the link to open this page.", copy: "Copy link", copied: "Link copied", shareError: "Unable to share right now", qrAlt: "QR code for this Bio page" }
   };
   let currentLanguage = "vi";
   let adminSessionPassword = "";
-  let activeQrUrl = "";
-  let activeQrDisplayUrl = "";
   const FEATURED_LABELS = { vi: "Nổi bật", ja: "おすすめ", en: "Featured" };
 
   const clampColumns = value => Math.min(3, Math.max(1, Number(value) || 1));
   const clampNumber = (value, min, max, fallback) => Math.min(max, Math.max(min, Number(value) || fallback));
 
-
-  const SPECIAL_URL_PREFIX = /^(?:https?:|mailto:|tel:|sms:|geo:|intent:|line:|zalo:|fb:|messenger:|tg:|whatsapp:|viber:|skype:|facetime:|facetime-audio:)/i;
-  const RELATIVE_URL_PREFIX = /^(?:#|\?|\/|\.\/|\.\.\/)/;
-  const normalizeExternalUrl = (value, item = null) => {
-    const raw = String(value || "").trim();
-    if (!raw) return "";
-    if (SPECIAL_URL_PREFIX.test(raw)) return raw;
-    if (raw.startsWith("//")) return `https:${raw}`;
-    if (RELATIVE_URL_PREFIX.test(raw)) return raw;
-    const id = String(item?.id || item?.sourceLinkId || "").toLowerCase();
-    const iconName = String(item?.icon || "").toLowerCase();
-    if ((id.includes("email") || iconName === "mail") && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw)) return `mailto:${raw}`;
-    if ((id.includes("phone") || iconName === "phone") && /^\+?[0-9 ()-]{6,}$/.test(raw)) return `tel:${raw.replace(/[ ()-]/g, "")}`;
-    if (/^[a-z][a-z0-9+.-]*:/i.test(raw)) return raw;
-    return `https://${raw.replace(/^\/+/, "")}`;
-  };
-
-  const profileSlug = String(window.BIO_PROFILE_SLUG || "vinh").toLowerCase();
-  const profileDir = String(window.BIO_PROFILE_DIR || (profileSlug === "vinh" ? "" : `${profileSlug}/`));
-  const isPrimaryProfile = profileSlug === "vinh";
-  const sharedAssets = deepClone(window.BIO_SHARED_ASSETS || {});
-  const hasOwn = (object, key) => Object.prototype.hasOwnProperty.call(object || {}, key);
-
-  const applySharedAssetsToSecondaryProfile = cfg => {
-    if (isPrimaryProfile) return cfg;
-    cfg.profile.favicon = cfg.profile.avatar || "avatar.png";
-    cfg.settings ||= {};
-    cfg.settings.appearance ||= { ...DEFAULT_APPEARANCE };
-
-    // Chỉ ảnh icon lớn/bé phụ thuộc tài khoản chính.
-    // Avatar, favicon tự theo avatar, nền ngoài và nền trong là riêng từng hồ sơ.
-    const linkImages = sharedAssets.linkImages || {};
-    (cfg.links || []).forEach(item => {
-      if (item?.id && hasOwn(linkImages, item.id)) item.image = linkImages[item.id] || "";
-    });
-
-    const socialImages = sharedAssets.socialImages || {};
-    (cfg.socialIcons || []).forEach(item => {
-      const sourceKey = item?.sourceLinkId || item?.id || "";
-      if (sourceKey && hasOwn(socialImages, sourceKey)) item.image = socialImages[sourceKey] || "";
-      else if (sourceKey && hasOwn(linkImages, sourceKey)) item.image = linkImages[sourceKey] || "";
-    });
-    return cfg;
-  };
-
   const normalizeConfig = input => {
     const cfg = deepClone(input || {});
     cfg.profile ||= {};
-    if (typeof cfg.profile.verified !== "boolean") cfg.profile.verified = true;
-    cfg.profile.favicon ||= cfg.profile.avatar || "assets/favicon.png";
+    cfg.profile.favicon ||= "assets/favicon.png";
     cfg.profile.badges = Array.isArray(cfg.profile.badges) ? cfg.profile.badges : [];
     while (cfg.profile.badges.length < 2) cfg.profile.badges.push({ enabled: true, icon: "sparkles", text: "" });
     cfg.profile.translations ||= {};
@@ -131,42 +58,10 @@
       if (typeof item.enabled !== "boolean") item.enabled = true;
       item.translations ||= {};
     });
-    const legacyAdmin = cfg.admin || {};
-    cfg.admin = {
-      ...(SYSTEM_CONFIG.adminDefaults || {}),
-      ...EXTERNAL_ADMIN_CONFIG,
-      ...legacyAdmin
-    };
-    cfg.admin.logoGestureMode = ["tap-admin-hold-cache", "tap-cache-hold-admin"].includes(cfg.admin.logoGestureMode)
-      ? cfg.admin.logoGestureMode
-      : "tap-cache-hold-admin";
-    cfg.admin.logoTapCount = Math.min(12, Math.max(2, Number(cfg.admin.logoTapCount) || (cfg.admin.logoGestureMode === "tap-cache-hold-admin" ? 2 : 5)));
-    cfg.admin.logoHoldSeconds = Math.min(8, Math.max(1, Number(cfg.admin.logoHoldSeconds) || 2));
-    cfg.admin.logoRingDelaySeconds = Math.min(
-      Math.max(0, cfg.admin.logoHoldSeconds - 0.15),
-      Math.max(0, Number(cfg.admin.logoRingDelaySeconds) || 0.6)
-    );
+    cfg.admin ||= {};
+    cfg.admin.logoTapCount = Math.min(12, Math.max(2, Number(cfg.admin.logoTapCount) || 5));
     cfg.admin.serverSave = { ...DEFAULT_SERVER_SAVE, ...(cfg.admin.serverSave || {}) };
-    cfg.admin.version = SYSTEM_VERSION;
-    cfg.admin.mode = IS_SERVER_MODE ? "server" : "embedded";
-    cfg.admin.serverSave.enabled = IS_SERVER_MODE;
-    cfg.admin.serverSave.endpoint = "api/save-profile.php";
     cfg.settings ||= {};
-    cfg.settings.qrUrl = normalizeExternalUrl(cfg.settings.qrUrl);
-    cfg.settings.qrDesign = { ...DEFAULT_QR_DESIGN, ...(cfg.settings.qrDesign || {}) };
-    // Tương thích V1.6.5: linkMode current/custom được chuyển sang 3 chế độ mới.
-    if (!cfg.settings.qrDesign.linkPreset) {
-      cfg.settings.qrDesign.linkPreset = cfg.settings.qrDesign.linkMode === "custom" ? "custom-custom" : "current-current";
-    }
-    cfg.settings.qrDesign.linkPreset = ["current-current", "custom-custom", "current-custom"].includes(cfg.settings.qrDesign.linkPreset)
-      ? cfg.settings.qrDesign.linkPreset
-      : "current-current";
-    delete cfg.settings.qrDesign.linkMode;
-    cfg.settings.qrDesign.colorMode = ["solid", "gradient"].includes(cfg.settings.qrDesign.colorMode) ? cfg.settings.qrDesign.colorMode : "solid";
-    cfg.settings.qrDesign.gradientDirection = ["horizontal", "vertical", "diagonal", "reverse-diagonal", "radial"].includes(cfg.settings.qrDesign.gradientDirection) ? cfg.settings.qrDesign.gradientDirection : "diagonal";
-    cfg.settings.qrDesign.color1 = String(cfg.settings.qrDesign.color1 || "#111111");
-    cfg.settings.qrDesign.color2 = String(cfg.settings.qrDesign.color2 || "#f39b19");
-    cfg.settings.qrDesign.backgroundColor = String(cfg.settings.qrDesign.backgroundColor || "#ffffff");
     cfg.settings.defaultTheme = ["auto", "light", "dark"].includes(cfg.settings.defaultTheme) ? cfg.settings.defaultTheme : "auto";
     cfg.settings.defaultLanguage = ["auto", "vi", "ja", "en"].includes(cfg.settings.defaultLanguage) ? cfg.settings.defaultLanguage : "auto";
     if (typeof cfg.settings.showLanguageButton !== "boolean") cfg.settings.showLanguageButton = true;
@@ -178,8 +73,6 @@
     cfg.settings.layout.desktopColumns = clampColumns(cfg.settings.layout.desktopColumns);
     cfg.links = Array.isArray(cfg.links) ? cfg.links : [];
     cfg.socialIcons = Array.isArray(cfg.socialIcons) ? cfg.socialIcons : [];
-    cfg.links.forEach(item => { item.url = normalizeExternalUrl(item.url, item); });
-    cfg.socialIcons.forEach(item => { item.url = normalizeExternalUrl(item.url, item); });
     const usedLinkIds = new Set();
     cfg.links.forEach((item, index) => {
       let candidate = String(item.id || `link-${index + 1}`).trim() || `link-${index + 1}`;
@@ -215,53 +108,15 @@
       if (typeof item.brandIcon !== "string") item.brandIcon = "auto";
       if (typeof item.showIconBackground !== "boolean") item.showIconBackground = item.brandIcon && item.brandIcon !== "none" ? false : !item.image;
     });
-    return applySharedAssetsToSecondaryProfile(cfg);
+    return cfg;
   };
 
   const sourceConfig = normalizeConfig(window.BIO_CONFIG || {});
-  const storageKeyBase = `${sourceConfig.admin?.storageKey || "bio-admin-preview"}`;
-  const storageKey = `${storageKeyBase}-${profileSlug}`;
+  const storageKey = sourceConfig.admin?.storageKey || "vinh-bio-admin-config-v11";
   const languageStorageKey = `${storageKey}-language`;
-  const profileDataFile = String(window.BIO_PROFILE_DATA_FILE || `${profileDir}profile.js`);
-  const adminDataFile = String(window.BIO_LEGACY_ADMIN_DATA_FILE || `${profileDir}admin-config.js`);
-
-  const loadedScripts = new Map();
-  const loadScriptOnce = (src, ready) => {
-    if (typeof ready === "function" && ready()) return Promise.resolve();
-    const absolute = new URL(src, document.baseURI).href;
-    if (loadedScripts.has(absolute)) return loadedScripts.get(absolute);
-    const promise = new Promise((resolve, reject) => {
-      const existing = [...document.scripts].find(script => script.src === absolute);
-      if (existing) {
-        if (typeof ready !== "function" || ready()) return resolve();
-        existing.addEventListener("load", resolve, { once: true });
-        existing.addEventListener("error", () => reject(new Error(`Không thể tải ${src}`)), { once: true });
-        return;
-      }
-      const script = document.createElement("script");
-      script.src = `${src}${src.includes("?") ? "&" : "?"}v=${encodeURIComponent(SYSTEM_ASSET_VERSION)}`;
-      script.async = true;
-      script.onload = resolve;
-      script.onerror = () => reject(new Error(`Không thể tải ${src}`));
-      document.head.appendChild(script);
-    });
-    loadedScripts.set(absolute, promise);
-    return promise;
-  };
-  const ensureQrLibrary = () => loadScriptOnce(SYSTEM_CONFIG.libraries?.qr || "js/qrcode.min.js", () => typeof window.QRCode === "function");
-  const ensureZipLibrary = () => loadScriptOnce(SYSTEM_CONFIG.libraries?.zip || "js/jszip.min.js", () => typeof window.JSZip === "function");
-
-  const isAbsoluteAsset = value => /^(?:[a-z][a-z0-9+.-]*:|\/\/|\/|#)/i.test(String(value || ""));
-  const resolveProfileAsset = value => {
-    const source = String(value || "").trim();
-    if (!source || isAbsoluteAsset(source)) return source;
-    if (/^(?:assets|img|css|js)\//i.test(source)) return source;
-    return `${profileDir}${source}`;
-  };
 
   const ICONS = {
     "arrow-up-right": '<path d="M7 17 17 7"/><path d="M7 7h10v10"/>',
-    "archive": '<rect x="3" y="4" width="18" height="4" rx="1"/><path d="M5 8v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8"/><path d="M10 12h4"/>',
     "book-open": '<path d="M2 5.5A2.5 2.5 0 0 1 4.5 3H9a3 3 0 0 1 3 3v15a3 3 0 0 0-3-3H4.5A2.5 2.5 0 0 0 2 20.5z"/><path d="M22 5.5A2.5 2.5 0 0 0 19.5 3H15a3 3 0 0 0-3 3v15a3 3 0 0 1 3-3h4.5a2.5 2.5 0 0 1 2.5 2.5z"/>',
     "bell": '<path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/><path d="M3.3 17h17.4c-1.6-1.8-2.4-3.8-2.4-6.2A6.3 6.3 0 0 0 12 4.5a6.3 6.3 0 0 0-6.3 6.3c0 2.4-.8 4.4-2.4 6.2Z"/><path d="M10 4.5a2 2 0 0 1 4 0"/>',
     "check": '<path d="m5 12 4 4L19 6"/>',
@@ -431,15 +286,10 @@
     $("#profileHandle").textContent = profile.handle || "";
     $("#profileBio").textContent = bio;
     $("#footerText").textContent = footer;
-    if (profile.avatar) $("#profileAvatar").src = resolveProfileAsset(profile.avatar);
-    const verified = $(".name-line .verified");
-    if (verified) {
-      ensureVerifiedBadge(verified);
-      verified.classList.toggle("hidden", profile.verified === false);
-    }
+    if (profile.avatar) $("#profileAvatar").src = profile.avatar;
     document.title = `${name} | Bio Link`;
 
-    const favicon = resolveProfileAsset(profile.favicon || profile.avatar || "assets/favicon.png");
+    const favicon = profile.favicon || profile.avatar || "assets/favicon.png";
     const faviconLink = $("#faviconLink");
     const appleIcon = $("#appleTouchIcon");
     if (faviconLink) faviconLink.href = favicon;
@@ -568,7 +418,6 @@
   const renderAll = () => {
     applyAppearanceAndLayout();
     applyProfile();
-    updateAvatarGestureTitle?.();
     renderAnnouncement();
     renderLinks();
     renderSocials();
@@ -631,12 +480,6 @@
     if (qrButton) qrButton.innerHTML = `${icon("qr-code", 16)}<span>${text.qr}</span>`;
     const copyButton = $("#copyLinkButton");
     if (copyButton) copyButton.innerHTML = `${icon("copy", 18)}<span>${text.copy}</span>`;
-    const copyQrImageButton = $("#copyQrImageButton");
-    if (copyQrImageButton) copyQrImageButton.innerHTML = `${icon("copy", 18)}<span>${text.copyQrImage}</span>`;
-    const downloadQrButton = $("#downloadQrCardButton");
-    if (downloadQrButton) downloadQrButton.innerHTML = `${icon("download", 18)}<span>${text.saveQr}</span>`;
-    const qrCardHint = $("#qrCardHint");
-    if (qrCardHint) qrCardHint.textContent = text.qrCardHint;
     const qrTitle = $("#qrTitle");
     if (qrTitle) qrTitle.textContent = text.qrTitle;
     const qrDescription = $("#qrDescription");
@@ -667,45 +510,24 @@
     if (!settings.showLanguageButton) $("#languageMenu")?.classList.add("hidden");
   };
 
-  const getCurrentPageUrl = () => {
-    const url = new URL(window.location.href);
-    url.searchParams.delete("_bio_refresh");
-    return url.href;
-  };
-
-  const getShortUrl = () => {
-    const custom = String(config.settings?.qrUrl || "").trim();
-    return custom ? new URL(custom, window.location.href).href : "";
-  };
-
-  const getQrLinkSelection = () => {
-    const current = getCurrentPageUrl();
-    const custom = getShortUrl();
-    const preset = config.settings?.qrDesign?.linkPreset || "current-current";
-    if (preset === "custom-custom" && custom) return { qrUrl: custom, displayUrl: custom, preset };
-    if (preset === "current-custom" && custom) return { qrUrl: current, displayUrl: custom, preset };
-    return { qrUrl: current, displayUrl: current, preset: "current-current" };
-  };
-
   const sharePage = async () => {
-    const { displayUrl } = getQrLinkSelection();
-    const data = { title: document.title, text: config.profile?.bio || "Xem các liên kết của tôi", url: displayUrl };
+    const data = { title: document.title, text: config.profile?.bio || "Xem các liên kết của tôi", url: location.href };
     try {
       if (navigator.share) await navigator.share(data);
-      else await copyPageUrl(data.url);
+      else await copyPageUrl();
     } catch (error) {
       if (error?.name !== "AbortError") showToast((I18N[currentLanguage] || I18N.vi).shareError);
     }
   };
 
-  const copyPageUrl = async value => {
-    const target = String(value || activeQrDisplayUrl || getQrLinkSelection().displayUrl);
+  const copyPageUrl = async () => {
+    const value = config.settings?.qrUrl || location.href;
     try {
-      await navigator.clipboard.writeText(target);
+      await navigator.clipboard.writeText(value);
       showToast((I18N[currentLanguage] || I18N.vi).copied);
     } catch {
       const input = document.createElement("textarea");
-      input.value = target;
+      input.value = value;
       document.body.appendChild(input);
       input.select();
       document.execCommand("copy");
@@ -714,376 +536,15 @@
     }
   };
 
-  const hexToRgb = value => {
-    const source = String(value || "#000000").trim().replace(/^#/, "");
-    const hex = source.length === 3 ? source.split("").map(ch => ch + ch).join("") : source.padEnd(6, "0").slice(0, 6);
-    const number = Number.parseInt(hex, 16);
-    return { r: (number >> 16) & 255, g: (number >> 8) & 255, b: number & 255 };
-  };
-
-  const interpolateRgb = (start, end, ratio) => ({
-    r: Math.round(start.r + (end.r - start.r) * ratio),
-    g: Math.round(start.g + (end.g - start.g) * ratio),
-    b: Math.round(start.b + (end.b - start.b) * ratio)
-  });
-
-  const getGradientRatio = (x, y, width, height, direction) => {
-    if (direction === "horizontal") return x / Math.max(1, width - 1);
-    if (direction === "vertical") return y / Math.max(1, height - 1);
-    if (direction === "reverse-diagonal") return ((width - 1 - x) + y) / Math.max(1, width + height - 2);
-    if (direction === "radial") {
-      const cx = (width - 1) / 2;
-      const cy = (height - 1) / 2;
-      return Math.min(1, Math.hypot(x - cx, y - cy) / Math.max(1, Math.hypot(cx, cy)));
-    }
-    return (x + y) / Math.max(1, width + height - 2);
-  };
-
-  const colorizeQrCanvas = canvas => {
-    if (!(canvas instanceof HTMLCanvasElement)) return;
-    // QRCode tạo canvas đen/trắng một lần. Hàm hoàn thiện được gọi lặp lại để
-    // chờ trình duyệt, vì vậy không được phân loại lại các pixel đã pha màu.
-    // Nếu tô lần hai, những màu có độ sáng > 128 sẽ bị hiểu nhầm là nền trắng,
-    // tạo thành mảng tam giác bị mất ở cuối hướng gradient.
-    if (canvas.dataset.bioQrColorized === "1") return;
-    const design = config.settings?.qrDesign || DEFAULT_QR_DESIGN;
-    const context = canvas.getContext("2d", { willReadFrequently: true });
-    const image = context.getImageData(0, 0, canvas.width, canvas.height);
-    const data = image.data;
-    const color1 = hexToRgb(design.color1);
-    const color2 = hexToRgb(design.color2);
-    const background = hexToRgb(design.backgroundColor);
-    const gradient = design.colorMode === "gradient";
-    for (let y = 0; y < canvas.height; y += 1) {
-      for (let x = 0; x < canvas.width; x += 1) {
-        const index = (y * canvas.width + x) * 4;
-        const luminance = (data[index] + data[index + 1] + data[index + 2]) / 3;
-        const isDark = luminance < 128 && data[index + 3] > 0;
-        const color = isDark
-          ? (gradient ? interpolateRgb(color1, color2, getGradientRatio(x, y, canvas.width, canvas.height, design.gradientDirection)) : color1)
-          : background;
-        data[index] = color.r;
-        data[index + 1] = color.g;
-        data[index + 2] = color.b;
-        data[index + 3] = 255;
-      }
-    }
-    context.putImageData(image, 0, 0);
-    canvas.dataset.bioQrColorized = "1";
-  };
-
-  const formatQrDisplayUrl = value => {
-    try {
-      const parsed = new URL(value);
-      return `${parsed.host}${parsed.pathname}${parsed.search}`;
-    } catch {
-      return String(value || "");
-    }
-  };
-
-  const renderQrCode = () => {
-    const selected = getQrLinkSelection();
-    activeQrUrl = selected.qrUrl;
-    activeQrDisplayUrl = selected.displayUrl;
-    const qrCanvas = $("#qrCanvas");
-    const text = I18N[currentLanguage] || I18N.vi;
-    qrCanvas.innerHTML = "";
-    if (typeof window.QRCode !== "function") {
-      qrCanvas.innerHTML = `<span class="qr-error">Không thể tạo mã QR</span>`;
-      return;
-    }
-    new window.QRCode(qrCanvas, {
-      text: activeQrUrl,
-      width: 520,
-      height: 520,
-      colorDark: "#000000",
-      colorLight: "#ffffff",
-      correctLevel: window.QRCode.CorrectLevel.H
-    });
-    const generatedCanvas = qrCanvas.querySelector("canvas");
-    const generatedImage = qrCanvas.querySelector("img");
-    const finalizeQrCanvas = () => {
-      if (generatedCanvas) {
-        generatedCanvas.setAttribute("aria-label", text.qrAlt);
-        generatedCanvas.style.setProperty("display", "block", "important");
-        generatedCanvas.style.setProperty("width", "100%", "important");
-        generatedCanvas.style.setProperty("height", "100%", "important");
-        colorizeQrCanvas(generatedCanvas);
-      }
-      if (generatedImage) generatedImage.style.setProperty("display", "none", "important");
-    };
-    qrCanvas.style.setProperty("--qr-background", config.settings?.qrDesign?.backgroundColor || "#ffffff");
-    finalizeQrCanvas();
-    requestAnimationFrame(finalizeQrCanvas);
-    setTimeout(finalizeQrCanvas, 80);
-    const qrUrl = $("#qrCardUrl");
-    if (qrUrl) qrUrl.textContent = formatQrDisplayUrl(activeQrDisplayUrl);
-  };
-
-  const openQrModal = async () => {
+  const openQrModal = () => {
     const modal = $("#qrModal");
+    const url = encodeURIComponent(config.settings?.qrUrl || location.href);
+    const qrImage = `https://api.qrserver.com/v1/create-qr-code/?size=420x420&margin=8&data=${url}`;
     const text = I18N[currentLanguage] || I18N.vi;
-    const profile = config.profile || {};
-    const profileName = localizedValue(profile, "name", "Bio Link");
-    const avatar = resolveProfileAsset(profile.avatar || profile.favicon || "assets/avatar.svg");
-    const qrAvatar = $("#qrProfileAvatar");
-    if (qrAvatar) { qrAvatar.src = avatar; qrAvatar.alt = profileName; }
-    const qrName = $("#qrProfileName");
-    if (qrName) qrName.textContent = profileName;
-    const qrHandle = $("#qrProfileHandle");
-    if (qrHandle) qrHandle.textContent = profile.handle || "";
-    const qrVerified = $("#qrVerified");
-    if (qrVerified) {
-      ensureVerifiedBadge(qrVerified);
-      qrVerified.classList.toggle("hidden", profile.verified === false);
-    }
-    const qrHint = $("#qrCardHint");
-    if (qrHint) qrHint.textContent = text.qrCardHint;
+    $("#qrCanvas").innerHTML = `<img src="${qrImage}" alt="${escapeAttribute(text.qrAlt)}" />`;
     modal.classList.add("open");
     modal.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
-    const qrCanvas = $("#qrCanvas");
-    if (qrCanvas) qrCanvas.innerHTML = `<span class="qr-loading">Đang tạo mã QR...</span>`;
-    try {
-      await ensureQrLibrary();
-      renderQrCode();
-    } catch (error) {
-      console.error(error);
-      if (qrCanvas) qrCanvas.innerHTML = `<span class="qr-error">Không thể tạo mã QR</span>`;
-    }
-  };
-
-  const roundedRectPath = (context, x, y, width, height, radius) => {
-    const r = Math.min(radius, width / 2, height / 2);
-    context.beginPath();
-    context.moveTo(x + r, y);
-    context.arcTo(x + width, y, x + width, y + height, r);
-    context.arcTo(x + width, y + height, x, y + height, r);
-    context.arcTo(x, y + height, x, y, r);
-    context.arcTo(x, y, x + width, y, r);
-    context.closePath();
-  };
-
-  const drawVerifiedBadge = (context, cx, cy, radius) => {
-    context.save();
-    context.fillStyle = "#1b74e4";
-    context.beginPath();
-    const points = 32;
-    for (let i = 0; i < points; i += 1) {
-      const angle = -Math.PI / 2 + (i * Math.PI * 2) / points;
-      const r = i % 2 === 0 ? radius : radius * .84;
-      const x = cx + Math.cos(angle) * r;
-      const y = cy + Math.sin(angle) * r;
-      if (i === 0) context.moveTo(x, y); else context.lineTo(x, y);
-    }
-    context.closePath();
-    context.fill();
-    context.strokeStyle = "#fff";
-    context.lineWidth = Math.max(3, radius * .18);
-    context.lineCap = "round";
-    context.lineJoin = "round";
-    context.beginPath();
-    context.moveTo(cx - radius * .42, cy);
-    context.lineTo(cx - radius * .1, cy + radius * .3);
-    context.lineTo(cx + radius * .48, cy - radius * .34);
-    context.stroke();
-    context.restore();
-  };
-
-  const loadCanvasImage = source => new Promise((resolve, reject) => {
-    const image = new Image();
-    image.decoding = "async";
-    image.onload = () => resolve(image);
-    image.onerror = reject;
-    if (/^https?:/i.test(source)) image.crossOrigin = "anonymous";
-    image.src = source;
-  });
-
-  const drawCircularImage = (context, image, cx, cy, size) => {
-    context.save();
-    context.beginPath();
-    context.arc(cx, cy, size / 2, 0, Math.PI * 2);
-    context.clip();
-    const ratio = Math.max(size / image.naturalWidth, size / image.naturalHeight);
-    const width = image.naturalWidth * ratio;
-    const height = image.naturalHeight * ratio;
-    context.drawImage(image, cx - width / 2, cy - height / 2, width, height);
-    context.restore();
-  };
-
-  const truncateCanvasText = (context, text, maxWidth) => {
-    let value = String(text || "");
-    if (context.measureText(value).width <= maxWidth) return value;
-    while (value.length > 1 && context.measureText(`${value}…`).width > maxWidth) value = value.slice(0, -1);
-    return `${value}…`;
-  };
-
-  const createQrCardImageBlob = async () => {
-    await ensureQrLibrary();
-    const qrSource = $("#qrCanvas canvas");
-    if (!(qrSource instanceof HTMLCanvasElement)) throw new Error("QR chưa sẵn sàng");
-    const profile = config.profile || {};
-    const profileName = localizedValue(profile, "name", "Bio Link");
-    const handle = profile.handle || "";
-    const avatarSource = resolveProfileAsset(profile.avatar || profile.favicon || "assets/avatar.svg");
-    const isDark = document.documentElement.dataset.theme === "dark";
-    const primary = config.settings?.appearance?.primaryColor || "#f39b19";
-    const width = 900;
-    const height = 1120;
-    const canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
-    const context = canvas.getContext("2d");
-    const cardGradient = context.createLinearGradient(0, 0, width, height);
-    if (isDark) {
-      cardGradient.addColorStop(0, "#2a2118");
-      cardGradient.addColorStop(.58, "#18130e");
-      cardGradient.addColorStop(1, "#0e0b08");
-    } else {
-      cardGradient.addColorStop(0, "#fffdf8");
-      cardGradient.addColorStop(1, "#fff1d6");
-    }
-    roundedRectPath(context, 8, 8, width - 16, height - 16, 52);
-    context.fillStyle = cardGradient;
-    context.fill();
-    context.strokeStyle = primary;
-    context.lineWidth = 3;
-    context.stroke();
-    context.save();
-    roundedRectPath(context, 8, 8, width - 16, height - 16, 52);
-    context.clip();
-    context.globalAlpha = isDark ? .16 : .17;
-    context.fillStyle = primary;
-    context.beginPath(); context.arc(width - 65, 60, 190, 0, Math.PI * 2); context.fill();
-    context.globalAlpha = isDark ? .1 : .12;
-    context.beginPath(); context.arc(45, height - 20, 215, 0, Math.PI * 2); context.fill();
-    context.globalAlpha = isDark ? .2 : .18;
-    for (let y = 28; y < height; y += 28) {
-      for (let x = 28; x < width; x += 28) {
-        if ((x + y) % 84 !== 0) continue;
-        context.beginPath(); context.arc(x, y, 1.3, 0, Math.PI * 2); context.fill();
-      }
-    }
-    context.restore();
-    const avatarY = 120;
-    try {
-      const avatarImage = await loadCanvasImage(avatarSource);
-      drawCircularImage(context, avatarImage, width / 2, avatarY, 132);
-    } catch {
-      context.fillStyle = primary;
-      context.beginPath(); context.arc(width / 2, avatarY, 66, 0, Math.PI * 2); context.fill();
-      context.fillStyle = "#fff";
-      context.font = "800 52px 'Be Vietnam Pro', system-ui, sans-serif";
-      context.textAlign = "center";
-      context.textBaseline = "middle";
-      context.fillText((profileName.trim()[0] || "B").toUpperCase(), width / 2, avatarY + 2);
-    }
-    context.textAlign = "center";
-    context.textBaseline = "alphabetic";
-    context.fillStyle = isDark ? "#fff8ef" : "#2c2118";
-    context.font = "800 42px 'Be Vietnam Pro', system-ui, sans-serif";
-    const name = truncateCanvasText(context, profileName, 650);
-    const nameWidth = context.measureText(name).width;
-    const nameY = 235;
-    context.fillText(name, width / 2, nameY);
-    if (profile.verified !== false) drawVerifiedBadge(context, width / 2 + nameWidth / 2 + 31, nameY - 15, 21);
-    context.fillStyle = isDark ? primary : (config.settings?.appearance?.primaryStrongColor || "#d97800");
-    context.font = "750 27px 'Be Vietnam Pro', system-ui, sans-serif";
-    context.fillText(truncateCanvasText(context, handle, 650), width / 2, 278);
-    const qrBoxX = 126;
-    const qrBoxY = 325;
-    const qrBoxSize = 648;
-    roundedRectPath(context, qrBoxX, qrBoxY, qrBoxSize, qrBoxSize, 44);
-    context.fillStyle = config.settings?.qrDesign?.backgroundColor || "#ffffff";
-    context.shadowColor = isDark ? "rgba(0,0,0,.42)" : "rgba(55,34,8,.16)";
-    context.shadowBlur = 30;
-    context.shadowOffsetY = 12;
-    context.fill();
-    context.shadowColor = "transparent";
-    context.drawImage(qrSource, qrBoxX + 34, qrBoxY + 34, qrBoxSize - 68, qrBoxSize - 68);
-    const text = I18N[currentLanguage] || I18N.vi;
-    context.fillStyle = isDark ? "#f2d29a" : "#5c3d17";
-    context.font = "800 25px 'Be Vietnam Pro', system-ui, sans-serif";
-    context.fillText(text.qrCardHint, width / 2, 1030);
-    context.fillStyle = isDark ? "#b9a78f" : "#8a6b46";
-    context.font = "650 22px 'Be Vietnam Pro', system-ui, sans-serif";
-    const displayUrl = formatQrDisplayUrl(activeQrDisplayUrl || getQrLinkSelection().displayUrl);
-    context.fillText(truncateCanvasText(context, displayUrl, 720), width / 2, 1072);
-    const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png", 1));
-    if (!blob) throw new Error("Không thể tạo ảnh PNG");
-    return { blob, fileName: `${profileSlug || "bio"}-qr-card.png`, profileName };
-  };
-
-  const copyQrCardImage = async () => {
-    const button = $("#copyQrImageButton");
-    const text = I18N[currentLanguage] || I18N.vi;
-    const original = button?.innerHTML || "";
-    if (!window.isSecureContext || !navigator.clipboard?.write || typeof window.ClipboardItem !== "function") {
-      showToast(text.copyQrImageUnsupported);
-      return;
-    }
-    if (button) {
-      button.disabled = true;
-      button.innerHTML = `${icon("copy", 18)}<span>${text.copyingQrImage}</span>`;
-    }
-    try {
-      const { blob } = await createQrCardImageBlob();
-      await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
-      showToast(text.copiedQrImage);
-    } catch (error) {
-      console.error(error);
-      showToast(error?.message || text.copyQrImageUnsupported);
-    } finally {
-      if (button) {
-        button.disabled = false;
-        button.innerHTML = original || `${icon("copy", 18)}<span>${text.copyQrImage}</span>`;
-      }
-    }
-  };
-
-  const downloadQrCard = async () => {
-    const button = $("#downloadQrCardButton");
-    const text = I18N[currentLanguage] || I18N.vi;
-    const original = button?.innerHTML || "";
-    if (button) {
-      button.disabled = true;
-      button.innerHTML = `${icon("download", 18)}<span>${text.savingQr}</span>`;
-    }
-    try {
-      const { blob, fileName, profileName } = await createQrCardImageBlob();
-      const qrFile = new File([blob], fileName, { type: "image/png" });
-      const isIOSDevice = /iP(?:hone|ad|od)/i.test(navigator.userAgent) ||
-        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-      const canShareFile = isIOSDevice &&
-        typeof navigator.share === "function" &&
-        typeof navigator.canShare === "function" &&
-        navigator.canShare({ files: [qrFile] });
-      if (canShareFile) {
-        // iPhone/iPad cần bảng chia sẻ để lưu ảnh vào Photos.
-        await navigator.share({ files: [qrFile], title: profileName });
-      } else {
-        // Windows, macOS, Android và trình duyệt desktop: tải PNG trực tiếp.
-        const objectUrl = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = objectUrl;
-        link.download = fileName;
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        setTimeout(() => URL.revokeObjectURL(objectUrl), 1500);
-      }
-      showToast(text.savedQr);
-    } catch (error) {
-      if (error?.name !== "AbortError") {
-        console.error(error);
-        showToast(error.message || "Không thể lưu ảnh QR");
-      }
-    } finally {
-      if (button) {
-        button.disabled = false;
-        button.innerHTML = original || `${icon("download", 18)}<span>${text.saveQr}</span>`;
-      }
-    }
   };
 
   const closeQrModal = () => {
@@ -1113,11 +574,14 @@
     });
   };
 
+  const isUsableHref = href => href && href !== "#" && !href.startsWith("javascript:");
+
   const openTouchLink = element => {
-    const href = element?.getAttribute("href");
-    if (!href || href === "#") return;
-    // Mobile mở sau khi vệt sáng hoàn tất. Dùng cùng tab để trình duyệt không
-    // chặn điều hướng do lệnh mở xảy ra sau thời gian chờ hiệu ứng.
+    const href = element?.href;
+    if (!isUsableHref(href)) return;
+
+    // Điều hướng trong tab hiện tại để bảo đảm hiệu ứng được nhìn thấy đầy đủ
+    // và tránh trình duyệt mobile chặn tab mới sau khoảng trễ hiệu ứng.
     window.location.assign(href);
   };
 
@@ -1136,8 +600,8 @@
       if (!element) return;
 
       cancelTouchInteraction();
-      element.classList.remove("is-touch-held", "is-touch-active");
-      // Buộc trình duyệt khởi động lại animation khi chạm liên tiếp cùng nút.
+      element.classList.remove("is-touch-held");
+      // Khởi động lại vệt sáng ngay cả khi chạm liên tiếp cùng một nút.
       void element.offsetWidth;
       element.classList.add("is-touch-active");
 
@@ -1151,17 +615,15 @@
         longPressed: false,
         longPressTimer: 0
       };
-
       state.longPressTimer = window.setTimeout(() => {
         if (touchInteraction !== state || state.moved) return;
         state.longPressed = true;
         element.classList.remove("is-touch-active");
         element.classList.add("is-touch-held");
         blockedClickTarget = element;
-        blockedClickUntil = Date.now() + 1400;
+        blockedClickUntil = Date.now() + 1200;
         if (navigator.vibrate) navigator.vibrate(12);
       }, LONG_PRESS_DELAY);
-
       touchInteraction = state;
     }, { passive: true });
 
@@ -1182,7 +644,7 @@
       touchInteraction = null;
 
       blockedClickTarget = state.element;
-      blockedClickUntil = Date.now() + 1600;
+      blockedClickUntil = Date.now() + 1400;
 
       if (state.moved) {
         clearTouchState(state.element);
@@ -1195,7 +657,7 @@
       }
 
       const elapsed = performance.now() - state.startedAt;
-      const remaining = Math.max(80, TAP_EFFECT_DURATION - elapsed);
+      const remaining = Math.max(120, TAP_EFFECT_DURATION - elapsed);
       window.setTimeout(() => {
         clearTouchState(state.element);
         openTouchLink(state.element);
@@ -1206,6 +668,7 @@
       if (touchInteraction?.pointerId === event.pointerId) cancelTouchInteraction();
     }, { passive: true });
 
+    // Chặn click mặc định sau pointerup để link không mở trước khi hiệu ứng kết thúc.
     document.addEventListener("click", event => {
       const element = event.target.closest(TOUCH_LINK_SELECTOR);
       if (!element) return;
@@ -1215,6 +678,7 @@
       }
     }, true);
 
+    // Tránh menu nhấn giữ, bôi đen chữ và kéo ảnh ở phần công khai.
     document.addEventListener("contextmenu", event => {
       if (event.target.closest(".page-shell, #qrModal")) event.preventDefault();
     });
@@ -1224,186 +688,6 @@
     document.addEventListener("dragstart", event => {
       if (event.target.closest(".page-shell, #qrModal")) event.preventDefault();
     });
-  };
-
-
-  const clearBioClientCache = async () => {
-    const avatar = $(".avatar-wrap");
-    avatar?.classList.remove("is-cache-pressing");
-    avatar?.classList.add("is-cache-resetting");
-    showToast((I18N[currentLanguage] || I18N.vi).cacheResetting);
-
-    const removeBioKeys = storage => {
-      try {
-        const keys = [];
-        for (let index = 0; index < storage.length; index += 1) {
-          const key = storage.key(index);
-          if (key) keys.push(key);
-        }
-        keys.forEach(key => {
-          if (key === "bio-theme" || key.includes("vinh-bio") || key.includes("bio-link") || key.includes("bio-manager")) storage.removeItem(key);
-        });
-      } catch { /* storage có thể bị chặn */ }
-    };
-
-    removeBioKeys(window.localStorage);
-    removeBioKeys(window.sessionStorage);
-
-    try {
-      if ("caches" in window) {
-        const names = await caches.keys();
-        await Promise.all(names.filter(name => /bio/i.test(name)).map(name => caches.delete(name)));
-      }
-    } catch { /* Cache Storage không khả dụng */ }
-
-    try {
-      if ("serviceWorker" in navigator) {
-        const registrations = await navigator.serviceWorker.getRegistrations();
-        await Promise.all(registrations.filter(item => {
-          try { return new URL(item.scope).pathname.includes("/bio/"); }
-          catch { return false; }
-        }).map(item => item.unregister()));
-      }
-    } catch { /* Không có quyền quản lý service worker */ }
-
-    await new Promise(resolve => setTimeout(resolve, 260));
-    const refreshUrl = new URL(window.location.href);
-    refreshUrl.searchParams.set("_bio_refresh", Date.now().toString());
-    window.location.replace(refreshUrl.href);
-  };
-
-  let avatarGestureState = null;
-  let avatarTapCount = 0;
-  let avatarTapTimer = 0;
-  let suppressAvatarClickUntil = 0;
-
-  const getLogoGestureSettings = () => {
-    const admin = config.admin || {};
-    const mode = ["tap-admin-hold-cache", "tap-cache-hold-admin"].includes(admin.logoGestureMode)
-      ? admin.logoGestureMode
-      : "tap-cache-hold-admin";
-    const holdMs = Math.round(clampNumber(admin.logoHoldSeconds, 1, 8, 2) * 1000);
-    const ringDelayMs = Math.min(
-      Math.max(0, holdMs - 150),
-      Math.round(clampNumber(admin.logoRingDelaySeconds, 0, 2, 0.6) * 1000)
-    );
-    const tapCount = Math.round(clampNumber(admin.logoTapCount, 2, 12, mode === "tap-cache-hold-admin" ? 2 : 5));
-    return { mode, holdMs, ringDelayMs, tapCount };
-  };
-
-  const updateAvatarGestureTitle = () => {
-    const avatar = $(".avatar-wrap");
-    if (!avatar) return;
-    const { mode, holdMs, tapCount } = getLogoGestureSettings();
-    const seconds = (holdMs / 1000).toLocaleString("vi-VN", { maximumFractionDigits: 1 });
-    avatar.title = mode === "tap-cache-hold-admin"
-      ? `Nhấn ${tapCount} lần để xóa cache · giữ ${seconds} giây để mở Admin`
-      : `Nhấn ${tapCount} lần để mở Admin · giữ ${seconds} giây để xóa cache`;
-  };
-
-  const cancelAvatarGesture = () => {
-    const state = avatarGestureState;
-    if (!state) return;
-    clearTimeout(state.ringTimer);
-    clearTimeout(state.actionTimer);
-    state.element.classList.remove("is-cache-pressing");
-    avatarGestureState = null;
-  };
-
-  const performAvatarTapAction = async mode => {
-    if (mode === "tap-cache-hold-admin") {
-      suppressAvatarClickUntil = Date.now() + 1800;
-      if (navigator.vibrate) navigator.vibrate(18);
-      await clearBioClientCache();
-      return;
-    }
-    openAdminLogin();
-  };
-
-  const performAvatarHoldAction = async mode => {
-    suppressAvatarClickUntil = Date.now() + 1800;
-    if (navigator.vibrate) navigator.vibrate([18, 35, 18]);
-    if (mode === "tap-cache-hold-admin") {
-      openAdminLogin();
-      return;
-    }
-    await clearBioClientCache();
-  };
-
-  const registerAvatarTap = () => {
-    const { mode, tapCount } = getLogoGestureSettings();
-    avatarTapCount += 1;
-    clearTimeout(avatarTapTimer);
-    avatarTapTimer = window.setTimeout(() => { avatarTapCount = 0; }, config.admin?.tapTimeout || 2500);
-    if (avatarTapCount < tapCount) return;
-    avatarTapCount = 0;
-    clearTimeout(avatarTapTimer);
-    void performAvatarTapAction(mode);
-  };
-
-  const setupAvatarGestures = () => {
-    const avatar = $(".avatar-wrap");
-    if (!avatar) return;
-    updateAvatarGestureTitle();
-
-    avatar.addEventListener("pointerdown", event => {
-      if (!event.isPrimary || (event.pointerType === "mouse" && event.button !== 0)) return;
-      cancelAvatarGesture();
-      const settings = getLogoGestureSettings();
-      const state = {
-        element: avatar,
-        pointerId: event.pointerId,
-        x: event.clientX,
-        y: event.clientY,
-        moved: false,
-        holdTriggered: false,
-        ringTimer: 0,
-        actionTimer: 0,
-        settings
-      };
-      avatar.classList.remove("is-cache-resetting", "is-cache-pressing");
-      avatar.style.setProperty("--cache-progress-duration", `${Math.max(150, settings.holdMs - settings.ringDelayMs)}ms`);
-      state.ringTimer = window.setTimeout(() => {
-        if (avatarGestureState !== state || state.moved || state.holdTriggered) return;
-        avatar.classList.add("is-cache-pressing");
-      }, settings.ringDelayMs);
-      state.actionTimer = window.setTimeout(() => {
-        if (avatarGestureState !== state || state.moved) return;
-        state.holdTriggered = true;
-        avatar.classList.remove("is-cache-pressing");
-        avatarGestureState = null;
-        void performAvatarHoldAction(settings.mode);
-      }, settings.holdMs);
-      avatarGestureState = state;
-      try { avatar.setPointerCapture(event.pointerId); } catch { /* không hỗ trợ */ }
-    }, { passive: true });
-
-    avatar.addEventListener("pointermove", event => {
-      const state = avatarGestureState;
-      if (!state || event.pointerId !== state.pointerId) return;
-      if (Math.hypot(event.clientX - state.x, event.clientY - state.y) <= 13) return;
-      state.moved = true;
-      cancelAvatarGesture();
-    }, { passive: true });
-
-    avatar.addEventListener("pointerup", event => {
-      const state = avatarGestureState;
-      if (!state || event.pointerId !== state.pointerId) return;
-      const shouldTap = !state.moved && !state.holdTriggered;
-      cancelAvatarGesture();
-      try { avatar.releasePointerCapture(event.pointerId); } catch { /* không hỗ trợ */ }
-      if (shouldTap) registerAvatarTap();
-    }, { passive: true });
-
-    avatar.addEventListener("pointercancel", cancelAvatarGesture, { passive: true });
-    avatar.addEventListener("lostpointercapture", cancelAvatarGesture, { passive: true });
-    avatar.addEventListener("contextmenu", event => event.preventDefault());
-    avatar.addEventListener("click", event => {
-      if (Date.now() < suppressAvatarClickUntil) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-      }
-    }, true);
   };
 
   const setupActions = () => {
@@ -1427,16 +711,10 @@
     });
     $("#shareButton").addEventListener("click", sharePage);
     $("#qrButton").addEventListener("click", openQrModal);
-    $("#copyLinkButton").addEventListener("click", () => copyPageUrl(activeQrDisplayUrl));
-    $("#copyQrImageButton")?.addEventListener("click", copyQrCardImage);
-    $("#downloadQrCardButton")?.addEventListener("click", downloadQrCard);
+    $("#copyLinkButton").addEventListener("click", copyPageUrl);
     $$('[data-close-modal]').forEach(el => el.addEventListener("click", closeQrModal));
     document.addEventListener("keydown", event => {
       if (event.key === "Escape") {
-        if ($("#linkHelpModal")?.classList.contains("open")) {
-          closeLinkHelp();
-          return;
-        }
         if ($("#orderModal")?.classList.contains("open")) {
           closeOrderModal();
           return;
@@ -1459,7 +737,7 @@
       <section id="adminLogin" class="admin-login-card" role="dialog" aria-modal="true" aria-labelledby="adminLoginTitle">
         <button class="admin-close" type="button" data-admin-close aria-label="Đóng">${icon("x")}</button>
         <div class="admin-lock">${icon("lock", 28)}</div>
-        <h2 id="adminLoginTitle">Mở cài đặt Bio Link <span class="admin-version">${escapeHtml(SYSTEM_VERSION)}</span></h2>
+        <h2 id="adminLoginTitle">Mở cài đặt Bio Link <span class="admin-version">V1.6.0</span></h2>
         <p>Nhập mật khẩu quản trị để chỉnh sửa nội dung.</p>
         <form id="adminLoginForm">
           <label class="admin-field"><span>Mật khẩu</span><div class="password-wrap"><input id="adminPassword" type="password" autocomplete="current-password" required /><button class="password-toggle" type="button" data-password-toggle="adminPassword" aria-label="Hiện mật khẩu" title="Hiện mật khẩu">${icon("eye", 18)}</button></div></label>
@@ -1470,7 +748,7 @@
 
       <section id="adminEditor" class="admin-editor hidden" role="dialog" aria-modal="true" aria-labelledby="adminTitle">
         <header class="admin-header">
-          <div><span class="admin-kicker">BIO LINK</span><span class="admin-version">${escapeHtml(SYSTEM_VERSION)}</span><h2 id="adminTitle">Cài đặt trang</h2></div>
+          <div><span class="admin-kicker">BIO LINK</span><span class="admin-version">V1.6.0</span><h2 id="adminTitle">Cài đặt trang</h2></div>
           <button class="admin-close" type="button" data-admin-close aria-label="Đóng">${icon("x")}</button>
         </header>
         <nav class="admin-tabs" aria-label="Nhóm cài đặt">
@@ -1482,16 +760,13 @@
           <div class="admin-panel" data-admin-panel="config">
             <section class="admin-section">
               <div class="admin-version-card">
-                <div><strong>Bio Link Manager <span class="admin-version">${escapeHtml(SYSTEM_VERSION)}</span></strong><small>Hồ sơ: <b>/${escapeHtml(profileSlug)}/</b> • Dữ liệu: <code>${escapeHtml(profileDataFile)}</code> • Admin: <code>${escapeHtml(adminDataFile)}</code></small></div>
+                <div><strong>Bio Link Manager <span class="admin-version">V1.6.0</span></strong><small>Giao diện và chức năng kế thừa bản 14.</small></div>
               </div>
               <div class="admin-grid two" style="margin-top:14px">
-                <label class="admin-field"><span>Phiên bản</span><input type="text" value="${SYSTEM_VERSION}" readonly /></label>
-                <label class="admin-field"><span>Cách dùng logo</span><select id="editLogoGestureMode"><option value="tap-cache-hold-admin">Nhấn nhiều lần: xóa cache · Giữ: mở Admin</option><option value="tap-admin-hold-cache">Nhấn nhiều lần: mở Admin · Giữ: xóa cache</option></select></label>
-                <label class="admin-field"><span>Số lần nhấn</span><input id="editLogoTapCount" type="number" min="2" max="12" step="1" /></label>
-                <label class="admin-field"><span>Thời gian giữ logo (giây)</span><input id="editLogoHoldSeconds" type="number" min="1" max="8" step="0.1" /></label>
-                <label class="admin-field"><span>Trễ hiện vòng tiến trình (giây)</span><input id="editLogoRingDelaySeconds" type="number" min="0" max="2" step="0.1" /></label>
+                <label class="admin-field"><span>Phiên bản</span><input type="text" value="V1.6.0" readonly /></label>
+                <label class="admin-field"><span>Số lần nhấn logo để mở cài đặt</span><input id="editLogoTapCount" type="number" min="2" max="12" step="1" /></label>
               </div>
-              <p id="logoTapHelp" class="admin-help">Mặc định: nhấn 2 lần để xóa cache; giữ 2 giây để mở Admin. Vòng tiến trình chỉ hiện sau 0,6 giây nên thao tác nhấn nhanh không còn lóe vòng.</p>
+              <p id="logoTapHelp" class="admin-help">Chỉ áp dụng cho bản GitHub có admin nằm trong trang. Nên đặt từ 3 đến 8 lần.</p>
             </section>
             <section class="admin-section">
               <h3>Thông tin chính</h3>
@@ -1499,32 +774,17 @@
                 <label class="admin-field"><span>Tên hiển thị</span><input id="editName" type="text" /></label>
                 <label class="admin-field"><span>Tên tài khoản</span><input id="editHandle" type="text" /></label>
               </div>
-              <label class="admin-switch admin-inline-switch"><input id="editVerified" type="checkbox" /><span></span><b>Hiện dấu tích xanh xác minh cạnh tên</b></label>
               <label class="admin-field"><span>Mô tả</span><textarea id="editBio" rows="3"></textarea></label>
               <div class="admin-grid two">
-                <label class="admin-field"><span>Logo / ảnh đại diện</span><input id="editAvatar" type="text" placeholder="avatar.png hoặc URL ảnh" /></label>
-                <label class="admin-field"><span>${isPrimaryProfile ? "Icon trên tab web" : "Icon trên tab (tự dùng avatar)"}</span><input id="editFavicon" type="text" placeholder="avatar.png hoặc URL icon" ${isPrimaryProfile ? "" : "readonly"} /></label>
+                <label class="admin-field"><span>Logo / ảnh đại diện</span><input id="editAvatar" type="text" placeholder="assets/logo.png hoặc URL ảnh" /></label>
+                <label class="admin-field"><span>Icon trên tab web</span><input id="editFavicon" type="text" placeholder="assets/favicon.png" /></label>
               </div>
               <label class="admin-field"><span>Chữ cuối trang</span><input id="editFooter" type="text" /></label>
-              <div class="admin-grid two">
-                <label class="admin-field"><span>Cách dùng link trong danh thiếp QR</span><select id="editQrLinkPreset"><option value="current-current">QR và chữ dưới: cùng link trang đang mở</option><option value="custom-custom">QR và chữ dưới: cùng link rút gọn</option><option value="current-custom">QR: link trang đang mở · Chữ dưới: link rút gọn</option></select></label>
-                <label class="admin-field"><span>Đường dẫn rút gọn</span><input id="editQrUrl" type="text" inputmode="url" autocomplete="url" placeholder="https://bit.ly/ten-cua-ban hoặc bit.ly/ten-cua-ban" /></label>
-              </div>
-              <div class="admin-grid three color-grid">
-                <label class="admin-field"><span>Kiểu màu QR</span><select id="editQrColorMode"><option value="solid">Một màu</option><option value="gradient">Hai màu pha</option></select></label>
-                <label class="admin-field"><span>Màu QR 1</span><input id="editQrColor1" type="color" /></label>
-                <label class="admin-field"><span>Màu QR 2</span><input id="editQrColor2" type="color" /></label>
-                <label class="admin-field"><span>Màu nền QR</span><input id="editQrBackgroundColor" type="color" /></label>
-                <label class="admin-field"><span>Hướng pha màu</span><select id="editQrGradientDirection"><option value="diagonal">Chéo trái → phải</option><option value="reverse-diagonal">Chéo phải → trái</option><option value="horizontal">Trái → phải</option><option value="vertical">Trên → dưới</option><option value="radial">Từ giữa ra ngoài</option></select></label>
-              </div>
-              <p class="admin-help">Việc chọn link chỉ thực hiện trong Admin. Có thể nhập <code>bit.ly/ten</code>; hệ thống tự thêm <code>https://</code>. Ở chế độ thứ ba, QR dẫn đến trang thật nhưng dòng chữ và nút sao chép dùng link rút gọn. Nền QR nên sáng, màu mã nên đậm để quét ổn định.</p>
               <div class="admin-upload-row">
                 <label class="admin-upload">${icon("image", 18)} Chọn ảnh logo<input id="avatarUpload" type="file" accept="image/png,image/webp,image/jpeg,image/svg+xml" /></label>
-                ${isPrimaryProfile ? `<label class="admin-upload">${icon("image", 18)} Chọn icon tab<input id="faviconUpload" type="file" accept="image/png,image/webp,image/x-icon,image/svg+xml" /></label>` : ""}
+                <label class="admin-upload">${icon("image", 18)} Chọn icon tab<input id="faviconUpload" type="file" accept="image/png,image/webp,image/x-icon,image/svg+xml" /></label>
               </div>
-              <p class="admin-help">${isPrimaryProfile
-                ? `Avatar/logo hồ sơ luôn riêng từng tài khoản: thay avatar tài khoản chính không làm đổi avatar của tài khoản phụ. Tài khoản chính quản lý ảnh icon lớn/bé dùng chung qua <code>shared-assets.js</code>; icon tab của tài khoản chính có thể chọn riêng.`
-                : `Tài khoản phụ được thay <b>avatar, nền ngoài và nền trong</b> riêng. Ảnh icon lớn/bé phụ thuộc tài khoản chính; icon trên tab tự dùng avatar để tránh phải quản lý thêm một ảnh.`}</p>
+              <p class="admin-help">Ảnh PNG/WEBP trong suốt sẽ giữ nền trong suốt. Nên chép ảnh vào thư mục <b>assets</b> rồi nhập đường dẫn để file nhẹ.</p>
               <details class="admin-translation-box">
                 <summary>${icon("globe", 16)} Nội dung tiếng Nhật và tiếng Anh</summary>
                 <div class="admin-translation-content">
@@ -1566,11 +826,10 @@
 
             <section class="admin-section">
               <h3>Giao diện, ngôn ngữ và nút</h3>
-              <div class="admin-grid two admin-aligned-selects">
+              <div class="admin-grid two">
                 <label class="admin-field"><span>Giao diện mặc định</span><select id="editDefaultTheme"><option value="auto">Theo hệ thống</option><option value="light">Luôn sáng</option><option value="dark">Luôn tối</option></select></label>
-                <label class="admin-field"><span>Ngôn ngữ mặc định</span><select id="editDefaultLanguage"><option value="auto">Tự nhận diện theo máy</option><option value="vi">VI — Tiếng Việt</option><option value="ja">JP — 日本語</option><option value="en">EN — English</option></select></label>
+                <label class="admin-field"><span>Ngôn ngữ mặc định</span><select id="editDefaultLanguage"><option value="auto">Tự nhận diện theo máy</option><option value="vi">VI — Tiếng Việt</option><option value="ja">JP — 日本語</option><option value="en">EN — English</option></select><small>Máy tiếng Việt → VI, máy tiếng Nhật → JP, ngôn ngữ khác → EN.</small></label>
               </div>
-              <p class="admin-help admin-language-detection-help">Tự nhận diện: máy tiếng Việt → VI, máy tiếng Nhật → JP, các ngôn ngữ khác → EN.</p>
               <div class="admin-checks">
                 <label><input id="editThemeButton" type="checkbox" /> Hiện nút sáng/tối</label>
                 <label><input id="editLanguageButton" type="checkbox" /> Hiện nút ngôn ngữ</label>
@@ -1625,13 +884,12 @@
                 <label class="admin-field"><span>Màu viền khung — sáng</span><input id="editLightBorderColor" type="color" /></label>
                 <label class="admin-field"><span>Màu viền khung — tối</span><input id="editDarkBorderColor" type="color" /></label>
               </div>
-              <label class="admin-field"><span>Ảnh nền ngoài</span><input id="editOuterBackgroundImage" type="text" placeholder="uploads/background-outer.webp hoặc URL ảnh" /></label>
-              <label class="admin-field"><span>Ảnh nền trong khung Bio</span><input id="editInnerBackgroundImage" type="text" placeholder="uploads/background-inner.webp hoặc URL ảnh" /></label>
+              <label class="admin-field"><span>Ảnh nền ngoài</span><input id="editOuterBackgroundImage" type="text" placeholder="assets/background.webp hoặc URL ảnh" /></label>
+              <label class="admin-field"><span>Ảnh nền trong khung Bio</span><input id="editInnerBackgroundImage" type="text" placeholder="assets/card-background.webp hoặc URL ảnh" /></label>
               <div class="admin-upload-row">
                 <label class="admin-upload">${icon("image", 18)} Chọn ảnh nền ngoài<input id="outerBackgroundUpload" type="file" accept="image/png,image/webp,image/jpeg,image/svg+xml" /></label>
                 <label class="admin-upload">${icon("image", 18)} Chọn ảnh nền trong<input id="innerBackgroundUpload" type="file" accept="image/png,image/webp,image/jpeg,image/svg+xml" /></label>
               </div>
-              <p class="admin-help">Ảnh nền ngoài và nền trong được lưu riêng theo từng tài khoản. Khi chọn ảnh từ máy, hãy dùng <b>Tải gói cập nhật ZIP</b> để nhận đúng file ảnh và đường dẫn trong <code>profile.js</code>.</p>
               <div class="admin-checks">
                 <label><input id="editShowDecorations" type="checkbox" /> Hiện các đốm tròn trang trí ngoài nền</label>
                 <label><input id="editShowCardBorder" type="checkbox" /> Hiện viền khung Bio theo màu chủ đạo</label>
@@ -1644,21 +902,21 @@
                 <label class="admin-field"><span>Mật khẩu mới</span><div class="password-wrap"><input id="editNewPassword" type="password" autocomplete="new-password" /><button class="password-toggle" type="button" data-password-toggle="editNewPassword" aria-label="Hiện mật khẩu" title="Hiện mật khẩu">${icon("eye", 18)}</button></div></label>
                 <label class="admin-field"><span>Nhập lại mật khẩu</span><div class="password-wrap"><input id="editConfirmPassword" type="password" autocomplete="new-password" /><button class="password-toggle" type="button" data-password-toggle="editConfirmPassword" aria-label="Hiện mật khẩu" title="Hiện mật khẩu">${icon("eye", 18)}</button></div></label>
               </div>
-              <p class="admin-help">Để trống nếu không muốn đổi. Mật khẩu, cách nhấn/giữ logo và toàn bộ thiết lập cá nhân được lưu chung trong <code>profile.js</code>. Các file hệ thống chỉ chứa giao diện và chức năng Admin.</p>
-              <div class="admin-server-note"><b>Lưu trực tiếp trên host:</b> nút “Lưu lên máy chủ” hoạt động khi host hỗ trợ PHP và thư mục <code>bio</code> có quyền ghi.</div>
+              <p class="admin-help">Để trống nếu không muốn đổi. Trên host PHP, mật khẩu này cũng được dùng để xác thực khi ghi cấu hình lên máy chủ.</p>
+              <div class="admin-server-note"><b>Lưu trực tiếp trên host:</b> nút “Lưu lên máy chủ” hoạt động khi host hỗ trợ PHP và thư mục <code>js</code> có quyền ghi.</div>
             </section>
           </div>
 
           <div class="admin-panel hidden" data-admin-panel="links">
             <section class="admin-section">
-              <div class="admin-section-title"><div><h3>Icon liên kết lớn</h3><p>${isPrimaryProfile ? `PC hiển thị các ô nhập theo 3 cột. Tài khoản chính được quản lý ảnh icon dùng chung cho mọi hồ sơ.` : `PC hiển thị các ô nhập theo 3 cột. Ảnh icon dùng chung từ tài khoản chính; tài khoản phụ chỉ chỉnh tên, mô tả, link, SVG, bật/tắt và thứ tự.`}</p></div><div class="admin-section-actions"><button id="sortLinksButton" class="admin-secondary" type="button">${icon("grip-vertical", 17)} Sắp xếp</button><button id="addLinkButton" class="admin-secondary" type="button">${icon("plus", 17)} Thêm nút</button></div></div>
+              <div class="admin-section-title"><div><h3>Icon liên kết lớn</h3><p>Nhấn “Sắp xếp” để mở danh sách gọn và kéo một lần đến đúng vị trí.</p></div><div class="admin-section-actions"><button id="sortLinksButton" class="admin-secondary" type="button">${icon("grip-vertical", 17)} Sắp xếp</button><button id="addLinkButton" class="admin-secondary" type="button">${icon("plus", 17)} Thêm nút</button></div></div>
               <div id="adminLinks" class="admin-items"></div>
             </section>
           </div>
 
           <div class="admin-panel hidden" data-admin-panel="socials">
             <section class="admin-section">
-              <div class="admin-section-title"><div><h3>Icon bé dưới cùng</h3><p>Chọn icon lớn rồi sao chép một lần. PC hiển thị ô nhập theo 3 cột; ảnh chọn từ máy sẽ được đóng cùng profile.js khi tải gói ZIP.</p></div><div class="admin-section-actions"><button id="sortSocialsButton" class="admin-secondary" type="button">${icon("grip-vertical", 17)} Sắp xếp</button><button id="addSocialButton" class="admin-secondary" type="button">${icon("plus", 17)} Thêm icon</button></div></div>
+              <div class="admin-section-title"><div><h3>Icon bé dưới cùng</h3><p>Chọn icon lớn và sao chép một lần; dùng “Sắp xếp” để kéo nhanh trong bảng nhỏ.</p></div><div class="admin-section-actions"><button id="sortSocialsButton" class="admin-secondary" type="button">${icon("grip-vertical", 17)} Sắp xếp</button><button id="addSocialButton" class="admin-secondary" type="button">${icon("plus", 17)} Thêm icon</button></div></div>
               <div id="adminSocials" class="admin-items"></div>
             </section>
           </div>
@@ -1666,8 +924,7 @@
         <footer class="admin-footer">
           <button id="resetConfigButton" class="admin-danger" type="button">${icon("rotate-ccw", 17)} Về cấu hình file</button>
           <div class="admin-footer-right">
-            <button id="exportConfigButton" class="admin-secondary" type="button">${icon("file-down", 17)} Tải profile.js</button>
-            <button id="exportUpdateZipButton" class="admin-secondary admin-zip-export" type="button">${icon("archive", 17)} Tải gói cập nhật ZIP</button>
+            <button id="exportConfigButton" class="admin-secondary" type="button">${icon("file-down", 17)} Tải config.js</button>
             <button id="serverSaveButton" class="admin-server" type="button">${icon("upload-cloud", 17)} Lưu lên máy chủ</button>
             <button id="saveConfigButton" class="admin-primary" type="button">${icon("save", 17)} Lưu & xem trước</button>
           </div>
@@ -1686,47 +943,41 @@
           <footer class="order-modal-footer"><button class="admin-primary" type="button" data-order-close>${icon("check", 17)} Xong</button></footer>
         </section>
       </div>
-
-      <div id="linkHelpModal" class="link-help-modal" aria-hidden="true">
-        <div class="link-help-backdrop" data-link-help-close></div>
-        <section class="link-help-card" role="dialog" aria-modal="true" aria-labelledby="linkHelpTitle">
-          <header><div><span class="admin-kicker">HƯỚNG DẪN LINK</span><h3 id="linkHelpTitle">Cách lấy đường dẫn</h3></div><button class="admin-close" type="button" data-link-help-close aria-label="Đóng">${icon("x")}</button></header>
-          <div id="linkHelpContent" class="link-help-content"></div>
-          <footer><button class="admin-primary" type="button" data-link-help-close>${icon("check", 17)} Đã hiểu</button></footer>
-        </section>
-      </div>
     </div>`;
 
   const setupAdmin = () => {
     if (sourceConfig.admin?.enabled === false) return;
     document.body.insertAdjacentHTML("beforeend", adminMarkup());
-    {
+    if (sourceConfig.admin?.mode === "embedded") {
       const serverButton = $("#serverSaveButton");
+      if (serverButton) serverButton.style.display = "none";
       const serverNote = $(".admin-server-note");
-      const profileLabel = sourceConfig.profile?.name || profileSlug;
-      if (!IS_SERVER_MODE) {
-        if (serverButton) serverButton.style.display = "none";
-        if (serverNote) serverNote.innerHTML = `<b>Hồ sơ ${escapeHtml(profileLabel)} (/${escapeHtml(profileSlug)}/):</b> lưu xem trước chỉ nằm trên trình duyệt. Muốn cập nhật trang thật, hãy tải <code>profile.js</code> hoặc gói ZIP rồi thay đúng file <code>${escapeHtml(profileDataFile)}</code>. File này gồm cả nội dung, màu sắc, mật khẩu và cách dùng logo; cập nhật file hệ thống sẽ không ghi đè dữ liệu cá nhân. ${HAS_SEPARATE_ADMIN_CONFIG ? `<br><b>Tương thích cấu trúc cũ:</b> thiết lập từ <code>${escapeHtml(adminDataFile)}</code> đang được đọc tạm. Hãy tải lại <code>profile.js</code> một lần để gộp chúng vào dữ liệu hồ sơ.` : ``} ${isPrimaryProfile ? `Ảnh icon lớn/bé do hồ sơ chính quản lý chung; avatar và hai ảnh nền vẫn là của riêng hồ sơ chính.` : `Hồ sơ phụ được tải avatar và hai ảnh nền riêng; ảnh icon lớn/bé tự dùng theo hồ sơ chính.`}`;
-      } else {
-        if (serverButton) serverButton.style.display = "inline-flex";
-        if (serverNote) serverNote.innerHTML = `<b>Hồ sơ ${escapeHtml(profileLabel)} (/${escapeHtml(profileSlug)}/):</b> nút <b>Lưu lên máy chủ</b> sẽ ghi trực tiếp toàn bộ nội dung và thiết lập cá nhân vào <code>${escapeHtml(profileDataFile)}</code>. Avatar và hai ảnh nền được lưu trong thư mục hồ sơ; ảnh icon lớn/bé chỉ tài khoản chính được cập nhật dùng chung.`;
-      }
+      if (serverNote) serverNote.innerHTML = "<b>Chế độ GitHub:</b> lưu xem trước chỉ nằm trên trình duyệt. Muốn cập nhật trang thật, hãy bấm <code>Tải config.js</code> rồi thay file <code>js/config.js</code> trong GitHub.";
     }
     $$("[data-admin-tab]").forEach(button => button.addEventListener("click", () => switchAdminTab(button.dataset.adminTab)));
 
-    $(".avatar-wrap")?.classList.add("admin-trigger");
+    let taps = 0;
+    let tapTimer = null;
+    $(".avatar-wrap").classList.add("admin-trigger");
+    $(".avatar-wrap").addEventListener("click", () => {
+      taps += 1;
+      clearTimeout(tapTimer);
+      tapTimer = setTimeout(() => { taps = 0; }, config.admin?.tapTimeout || 2500);
+      if (taps >= (config.admin?.logoTapCount || 5)) {
+        taps = 0;
+        openAdminLogin();
+      }
+    });
 
     $$('[data-admin-close]').forEach(el => el.addEventListener("click", closeAdmin));
     $("#adminLoginForm").addEventListener("submit", handleAdminLogin);
     $("#saveConfigButton").addEventListener("click", saveEditorConfig);
     $("#serverSaveButton").addEventListener("click", saveConfigToServer);
     $("#exportConfigButton").addEventListener("click", exportEditorConfig);
-    $("#exportUpdateZipButton").addEventListener("click", exportUpdateZip);
     $("#resetConfigButton").addEventListener("click", resetToSourceConfig);
     $("#sortLinksButton").addEventListener("click", () => openOrderModal("links"));
     $("#sortSocialsButton").addEventListener("click", () => openOrderModal("socials"));
     $("#orderModal").addEventListener("click", handleOrderModalClick);
-    $$('[data-link-help-close]').forEach(el => el.addEventListener("click", closeLinkHelp));
     $("#orderList").addEventListener("pointerdown", handleOrderPointerDown);
     document.addEventListener("pointermove", handleOrderPointerMove, { passive: false });
     document.addEventListener("pointerup", handleOrderPointerEnd);
@@ -1747,23 +998,11 @@
     $("#adminSocials").addEventListener("change", handleImageUpload);
     $("#adminLinks").addEventListener("input", handleEditorItemInput);
     $("#adminSocials").addEventListener("input", handleEditorItemInput);
-    const normalizeVisibleUrlField = event => {
-      const input = event.target.closest('input[data-field="url"]');
-      if (!input) return;
-      const card = input.closest(".admin-item");
-      if (!card) return;
-      const list = card.dataset.type === "links" ? editorDraft.links : editorDraft.socialIcons;
-      const item = list[Number(card.dataset.index)];
-      input.value = normalizeExternalUrl(input.value, item);
-    };
-    $("#adminLinks").addEventListener("focusout", normalizeVisibleUrlField, true);
-    $("#adminSocials").addEventListener("focusout", normalizeVisibleUrlField, true);
-    $("#editQrUrl")?.addEventListener("blur", event => { event.target.value = normalizeExternalUrl(event.target.value); });
     $("#adminSocials").addEventListener("change", handleSocialSourceChange);
     $("#avatarUpload").addEventListener("change", handleAvatarUpload);
-    $("#faviconUpload")?.addEventListener("change", handleFaviconUpload);
-    $("#outerBackgroundUpload")?.addEventListener("change", event => handleBackgroundUpload(event, "#editOuterBackgroundImage", "ảnh nền ngoài"));
-    $("#innerBackgroundUpload")?.addEventListener("change", event => handleBackgroundUpload(event, "#editInnerBackgroundImage", "ảnh nền trong"));
+    $("#faviconUpload").addEventListener("change", handleFaviconUpload);
+    $("#outerBackgroundUpload").addEventListener("change", event => handleBackgroundUpload(event, "#editOuterBackgroundImage", "ảnh nền ngoài"));
+    $("#innerBackgroundUpload").addEventListener("change", event => handleBackgroundUpload(event, "#editInnerBackgroundImage", "ảnh nền trong"));
     $("#adminOverlay").addEventListener("click", handlePasswordToggle);
     $("#adminPassword").addEventListener("input", () => $("#adminLoginError").classList.add("hidden"));
   };
@@ -1935,19 +1174,10 @@
   const populateEditor = () => {
     $("#editName").value = editorDraft.profile.name || "";
     $("#editHandle").value = editorDraft.profile.handle || "";
-    $("#editVerified").checked = editorDraft.profile.verified !== false;
     $("#editBio").value = editorDraft.profile.bio || "";
     $("#editAvatar").value = editorDraft.profile.avatar || "";
-    $("#editFavicon").value = isPrimaryProfile ? (editorDraft.profile.favicon || "assets/favicon.png") : (editorDraft.profile.avatar || "avatar.png");
+    $("#editFavicon").value = editorDraft.profile.favicon || "assets/favicon.png";
     $("#editFooter").value = editorDraft.profile.footerText || "";
-    $("#editQrUrl").value = editorDraft.settings.qrUrl || "";
-    const qrDesign = editorDraft.settings.qrDesign || DEFAULT_QR_DESIGN;
-    $("#editQrLinkPreset").value = qrDesign.linkPreset || "current-current";
-    $("#editQrColorMode").value = qrDesign.colorMode || "solid";
-    $("#editQrColor1").value = qrDesign.color1 || "#111111";
-    $("#editQrColor2").value = qrDesign.color2 || "#f39b19";
-    $("#editQrBackgroundColor").value = qrDesign.backgroundColor || "#ffffff";
-    $("#editQrGradientDirection").value = qrDesign.gradientDirection || "diagonal";
     $("#editNameJa").value = editorDraft.profile.translations?.ja?.name || "";
     $("#editBioJa").value = editorDraft.profile.translations?.ja?.bio || "";
     $("#editFooterJa").value = editorDraft.profile.translations?.ja?.footerText || "";
@@ -1967,18 +1197,11 @@
     $("#editUsefulBadgeIcon").value = usefulBadge.icon || "sparkles";
     $("#editUsefulBadgeTextJa").value = usefulBadge.translations?.ja?.text || "";
     $("#editUsefulBadgeTextEn").value = usefulBadge.translations?.en?.text || "";
-    $("#editLogoGestureMode").value = editorDraft.admin?.logoGestureMode || "tap-cache-hold-admin";
-    $("#editLogoTapCount").value = editorDraft.admin?.logoTapCount || 2;
-    $("#editLogoHoldSeconds").value = editorDraft.admin?.logoHoldSeconds || 2;
-    $("#editLogoRingDelaySeconds").value = editorDraft.admin?.logoRingDelaySeconds ?? 0.6;
+    $("#editLogoTapCount").value = editorDraft.admin?.logoTapCount || 5;
     const tapInput = $("#editLogoTapCount");
-    const gestureInput = $("#editLogoGestureMode");
-    const holdInput = $("#editLogoHoldSeconds");
-    const delayInput = $("#editLogoRingDelaySeconds");
     const tapHelp = $("#logoTapHelp");
-    const isEmbeddedAdmin = editorDraft.admin?.mode === "embedded";
-    [tapInput, gestureInput, holdInput, delayInput].forEach(input => { if (input) input.disabled = !isEmbeddedAdmin; });
-    if (tapHelp && !isEmbeddedAdmin) tapHelp.textContent = "Bản này mở Admin bằng đường dẫn riêng; các thao tác logo chỉ áp dụng cho gói GitHub có Admin nằm trong trang.";
+    if (tapInput) tapInput.disabled = editorDraft.admin?.mode !== "embedded";
+    if (tapHelp && editorDraft.admin?.mode !== "embedded") tapHelp.textContent = "Bản này mở admin bằng đường dẫn riêng; số lần nhấn logo chỉ được dùng trong gói GitHub có admin nằm trong trang.";
     $("#editDefaultTheme").value = editorDraft.settings.defaultTheme || "auto";
     $("#editDefaultLanguage").value = editorDraft.settings.defaultLanguage || "auto";
     $("#editMobileColumns").value = String(editorDraft.settings.layout.mobileColumns || 1);
@@ -2081,17 +1304,15 @@
           <p class="admin-sync-note">Nút “Đồng bộ ngay” sẽ sao chép một lần tên, đường dẫn, icon/ảnh, icon thương hiệu, nền và bản dịch. Sau đó tất cả ô bên dưới vẫn sửa được bình thường.</p>
         ` : ""}
         <div class="admin-manual-fields">
-          <div class="admin-item-field-grid">
+          <div class="admin-grid two">
             <label class="admin-field"><span>${isLinks ? "Tên nút" : "Tên icon"}</span><input data-field="${isLinks ? "title" : "label"}" type="text" value="${escapeAttribute(isLinks ? item.title : item.label)}" /></label>
-            ${isLinks
-              ? `<label class="admin-field"><span>Mô tả</span><input data-field="description" type="text" value="${escapeAttribute(item.description || "")}" /></label>`
-              : `<label class="admin-field"><span>Icon thương hiệu</span><select data-field="brandIcon">${brandOptions.map(([value, label]) => `<option value="${value}" ${(item.brandIcon || "auto") === value ? "selected" : ""}>${label}</option>`).join("")}</select></label>`}
-            <div class="admin-field"><div class="admin-field-label-row"><span>Đường dẫn</span><button class="admin-help-dot" type="button" data-action="show-link-help" aria-label="Hướng dẫn lấy đường dẫn" title="Cách lấy đường dẫn">?</button></div><input data-field="url" type="text" inputmode="url" autocomplete="url" value="${escapeAttribute(item.url || "")}" placeholder="https://facebook.com/ten hoặc facebook.com/ten" /></div>
             <label class="admin-field"><span>Tên icon SVG</span><input data-field="icon" type="text" value="${escapeAttribute(item.icon || "globe")}" placeholder="facebook, phone, mail..." /></label>
-            <label class="admin-field"><span>Ảnh thay icon</span><input data-field="image" type="text" value="${escapeAttribute(item.image || "")}" placeholder="assets/facebook.webp hoặc URL" ${isPrimaryProfile ? "" : "readonly"} /></label>
-            ${isLinks
-              ? `<label class="admin-field"><span>Chữ trên nơ VI</span><input data-field="badge" type="text" value="${escapeAttribute(item.badge || "")}" placeholder="Để trống: Nổi bật" /></label>`
-              : `<div class="admin-field admin-field-note"><span>Chọn ảnh</span><small>Dùng nút bên dưới để nạp PNG/WEBP từ máy.</small></div>`}
+          </div>
+          ${isLinks ? `<label class="admin-field"><span>Mô tả</span><input data-field="description" type="text" value="${escapeAttribute(item.description || "")}" /></label>` : `<label class="admin-field"><span>Icon thương hiệu đen trắng</span><select data-field="brandIcon">${brandOptions.map(([value, label]) => `<option value="${value}" ${(item.brandIcon || "auto") === value ? "selected" : ""}>${label}</option>`).join("")}</select></label>`}
+          <label class="admin-field"><span>Đường dẫn</span><input data-field="url" type="text" value="${escapeAttribute(item.url || "")}" /></label>
+          <div class="admin-grid two">
+            <label class="admin-field"><span>Ảnh thay icon</span><input data-field="image" type="text" value="${escapeAttribute(item.image || "")}" placeholder="assets/facebook.png hoặc URL" /></label>
+            ${isLinks ? `<label class="admin-field"><span>Chữ trên nơ VI</span><input data-field="badge" type="text" value="${escapeAttribute(item.badge || "")}" placeholder="Để trống sẽ dùng: Nổi bật" /></label>` : `<span></span>`}
           </div>
           ${translationFields}
           <div class="admin-item-options">
@@ -2099,11 +1320,7 @@
               ${isLinks ? `<label><input data-field="featured" type="checkbox" ${item.featured ? "checked" : ""}/> Hiện nơ nổi bật ở cả VI / JP / EN</label>` : ""}
               <label><input data-field="showIconBackground" type="checkbox" ${item.showIconBackground ? "checked" : ""}/> Hiện nền icon</label>
             </div>
-            <div class="admin-upload-with-help">
-              ${isPrimaryProfile
-                ? `<label class="admin-upload small">${icon("image", 16)} ${isLinks ? "Chọn ảnh icon lớn" : "Chọn ảnh icon bé"}<input data-action="item-image-upload" type="file" accept="image/png,image/webp,image/jpeg,image/svg+xml" /></label><small>Chỉ thay hình của ${isLinks ? "nút liên kết lớn" : "icon bé dưới cùng"}, không thay avatar/logo hồ sơ. Ảnh này được dùng chung cho các tài khoản phụ sau khi cập nhật gói ZIP.</small>`
-                : `<span class="admin-shared-inline">${icon("lock", 15)} Ảnh icon dùng chung từ tài khoản chính /bio/</span>`}
-            </div>
+            <label class="admin-upload small">${icon("image", 16)} Chọn ảnh PNG/WEBP<input data-action="item-image-upload" type="file" accept="image/png,image/webp,image/jpeg,image/svg+xml" /></label>
           </div>
         </div>
       </article>`;
@@ -2120,10 +1337,9 @@
     if (!editorDraft) return;
     editorDraft.profile.name = $("#editName").value.trim();
     editorDraft.profile.handle = $("#editHandle").value.trim();
-    editorDraft.profile.verified = $("#editVerified").checked;
     editorDraft.profile.bio = $("#editBio").value.trim();
     editorDraft.profile.avatar = $("#editAvatar").value.trim();
-    editorDraft.profile.favicon = isPrimaryProfile ? ($("#editFavicon").value.trim() || "assets/favicon.png") : (editorDraft.profile.avatar || "avatar.png");
+    editorDraft.profile.favicon = $("#editFavicon").value.trim() || "assets/favicon.png";
     editorDraft.profile.footerText = $("#editFooter").value.trim();
     editorDraft.profile.translations = {
       ja: { name: $("#editNameJa").value.trim(), bio: $("#editBioJa").value.trim(), footerText: $("#editFooterJa").value.trim() },
@@ -2144,25 +1360,7 @@
       }
     ];
     editorDraft.admin ||= {};
-    editorDraft.admin.logoGestureMode = $("#editLogoGestureMode")?.value || "tap-cache-hold-admin";
-    editorDraft.admin.logoTapCount = clampNumber($("#editLogoTapCount")?.value, 2, 12, editorDraft.admin.logoGestureMode === "tap-cache-hold-admin" ? 2 : 5);
-    editorDraft.admin.logoHoldSeconds = clampNumber($("#editLogoHoldSeconds")?.value, 1, 8, 2);
-    editorDraft.admin.logoRingDelaySeconds = Math.min(
-      Math.max(0, editorDraft.admin.logoHoldSeconds - 0.15),
-      clampNumber($("#editLogoRingDelaySeconds")?.value, 0, 2, 0.6)
-    );
-    editorDraft.settings.qrUrl = normalizeExternalUrl($("#editQrUrl").value);
-    editorDraft.settings.qrDesign = {
-      linkPreset: $("#editQrLinkPreset").value,
-      colorMode: $("#editQrColorMode").value,
-      color1: $("#editQrColor1").value || "#111111",
-      color2: $("#editQrColor2").value || "#f39b19",
-      backgroundColor: $("#editQrBackgroundColor").value || "#ffffff",
-      gradientDirection: $("#editQrGradientDirection").value
-    };
-    if (["custom-custom", "current-custom"].includes(editorDraft.settings.qrDesign.linkPreset) && !editorDraft.settings.qrUrl) {
-      editorDraft.settings.qrDesign.linkPreset = "current-current";
-    }
+    editorDraft.admin.logoTapCount = clampNumber($("#editLogoTapCount")?.value, 2, 12, 5);
     editorDraft.settings.defaultTheme = $("#editDefaultTheme").value;
     editorDraft.settings.defaultLanguage = $("#editDefaultLanguage").value;
     editorDraft.settings.layout.mobileColumns = clampColumns($("#editMobileColumns").value);
@@ -2210,10 +1408,7 @@
       const item = list[index];
       if (!item) return;
       $$('[data-field]', card).forEach(field => {
-        const fieldName = field.dataset.field;
-        item[fieldName] = field.type === "checkbox"
-          ? field.checked
-          : (fieldName === "url" ? normalizeExternalUrl(field.value, item) : field.value.trim());
+        item[field.dataset.field] = field.type === "checkbox" ? field.checked : field.value.trim();
       });
       item.translations ||= {};
       $$('[data-translation-language]', card).forEach(field => {
@@ -2240,50 +1435,14 @@
     collectEditorFields();
   };
 
-  const getLinkHelpHtml = item => {
-    const key = `${item?.id || ""} ${item?.title || item?.label || ""} ${item?.icon || ""}`.toLowerCase();
-    let specific = "Mở trang cần liên kết → Chia sẻ → Sao chép liên kết. Có thể dán đầy đủ <code>https://...</code>, hoặc chỉ dán <code>tenmien.com/duong-dan</code>; hệ thống sẽ tự thêm <code>https://</code>.";
-    if (key.includes("facebook")) specific = "Facebook: mở trang cá nhân hoặc Fanpage → Chia sẻ → Sao chép liên kết. Có thể nhập <code>facebook.com/ten</code>; hệ thống tự đổi thành <code>https://facebook.com/ten</code>.";
-    else if (key.includes("messenger")) specific = "Messenger: dùng <code>m.me/tennguoidung</code> hoặc link chia sẻ Messenger. Hệ thống tự thêm <code>https://</code>.";
-    else if (key.includes("zalo")) specific = "Zalo: mở hồ sơ → Chia sẻ → Sao chép liên kết; hoặc nhập <code>zalo.me/84...</code>. Hệ thống tự thêm <code>https://</code>.";
-    else if (key.includes("line")) specific = "LINE: Trang chủ → Thêm bạn → Mời → Sao chép liên kết. Có thể nhập <code>line.me/ti/p/...</code>; hệ thống tự thêm <code>https://</code>.";
-    else if (key.includes("tiktok") || key.includes("music")) specific = "TikTok: mở hồ sơ → Chia sẻ → Sao chép liên kết. Có thể nhập <code>tiktok.com/@ten</code>; hệ thống tự thêm <code>https://</code>.";
-    else if (key.includes("youtube")) specific = "YouTube: mở kênh → Chia sẻ → Sao chép liên kết. Có thể nhập <code>youtube.com/@tenkenh</code>; hệ thống tự thêm <code>https://</code>.";
-    else if (key.includes("phone")) specific = "Số điện thoại: nhập <code>tel:+819012345678</code>. Nếu chỉ nhập số có dấu <code>+</code>, hệ thống cũng tự đổi sang <code>tel:</code>.";
-    else if (key.includes("mail") || key.includes("email")) specific = "Email: nhập <code>mailto:ten@example.com</code>. Nếu chỉ nhập địa chỉ email, hệ thống tự thêm <code>mailto:</code>.";
-    return `<p>${specific}</p><p><b>Vì sao cần https://?</b> Nếu nhập <code>bit.ly/vinhbio</code> mà không có giao thức, trình duyệt có thể hiểu đó là đường dẫn con và nối thành <code>/bio/bit.ly/vinhbio</code>. Bản này tự sửa sang <code>https://bit.ly/vinhbio</code>.</p><p><b>Ngoại lệ không tự thêm https://:</b> <code>tel:</code>, <code>mailto:</code>, <code>sms:</code>, đường dẫn nội bộ bắt đầu bằng <code>/</code>, <code>./</code>, <code>../</code> hoặc <code>#</code>.</p><p><b>Kiểm tra:</b> mở thử link trong tab ẩn danh trước khi cập nhật GitHub. Chỉ nhấn đúng vòng tròn dấu hỏi mới mở hướng dẫn.</p>`;
-  };
-
-  const openLinkHelp = item => {
-    const modal = $("#linkHelpModal");
-    const content = $("#linkHelpContent");
-    if (!modal || !content) return;
-    content.innerHTML = getLinkHelpHtml(item);
-    modal.classList.add("open");
-    modal.setAttribute("aria-hidden", "false");
-  };
-
-  const closeLinkHelp = () => {
-    const modal = $("#linkHelpModal");
-    modal?.classList.remove("open");
-    modal?.setAttribute("aria-hidden", "true");
-  };
-
   const handleItemAction = event => {
     const button = event.target.closest("[data-action]");
     if (!button || button.dataset.action === "item-image-upload") return;
-    event.preventDefault();
-    event.stopPropagation();
+    collectEditorFields();
     const card = button.closest(".admin-item");
-    if (!card) return;
     const type = card.dataset.type;
     const index = Number(card.dataset.index);
     const list = type === "links" ? editorDraft.links : editorDraft.socialIcons;
-    if (button.dataset.action === "show-link-help") {
-      openLinkHelp(list[index]);
-      return;
-    }
-    collectEditorFields();
     if (button.dataset.action === "toggle-enabled") {
       list[index].enabled = !list[index].enabled;
       renderEditorItems(type);
@@ -2331,7 +1490,6 @@
   };
 
   const handleFaviconUpload = async event => {
-    if (!isPrimaryProfile) return showToast("Tài khoản phụ dùng icon tab theo avatar");
     const file = event.target.files?.[0];
     if (!file) return;
     if (file.size > 800_000) return showToast("Icon tab nên nhỏ hơn 800 KB");
@@ -2373,7 +1531,6 @@
   };
 
   const handleImageUpload = async event => {
-    if (!isPrimaryProfile) return;
     const input = event.target.closest('[data-action="item-image-upload"]');
     if (!input) return;
     const file = input.files?.[0];
@@ -2467,16 +1624,10 @@
         method: "POST",
         credentials: "same-origin",
         headers: { "Content-Type": "application/json", "X-Requested-With": "BioLinkAdmin" },
-        body: JSON.stringify({
-          password: adminSessionPassword,
-          profileSlug,
-          config: editorDraft,
-          newPasswordHash: editorDraft.admin?.passwordHash || ""
-        })
+        body: JSON.stringify({ password: adminSessionPassword, config: editorDraft })
       });
       const result = await response.json().catch(() => ({}));
       if (!response.ok || result.ok !== true) throw new Error(result.message || `Lỗi máy chủ ${response.status}`);
-      if (result.config && typeof result.config === "object") editorDraft = normalizeConfig(result.config);
       commitSavedConfigToPreview();
       if ($("#editNewPassword").value) adminSessionPassword = $("#editNewPassword").value;
       $("#editNewPassword").value = "";
@@ -2491,189 +1642,24 @@
     }
   };
 
-  const profileDataFromConfig = draft => {
-    const output = deepClone(draft || {});
-    output.admin ||= {};
-    delete output.admin.version;
-    delete output.admin.mode;
-    output.admin.serverSave = {
-      ...(output.admin.serverSave || {}),
-      enabled: IS_SERVER_MODE,
-      endpoint: "api/save-profile.php"
-    };
-    return output;
-  };
-
-  const downloadTextFile = (content, fileName) => {
+  const exportEditorConfig = async () => {
+    collectEditorFields();
+    if (!(await applyNewPassword())) return;
+    const content = `/* Cấu hình Bio Link - xuất từ bảng cài đặt */\nwindow.BIO_CONFIG = ${JSON.stringify(editorDraft, null, 2)};\n`;
     const blob = new Blob([content], { type: "text/javascript;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = fileName;
+    link.download = "config.js";
     document.body.appendChild(link);
     link.click();
     link.remove();
     URL.revokeObjectURL(url);
-  };
-
-  const exportEditorConfig = async () => {
-    collectEditorFields();
-    if (!(await applyNewPassword())) return;
-    const finalOutput = profileDataFromConfig(editorDraft);
-    const content = `/* Dữ liệu và thiết lập riêng của hồ sơ ${profileSlug}. Mã giao diện/phiên bản nằm trong file hệ thống dùng chung. */
-window.BIO_CONFIG = ${JSON.stringify(finalOutput, null, 2)};
-`;
-    downloadTextFile(content, "profile.js");
-    const hasImages = JSON.stringify(finalOutput).includes('"data:image/');
-    showToast(hasImages ? "Đã tải profile.js có ảnh nhúng; nên dùng gói ZIP để file gọn hơn" : "Đã tải profile.js gồm cả mật khẩu và thiết lập logo");
-  };
-
-  const DATA_URL_RE = /^data:([^;,]+)(?:;[^,]*)?;base64,(.+)$/i;
-  const isEmbeddedDataUrl = value => DATA_URL_RE.test(String(value || ""));
-  const fileExtensionForMime = mime => ({
-    "image/png": "png",
-    "image/webp": "webp",
-    "image/jpeg": "jpg",
-    "image/svg+xml": "svg",
-    "image/gif": "gif",
-    "image/x-icon": "ico",
-    "image/vnd.microsoft.icon": "ico"
-  }[String(mime || "").toLowerCase()] || "bin");
-  const dataUrlToBytes = dataUrl => {
-    const match = String(dataUrl || "").match(DATA_URL_RE);
-    if (!match) throw new Error("Dữ liệu ảnh không hợp lệ");
-    const binary = atob(match[2]);
-    const bytes = new Uint8Array(binary.length);
-    for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
-    return { mime: match[1], bytes };
-  };
-  const safeAssetName = value => String(value || "asset")
-    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase().replace(/[^a-z0-9_-]+/g, "-").replace(/^-+|-+$/g, "") || "asset";
-  const profileZipFolder = () => profileSlug === "vinh" ? "bio" : `bio/${profileSlug}`;
-
-  const buildSharedAssetsConfig = exported => ({
-    linkImages: Object.fromEntries((exported.links || []).map(item => [item.id, item.image || ""])),
-    socialImages: Object.fromEntries((exported.socialIcons || []).map(item => [item.sourceLinkId || item.id, item.image || ""]))
-  });
-
-  const preparePortableProfileExport = draft => {
-    const exported = profileDataFromConfig(draft);
-    const assets = [];
-    const reusedDataUrls = new Map();
-    const usedPaths = new Set();
-
-    const uniquePath = (baseName, extension) => {
-      let candidate = `${baseName}.${extension}`;
-      let counter = 2;
-      while (usedPaths.has(candidate)) candidate = `${baseName}-${counter++}.${extension}`;
-      usedPaths.add(candidate);
-      return candidate;
-    };
-
-    const extract = (value, preferredBaseName) => {
-      if (!isEmbeddedDataUrl(value)) return value;
-      if (reusedDataUrls.has(value)) return reusedDataUrls.get(value);
-      const { mime, bytes } = dataUrlToBytes(value);
-      const extension = fileExtensionForMime(mime);
-      const relativePath = uniquePath(preferredBaseName, extension);
-      reusedDataUrls.set(value, relativePath);
-      assets.push({ relativePath, bytes, mime });
-      return relativePath;
-    };
-
-    exported.profile.avatar = extract(exported.profile.avatar, "avatar");
-    exported.settings.appearance.outerBackgroundImage = extract(exported.settings.appearance.outerBackgroundImage, "uploads/background-outer");
-    exported.settings.appearance.innerBackgroundImage = extract(exported.settings.appearance.innerBackgroundImage, "uploads/background-inner");
-
-    if (isPrimaryProfile) {
-      exported.profile.favicon = extract(exported.profile.favicon, "favicon");
-      exported.links.forEach((item, index) => {
-        item.image = extract(item.image, `assets/shared/link-${safeAssetName(item.id || item.title || index + 1)}`);
-      });
-      exported.socialIcons.forEach((item, index) => {
-        item.image = extract(item.image, `assets/shared/social-${safeAssetName(item.sourceLinkId || item.id || item.label || index + 1)}`);
-      });
-      return { exported, assets, shared: buildSharedAssetsConfig(exported) };
-    }
-
-    // Hồ sơ phụ có avatar và nền riêng; chỉ ảnh icon lớn/bé lấy từ shared-assets.js.
-    exported.profile.favicon = exported.profile.avatar || "avatar.png";
-    const linkImages = sharedAssets.linkImages || {};
-    exported.links.forEach(item => {
-      if (item?.id && hasOwn(linkImages, item.id)) item.image = linkImages[item.id] || "";
-    });
-    const socialImages = sharedAssets.socialImages || {};
-    exported.socialIcons.forEach(item => {
-      const sourceKey = item?.sourceLinkId || item?.id || "";
-      if (sourceKey && hasOwn(socialImages, sourceKey)) item.image = socialImages[sourceKey] || "";
-      else if (sourceKey && hasOwn(linkImages, sourceKey)) item.image = linkImages[sourceKey] || "";
-    });
-    return { exported, assets, shared: null };
-  };
-
-  const downloadBlob = (blob, fileName) => {
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-  };
-
-  const exportUpdateZip = async () => {
-    collectEditorFields();
-    try {
-      await ensureZipLibrary();
-    } catch (error) {
-      console.error(error);
-      showToast("Không thể tải thư viện tạo ZIP");
-      return;
-    }
-    const button = $("#exportUpdateZipButton");
-    const original = button.innerHTML;
-    button.disabled = true;
-    button.innerHTML = `${icon("archive", 17)} Đang tạo ZIP...`;
-    try {
-      const { exported, assets, shared } = preparePortableProfileExport(editorDraft);
-      const zip = new window.JSZip();
-      const folder = profileZipFolder();
-      const profileContent = `/* Dữ liệu và thiết lập riêng Bio Link - gói cập nhật ${SYSTEM_VERSION} */\nwindow.BIO_CONFIG = ${JSON.stringify(exported, null, 2)};\n`;
-      zip.file(`${folder}/profile.js`, profileContent);
-      if (isPrimaryProfile && shared) {
-        const sharedContent = `/* Ảnh dùng chung Bio Link ${SYSTEM_VERSION} - chỉ tài khoản chính cập nhật */\nwindow.BIO_SHARED_ASSETS = ${JSON.stringify(shared, null, 2)};\n`;
-        zip.file("bio/shared-assets.js", sharedContent);
-      }
-      assets.forEach(asset => zip.file(`${folder}/${asset.relativePath}`, asset.bytes));
-      const guide = [
-        `BIO LINK ${SYSTEM_VERSION} - GOI CAP NHAT RIENG HO SO`,
-        "",
-        `Ho so: ${exported.profile?.name || profileSlug}`,
-        `Thu muc dich: ${folder}/`,
-        `File du lieu va thiet lap ca nhan: ${folder}/profile.js`,
-        `Số file ảnh mới: ${assets.length}`,
-        isPrimaryProfile ? "Có kèm bio/shared-assets.js để các tài khoản phụ dùng chung ảnh icon lớn/bé." : "Hồ sơ phụ có thể chứa avatar và ảnh nền riêng; ảnh icon lớn/bé lấy từ bio/shared-assets.js.",
-        "",
-        "Giai nen tai thu muc goc repository (noi dang co thu muc bio).",
-        "Gói này chỉ chứa dữ liệu/ảnh cần cập nhật; không chứa lại index.html, CSS hoặc JS dùng chung."
-      ].join("\n");
-      zip.file("HUONG-DAN-CAP-NHAT.txt", guide);
-      const blob = await zip.generateAsync({ type: "blob", compression: "DEFLATE", compressionOptions: { level: 6 } });
-      downloadBlob(blob, `${safeAssetName(profileSlug)}-cap-nhat-${SYSTEM_ASSET_VERSION}.zip`);
-      showToast(isPrimaryProfile ? (assets.length ? `Đã tạo ZIP gồm profile.js, shared-assets.js và ${assets.length} ảnh` : "Đã tạo ZIP gồm profile.js và shared-assets.js") : (assets.length ? `Đã tạo ZIP gồm profile.js và ${assets.length} ảnh riêng` : "Đã tạo ZIP chỉ gồm profile.js"));
-    } catch (error) {
-      console.error(error);
-      showToast(error.message || "Không thể tạo gói ZIP");
-    } finally {
-      button.disabled = false;
-      button.innerHTML = original;
-    }
+    showToast("Đã tải file config.js");
   };
 
   const resetToSourceConfig = () => {
-    if (!confirm(`Xóa cấu hình xem trước và đọc lại file ${profileDataFile}?`)) return;
+    if (!confirm("Xóa cấu hình đã lưu trên trình duyệt và quay về file js/config.js?")) return;
     safeStorageRemove(storageKey);
     safeStorageRemove("bio-theme");
     safeStorageRemove(languageStorageKey);
@@ -2698,21 +1684,10 @@ window.BIO_CONFIG = ${JSON.stringify(finalOutput, null, 2)};
     setupActions();
     setupPublicTouchInteractions();
     currentLanguage = resolveInitialLanguage();
-    setTheme(resolveInitialTheme());
     renderAll();
+    setTheme(resolveInitialTheme());
     applyLanguage();
-
-    // Hiện toàn bộ hồ sơ và các nút trước. Giao diện Admin lớn được dựng ở lượt
-    // rảnh kế tiếp nên không còn tình trạng logo/tên hiện trước, nút xuất hiện sau.
-    requestAnimationFrame(() => {
-      document.documentElement.dataset.bioReady = "true";
-      const setupDeferredAdmin = () => {
-        setupAdmin();
-        setupAvatarGestures();
-      };
-      if ("requestIdleCallback" in window) window.requestIdleCallback(setupDeferredAdmin, { timeout: 700 });
-      else window.setTimeout(setupDeferredAdmin, 0);
-    });
+    setupAdmin();
   };
 
   init();

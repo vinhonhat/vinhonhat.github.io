@@ -1,4 +1,4 @@
-/* Cấu hình Bio Link V1.6.10 */
+/* Dữ liệu và thiết lập riêng của hồ sơ thao. Mã giao diện/phiên bản nằm trong file hệ thống dùng chung. */
 window.BIO_CONFIG = {
   "profile": {
     "name": "Thảo Sakura",
@@ -49,29 +49,13 @@ window.BIO_CONFIG = {
     },
     "verified": true
   },
-  "admin": {
-    "enabled": true,
-    "logoGestureMode": "tap-cache-hold-admin",
-    "logoTapCount": 2,
-    "logoHoldSeconds": 2,
-    "logoRingDelaySeconds": 0.6,
-    "tapTimeout": 2500,
-    "storageKey": "vinh-bio-admin-config-v168",
-    "passwordHash": "5994fceb32789ea9beb12f4233d556b070ca94f279e73f0c8c3272b7daa0625f",
-    "serverSave": {
-      "enabled": false,
-      "endpoint": "api/save-config.php"
-    },
-    "mode": "embedded",
-    "version": "V1.7.1"
-  },
   "settings": {
     "defaultTheme": "auto",
     "showThemeButton": true,
     "showShareButton": true,
     "showQrButton": true,
     "openLinksInNewTab": true,
-    "qrUrl": "https://bit.ly/thaonaicon",
+    "qrUrl": "https://bit.ly/sakurathao",
     "announcement": {
       "enabled": false,
       "icon": "bell",
@@ -122,9 +106,9 @@ window.BIO_CONFIG = {
     },
     "qrDesign": {
       "linkPreset": "current-custom",
-      "colorMode": "solid",
-      "color1": "#111111",
-      "color2": "#f39b19",
+      "colorMode": "gradient",
+      "color1": "#004cff",
+      "color2": "#ff00dd",
       "backgroundColor": "#ffffff",
       "gradientDirection": "diagonal"
     }
@@ -459,7 +443,7 @@ window.BIO_CONFIG = {
       "sourceLinkId": "website",
       "brandIcon": "none",
       "icon": "globe",
-      "image": "",
+      "image": "assets/web.webp",
       "showIconBackground": false,
       "label": "Trường Nhật ngữ Tokyo Sakura",
       "url": "https://tsis.jp/",
@@ -532,5 +516,19 @@ window.BIO_CONFIG = {
       },
       "brandIcon": "gmail"
     }
-  ]
+  ],
+  "admin": {
+    "enabled": true,
+    "logoGestureMode": "tap-cache-hold-admin",
+    "logoTapCount": 2,
+    "tapTimeout": 2500,
+    "logoHoldSeconds": 2,
+    "logoRingDelaySeconds": 0.6,
+    "storageKey": "vinh-bio-admin-config-v168",
+    "passwordHash": "5994fceb32789ea9beb12f4233d556b070ca94f279e73f0c8c3272b7daa0625f",
+    "serverSave": {
+      "enabled": false,
+      "endpoint": "api/save-profile.php"
+    }
+  }
 };

@@ -1,12 +1,11 @@
-/* Dữ liệu và thiết lập riêng của hồ sơ duyen. Mã giao diện/phiên bản nằm trong file hệ thống dùng chung. */
+/* Cấu hình Bio Link - xuất từ bảng cài đặt */
 window.BIO_CONFIG = {
   "profile": {
-    "name": "Duyên",
-    "verified": true,
-    "handle": "@duyen",
-    "bio": "Trang liên kết của Duyên. Nhấn logo để mở cài đặt và thay nội dung.",
-    "avatar": "avatar.png",
-    "footerText": "Duyên • Bio Link",
+    "name": "Thảo Sakura",
+    "handle": "@thaosakura",
+    "bio": "Làm việc tại trường Nhật ngữ Tokyo Sakura",
+    "avatar": "/biothao/img/logothao.jpeg",
+    "footerText": "Thảo Sakura • Made with ❤️",
     "badges": [
       {
         "enabled": true,
@@ -35,19 +34,32 @@ window.BIO_CONFIG = {
         }
       }
     ],
-    "favicon": "avatar.png",
+    "favicon": "/biothao/img/logothao.jpeg",
     "translations": {
       "ja": {
-        "name": "ズエン",
-        "bio": "ズエンのリンクページです。",
-        "footerText": "ズエン • Bio Link"
+        "name": "日本のVinh",
+        "bio": "iPhone、iPad、MacBook、データSIM、音声通話SIM、楽天SIM、特定技能試験。\n日本での暮らし、テクノロジー、便利な情報を共有しています。",
+        "footerText": "日本のVinh • Made with ❤️"
       },
       "en": {
-        "name": "Duyen",
-        "bio": "This is Duyen's link page.",
-        "footerText": "Duyen • Bio Link"
+        "name": "Vinh in Japan",
+        "bio": "iPhone, iPad, MacBook, Data SIMs, Voice SIMs, Rakuten SIM, Tokutei Exam.\nSharing life in Japan, technology, and useful tools.",
+        "footerText": "Vinh in Japan • Made with ❤️"
       }
     }
+  },
+  "admin": {
+    "enabled": true,
+    "logoTapCount": 5,
+    "tapTimeout": 2500,
+    "storageKey": "vinh-bio-admin-config-v160",
+    "passwordHash": "5994fceb32789ea9beb12f4233d556b070ca94f279e73f0c8c3272b7daa0625f",
+    "serverSave": {
+      "enabled": false,
+      "endpoint": "api/save-config.php"
+    },
+    "mode": "embedded",
+    "version": "V1.6.0"
   },
   "settings": {
     "defaultTheme": "auto",
@@ -70,9 +82,9 @@ window.BIO_CONFIG = {
       }
     },
     "layout": {
-      "mobileColumns": 2,
-      "tabletColumns": 2,
-      "desktopColumns": 2
+      "mobileColumns": 1,
+      "tabletColumns": 1,
+      "desktopColumns": 1
     },
     "appearance": {
       "primaryColor": "#f39b19",
@@ -103,23 +115,15 @@ window.BIO_CONFIG = {
       "vi": "assets/flag-vi.svg",
       "ja": "assets/flag-ja.svg",
       "en": "assets/flag-en.svg"
-    },
-    "qrDesign": {
-      "linkPreset": "current-current",
-      "colorMode": "solid",
-      "color1": "#111111",
-      "color2": "#f39b19",
-      "backgroundColor": "#ffffff",
-      "gradientDirection": "diagonal"
     }
   },
   "links": [
     {
-      "enabled": false,
+      "enabled": true,
       "icon": "facebook",
       "title": "Facebook",
       "description": "Trang Facebook chính thức",
-      "url": "https://facebook.com/tqv2022",
+      "url": "https://facebook.com/61590400792468",
       "image": "assets/fb.webp",
       "badge": "",
       "featured": false,
@@ -143,7 +147,7 @@ window.BIO_CONFIG = {
       "icon": "message-circle",
       "title": "Messenger",
       "description": "Nhắn tin trực tiếp qua Messenger",
-      "url": "https://m.me/tqv2022",
+      "url": "https://m.me/61590400792468",
       "image": "assets/mess.webp",
       "badge": "",
       "featured": false,
@@ -163,35 +167,11 @@ window.BIO_CONFIG = {
       }
     },
     {
-      "enabled": false,
-      "icon": "music-2",
-      "title": "TikTok",
-      "description": "Video ngắn và chia sẻ cuộc sống tại Nhật",
-      "url": "https://www.tiktok.com/@tqv2020?_r=1&_t=ZS-98QazQnE1p9",
-      "image": "assets/tiktok.webp",
-      "badge": "",
-      "featured": false,
-      "showIconBackground": false,
-      "id": "tiktok",
-      "translations": {
-        "ja": {
-          "title": "TikTok",
-          "description": "日本での暮らしとショート動画",
-          "badge": ""
-        },
-        "en": {
-          "title": "TikTok",
-          "description": "Short videos and life in Japan",
-          "badge": ""
-        }
-      }
-    },
-    {
-      "enabled": false,
+      "enabled": true,
       "icon": "message-square",
       "title": "Zalo",
       "description": "Liên hệ với tôi trên Zalo",
-      "url": "https://zalo.me/84966697926",
+      "url": "https://zalo.me/819092951402",
       "image": "assets/zalo.webp",
       "badge": "",
       "featured": false,
@@ -211,11 +191,11 @@ window.BIO_CONFIG = {
       }
     },
     {
-      "enabled": false,
+      "enabled": true,
       "icon": "message-circle-more",
       "title": "LINE",
       "description": "Kết bạn hoặc nhắn tin qua LINE",
-      "url": "https://line.me/ti/p/VNcwANYxzU",
+      "url": "https://line.me/ti/p/_Vjb1ng-z7",
       "image": "assets/line.webp",
       "badge": "",
       "featured": false,
@@ -235,25 +215,49 @@ window.BIO_CONFIG = {
       }
     },
     {
-      "enabled": false,
+      "enabled": true,
       "featured": false,
       "icon": "globe",
-      "title": "Vinh ở Nhật",
-      "description": "Bài viết, hướng dẫn và tiện ích mới nhất",
-      "url": "https://vinhonhat.github.io/",
+      "title": "Trường Nhật ngữ Tokyo Sakura",
+      "description": "Trang chủ trường Tokyo Sakura",
+      "url": "https://tsis.jp/",
       "badge": "",
       "image": "assets/web.webp",
       "showIconBackground": false,
       "id": "website",
       "translations": {
         "ja": {
-          "title": "日本のVinh ウェブサイト",
-          "description": "最新記事、ガイド、便利なツール",
+          "title": "東京さくらインタナショナルスクール",
+          "description": "東京さくらインタナショナルスクールのホームページ",
+          "badge": "おすすめ"
+        },
+        "en": {
+          "title": "Tokyo Sakura International School",
+          "description": "Tokyo Sakura International School Website",
+          "badge": "Featured"
+        }
+      }
+    },
+    {
+      "enabled": false,
+      "icon": "music-2",
+      "title": "TikTok",
+      "description": "Video ngắn và chia sẻ cuộc sống tại Nhật",
+      "url": "https://www.tiktok.com/@",
+      "image": "assets/tiktok.webp",
+      "badge": "",
+      "featured": false,
+      "showIconBackground": false,
+      "id": "tiktok",
+      "translations": {
+        "ja": {
+          "title": "TikTok",
+          "description": "日本での暮らしとショート動画",
           "badge": ""
         },
         "en": {
-          "title": "Vinh in Japan Website",
-          "description": "Latest articles, guides, and useful tools",
+          "title": "TikTok",
+          "description": "Short videos and life in Japan",
           "badge": ""
         }
       }
@@ -353,62 +357,14 @@ window.BIO_CONFIG = {
           "badge": ""
         }
       }
-    },
-    {
-      "enabled": false,
-      "icon": "book-open",
-      "title": "Bé Vui Học",
-      "description": "Kho trò chơi học tập dành cho bé",
-      "url": "https://vinhonhat.github.io/behoc/",
-      "image": "",
-      "badge": "",
-      "featured": false,
-      "showIconBackground": true,
-      "id": "kids-learning",
-      "translations": {
-        "ja": {
-          "title": "楽しく学ぼう",
-          "description": "子ども向け学習ゲーム",
-          "badge": ""
-        },
-        "en": {
-          "title": "Fun Learning for Kids",
-          "description": "Learning games for children",
-          "badge": ""
-        }
-      }
-    },
-    {
-      "enabled": false,
-      "icon": "download",
-      "title": "Tải công cụ miễn phí",
-      "description": "Phần mềm và công cụ do Vinh chia sẻ",
-      "url": "https://vinhonhat.github.io/#download",
-      "image": "",
-      "badge": "",
-      "featured": false,
-      "showIconBackground": true,
-      "id": "downloads",
-      "translations": {
-        "ja": {
-          "title": "無料ツール",
-          "description": "Vinhが共有するソフトウェアとツール",
-          "badge": ""
-        },
-        "en": {
-          "title": "Free downloads",
-          "description": "Software and tools shared by Vinh",
-          "badge": ""
-        }
-      }
     }
   ],
   "socialIcons": [
     {
-      "enabled": false,
+      "enabled": true,
       "icon": "facebook",
       "label": "Facebook",
-      "url": "https://facebook.com/tqv2022",
+      "url": "https://facebook.com/61590400792468",
       "image": "assets/fb.webp",
       "showIconBackground": false,
       "id": "social-1",
@@ -428,7 +384,7 @@ window.BIO_CONFIG = {
       "enabled": false,
       "icon": "message-circle",
       "label": "Messenger",
-      "url": "https://m.me/tqv2022",
+      "url": "https://m.me/61590400792468",
       "image": "assets/mess.webp",
       "showIconBackground": false,
       "id": "social-messenger",
@@ -441,6 +397,66 @@ window.BIO_CONFIG = {
         },
         "en": {
           "label": "Messenger"
+        }
+      }
+    },
+    {
+      "enabled": true,
+      "icon": "message-square",
+      "label": "Zalo",
+      "url": "https://zalo.me/819092951402",
+      "image": "assets/zalo.webp",
+      "showIconBackground": false,
+      "id": "social-4",
+      "syncFromLink": false,
+      "sourceLinkId": "zalo",
+      "translations": {
+        "ja": {
+          "label": "Zalo"
+        },
+        "en": {
+          "label": "Zalo"
+        }
+      },
+      "brandIcon": "zalo"
+    },
+    {
+      "enabled": true,
+      "icon": "message-circle-more",
+      "label": "LINE",
+      "url": "https://line.me/ti/p/_Vjb1ng-z7",
+      "image": "assets/line.webp",
+      "showIconBackground": false,
+      "id": "social-5",
+      "syncFromLink": false,
+      "sourceLinkId": "line",
+      "translations": {
+        "ja": {
+          "label": "LINE"
+        },
+        "en": {
+          "label": "LINE"
+        }
+      },
+      "brandIcon": "line"
+    },
+    {
+      "id": "social-1785395847221",
+      "enabled": true,
+      "syncFromLink": false,
+      "sourceLinkId": "website",
+      "brandIcon": "none",
+      "icon": "globe",
+      "image": "",
+      "showIconBackground": false,
+      "label": "Trường Nhật ngữ Tokyo Sakura",
+      "url": "https://tsis.jp/",
+      "translations": {
+        "ja": {
+          "label": "東京さくらインタナショナルスクール"
+        },
+        "en": {
+          "label": "Tokyo Sakura International School"
         }
       }
     },
@@ -463,46 +479,6 @@ window.BIO_CONFIG = {
         }
       },
       "brandIcon": "tiktok"
-    },
-    {
-      "enabled": false,
-      "icon": "message-square",
-      "label": "Zalo",
-      "url": "https://zalo.me/84966697926",
-      "image": "assets/zalo.webp",
-      "showIconBackground": false,
-      "id": "social-4",
-      "syncFromLink": false,
-      "sourceLinkId": "zalo",
-      "translations": {
-        "ja": {
-          "label": "Zalo"
-        },
-        "en": {
-          "label": "Zalo"
-        }
-      },
-      "brandIcon": "zalo"
-    },
-    {
-      "enabled": false,
-      "icon": "message-circle-more",
-      "label": "LINE",
-      "url": "https://line.me/ti/p/VNcwANYxzU",
-      "image": "assets/line.webp",
-      "showIconBackground": false,
-      "id": "social-5",
-      "syncFromLink": false,
-      "sourceLinkId": "line",
-      "translations": {
-        "ja": {
-          "label": "LINE"
-        },
-        "en": {
-          "label": "LINE"
-        }
-      },
-      "brandIcon": "line"
     },
     {
       "enabled": false,
@@ -544,19 +520,5 @@ window.BIO_CONFIG = {
       },
       "brandIcon": "gmail"
     }
-  ],
-  "admin": {
-    "enabled": true,
-    "logoGestureMode": "tap-cache-hold-admin",
-    "logoTapCount": 2,
-    "logoHoldSeconds": 2,
-    "logoRingDelaySeconds": 0.6,
-    "tapTimeout": 2500,
-    "storageKey": "vinh-bio-admin-config-v168",
-    "passwordHash": "5f3c731b478c8292b603e6dec59aaa2626f6fcb3c6d5e97bc3a844b8dc4e279b",
-    "serverSave": {
-      "enabled": false,
-      "endpoint": "api/save-profile.php"
-    }
-  }
+  ]
 };

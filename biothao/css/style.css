@@ -41,7 +41,6 @@
   --button-shadow: 0 14px 35px rgba(0, 0, 0, 0.28);
 }
 
-
 * { box-sizing: border-box; }
 
 html {
@@ -201,13 +200,13 @@ html[data-decorations="hide"] .background { display: none; }
 }
 .language-menu {
   position: absolute; top: calc(100% + 9px); right: 0; z-index: 20;
-  display: grid; grid-template-columns: 1fr; gap: 6px;
-  width: 112px; padding: 8px; border: 1px solid var(--link-border); border-radius: 15px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+  width: 176px; padding: 8px; border: 1px solid var(--link-border); border-radius: 15px;
   background: var(--card-bg); box-shadow: 0 14px 36px rgba(44,33,24,.18); backdrop-filter: blur(20px);
 }
 .language-menu button {
-  min-width: 0; display: grid; grid-template-columns: 34px 1fr; align-items: center; gap: 8px; padding: 8px; border: 0; border-radius: 10px;
-  color: var(--text); background: transparent; cursor: pointer; text-align: left;
+  min-width: 0; display: grid; place-items: center; gap: 5px; padding: 8px 5px; border: 0; border-radius: 10px;
+  color: var(--text); background: transparent; cursor: pointer; text-align: center;
 }
 .language-menu button:hover, .language-menu button.active { background: var(--link-bg); }
 .language-menu button.active { box-shadow: inset 0 0 0 1px rgba(243,155,25,.34); }
@@ -273,29 +272,21 @@ h1 {
 .verified {
   width: 22px;
   height: 22px;
-  min-width: 22px;
-  min-height: 22px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 22px;
-  aspect-ratio: 1 / 1;
-  line-height: 0;
-  background: transparent;
-  filter: drop-shadow(0 2px 5px rgba(27, 116, 228, .34));
-  overflow: visible;
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3ca9ff, #1579ef);
 }
 
-.verified::before { content: none; }
-.verified .verified-badge-svg {
-  width: 100% !important;
-  height: 100% !important;
-  min-width: 100%;
-  min-height: 100%;
-  display: block;
-  flex: 0 0 100%;
-  overflow: visible;
-  transform: none !important;
+.verified::before {
+  content: "";
+  width: 10px;
+  height: 6px;
+  margin-top: -2px;
+  border-left: 2px solid white;
+  border-bottom: 2px solid white;
+  transform: rotate(-45deg);
 }
 
 .handle {
@@ -405,7 +396,7 @@ h1 {
 }
 
 .link-card:hover::before,
-.link-card.is-touch-active::before { opacity: 1; animation: shine .38s ease-out; }
+.link-card.is-touch-active::before { opacity: 1; animation: shine .8s ease; }
 .link-card.is-touch-held::before {
   opacity: .34;
   transform: translateX(110%);
@@ -622,8 +613,7 @@ h1 {
   border-radius: 18px;
   background: white;
 }
-.qr-box img, .qr-box canvas { width: 100% !important; height: 100% !important; display: block; image-rendering: pixelated; }
-.qr-error { color:#b42318; font-size:.78rem; font-weight:700; }
+.qr-box img { width: 100%; height: 100%; display: block; }
 .copy-button {
   width: 100%;
   min-height: 50px;
@@ -1340,467 +1330,3 @@ html[data-card-border="hide"] .bio-card { border-color: transparent; }
 .admin-version-card{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 16px;border:1px solid color-mix(in srgb,var(--primary) 32%,transparent);border-radius:16px;background:color-mix(in srgb,var(--primary) 7%,transparent)}
 .admin-version-card strong{font-size:1rem}.admin-version-card small{display:block;margin-top:4px;color:var(--muted)}
 .admin-field input[readonly],.admin-field input:disabled{opacity:.78;cursor:not-allowed}
-
-
-/* V1.6.4: hỗ trợ nội dung chỉ dành cho trình đọc màn hình */
-.sr-only { position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important; }
-
-
-/* ===== V1.6.4: giữ avatar để xóa cache Bio ===== */
-.avatar-wrap { touch-action: manipulation; -webkit-touch-callout: none; }
-.cache-reset-ring {
-  position: absolute;
-  inset: -8px;
-  z-index: 5;
-  opacity: 0;
-  pointer-events: none;
-  filter: drop-shadow(0 5px 12px color-mix(in srgb, var(--primary) 35%, transparent));
-  transition: opacity .15s ease;
-}
-.cache-reset-ring svg { width: 100%; height: 100%; overflow: visible; }
-.cache-reset-ring circle {
-  fill: none;
-  stroke: var(--primary);
-  stroke-width: 2.6;
-  stroke-linecap: round;
-  stroke-dasharray: 113.1;
-  stroke-dashoffset: 113.1;
-  transform: rotate(-90deg);
-  transform-origin: 50% 50%;
-}
-.avatar-wrap.is-cache-pressing .cache-reset-ring { opacity: 1; }
-.avatar-wrap.is-cache-pressing .cache-reset-ring circle { animation: cacheResetProgress var(--cache-progress-duration, 1.4s) linear forwards; }
-.avatar-wrap.is-cache-resetting { animation: cacheResetPulse .55s ease infinite alternate; }
-@keyframes cacheResetProgress { to { stroke-dashoffset: 0; } }
-@keyframes cacheResetPulse { to { transform: scale(1.045); } }
-
-/* ===== V1.6.4: QR danh thiếp, logo trên tên giống trang Bio ===== */
-.qr-modal-card { width: min(100%, 420px); padding: 27px; }
-.qr-business-card {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  margin: 8px 0 18px;
-  padding: 20px 18px 17px;
-  border: 1px solid color-mix(in srgb, var(--primary) 46%, white);
-  border-radius: 24px;
-  color: #2c2118;
-  background:
-    radial-gradient(circle at 88% 9%, color-mix(in srgb, var(--primary) 20%, transparent) 0 76px, transparent 77px),
-    radial-gradient(circle at 8% 94%, color-mix(in srgb, var(--primary) 14%, transparent) 0 92px, transparent 93px),
-    linear-gradient(145deg, #fffdf8, color-mix(in srgb, var(--primary) 9%, white));
-  box-shadow: 0 18px 45px color-mix(in srgb, var(--primary-strong) 17%, transparent);
-}
-.qr-business-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  opacity: .28;
-  background-image: radial-gradient(color-mix(in srgb, var(--primary) 35%, transparent) .8px, transparent .8px);
-  background-size: 13px 13px;
-  mask-image: linear-gradient(135deg, black, transparent 65%);
-}
-.qr-profile-column {
-  display: grid;
-  justify-items: center;
-  gap: 5px;
-  margin-bottom: 14px;
-  text-align: center;
-}
-.qr-avatar-wrap { position: relative; width: 68px; height: 68px; margin-bottom: 3px; }
-.qr-profile-avatar {
-  width: 68px;
-  height: 68px;
-  display: block;
-  border: 0;
-  border-radius: 50%;
-  object-fit: cover;
-  background: transparent;
-  box-shadow: none;
-}
-.qr-status-dot { display:none !important; }
-.qr-name-line { display:flex; align-items:center; justify-content:center; gap:6px; max-width:100%; }
-.qr-name-line strong {
-  max-width: 260px;
-  overflow: hidden;
-  color: #2c2118;
-  font-size: 1.08rem;
-  line-height: 1.3;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.qr-verified { width: 20px; height: 20px; }
-.qr-profile-handle { color: #8a5b1d; font-size: .77rem; font-weight: 750; }
-.qr-business-card .qr-box {
-  width: 218px;
-  height: 218px;
-  margin: 0 auto 12px;
-  padding: 10px;
-  border: 1px solid rgba(81, 51, 15, .09);
-  border-radius: 20px;
-  background: #fff;
-  box-shadow: 0 10px 28px rgba(55, 34, 8, .12);
-}
-.qr-card-hint { margin: 0 !important; color: #5c3d17 !important; font-size: .78rem !important; font-weight: 800; letter-spacing: .02em; }
-.qr-card-url { display:block; max-width:100%; margin-top:6px; overflow:hidden; color:#8a6b46; font-size:.68rem; font-weight:650; text-overflow:ellipsis; white-space:nowrap; }
-.admin-inline-switch { margin: 3px 0 12px; }
-@media (max-width: 430px) {
-  .qr-modal-card { padding: 21px 14px 16px; }
-  .qr-business-card { padding: 17px 12px 15px; }
-  .qr-business-card .qr-box { width: min(210px, 62vw); height: min(210px, 62vw); }
-}
-
-
-/* V1.6.4: danh thiếp QR đổi màu theo giao diện; riêng vùng QR luôn trắng để dễ quét. */
-[data-theme="dark"] .qr-business-card {
-  color: var(--dark-text, #fff8ef);
-  border-color: color-mix(in srgb, var(--primary) 62%, #0d0a07);
-  background:
-    radial-gradient(circle at 88% 9%, color-mix(in srgb, var(--primary) 22%, transparent) 0 76px, transparent 77px),
-    radial-gradient(circle at 8% 94%, color-mix(in srgb, var(--primary) 13%, transparent) 0 92px, transparent 93px),
-    linear-gradient(145deg, #2a2118 0%, #18130e 55%, #0e0b08 100%);
-  box-shadow: 0 20px 48px rgba(0, 0, 0, .42), 0 0 0 1px color-mix(in srgb, var(--primary) 14%, transparent);
-}
-[data-theme="dark"] .qr-business-card::after {
-  opacity: .22;
-  background-image: radial-gradient(color-mix(in srgb, var(--primary) 46%, transparent) .8px, transparent .8px);
-}
-[data-theme="dark"] .qr-profile-avatar { border:0; background:transparent; box-shadow:none; }
-[data-theme="dark"] .qr-status-dot { display:none !important; }
-[data-theme="dark"] .qr-name-line strong { color: #fff8ef; }
-[data-theme="dark"] .qr-profile-handle { color: color-mix(in srgb, var(--primary) 88%, white); }
-[data-theme="dark"] .qr-card-hint { color: #f2d29a !important; }
-[data-theme="dark"] .qr-card-url { color: #b9a78f; }
-[data-theme="dark"] .qr-business-card .qr-box {
-  border-color: rgba(255, 255, 255, .16);
-  background: #fff;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, .38);
-}
-
-
-/* ===== V1.6.9: QR tùy màu, 3 chế độ link trong Admin và lưu danh thiếp PNG ===== */
-.qr-action-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-.download-qr-button {
-  width: 100%;
-  min-height: 50px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  border: 1px solid color-mix(in srgb, var(--primary) 45%, transparent);
-  border-radius: 15px;
-  color: var(--primary-strong);
-  background: color-mix(in srgb, var(--primary) 10%, var(--card-bg));
-  cursor: pointer;
-  font-weight: 750;
-}
-.download-qr-button:hover { border-color:var(--primary); background:color-mix(in srgb, var(--primary) 17%, var(--card-bg)); }
-.download-qr-button:disabled { opacity:.65; cursor:wait; }
-.qr-business-card .qr-box { background: var(--qr-background, #fff); }
-@media (max-width:430px) {
-  .qr-action-row { grid-template-columns:1fr; }
-  .language-menu { width:106px; }
-}
-
-
-/* ===== V1.6.9: form Admin gọn 3 cột + xuất gói ảnh ===== */
-.admin-aligned-selects .admin-field { margin-bottom: 0; }
-.admin-language-detection-help { margin: 8px 0 12px; }
-.admin-item-field-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 9px 11px;
-  margin-bottom: 11px;
-}
-.admin-item-field-grid .admin-field { min-width: 0; margin-bottom: 0; gap: 5px; }
-.admin-item-field-grid .admin-field input,
-.admin-item-field-grid .admin-field select {
-  min-height: 39px;
-  padding: 8px 10px;
-  border-radius: 10px;
-  font-size: .77rem;
-}
-.admin-field-note {
-  align-content: center;
-  min-height: 61px;
-  padding: 8px 10px;
-  border: 1px dashed var(--link-border);
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--primary) 4%, transparent);
-}
-.admin-field-note small { color: var(--muted); font-size: .65rem; line-height: 1.4; }
-.admin-upload-with-help {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-  gap: 7px 10px;
-  max-width: 460px;
-}
-.admin-upload-with-help small { max-width: 265px; color: var(--muted); font-size: .64rem; line-height: 1.35; }
-.admin-zip-export { border-color: color-mix(in srgb, var(--primary) 48%, var(--link-border)); }
-.admin-zip-export:hover { color: var(--primary-strong); background: color-mix(in srgb, var(--primary) 10%, var(--card-bg)); }
-
-@media (max-width: 1020px) and (min-width: 721px) {
-  .admin-item-field-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-@media (max-width: 720px) {
-  .admin-item-field-grid { grid-template-columns: 1fr; gap: 8px; }
-  .admin-upload-with-help { width: 100%; justify-content: flex-start; }
-  .admin-upload-with-help small { max-width: none; }
-  .admin-footer-right { grid-template-columns: 1fr 1fr; }
-  .admin-footer-right .admin-primary { grid-column: 1 / -1; }
-}
-
-
-/* V1.6.9: tài nguyên ảnh dùng chung cho hồ sơ phụ */
-.admin-field input[readonly] {
-  cursor: not-allowed;
-  opacity: .72;
-  border-style: dashed;
-}
-.admin-shared-assets-note,
-.admin-shared-inline {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  color: var(--admin-muted, #8b7d70);
-  font-size: 12px;
-  line-height: 1.5;
-}
-.admin-shared-assets-note {
-  width: 100%;
-  box-sizing: border-box;
-  margin: 10px 0 0;
-  padding: 10px 12px;
-  border: 1px dashed color-mix(in srgb, var(--primary-color, #f39b19) 44%, transparent);
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--primary-color, #f39b19) 7%, transparent);
-}
-
-
-/* QR tối ưu màn hình nhỏ + nút lưu luôn nhìn thấy */
-#qrModal {
-  overflow-x: hidden;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-}
-.qr-modal-card {
-  max-height: calc(100vh - 24px);
-  max-height: calc(100dvh - 24px);
-  overflow-x: hidden;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
-}
-.qr-action-row {
-  position: sticky;
-  bottom: -1px;
-  z-index: 5;
-  margin-top: 0;
-  padding-top: 10px;
-  padding-bottom: max(0px, env(safe-area-inset-bottom));
-  background: linear-gradient(to bottom, transparent 0, var(--card-bg) 18px, var(--card-bg) 100%);
-}
-.qr-verified {
-  width: 20px;
-  height: 20px;
-  min-width: 20px;
-  min-height: 20px;
-  flex-basis: 20px;
-}
-
-@media (max-width: 390px), (max-height: 700px) {
-  #qrModal {
-    place-items: start center;
-    padding: max(6px, env(safe-area-inset-top)) 6px max(6px, env(safe-area-inset-bottom));
-  }
-  .qr-modal-card {
-    width: min(100%, 390px);
-    max-height: calc(100vh - 12px);
-    max-height: calc(100dvh - 12px);
-    padding: 12px 8px 7px;
-    border-radius: 20px;
-  }
-  .qr-modal-card .modal-icon { display: none; }
-  .qr-modal-card .modal-close {
-    top: 7px;
-    right: 7px;
-    width: 35px;
-    height: 35px;
-    z-index: 8;
-  }
-  .qr-business-card {
-    margin: 0 0 7px;
-    padding: 10px 8px 9px;
-    border-radius: 18px;
-  }
-  .qr-profile-column {
-    gap: 2px;
-    margin-bottom: 7px;
-  }
-  .qr-avatar-wrap,
-  .qr-profile-avatar {
-    width: 48px;
-    height: 48px;
-  }
-  .qr-avatar-wrap { margin-bottom: 1px; }
-  .qr-name-line { gap: 5px; }
-  .qr-name-line strong {
-    max-width: 245px;
-    font-size: .94rem;
-  }
-  .qr-profile-handle { font-size: .68rem; }
-  .qr-verified {
-    width: 18px;
-    height: 18px;
-    min-width: 18px;
-    min-height: 18px;
-    flex-basis: 18px;
-  }
-  .qr-business-card .qr-box {
-    width: min(188px, 57vw);
-    height: min(188px, 57vw);
-    margin-bottom: 7px;
-    padding: 7px;
-    border-radius: 15px;
-  }
-  .qr-card-hint {
-    font-size: .7rem !important;
-    line-height: 1.25 !important;
-  }
-  .qr-card-url {
-    margin-top: 3px;
-    font-size: .6rem;
-  }
-  .qr-action-row {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 6px;
-    padding-top: 7px;
-  }
-  .qr-action-row .copy-button,
-  .qr-action-row .download-qr-button {
-    min-height: 43px;
-    padding: 7px 5px;
-    border-radius: 12px;
-    font-size: .68rem;
-    line-height: 1.15;
-  }
-  .qr-action-row svg { width: 16px; height: 16px; flex: 0 0 16px; }
-}
-
-
-/* Nút ? chỉ nhận thao tác trong đúng vùng và popup hướng dẫn link. */
-.admin-field-label-row {
-  min-height: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  color: var(--muted);
-  font-size: .72rem;
-  font-weight: 700;
-}
-.admin-help-dot {
-  width: 22px;
-  height: 22px;
-  flex: 0 0 22px;
-  display: grid;
-  place-items: center;
-  padding: 0;
-  border: 1px solid color-mix(in srgb, var(--primary) 62%, var(--link-border));
-  border-radius: 50%;
-  color: var(--primary-strong);
-  background: color-mix(in srgb, var(--primary) 9%, var(--card-bg));
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 900;
-  line-height: 1;
-}
-.admin-help-dot:hover,
-.admin-help-dot:focus-visible {
-  border-color: var(--primary);
-  background: color-mix(in srgb, var(--primary) 17%, var(--card-bg));
-  outline: none;
-}
-.link-help-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 10040;
-  display: none;
-  place-items: center;
-  padding: 18px;
-}
-.link-help-modal.open { display: grid; }
-.link-help-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.58); backdrop-filter: blur(5px); }
-.link-help-card {
-  position: relative;
-  width: min(520px, 100%);
-  max-height: min(82dvh, 680px);
-  overflow: auto;
-  padding: 18px;
-  border: 1px solid color-mix(in srgb, var(--primary) 46%, var(--link-border));
-  border-radius: 18px;
-  color: var(--text);
-  background: var(--bio-card-bg);
-  box-shadow: 0 24px 70px rgba(0,0,0,.34);
-}
-.link-help-card header { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
-.link-help-card h3 { margin:4px 0 0; }
-.link-help-content { margin:16px 0; color:var(--muted); font-size:13px; line-height:1.7; }
-.link-help-content code { color:var(--text); background:color-mix(in srgb, var(--primary) 10%, var(--card-bg)); padding:2px 5px; border-radius:6px; }
-.link-help-card footer { display:flex; justify-content:flex-end; }
-.qr-loading { color: var(--muted); font-size: 12px; font-weight: 700; }
-
-/* ===== V1.7.5-beta: QR clipboard/tải ảnh + dữ liệu cá nhân tách khỏi hệ thống ===== */
-.copy-qr-image-button,
-.download-qr-button {
-  width: 100%;
-  min-height: 50px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  border: 1px solid color-mix(in srgb, var(--primary) 45%, transparent);
-  border-radius: 15px;
-  color: var(--primary-strong);
-  background: color-mix(in srgb, var(--primary) 10%, var(--card-bg));
-  cursor: pointer;
-  font: inherit;
-  font-weight: 750;
-}
-.copy-qr-image-button:hover,
-.download-qr-button:hover {
-  border-color: var(--primary);
-  background: color-mix(in srgb, var(--primary) 17%, var(--card-bg));
-}
-.copy-qr-image-button:disabled,
-.download-qr-button:disabled { opacity: .65; cursor: wait; }
-.qr-action-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-
-@media (max-width: 430px) {
-  .qr-action-row { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
-  .qr-action-row .copy-button,
-  .qr-action-row .copy-qr-image-button,
-  .qr-action-row .download-qr-button {
-    min-width: 0;
-    min-height: 43px;
-    padding: 7px 4px;
-    border-radius: 12px;
-    font-size: .64rem;
-    line-height: 1.13;
-  }
-  .qr-action-row button span {
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-}
-
-@media (max-width: 345px) {
-  .qr-action-row { grid-template-columns: 1fr 1fr; }
-  .qr-action-row .copy-button { grid-column: 1 / -1; }
-}
