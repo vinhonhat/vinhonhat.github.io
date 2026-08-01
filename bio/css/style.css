@@ -1888,3 +1888,89 @@ html[data-card-border="hide"] .bio-card { border-color: transparent; }
   .admin-avatar-preview { width: 72px; height: 72px; }
   .admin-avatar-preview span { font-size: 21px; }
 }
+
+/* ===== V1.7.8 chính thức: QR căn giữa + hàng thao tác icon gọn ===== */
+#qrModal {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  padding: max(8px, env(safe-area-inset-top)) 8px max(8px, env(safe-area-inset-bottom));
+}
+#qrModal .qr-modal-card {
+  margin: auto;
+  max-height: calc(100vh - 16px);
+  max-height: calc(100dvh - 16px);
+}
+#qrModal .qr-action-row {
+  position: static;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 8px 0 0;
+  padding: 0;
+  background: transparent;
+}
+#qrModal .qr-action-row .copy-button,
+#qrModal .qr-action-row .copy-qr-image-button,
+#qrModal .qr-action-row .download-qr-button {
+  width: 46px;
+  min-width: 46px;
+  height: 46px;
+  min-height: 46px;
+  flex: 0 0 46px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--primary) 52%, var(--card-border));
+  border-radius: 14px;
+  color: var(--primary-strong);
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
+  box-shadow: none;
+  font-size: 0;
+}
+#qrModal .qr-action-row .copy-button:hover,
+#qrModal .qr-action-row .copy-qr-image-button:hover,
+#qrModal .qr-action-row .download-qr-button:hover,
+#qrModal .qr-action-row .copy-button:focus-visible,
+#qrModal .qr-action-row .copy-qr-image-button:focus-visible,
+#qrModal .qr-action-row .download-qr-button:focus-visible {
+  border-color: var(--primary);
+  color: var(--primary-strong);
+  background: color-mix(in srgb, var(--primary) 16%, transparent);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--primary) 18%, transparent);
+  outline: none;
+}
+#qrModal .qr-action-row button:active { transform: scale(.94); }
+#qrModal .qr-action-row button svg { width: 21px; height: 21px; }
+#qrModal .qr-action-row button span { display: none !important; }
+
+@media (max-width: 390px), (max-height: 700px) {
+  #qrModal {
+    place-items: center;
+    align-content: center;
+    padding: max(6px, env(safe-area-inset-top)) 6px max(6px, env(safe-area-inset-bottom));
+  }
+  #qrModal .qr-modal-card {
+    margin: auto;
+    max-height: calc(100vh - 12px);
+    max-height: calc(100dvh - 12px);
+  }
+  #qrModal .qr-action-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 0;
+  }
+  #qrModal .qr-action-row .copy-button,
+  #qrModal .qr-action-row .copy-qr-image-button,
+  #qrModal .qr-action-row .download-qr-button {
+    width: 43px;
+    min-width: 43px;
+    height: 43px;
+    min-height: 43px;
+    flex-basis: 43px;
+    padding: 0;
+    border-radius: 13px;
+  }
+}

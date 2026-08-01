@@ -318,6 +318,7 @@
     "chevron-down": '<path d="m6 9 6 6 6-6"/>',
     "chevron-up": '<path d="m18 15-6-6-6 6"/>',
     "copy": '<rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>',
+    "link-2": '<path d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1"/><path d="M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0 7.1 7.1l1.1-1.1"/>',
     "download": '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>',
     "eye": '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/>',
     "eye-off": '<path d="m3 3 18 18"/><path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/><path d="M9.9 4.2A10.7 10.7 0 0 1 12 4c6.5 0 10 8 10 8a17.4 17.4 0 0 1-2.1 3.2"/><path d="M6.6 6.6C3.7 8.5 2 12 2 12s3.5 8 10 8a9.8 9.8 0 0 0 4.1-.9"/>',
@@ -696,12 +697,16 @@
     if (socialLabel) socialLabel.textContent = text.connect;
     const qrButton = $("#qrButton");
     if (qrButton) qrButton.innerHTML = `${icon("qr-code", 16)}<span>${text.qr}</span>`;
-    const copyButton = $("#copyLinkButton");
-    if (copyButton) copyButton.innerHTML = `${icon("copy", 18)}<span>${text.copy}</span>`;
-    const copyQrImageButton = $("#copyQrImageButton");
-    if (copyQrImageButton) copyQrImageButton.innerHTML = `${icon("copy", 18)}<span>${text.copyQrImage}</span>`;
-    const downloadQrButton = $("#downloadQrCardButton");
-    if (downloadQrButton) downloadQrButton.innerHTML = `${icon("download", 18)}<span>${text.saveQr}</span>`;
+    const setQrActionButton = (button, iconName, label) => {
+      if (!button) return;
+      button.innerHTML = icon(iconName, 21);
+      button.title = label;
+      button.setAttribute("aria-label", label);
+      button.dataset.label = label;
+    };
+    setQrActionButton($("#copyLinkButton"), "link-2", text.copy);
+    setQrActionButton($("#copyQrImageButton"), "copy", text.copyQrImage);
+    setQrActionButton($("#downloadQrCardButton"), "download", text.saveQr);
     const qrCardHint = $("#qrCardHint");
     if (qrCardHint) qrCardHint.textContent = text.qrCardHint;
     const qrTitle = $("#qrTitle");
@@ -1007,37 +1012,8 @@
     canvas.width = width;
     canvas.height = height;
     const context = canvas.getContext("2d");
-    const cardGradient = context.createLinearGradient(0, 0, width, height);
-    if (isDark) {
-      cardGradient.addColorStop(0, "#2a2118");
-      cardGradient.addColorStop(.58, "#18130e");
-      cardGradient.addColorStop(1, "#0e0b08");
-    } else {
-      cardGradient.addColorStop(0, "#fffdf8");
-      cardGradient.addColorStop(1, "#fff1d6");
-    }
-    roundedRectPath(context, 8, 8, width - 16, height - 16, 52);
-    context.fillStyle = cardGradient;
-    context.fill();
-    context.strokeStyle = primary;
-    context.lineWidth = 3;
-    context.stroke();
-    context.save();
-    roundedRectPath(context, 8, 8, width - 16, height - 16, 52);
-    context.clip();
-    context.globalAlpha = isDark ? .16 : .17;
-    context.fillStyle = primary;
-    context.beginPath(); context.arc(width - 65, 60, 190, 0, Math.PI * 2); context.fill();
-    context.globalAlpha = isDark ? .1 : .12;
-    context.beginPath(); context.arc(45, height - 20, 215, 0, Math.PI * 2); context.fill();
-    context.globalAlpha = isDark ? .2 : .18;
-    for (let y = 28; y < height; y += 28) {
-      for (let x = 28; x < width; x += 28) {
-        if ((x + y) % 84 !== 0) continue;
-        context.beginPath(); context.arc(x, y, 1.3, 0, Math.PI * 2); context.fill();
-      }
-    }
-    context.restore();
+    // PNG xuất ra dùng nền trong suốt. Chỉ vùng chứa mã QR giữ nền sáng để quét ổn định.
+    context.clearRect(0, 0, width, height);
     const avatarY = 120;
     try {
       const avatarImage = await loadCanvasImage(avatarSource);
@@ -1053,35 +1029,50 @@
     }
     context.textAlign = "center";
     context.textBaseline = "alphabetic";
-    context.fillStyle = isDark ? "#fff8ef" : "#2c2118";
     context.font = "800 42px 'Be Vietnam Pro', system-ui, sans-serif";
     const name = truncateCanvasText(context, profileName, 650);
     const nameWidth = context.measureText(name).width;
     const nameY = 235;
+    context.lineJoin = "round";
+    context.strokeStyle = "rgba(255,255,255,.94)";
+    context.lineWidth = 9;
+    context.strokeText(name, width / 2, nameY);
+    context.fillStyle = "#2c2118";
     context.fillText(name, width / 2, nameY);
     if (profile.verified !== false) drawVerifiedBadge(context, width / 2 + nameWidth / 2 + 31, nameY - 15, 21);
-    context.fillStyle = isDark ? primary : (config.settings?.appearance?.primaryStrongColor || "#d97800");
     context.font = "750 27px 'Be Vietnam Pro', system-ui, sans-serif";
-    context.fillText(truncateCanvasText(context, handle, 650), width / 2, 278);
+    const handleText = truncateCanvasText(context, handle, 650);
+    context.strokeStyle = "rgba(255,255,255,.94)";
+    context.lineWidth = 7;
+    context.strokeText(handleText, width / 2, 278);
+    context.fillStyle = config.settings?.appearance?.primaryStrongColor || "#d97800";
+    context.fillText(handleText, width / 2, 278);
     const qrBoxX = 126;
     const qrBoxY = 325;
     const qrBoxSize = 648;
     roundedRectPath(context, qrBoxX, qrBoxY, qrBoxSize, qrBoxSize, 44);
     context.fillStyle = config.settings?.qrDesign?.backgroundColor || "#ffffff";
-    context.shadowColor = isDark ? "rgba(0,0,0,.42)" : "rgba(55,34,8,.16)";
+    context.shadowColor = "rgba(0,0,0,.18)";
     context.shadowBlur = 30;
     context.shadowOffsetY = 12;
     context.fill();
     context.shadowColor = "transparent";
     context.drawImage(qrSource, qrBoxX + 34, qrBoxY + 34, qrBoxSize - 68, qrBoxSize - 68);
     const text = I18N[currentLanguage] || I18N.vi;
-    context.fillStyle = isDark ? "#f2d29a" : "#5c3d17";
     context.font = "800 25px 'Be Vietnam Pro', system-ui, sans-serif";
+    context.strokeStyle = "rgba(255,255,255,.94)";
+    context.lineWidth = 7;
+    context.strokeText(text.qrCardHint, width / 2, 1030);
+    context.fillStyle = "#5c3d17";
     context.fillText(text.qrCardHint, width / 2, 1030);
-    context.fillStyle = isDark ? "#b9a78f" : "#8a6b46";
     context.font = "650 22px 'Be Vietnam Pro', system-ui, sans-serif";
     const displayUrl = formatQrDisplayUrl(activeQrDisplayUrl || getQrLinkSelection().displayUrl);
-    context.fillText(truncateCanvasText(context, displayUrl, 720), width / 2, 1072);
+    const displayText = truncateCanvasText(context, displayUrl, 720);
+    context.strokeStyle = "rgba(255,255,255,.94)";
+    context.lineWidth = 6;
+    context.strokeText(displayText, width / 2, 1072);
+    context.fillStyle = "#8a6b46";
+    context.fillText(displayText, width / 2, 1072);
     const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png", 1));
     if (!blob) throw new Error("Không thể tạo ảnh PNG");
     return { blob, fileName: `${getPreferredExportBaseName()}-qr-card.png`, profileName };
@@ -1097,7 +1088,7 @@
     }
     if (button) {
       button.disabled = true;
-      button.innerHTML = `${icon("copy", 18)}<span>${text.copyingQrImage}</span>`;
+      button.innerHTML = icon("copy", 21);
     }
     try {
       const { blob } = await createQrCardImageBlob();
@@ -1109,7 +1100,7 @@
     } finally {
       if (button) {
         button.disabled = false;
-        button.innerHTML = original || `${icon("copy", 18)}<span>${text.copyQrImage}</span>`;
+        button.innerHTML = original || icon("copy", 21);
       }
     }
   };
@@ -1120,7 +1111,7 @@
     const original = button?.innerHTML || "";
     if (button) {
       button.disabled = true;
-      button.innerHTML = `${icon("download", 18)}<span>${text.savingQr}</span>`;
+      button.innerHTML = icon("download", 21);
     }
     try {
       const { blob, fileName, profileName } = await createQrCardImageBlob();
@@ -1154,7 +1145,7 @@
     } finally {
       if (button) {
         button.disabled = false;
-        button.innerHTML = original || `${icon("download", 18)}<span>${text.saveQr}</span>`;
+        button.innerHTML = original || icon("download", 21);
       }
     }
   };
