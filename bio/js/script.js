@@ -1012,9 +1012,41 @@
     canvas.width = width;
     canvas.height = height;
     const context = canvas.getContext("2d");
-    // PNG xuất ra dùng nền trong suốt. Chỉ vùng chứa mã QR giữ nền sáng để quét ổn định.
+    // Giữ nền ngoài trong suốt, nhưng khôi phục nền của toàn bộ thẻ card khi sao chép/tải ảnh.
     context.clearRect(0, 0, width, height);
-    const avatarY = 120;
+    const cardX = 40;
+    const cardY = 40;
+    const cardWidth = width - 80;
+    const cardHeight = height - 80;
+    const cardRadius = 38;
+    roundedRectPath(context, cardX, cardY, cardWidth, cardHeight, cardRadius);
+    context.fillStyle = isDark ? "#1b130d" : "#f8efe3";
+    context.shadowColor = "rgba(0,0,0,.22)";
+    context.shadowBlur = 34;
+    context.shadowOffsetY = 14;
+    context.fill();
+    context.shadowColor = "transparent";
+    context.lineWidth = 2;
+    context.strokeStyle = isDark ? "rgba(243,155,25,.42)" : "rgba(243,155,25,.38)";
+    context.stroke();
+    context.save();
+    roundedRectPath(context, cardX, cardY, cardWidth, cardHeight, cardRadius);
+    context.clip();
+    context.fillStyle = isDark ? "rgba(243,155,25,.12)" : "rgba(243,155,25,.12)";
+    context.beginPath();
+    context.arc(cardX + cardWidth - 64, cardY + 110, 118, 0, Math.PI * 2);
+    context.fill();
+    context.beginPath();
+    context.arc(cardX + 36, cardY + cardHeight - 22, 92, 0, Math.PI * 2);
+    context.fill();
+    context.fillStyle = isDark ? "rgba(255,255,255,.08)" : "rgba(110,78,40,.09)";
+    for (let x = cardX + 18; x < cardX + 190; x += 16) {
+      for (let y = cardY + 18; y < cardY + 150; y += 16) {
+        context.fillRect(x, y, 2.2, 2.2);
+      }
+    }
+    context.restore();
+    const avatarY = 150;
     try {
       const avatarImage = await loadCanvasImage(avatarSource);
       drawCircularImage(context, avatarImage, width / 2, avatarY, 132);
@@ -1032,23 +1064,23 @@
     context.font = "800 42px 'Be Vietnam Pro', system-ui, sans-serif";
     const name = truncateCanvasText(context, profileName, 650);
     const nameWidth = context.measureText(name).width;
-    const nameY = 235;
+    const nameY = 265;
     context.lineJoin = "round";
     context.strokeStyle = "rgba(255,255,255,.94)";
     context.lineWidth = 9;
     context.strokeText(name, width / 2, nameY);
-    context.fillStyle = "#2c2118";
+    context.fillStyle = isDark ? "#fff7ef" : "#2c2118";
     context.fillText(name, width / 2, nameY);
     if (profile.verified !== false) drawVerifiedBadge(context, width / 2 + nameWidth / 2 + 31, nameY - 15, 21);
     context.font = "750 27px 'Be Vietnam Pro', system-ui, sans-serif";
     const handleText = truncateCanvasText(context, handle, 650);
     context.strokeStyle = "rgba(255,255,255,.94)";
     context.lineWidth = 7;
-    context.strokeText(handleText, width / 2, 278);
+    context.strokeText(handleText, width / 2, 308);
     context.fillStyle = config.settings?.appearance?.primaryStrongColor || "#d97800";
-    context.fillText(handleText, width / 2, 278);
+    context.fillText(handleText, width / 2, 308);
     const qrBoxX = 126;
-    const qrBoxY = 325;
+    const qrBoxY = 355;
     const qrBoxSize = 648;
     roundedRectPath(context, qrBoxX, qrBoxY, qrBoxSize, qrBoxSize, 44);
     context.fillStyle = config.settings?.qrDesign?.backgroundColor || "#ffffff";
@@ -1062,17 +1094,17 @@
     context.font = "800 25px 'Be Vietnam Pro', system-ui, sans-serif";
     context.strokeStyle = "rgba(255,255,255,.94)";
     context.lineWidth = 7;
-    context.strokeText(text.qrCardHint, width / 2, 1030);
-    context.fillStyle = "#5c3d17";
-    context.fillText(text.qrCardHint, width / 2, 1030);
+    context.strokeText(text.qrCardHint, width / 2, 1060);
+    context.fillStyle = isDark ? "#fff3e2" : "#5c3d17";
+    context.fillText(text.qrCardHint, width / 2, 1060);
     context.font = "650 22px 'Be Vietnam Pro', system-ui, sans-serif";
     const displayUrl = formatQrDisplayUrl(activeQrDisplayUrl || getQrLinkSelection().displayUrl);
     const displayText = truncateCanvasText(context, displayUrl, 720);
     context.strokeStyle = "rgba(255,255,255,.94)";
     context.lineWidth = 6;
-    context.strokeText(displayText, width / 2, 1072);
-    context.fillStyle = "#8a6b46";
-    context.fillText(displayText, width / 2, 1072);
+    context.strokeText(displayText, width / 2, 1100);
+    context.fillStyle = isDark ? "#e7d8c1" : "#8a6b46";
+    context.fillText(displayText, width / 2, 1100);
     const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png", 1));
     if (!blob) throw new Error("Không thể tạo ảnh PNG");
     return { blob, fileName: `${getPreferredExportBaseName()}-qr-card.png`, profileName };
