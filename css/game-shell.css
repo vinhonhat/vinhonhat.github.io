@@ -1,0 +1,23 @@
+/* Vinh ở Nhật - Game shell Beta 7 */
+:root{--game-bg:#10141c;--game-panel:#19212e;--game-border:#2d3a4d;--game-text:#f7f9fc;--game-muted:#9aa8ba;--game-accent:#ff9d2e;--game-safe-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;margin:0;overflow:hidden;overscroll-behavior:none;background:var(--game-bg);color:var(--game-text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;touch-action:none;user-select:none;-webkit-user-select:none}
+button{font:inherit;color:inherit}
+.game-page{height:100dvh;display:grid;grid-template-rows:auto 1fr;overflow:hidden}
+.game-topbar{height:58px;display:flex;align-items:center;gap:12px;padding:8px max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right));background:rgba(16,20,28,.94);border-bottom:1px solid var(--game-border);z-index:20}
+.game-back,.game-action{border:1px solid var(--game-border);background:var(--game-panel);border-radius:13px;min-width:42px;height:42px;display:grid;place-items:center;cursor:pointer;font-weight:800}
+.game-back:hover,.game-action:hover{border-color:var(--game-accent);background:#252f3e}
+.game-title{min-width:0;flex:1}.game-title strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:16px}.game-title small{display:block;color:var(--game-muted);font-size:11px;margin-top:1px}
+.game-score{font-weight:900;font-variant-numeric:tabular-nums;white-space:nowrap;color:#ffd38f}
+.game-stage{position:relative;min-height:0;display:grid;place-items:center;padding:12px 12px calc(12px + var(--game-safe-bottom));overflow:hidden}
+.game-board-wrap{position:relative;width:min(100%,760px);height:min(100%,760px);display:grid;place-items:center}
+.game-canvas{display:block;max-width:100%;max-height:100%;border:1px solid var(--game-border);border-radius:18px;background:#0b0e14;box-shadow:0 18px 45px rgba(0,0,0,.28);touch-action:none}
+.game-panel{width:min(100%,620px);max-height:100%;overflow:hidden;background:var(--game-panel);border:1px solid var(--game-border);border-radius:20px;padding:16px;box-shadow:0 18px 45px rgba(0,0,0,.28)}
+.game-overlay{position:absolute;inset:0;display:grid;place-items:center;background:rgba(7,10,15,.72);backdrop-filter:blur(5px);z-index:10;border-radius:18px;padding:20px;text-align:center}
+.game-overlay[hidden]{display:none}.game-dialog{max-width:360px}.game-dialog h1,.game-dialog h2{margin:0 0 8px}.game-dialog p{color:var(--game-muted);line-height:1.5;margin:0 0 16px}
+.game-primary{border:0;border-radius:14px;background:linear-gradient(135deg,#ffad33,#ff7b28);color:#201207;font-weight:900;padding:12px 20px;cursor:pointer;box-shadow:0 8px 22px rgba(255,137,39,.26)}
+.game-controls{display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:10px}.game-controls button{border:1px solid var(--game-border);background:#253043;border-radius:13px;min-width:54px;min-height:48px;font-weight:900;cursor:pointer}.game-controls button:active{transform:scale(.96);background:#334158}
+.game-hint{position:absolute;left:50%;bottom:calc(12px + var(--game-safe-bottom));transform:translateX(-50%);z-index:5;background:rgba(16,20,28,.84);border:1px solid var(--game-border);border-radius:999px;padding:7px 12px;color:var(--game-muted);font-size:11px;white-space:nowrap;pointer-events:none}
+.game-grid{display:grid;gap:10px}.game-stat-row{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:12px}.game-stat{background:#111722;border:1px solid var(--game-border);border-radius:12px;padding:8px 12px;text-align:center}.game-stat strong{display:block;color:#ffd38f}.game-stat small{color:var(--game-muted)}
+@media(max-width:700px){.game-topbar{height:54px}.game-stage{padding:7px 7px calc(7px + var(--game-safe-bottom))}.game-board-wrap{width:100%;height:100%}.game-hint{display:none}.game-panel{border-radius:16px;padding:12px}.game-title small{display:none}}
+@media(orientation:landscape) and (max-height:520px){.game-topbar{height:48px}.game-back,.game-action{height:36px;min-width:36px}.game-stage{padding:5px}.game-title small{display:none}}

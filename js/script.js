@@ -1,9 +1,8 @@
 (() => {
     'use strict';
 
-    const VERSION = '26.8.1-beta5';
+    const VERSION = '26.8.1-beta7';
     const POSTS_INDEX_URL = `/data/posts-index.json?v=${VERSION}`;
-    const HOME_CONFIG_URL = `/data/home-config.json?v=${VERSION}`;
     const SITE_CONFIG_URL = `/data/site-config.json?v=${VERSION}`;
     const BANNER_CONFIG_URL = `/data/banner-config.json?v=${VERSION}`;
 
@@ -173,16 +172,9 @@
                 banner: banner.settings || banner.banner || {},
                 banners: banner.items || banner.banners || [],
                 sections: { ...(site.sections || {}), banner: banner.enabled !== false }
-            })).catch(async error => {
-                console.warn('Dùng cấu hình tương thích home-config.json:', error);
-                try {
-                    const response = await fetch(HOME_CONFIG_URL, { cache: 'no-cache' });
-                    if (!response.ok) throw new Error(`home-config ${response.status}`);
-                    return mergeHomeConfig(await response.json());
-                } catch (fallbackError) {
-                    console.warn(fallbackError);
-                    return mergeHomeConfig(DEFAULT_HOME_CONFIG);
-                }
+            })).catch(error => {
+                console.warn('Không thể tải site-config.json hoặc banner-config.json, dùng cấu hình mặc định:', error);
+                return mergeHomeConfig(DEFAULT_HOME_CONFIG);
             });
         }
         return homeConfigPromise;

@@ -24,7 +24,7 @@ function normalize(raw = {}) {
   const updatedAt = raw.updatedAt || raw.modifiedAt || null;
   return {
     ...raw,
-    schemaVersion: 2,
+    schemaVersion: 3,
     status: Number(raw.status) === 0 ? 0 : 1,
     category: toArray(raw.category || raw.categories),
     tags: toArray(raw.tags),
@@ -37,7 +37,7 @@ function normalize(raw = {}) {
     showOnDesktop: raw.showOnDesktop !== false,
     showOnMobile: raw.showOnMobile !== false,
     searchable: raw.searchable !== false,
-    searchText: String(raw.searchText || '').replace(/\s+/g, ' ').trim().slice(0, 3000)
+    searchText: String(raw.searchText || '').replace(/\s+/g, ' ').trim().slice(0, 12000)
   };
 }
 
@@ -51,7 +51,17 @@ function main() {
   }
 
   const rows = Array.isArray(payload) ? payload : payload?.posts;
-  if (!Array.isArray(rows)) return fail('posts.json phải là mảng cũ hoặc object Beta 2 có trường posts.');
+  if (!Array.isArray(rows)) return fail('posts.json phải là mảng cũ hoặc object Beta 7 có trường posts.');
+
+  let existingSearchById = new Map();
+  if (fs.existsSync(searchOutputPath)) {
+    try {
+      const oldSearch = JSON.parse(fs.readFileSync(searchOutputPath, 'utf8'));
+      if (Array.isArray(oldSearch)) existingSearchById = new Map(oldSearch.map(row => [row.id, row.searchText || '']));
+    } catch (error) {
+      console.warn(`Không đọc được posts-search.json cũ: ${error.message}`);
+    }
+  }
 
   const ids = new Set();
   const links = new Map();
@@ -111,7 +121,7 @@ function main() {
       category: post.category, tags: post.tags,
       publishedAt: post.publishedAt, updatedAt: post.updatedAt, date: post.date,
       searchable: post.searchable, title: post.title, summary: post.summary || '',
-      searchText: post.searchText, imageUrl: post.imageUrl || '', link: post.link
+      searchText: post.searchText || existingSearchById.get(post.id) || '', imageUrl: post.imageUrl || '', link: post.link
     };
   });
 

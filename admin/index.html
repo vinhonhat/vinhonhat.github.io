@@ -7,9 +7,9 @@
     
     <!-- Tải CSS từ trang chính để đồng bộ giao diện -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="/css/style.css?v=26.8.1-beta5">
-    <link rel="stylesheet" href="/css/shell-r8.css?v=26.8.1-beta5">
-    <link rel="stylesheet" href="/css/admin.css?v=26.8.1-beta5">
+    <link rel="stylesheet" href="/css/style.css?v=26.8.1-beta7">
+    <link rel="stylesheet" href="/css/shell-r8.css?v=26.8.1-beta7">
+    <link rel="stylesheet" href="/css/admin.css?v=26.8.1-beta7">
     <!-- 🔹 Icon website (favicon) -->
     <link rel="icon" href="/img/logoQV.png" type="image/x-icon"> 
     <!-- Tải TinyMCE (BẮT BUỘC: Bạn phải tải về và đặt vào thư mục /admin/tinymce/) -->
@@ -51,7 +51,7 @@
         <div class="admin-topbar flex flex-row justify-between items-center mb-6 border-b pb-4">        
         <div class="flex flex-col">
             <h1 class="text-3xl font-bold text-gray-800 leading-none">CMS Vinh ở Nhật</h1>
-            <span class="text-xs text-gray-500 mt-1 font-medium">Phiên bản 26.8.1-beta5 · CMS dữ liệu tách nhẹ</span>
+            <span class="text-xs text-gray-500 mt-1 font-medium">Phiên bản 26.8.1-beta7 · CMS dữ liệu tách nhẹ</span>
         </div>
         
         <button id="logoutBtn" class="hidden bg-white border border-red-500 text-red-500 px-4 py-2 rounded-lg shadow-sm hover:bg-red-50 transition-all flex items-center font-medium">
@@ -73,8 +73,8 @@
                 <div><span>Thiết kế trang chủ</span><h2>Banner, dòng tin và hiệu ứng ngày lễ</h2><p>Cấu hình giao diện và banner được tách riêng để dễ quản lý. Nội dung bài viết vẫn quản lý tại tab Bài viết.</p></div>
                 <div class="home-admin-hero-actions">
                     <button id="previewHomeConfig" type="button">Xem trước trang chủ</button>
-                    <label class="home-config-import">Nhập file<input id="importHomeConfig" type="file" accept="application/json,.json"></label>
-                    <a id="downloadSiteConfig" download="site-config.json">Tải site-config.json</a><a id="downloadBannerConfig" download="banner-config.json">Tải banner-config.json</a><a id="downloadHomeConfig" download="home-config.json" title="File tương thích bản cũ">Tải file tương thích</a>
+                    <label class="home-config-import">Nhập cấu hình cũ/mới<input id="importHomeConfig" type="file" accept="application/json,.json"></label>
+                    <a id="downloadSiteConfig" download="site-config.json">Tải site-config.json</a><a id="downloadBannerConfig" download="banner-config.json">Tải banner-config.json</a>
                 </div>
             </div>
 
@@ -205,7 +205,7 @@
             <div class="home-admin-savebar">
                 <span id="homeConfigStatus">Đang tải cấu hình…</span>
                 <button id="saveHomeConfigLocal" type="button">Lưu bản đang chỉnh</button>
-                <a id="downloadSiteConfigBottom" download="site-config.json">Tải giao diện</a><a id="downloadBannerConfigBottom" download="banner-config.json">Tải banner</a><a id="downloadHomeConfigBottom" download="home-config.json">Tải file tương thích</a>
+                <a id="downloadSiteConfigBottom" download="site-config.json">Tải giao diện</a><a id="downloadBannerConfigBottom" download="banner-config.json">Tải banner</a>
             </div>
         </section>
 
@@ -496,7 +496,7 @@
                         <div>
                             <dt class="font-semibold">Q: Bây giờ nội dung được lưu ở đâu?</dt>
                             <dd class="text-sm pl-2 border-l-2 border-gray-200 ml-2 mt-1">
-                                A: Nội dung chính nằm trong <strong>file HTML của bài</strong>. <code>posts.json</code> chỉ giữ tiêu đề, ảnh, trạng thái và ngày. Khi chọn bài, Admin tự đọc HTML mới nhất. Sau khi sửa, tải HTML mới và hai file JSON rồi chép đúng vị trí trong repository.
+                                A: Nội dung chính nằm trong <strong>file HTML của bài</strong>. <code>posts.json</code> chỉ giữ metadata; nội dung tìm kiếm nằm trong <code>posts-search.json</code>. Khi chọn bài, Admin tự đọc HTML mới nhất. Sau khi sửa, tải HTML mới và ba file JSON rồi chép đúng vị trí trong repository.
                             </dd>
                         </div>
                         <div>
@@ -525,7 +525,7 @@
                 <!-- Nơi hiển thị JSON -->
                 <div id="jsonOutputContainer" class="bg-white p-6 rounded-lg shadow-md" style="display: none;">
                     <h2 class="text-xl font-bold text-gray-800 border-l-4 border-red-600 pl-4 mb-4">Dữ liệu JSON để lưu</h2>
-                    <p class="admin-note">Sau mỗi lần sửa bài, tải ba file dữ liệu chính bên dưới. <strong>posts.json</strong> chỉ giữ metadata; <strong>posts-index.json</strong> là file nhẹ cho trang hiển thị; <strong>posts-search.json</strong> chỉ tải khi tìm kiếm; <strong>legacy-content.json</strong> chỉ là bản dự phòng cho bài cũ chưa chuyển.</p>
+                    <p class="admin-note">Sau mỗi lần sửa bài, tải ba file dữ liệu chính bên dưới. <strong>posts.json</strong> chỉ giữ metadata, không chứa nội dung hoặc searchText; <strong>posts-index.json</strong> là file nhẹ cho trang hiển thị; <strong>posts-search.json</strong> chỉ tải khi tìm kiếm; <strong>legacy-content.json</strong> chỉ là bản dự phòng cho bài cũ chưa chuyển.</p>
                     <div class="data-downloads">
                         <a id="downloadPostsJson" download="posts.json">Tải posts.json metadata</a>
                         <a id="downloadPostsIndexJson" download="posts-index.json">Tải posts-index.json nhẹ</a>
@@ -560,7 +560,7 @@
 
     <script type="module">
         import { SITE_CONFIG } from '/admin/config.js';
-        import { normalizePostsPayload, normalizePost, buildPostsPayload, buildPostsIndex, buildPostsSearchIndex, effectiveDate, parseArticleHtml, fetchAndParsePost, parseArticleFile, makeEmbeddedMeta, jsonForHtmlScript, formatViDate, isInternalLink, htmlToText } from '/admin/post-data-v2.js?v=26.8.1-beta5';
+        import { normalizePostsPayload, normalizePost, buildPostsPayload, buildPostsIndex, buildPostsSearchIndex, effectiveDate, parseArticleHtml, fetchAndParsePost, parseArticleFile, makeEmbeddedMeta, jsonForHtmlScript, formatViDate, isInternalLink, htmlToText } from '/admin/post-data.js?v=26.8.1-beta7';
 
         // Cập nhật tiêu đề trang
         document.title = `Trang Quản Trị | ${SITE_CONFIG.titleSuffix || 'Vinh ở Nhật'}`;
@@ -580,6 +580,7 @@
         // --- CÁC BIẾN TOÀN CỤC ---
         let allPostsData = [];
         let legacyContentById = {};
+        let legacyContentLoaded = false;
         let currentLoadedContent = '';
         let currentSourceFormat = '';
         let currentPostWasExisting = false;
@@ -1229,7 +1230,7 @@
             ],
 
             
-            content_css: ['/css/style.css?v=26.8.1-beta5'], 
+            content_css: ['/css/style.css?v=26.8.1-beta7'], 
             height: 600,
             image_caption: true,
             quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
@@ -1247,10 +1248,10 @@
         // --- TẢI DỮ LIỆU BAN ĐẦU (Data và Template) ---
         async function loadInitialData() {
             try {
-                const [postsResponse, templateResponse, legacyResponse] = await Promise.all([
+                const [postsResponse, templateResponse, searchResponse] = await Promise.all([
                     fetch('/data/posts.json?t=' + Date.now(), { cache: 'no-store' }),
                     fetch('/admin/post-template.html?t=' + Date.now(), { cache: 'no-store' }),
-                    fetch('/data/legacy-content.json?t=' + Date.now(), { cache: 'no-store' }).catch(() => null)
+                    fetch('/data/posts-search.json?t=' + Date.now(), { cache: 'no-store' }).catch(() => null)
                 ]);
 
                 if (!postsResponse.ok) throw new Error(`Không thể tải posts.json: ${postsResponse.statusText}`);
@@ -1258,16 +1259,17 @@
 
                 const postsPayload = await postsResponse.json();
                 allPostsData = normalizePostsPayload(postsPayload);
+                if (searchResponse && searchResponse.ok) {
+                    const searchRows = await searchResponse.json();
+                    const searchById = new Map((Array.isArray(searchRows) ? searchRows : []).map(row => [row.id, row.searchText || '']));
+                    allPostsData = allPostsData.map(post => ({ ...post, searchText: searchById.get(post.id) || '' }));
+                }
                 postTemplateHtml = await templateResponse.text();
 
-                if (legacyResponse && legacyResponse.ok) {
-                    const legacyPayload = await legacyResponse.json();
-                    legacyContentById = legacyPayload?.contentById || {};
-                }
 
                 allPostsData.sort((a, b) => new Date(effectiveDate(b)) - new Date(effectiveDate(a)));
                 populateSelector();
-                console.log(`CMS Beta 2 đã tải ${allPostsData.length} bài. Nội dung được ưu tiên đọc từ HTML.`);
+                console.log(`CMS Beta 7 đã tải ${allPostsData.length} bài. Nội dung được ưu tiên đọc từ HTML.`);
             } catch (error) {
                 console.error('Lỗi khi tải dữ liệu:', error);
                 alert('Không thể tải dữ liệu bài viết hoặc file template. Vui lòng kiểm tra console.');
@@ -1379,6 +1381,22 @@
             isFilenameManuallyEdited = currentPostWasExisting;
         }
 
+
+        async function ensureLegacyContent() {
+            if (legacyContentLoaded) return legacyContentById;
+            legacyContentLoaded = true;
+            try {
+                const response = await fetch('/data/legacy-content.json?t=' + Date.now(), { cache: 'no-store' });
+                if (!response.ok) throw new Error(String(response.status));
+                const payload = await response.json();
+                legacyContentById = payload?.contentById || {};
+            } catch (error) {
+                console.warn('Không tải được legacy-content.json:', error);
+                legacyContentById = {};
+            }
+            return legacyContentById;
+        }
+
         async function readContentForPost(post, force = false) {
             setSourceState('Đang đọc HTML…', 'Admin đang lấy nội dung mới nhất từ file bài viết.', 'loading');
             try {
@@ -1405,6 +1423,7 @@
                 setSourceState(parsed.format === 'html-v2' ? 'HTML mới – đã đồng bộ' : 'HTML cũ – sẽ tự chuyển khi lưu', `Nội dung đang lấy trực tiếp từ ${post.link}.${warning}`, parsed.format === 'html-v2' ? 'ok' : 'legacy');
                 return;
             } catch (error) {
+                await ensureLegacyContent();
                 const legacy = legacyContentById[post.id] || post.contentHtml || '';
                 currentLoadedContent = legacy;
                 currentSourceFormat = legacy ? 'json-legacy' : (isInternalLink(post.link) ? 'html-unreadable' : 'external');
@@ -1672,7 +1691,7 @@
         }
 
         // --- TẠO DỮ LIỆU METADATA V2 + CHỈ MỤC TÌM KIẾM ---
-        saveButton.addEventListener('click', () => {
+        saveButton.addEventListener('click', async () => {
             const savedPost = getPostObjectFromForm(true);
             if (!savedPost) return;
 
@@ -1696,6 +1715,7 @@
             const fullJson = JSON.stringify(buildPostsPayload(allPostsData), null, 2);
             const lightJson = JSON.stringify(buildPostsIndex(allPostsData));
             const searchJson = JSON.stringify(buildPostsSearchIndex(allPostsData));
+            await ensureLegacyContent();
             const legacyJson = JSON.stringify({
                 schemaVersion: 1,
                 purpose: 'Dữ liệu dự phòng khi bài HTML cũ chưa đọc được. Không dùng cho trang người đọc.',
@@ -1716,7 +1736,7 @@
             populateSelector();
             postSelector.value = savedPost.id;
 
-            alert('✅ Đã tạo dữ liệu Beta 2. Nếu có sửa nội dung, hãy tải cả file HTML rồi thay đúng đường dẫn; sau đó thay posts.json, posts-index.json và posts-search.json. legacy-content.json chỉ cần thay khi anh muốn giữ bản dự phòng mới nhất.');
+            alert('✅ Đã tạo dữ liệu Beta 7. Nếu có sửa nội dung, hãy tải cả file HTML rồi thay đúng đường dẫn; sau đó thay posts.json, posts-index.json và posts-search.json. legacy-content.json chỉ cần thay khi anh muốn giữ bản dự phòng mới nhất.');
         });
 
     </script>
@@ -1849,8 +1869,8 @@
     });
 </script>
     
-    <script src="/admin/home-admin.js?v=26.8.1-beta5" defer></script>
-    <script src="/admin/categories-admin.js?v=26.8.1-beta5" defer></script>
+    <script src="/admin/home-admin.js?v=26.8.1-beta7" defer></script>
+    <script src="/admin/categories-admin.js?v=26.8.1-beta7" defer></script>
 </body>
 </html>
 

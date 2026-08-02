@@ -1,11 +1,10 @@
 (() => {
     'use strict';
 
-    const HOME_CONFIG_URL = '/data/home-config.json?v=26.8.1-beta5';
-    const SITE_CONFIG_URL = '/data/site-config.json?v=26.8.1-beta5';
-    const BANNER_CONFIG_URL = '/data/banner-config.json?v=26.8.1-beta5';
+    const SITE_CONFIG_URL = '/data/site-config.json?v=26.8.1-beta7';
+    const BANNER_CONFIG_URL = '/data/banner-config.json?v=26.8.1-beta7';
     const DEFAULT_CONFIG = {
-        version: '26.8.1-beta5',
+        version: '26.8.1-beta7',
         sections: { banner: true, featured: true, topics: true, latestFeed: true, sidebar: true },
         banner: { mode: 'mixed', aspectRatio: '3 / 1', autoplay: true, intervalMs: 5500, showArrows: true, showDots: true, holidaySlideEnabled: true, pauseOnHover: true },
         feed: { source: 'new', initialCount: 6, batchSize: 4, maxItems: 20, autoLoad: true, showShare: true },
@@ -20,7 +19,7 @@
     };
 
     let state = structuredClone(DEFAULT_CONFIG);
-    let objectUrls = { home: '', site: '', banner: '' };
+    let objectUrls = { site: '', banner: '' };
 
     const $ = selector => document.querySelector(selector);
     const $$ = selector => Array.from(document.querySelectorAll(selector));
@@ -70,7 +69,7 @@
         return {
             ...DEFAULT_CONFIG,
             ...input,
-            version: '26.8.1-beta5',
+            version: '26.8.1-beta7',
             sections: { ...DEFAULT_CONFIG.sections, ...(input.sections || {}) },
             banner: { ...DEFAULT_CONFIG.banner, ...(input.banner || {}) },
             feed: { ...DEFAULT_CONFIG.feed, ...(input.feed || {}) },
@@ -173,7 +172,7 @@
     }
 
     function readSettings() {
-        state.version = '26.8.1-beta5';
+        state.version = '26.8.1-beta7';
         state.sections = {
             banner: $('#homeSectionBanner')?.checked ?? true,
             featured: $('#homeSectionFeatured')?.checked ?? true,
@@ -331,8 +330,8 @@
             lunar: state.lunar
         };
         const bannerConfig = { version: state.version, enabled: state.sections.banner !== false, settings: state.banner, items: state.banners };
-        const urls = { home: makeJsonUrl('home', state), site: makeJsonUrl('site', siteConfig), banner: makeJsonUrl('banner', bannerConfig) };
-        [['#downloadHomeConfig','home-config.json','home'],['#downloadHomeConfigBottom','home-config.json','home'],['#downloadSiteConfig','site-config.json','site'],['#downloadSiteConfigBottom','site-config.json','site'],['#downloadBannerConfig','banner-config.json','banner'],['#downloadBannerConfigBottom','banner-config.json','banner'],['#downloadBannerConfigTab','banner-config.json','banner'],['#downloadBannerConfigTabBottom','banner-config.json','banner']].forEach(([selector, filename, key]) => {
+        const urls = { site: makeJsonUrl('site', siteConfig), banner: makeJsonUrl('banner', bannerConfig) };
+        [['#downloadSiteConfig','site-config.json','site'],['#downloadSiteConfigBottom','site-config.json','site'],['#downloadBannerConfig','banner-config.json','banner'],['#downloadBannerConfigBottom','banner-config.json','banner'],['#downloadBannerConfigTab','banner-config.json','banner'],['#downloadBannerConfigTabBottom','banner-config.json','banner']].forEach(([selector, filename, key]) => {
             const link = $(selector); if (link) { link.href = urls[key]; link.download = filename; }
         });
         const status = $('#homeConfigStatus');
@@ -456,16 +455,13 @@
             const banner = await bannerResponse.json();
             state = mergeConfig({ ...site, banner: banner.settings || {}, banners: banner.items || [], sections: { ...(site.sections || {}), banner: banner.enabled !== false } });
         } catch (error) {
-            try {
-                const response = await fetch(HOME_CONFIG_URL, { cache: 'no-cache' });
-                if (!response.ok) throw new Error(String(response.status));
-                state = mergeConfig(await response.json());
-            } catch (legacyError) {
-                const draft = localStorage.getItem('vinh-home-admin-draft');
-                if (draft) {
-                    try { state = mergeConfig(JSON.parse(draft)); }
-                    catch (parseError) { state = structuredClone(DEFAULT_CONFIG); }
-                }
+            console.warn('Không tải được site-config.json hoặc banner-config.json:', error);
+            const draft = localStorage.getItem('vinh-home-admin-draft');
+            if (draft) {
+                try { state = mergeConfig(JSON.parse(draft)); }
+                catch (parseError) { state = structuredClone(DEFAULT_CONFIG); }
+            } else {
+                state = structuredClone(DEFAULT_CONFIG);
             }
         }
         fillSettings();

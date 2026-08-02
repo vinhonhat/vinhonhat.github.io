@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '26.8.1-beta5';
+  const VERSION = '26.8.1-beta7';
   const scriptNode = document.querySelector('script[src*="category-page.js"]');
   const siteRoot = new URL('../', scriptNode?.src || new URL('/js/category-page.js', location.origin).href);
   const assetUrl = path => {

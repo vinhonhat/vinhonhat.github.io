@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '26.8.1-beta5';
+  const VERSION = '26.8.1-beta7';
   const CONFIG_URL = `/data/categories.json?v=${VERSION}`;
   const DRAFT_KEY = 'vinhonhat-categories-beta5-draft';
   const SECTION_LABELS = {

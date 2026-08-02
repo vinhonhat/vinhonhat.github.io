@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vinhonhat-26.8.1-beta6';
+const CACHE_NAME = 'vinhonhat-26.8.1-beta7';
 const CORE_ASSETS = [
     '/',
     '/index.html',
@@ -11,7 +11,6 @@ const CORE_ASSETS = [
     '/data/posts-index.json',
     '/data/site-config.json',
     '/data/banner-config.json',
-    '/data/home-config.json',
     '/data/categories.json',
     '/css/category-page.css',
     '/js/category-page.js',
