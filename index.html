@@ -2,128 +2,206 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vinh ở Nhật | Blog Cá Nhân</title>  <!-- PHIÊN BẢN V26.1.24 -->
-    
-<!-- 🔹 Khai báo file manifest (dùng cho cài web thành app PWA) -->
-    <link rel="manifest" href="/manifest.json"> 
-
-<!-- 🔹 Màu thanh trình duyệt khi lưu như ứng dụng -->
-    <meta name="theme-color" content="#F6AD55"> 
-
-<!-- 🔹 Icon khi thêm vào màn hình chính của iPhone -->
-    <link rel="apple-touch-icon" href="/img/qvn.png"> 
-    
-<!-- 🔹 Icon website (favicon) -->
-    <link rel="icon" href="/img/logoQV.png" type="image/x-icon"> 
-
-<!-- 🔹 Dùng Tailwind CSS qua CDN để tạo giao diện -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-<!-- 🔹 Kết nối font chữ Google: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- 🔹 Thư viện icon FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    
-<!-- 🔹 File CSS riêng của bạn -->
-    <link rel="stylesheet" href="/css/style.css?v=26.1.31">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="description" content="Tin tức, hướng dẫn và kinh nghiệm hữu ích dành cho người Việt đang sống tại Nhật Bản.">
+    <meta name="theme-color" content="#ffffff">
+    <title>Vinh ở Nhật | Tin tức & hướng dẫn tại Nhật</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/img/qvn.png">
+    <link rel="icon" href="/img/logoQV.png" type="image/png">
+    <link rel="stylesheet" href="/css/style.css?v=26.7.31.9">
+    <link rel="stylesheet" href="/css/shell-r8.css?v=26.7.31.9">
 </head>
-<body class="bg-[#FBF7F0]">
-    <div id="popupOverlay" class="popup-overlay" style="display: none;">
-		<div class="popup-content max-w-xl">
-            <!-- Nút đóng popup -->
-			<button id="closePopupBtn" class="absolute top-2 right-4 text-2xl text-gray-400 hover:text-gray-600">&times;</button>
-			
-            <!-- Tiêu đề popup (ví dụ: “Ngày Quốc khánh nước Việt Nam ”) -->
-            <h2 id="popupTitle" class="text-2xl font-bold mb-2 text-gray-800"></h2>
-            <!-- Hình ảnh ngày lễ -->
-			<img id="holidayImage" src="" alt="Hình ảnh ngày lễ" 
-				class="w-full max-h-80 object-contain mb-6 rounded-lg hidden">               
-			<p id="popupText" class="text-gray-600 "></p> <!-- Nội dung mô tả -->
-		</div>
-	</div>
+<body class="site-body home-page">
+    <div id="header-placeholder" class="site-header-placeholder">
+<header class="site-header">
+    <div class="header-inner">
+        <a id="site-logo" class="brand" href="/" title="Trang chủ; nhấn đúp để làm mới bộ nhớ đệm">
+            <img id="site-logo-img" src="/img/logoQV.png" alt="Vinh ở Nhật" width="44" height="44" decoding="async">
+            <span class="brand-copy"><strong>Vinh ở Nhật</strong><small>Tin tức & hướng dẫn tại Nhật</small></span>
+        </a>
 
-    <div id="header-placeholder" class="sticky top-0 z-50 bg-white shadow-md"></div>
+        <nav class="desktop-nav" aria-label="Menu chính">
+            <a href="/" data-nav="home">Trang chủ</a>
+            <a href="/pages/pages-baiviet/bai-viet-hd.html" data-nav="posts">Bài viết</a>
+            <a href="/pages/pages-hoctap/hoctap.html" data-nav="study">Học tập</a>
+            <div class="desktop-dropdown" data-download-dropdown>
+                <button id="downloads-menu-toggle" class="desktop-dropdown-toggle" type="button" data-nav="downloads" aria-expanded="false" aria-controls="downloads-menu">
+                    <span>Tải xuống</span>
+                </button>
+                <div id="downloads-menu" class="desktop-dropdown-menu" role="menu">
+                    <a class="download-menu-featured" href="/pages/pages-app/tai-xuong.html" role="menuitem"><span class="download-menu-icon">↓</span><span><strong>Kho công cụ</strong><small>Xem tất cả ứng dụng và tool</small></span></a>
+                    <a href="/pages/pages-app/checklcd.html" role="menuitem"><span class="download-menu-icon">PC</span><span><strong>Check máy tính</strong><small>Kiểm tra màn hình và phần cứng</small></span></a>
+                    <a href="https://vinhonhat.github.io/nihongo" role="menuitem"><span class="download-menu-icon">日</span><span><strong>Nihongo Quest</strong><small>Ứng dụng luyện tiếng Nhật</small></span></a>
+                    <a href="/pages/pages-app/ung-dung-di-ong-20260613.html" role="menuitem"><span class="download-menu-icon">APP</span><span><strong>Ứng dụng di động</strong><small>Các tiện ích dành cho điện thoại</small></span></a>
+                </div>
+            </div>
+            <a href="/pages/pages-giaitri/giaitri.html" data-nav="fun">Giải trí</a>
+        </nav>
 
-<!-- ================= MAIN ================= -->
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-24 mt-8">
-        <!-- Banner trình chiếu -->
-        <div class="banner-container w-full md:w-4/5 xl:w-3/5 mx-auto rounded-lg shadow-md relative overflow-hidden group">
-
-            <div id="bannerSlider" class="banner-slider flex transition-transform duration-500 ease-in-out"></div>
-
-            <div id="bannerDots" class="absolute bottom-2 left-0 right-0 flex justify-center items-center space-x-1.5 z-10"></div>
+        <div class="header-actions">
+            <div class="header-clock" aria-label="Ngày giờ và âm lịch hiện tại">
+                <span class="moon-phase-wrap" title="Tuần trăng hôm nay"><canvas id="moon-phase-canvas" class="moon-phase-canvas" width="64" height="64" aria-hidden="true"></canvas></span>
+                <span class="clock-copy">
+                    <strong id="time">--:--:--</strong>
+                    <span id="date">Đang tải ngày...</span>
+                    <span id="lunar-date" class="lunar-date">Đang tải âm lịch...</span>
+                </span>
+            </div>
+            <button class="desktop-search-button search-open" type="button" data-search-trigger aria-label="Mở tìm kiếm" aria-controls="search-panel" aria-expanded="false" onclick="return window.VinhSearch ? window.VinhSearch.open(event) : false">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg><span>Tìm kiếm</span>
+            </button>
         </div>
-        
-    <!-- ================= bÀI VIẾT MỚI NHẤT ================= -->   
-        <section class="mt-12">
-            <h2 class="text-2xl font-semibold text-gray-800 border-l-4 border-yellow-600 pl-4 mb-6">Bài viết mới nhất</h2>
-            <div id="latest-posts-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
-            <!--<div class="text-center mt-8">
-                 <a href="#" class="bg-yellow-600 text-white font-semibold py-2 px-6 rounded-full transition-all duration-300 hover:bg-yellow-700 shadow-md">
-                    Xem thêm nhiều bài mới &rarr;
-                </a> 
-            </div>-->
-        </section>
-    <!-- ================= MENU BÀI VIẾT HD BÊN TRÁI ================= -->    
-        <section class="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8">
-    
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-bold text-gray-800 border-l-4 border-yellow-600 pl-4">
-                Bài viết hướng dẫn
-            </h2>
-            <a href="/pages/pages-baiviet/bai-viet-hd.html" class="text-yellow-600 hover:underline">
-                Xem thêm &rarr;
-            </a>
-        </div>
-        
-        <div id="guide-posts-container" class="space-y-4"></div>
-        </div>
-    <!-- ================= MENU VIDEO HƯỚNG DẪN BÊN PHẢI ================= -->  
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-bold text-gray-800 border-l-4 border-yellow-600 pl-4">
-                Video hướng dẫn
-            </h2>
-            <a href="/pages/pages-video/video.html" class="text-yellow-600 hover:underline">
-                Xem thêm &rarr;
-            </a>
-        </div>
+    </div>
+</header>
 
-        <div id="video-guides-container" class="space-y-4"></div>
+<nav class="mobile-bottom-nav" aria-label="Menu di động" data-mobile-nav>
+    <a href="/" data-nav="home">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8"></path><path d="M5 10v10h14V10"></path></svg><span data-mobile-nav-label="home">Trang chủ</span>
+    </a>
+    <a href="/#latest-posts" data-scroll-latest>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v3M12 18v3M4.2 6.2l2.1 2.1M17.7 17.7l2.1 2.1M3 12h3M18 12h3M4.2 17.8l2.1-2.1M17.7 6.3l2.1-2.1"></path><circle cx="12" cy="12" r="3.2"></circle></svg><span data-mobile-nav-label="latest">Mới nhất</span>
+    </a>
+    <button class="search-open mobile-search-button" type="button" data-search-trigger aria-label="Mở tìm kiếm" aria-controls="search-panel" aria-expanded="false" onclick="return window.VinhSearch ? window.VinhSearch.open(event) : false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg><span data-mobile-nav-label="search">Tìm kiếm</span>
+    </button>
+    <button id="mobile-menu-open" class="mobile-menu-button" type="button" aria-label="Mở menu" aria-controls="mobile-menu-panel" aria-expanded="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h14"></path></svg><span data-mobile-nav-label="menu">Menu</span>
+    </button>
+</nav>
+
+<div id="mobile-menu-panel" class="mobile-menu-panel" hidden>
+    <button class="mobile-menu-backdrop" type="button" data-close-mobile-menu aria-label="Đóng menu"></button>
+    <section class="mobile-menu-sheet" role="dialog" aria-modal="true" aria-labelledby="mobile-menu-title">
+        <div class="sheet-handle" aria-hidden="true"></div>
+        <div class="mobile-menu-head"><div><small>Đi nhanh tới</small><h2 id="mobile-menu-title">Menu</h2></div><button type="button" data-close-mobile-menu aria-label="Đóng">×</button></div>
+        <div class="mobile-menu-grid">
+            <a href="/pages/pages-baiviet/bai-viet-hd.html"><span>B</span><strong>Bài viết</strong><small>Tất cả hướng dẫn</small></a>
+            <a href="/pages/pages-hoctap/hoctap.html"><span>学</span><strong>Học tập</strong><small>Tiếng Nhật, Tokutei</small></a>
+            <a href="/pages/pages-app/tai-xuong.html"><span>↓</span><strong>Tải xuống</strong><small>Ứng dụng và tool</small></a>
+            <a href="/pages/pages-giaitri/giaitri.html"><span>▶</span><strong>Giải trí</strong><small>Game và tiện ích</small></a>
+            <a href="/pages/pages-baiviet/rakuten.html"><span>R</span><strong>Rakuten</strong><small>Sim, ngân hàng</small></a>
+            <a href="/pages/pages-baiviet/seven.html"><span>7</span><strong>Seven Bank</strong><small>Tài khoản, ATM</small></a>
+            <a href="/pages/pages-baiviet/sim.html"><span>S</span><strong>SIM Nhật</strong><small>Cài đặt, sử dụng</small></a>
+            <a href="/pages/pages-baiviet/other.html"><span>日</span><strong>Cuộc sống Nhật</strong><small>Kinh nghiệm thực tế</small></a>
+        </div>
+    </section>
+</div>
     </div>
 
-</section>
-    </main>
-<!-- ================= MAIN END ================= -->
- 
-    <div id="footer-placeholder"></div>
+    <main class="news-main">
+        <section id="home-banner-section" class="home-banner-section-r3" aria-label="Banner nổi bật">
+            <div id="home-banner" class="home-banner-r3" aria-live="polite">
+                <div class="home-banner-loading">Đang tải banner…</div>
+            </div>
+        </section>
 
-    <!-- ================= nút lên đầu trang ================= -->
-    <button id="scrollToTopBtn" class="fixed bottom-6 right-6 bg-yellow-600 text-white w-14 h-12 rounded-lg shadow-lg flex flex-col justify-center items-center text-xs transition-opacity duration-300 hover:bg-yellow-700 opacity-0 pointer-events-none z-40">
-        <i class="fas fa-arrow-up text-lg mb-1"></i>
-        <span class="font-semibold">Lên đầu</span>
+        <nav class="topic-strip home-topic-strip" aria-label="Chủ đề nổi bật">
+            <a href="/pages/pages-baiviet/rakuten.html">Rakuten</a>
+            <a href="/pages/pages-baiviet/seven.html">Seven Bank</a>
+            <a href="/pages/pages-baiviet/sim.html">Sim & điện thoại</a>
+            <a href="/pages/pages-baiviet/other.html">Cuộc sống Nhật</a>
+            <a href="/pages/pages-hoctap/hoctap.html">Học tập</a>
+        </nav>
+
+        <section class="news-hero" aria-label="Bài viết nổi bật">
+            <div id="hero-story" class="hero-story skeleton-block"></div>
+            <h2 class="mobile-featured-more-title">Bài nổi bật khác</h2>
+            <div id="hero-side-list" class="hero-side-list"></div>
+        </section>
+
+        <div class="news-layout">
+            <div class="news-primary">
+                <section id="latest-posts" class="news-section">
+                    <div class="section-heading">
+                        <div>
+                            <span class="section-kicker">Mới cập nhật</span>
+                            <h1>Bài viết mới nhất</h1>
+                        </div>
+                        <a href="/pages/pages-baiviet/bai-viet-hd.html" class="section-more">Xem tất cả <span aria-hidden="true">→</span></a>
+                    </div>
+                    <div id="latest-posts-container" class="news-feed" aria-live="polite"></div>
+                </section>
+            </div>
+
+            <aside class="news-sidebar">
+                <section class="sidebar-card guide-card">
+                    <div class="sidebar-title-row">
+                        <h2>Hướng dẫn nổi bật</h2>
+                        <a href="/pages/pages-baiviet/bai-viet-hd.html">Xem thêm</a>
+                    </div>
+                    <div id="guide-posts-container" class="compact-feed"></div>
+                </section>
+            </aside>
+        </div>
+    </main>
+
+    <div id="footer-placeholder">
+<footer class="site-footer">
+    <div class="footer-inner footer-inner-r8">
+        <section class="footer-about" aria-label="Giới thiệu website">
+            <p class="footer-description" data-footer-description>Chia sẻ hướng dẫn thực tế, dễ hiểu dành cho người Việt đang sinh sống tại Nhật Bản.</p>
+            <nav class="footer-links" aria-label="Liên kết cuối trang">
+                <a href="/pages/pages-baiviet/bai-viet-hd.html">Bài viết</a>
+                <a href="/pages/pages-hoctap/hoctap.html">Học tập</a>
+                <a href="/pages/pages-app/tai-xuong.html">Tải xuống</a>
+            </nav>
+        </section>
+        <section class="footer-contact" aria-label="Liên hệ nhanh">
+            <span class="footer-contact-label" data-footer-contact-label>Liên hệ</span>
+            <div class="footer-socials" aria-label="Liên hệ và mạng xã hội">
+                <a data-footer-social="facebook" href="https://fb.com/tqv2022" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-3 0-5 2-5 5v3H6v4h3v5h4v-5h3.2l.8-4H13V9c0-.7.3-1 1-1Z"></path></svg></a>
+                <a data-footer-social="messenger" href="https://m.me/tqv2022" target="_blank" rel="noopener" aria-label="Messenger" title="Messenger"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.7c0 5-4 8.7-9 8.7-1 0-2-.2-2.9-.5L5 22l.2-3.8C3.8 16.7 3 14.5 3 12.1 3 7 7 3.4 12 3.4s9 3.4 9 8.3Z"></path><path d="m7.5 14.2 3.2-3.4 2.5 2 3.3-3.4-3.1 5-2.5-2-3.4 1.8Z"></path></svg></a>
+                <a data-footer-social="zalo" href="#" target="_blank" rel="noopener" aria-label="Zalo" title="Zalo" hidden><span>Z</span></a>
+                <a data-footer-social="tiktok" href="https://www.tiktok.com/@tqv2020" target="_blank" rel="noopener" aria-label="TikTok" title="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4v10.2a4.2 4.2 0 1 1-3.1-4.1"></path><path d="M14 4c.8 2.3 2.2 3.6 4.5 4"></path></svg></a>
+                <a data-footer-social="email" href="#" aria-label="Email" title="Email" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v12H3z"></path><path d="m3 7 9 7 9-7"></path></svg></a>
+            </div>
+        </section>
+    </div>
+    <div class="footer-bottom">© 2026 · Vinh ở Nhật · Phiên bản 26.7.31.9</div>
+</footer>
+    </div>
+
+    <div id="search-panel" class="search-panel" hidden>
+        <div class="search-backdrop" data-close-search></div>
+        <section class="search-dialog" role="dialog" aria-modal="true" aria-labelledby="search-title">
+            <div class="search-dialog-head">
+                <div><small>Tìm trong toàn bộ website</small><h2 id="search-title">Anh cần tìm bài nào?</h2></div>
+                <button class="icon-button" type="button" data-close-search aria-label="Đóng tìm kiếm"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+            </div>
+            <label class="search-field">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+                <input id="site-search-input" type="search" inputmode="search" autocomplete="off" enterkeyhint="search" placeholder="Ví dụ: Rakuten, Yucho, sim...">
+                <button id="clear-search" type="button" aria-label="Xóa nội dung">×</button>
+            </label>
+            <div class="search-history" id="search-history">
+                <span class="search-history-label">Gợi ý</span>
+                <div class="search-history-list" id="search-history-list"></div>
+                <button id="clear-search-history" class="search-history-clear" type="button" aria-label="Xóa lịch sử tìm kiếm" title="Xóa lịch sử" hidden>×</button>
+            </div>
+            <div id="search-results" class="search-results" aria-live="polite"><p class="search-empty">Nhập từ khóa để tìm theo tiêu đề, mô tả, danh mục hoặc thẻ.</p></div>
+        </section>
+    </div>
+
+    <div id="holiday-popup" class="holiday-popup" hidden>
+        <div class="holiday-popup-backdrop" data-close-holiday></div>
+        <section class="holiday-popup-card" role="dialog" aria-modal="true" aria-labelledby="holiday-popup-title">
+            <button class="holiday-popup-close" type="button" data-close-holiday aria-label="Đóng">×</button>
+            <img id="holiday-popup-image" alt="" hidden>
+            <span class="holiday-popup-kicker">Lời chúc hôm nay</span>
+            <h2 id="holiday-popup-title"></h2>
+            <p id="holiday-popup-message"></p>
+            <button class="holiday-popup-confirm" type="button" data-close-holiday>Chúc một ngày vui vẻ</button>
+        </section>
+    </div>
+
+    <button id="scrollToTopBtn" class="scroll-top" type="button" aria-label="Lên đầu trang">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>
     </button>
 
-    <!-- 🔸 Gọi các file JavaScript -->
-    <!-- lunar-calendar.js: xử lý lịch âm dương -->
-    <!-- holidays.js: danh sách ngày lễ & popup -->
-    <!-- proverbs.js: có thể chứa câu danh ngôn/ngẫu nhiên -->
-    <!-- content.js: tải nội dung bài viết/video -->
-    <!-- script.js: điều khiển chung (menu, đồng hồ, popup, v.v.) -->
-    <script src="/js/lunar-calendar.js"></script>
-    <script src="/js/holidays.js"></script>
-    <script src="/js/proverbs.js"></script>
-    <!-- <script src="/js/content.js"></script>  -->
-    <script src="/data/banner.js"></script> 
-    <script src="/js/fireworks.js"></script>
-    <script src="/js/script.js?v=26.1.31"></script>
-<!-- ================= KET THUC ================= -->
-
+    <script src="/js/search.js?v=26.7.31.9" defer></script>
+    <script src="/js/holidays.js?v=26.7.31.9" defer></script>
+    <script src="/js/fireworks.js?v=26.7.31.9" defer></script>
+    <script src="/js/script.js?v=26.7.31.9" defer></script>
 </body>
 </html>
