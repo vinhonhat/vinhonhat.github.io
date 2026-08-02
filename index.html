@@ -57,17 +57,17 @@
     </div>
 </header>
 
-<nav class="mobile-bottom-nav" aria-label="Menu di động" data-mobile-nav>
-    <a href="/" data-nav="home">
+<nav class="mobile-bottom-nav labels-hidden" aria-label="Menu di động" data-mobile-nav>
+    <a href="/" data-nav="home" data-mobile-nav-key="home">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8"></path><path d="M5 10v10h14V10"></path></svg><span data-mobile-nav-label="home">Trang chủ</span>
     </a>
-    <a href="/#latest-posts" data-scroll-latest>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v3M12 18v3M4.2 6.2l2.1 2.1M17.7 17.7l2.1 2.1M3 12h3M18 12h3M4.2 17.8l2.1-2.1M17.7 6.3l2.1-2.1"></path><circle cx="12" cy="12" r="3.2"></circle></svg><span data-mobile-nav-label="latest">Mới nhất</span>
+    <a href="/#latest-posts" data-scroll-latest data-mobile-nav-key="latest">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5c2.7-.7 5.3-.2 8 1.5v13c-2.7-1.7-5.3-2.2-8-1.5z"></path><path d="M20 5.5c-2.7-.7-5.3-.2-8 1.5v13c2.7-1.7 5.3-2.2 8-1.5z"></path></svg><span data-mobile-nav-label="latest">Mới nhất</span>
     </a>
-    <button class="search-open mobile-search-button" type="button" data-search-trigger aria-label="Mở tìm kiếm" aria-controls="search-panel" aria-expanded="false" onclick="return window.VinhSearch ? window.VinhSearch.open(event) : false">
+    <button class="search-open mobile-search-button" data-mobile-nav-key="search" type="button" data-search-trigger aria-label="Mở tìm kiếm" aria-controls="search-panel" aria-expanded="false" onclick="return window.VinhSearch ? window.VinhSearch.open(event) : false">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg><span data-mobile-nav-label="search">Tìm kiếm</span>
     </button>
-    <button id="mobile-menu-open" class="mobile-menu-button" type="button" aria-label="Mở menu" aria-controls="mobile-menu-panel" aria-expanded="false">
+    <button id="mobile-menu-open" class="mobile-menu-button" data-mobile-nav-key="menu" type="button" aria-label="Mở menu" aria-controls="mobile-menu-panel" aria-expanded="false">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h14"></path></svg><span data-mobile-nav-label="menu">Menu</span>
     </button>
 </nav>
@@ -76,19 +76,26 @@
     <button class="mobile-menu-backdrop" type="button" data-close-mobile-menu aria-label="Đóng menu"></button>
     <section class="mobile-menu-sheet" role="dialog" aria-modal="true" aria-labelledby="mobile-menu-title">
         <div class="sheet-handle" aria-hidden="true"></div>
-        <div class="mobile-menu-head"><div><small>Đi nhanh tới</small><h2 id="mobile-menu-title">Menu</h2></div><button type="button" data-close-mobile-menu aria-label="Đóng">×</button></div>
+        <div class="mobile-menu-head">
+            <div class="mobile-menu-brand" data-mobile-menu-intro>
+                <img src="/img/logoQV.png" alt="" width="46" height="46" loading="lazy" decoding="async">
+                <div><small data-mobile-menu-eyebrow>Đi nhanh tới</small><h2 id="mobile-menu-title" data-mobile-menu-intro-title>Vinh ở Nhật</h2><p data-mobile-menu-intro-text>Tin tức, hướng dẫn và công cụ hữu ích dành cho người Việt tại Nhật.</p></div>
+            </div>
+            <button type="button" data-close-mobile-menu aria-label="Đóng">×</button>
+        </div>
         <div class="mobile-menu-grid">
-            <a href="/pages/pages-baiviet/bai-viet-hd.html"><span>B</span><strong>Bài viết</strong><small>Tất cả hướng dẫn</small></a>
-            <a href="/pages/pages-hoctap/hoctap.html"><span>学</span><strong>Học tập</strong><small>Tiếng Nhật, Tokutei</small></a>
-            <a href="/pages/pages-app/tai-xuong.html"><span>↓</span><strong>Tải xuống</strong><small>Ứng dụng và tool</small></a>
-            <a href="/pages/pages-giaitri/giaitri.html"><span>▶</span><strong>Giải trí</strong><small>Game và tiện ích</small></a>
-            <a href="/pages/pages-baiviet/rakuten.html"><span>R</span><strong>Rakuten</strong><small>Sim, ngân hàng</small></a>
-            <a href="/pages/pages-baiviet/seven.html"><span>7</span><strong>Seven Bank</strong><small>Tài khoản, ATM</small></a>
-            <a href="/pages/pages-baiviet/sim.html"><span>S</span><strong>SIM Nhật</strong><small>Cài đặt, sử dụng</small></a>
-            <a href="/pages/pages-baiviet/other.html"><span>日</span><strong>Cuộc sống Nhật</strong><small>Kinh nghiệm thực tế</small></a>
+            <a href="/pages/pages-baiviet/bai-viet-hd.html"><span data-mobile-menu-icon="posts">B</span><strong>Bài viết</strong><small>Tất cả hướng dẫn</small></a>
+            <a href="/pages/pages-hoctap/hoctap.html"><span data-mobile-menu-icon="study">学</span><strong>Học tập</strong><small>Tiếng Nhật, Tokutei</small></a>
+            <a href="/pages/pages-app/tai-xuong.html"><span data-mobile-menu-icon="downloads">↓</span><strong>Tải xuống</strong><small>Ứng dụng và tool</small></a>
+            <a href="/pages/pages-giaitri/giaitri.html"><span data-mobile-menu-icon="fun">▶</span><strong>Giải trí</strong><small>Game và tiện ích</small></a>
+            <a href="/pages/pages-baiviet/rakuten.html"><span data-mobile-menu-icon="rakuten">R</span><strong>Rakuten</strong><small>Sim, ngân hàng</small></a>
+            <a href="/pages/pages-baiviet/seven.html"><span data-mobile-menu-icon="seven">7</span><strong>Seven Bank</strong><small>Tài khoản, ATM</small></a>
+            <a href="/pages/pages-baiviet/sim.html"><span data-mobile-menu-icon="sim">S</span><strong>SIM Nhật</strong><small>Cài đặt, sử dụng</small></a>
+            <a href="/pages/pages-baiviet/other.html"><span data-mobile-menu-icon="life">日</span><strong>Cuộc sống Nhật</strong><small>Kinh nghiệm thực tế</small></a>
         </div>
     </section>
 </div>
+
     </div>
 
     <main class="news-main">
@@ -191,7 +198,7 @@
         <section class="holiday-popup-card" role="dialog" aria-modal="true" aria-labelledby="holiday-popup-title">
             <button class="holiday-popup-close" type="button" data-close-holiday aria-label="Đóng">×</button>
             <img id="holiday-popup-image" alt="" hidden>
-            <span id="holiday-popup-date" class="holiday-popup-kicker">Lời chúc hôm nay</span>
+            <span class="holiday-popup-kicker">Lời chúc hôm nay</span>
             <h2 id="holiday-popup-title"></h2>
             <p id="holiday-popup-message"></p>
             <button class="holiday-popup-confirm" type="button" data-close-holiday>Chúc một ngày vui vẻ</button>
