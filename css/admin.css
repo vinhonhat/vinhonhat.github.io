@@ -555,3 +555,17 @@ body.admin-body { background: var(--admin-bg) !important; color: var(--admin-tex
   .post-source-panel { align-items: stretch; flex-direction: column; }
   .post-source-actions { justify-content: flex-start; }
 }
+
+/* V26.8.2 Beta 10 - quản lý SIM */
+.sim-admin-list { display:grid; gap:14px; }
+.sim-admin-card { overflow:hidden; border:1px solid #e2e5e9; border-radius:16px; background:#fff; }
+.sim-admin-card>header { padding:13px 15px; display:flex; align-items:center; justify-content:space-between; gap:15px; background:#fff8ee; }
+.sim-admin-card>header div { display:grid; }
+.sim-admin-card>header small { color:#7a8189; }
+.sim-admin-card>header button { width:34px; height:34px; border:1px solid #efc8c8; border-radius:10px; color:#b22; background:#fff; font-size:20px; cursor:pointer; }
+.sim-admin-fields { padding:14px; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:11px; }
+.sim-admin-fields label { min-width:0; display:grid; gap:5px; color:#626a73; font-size:11px; font-weight:800; }
+.sim-admin-fields input,.sim-admin-fields select,.sim-admin-fields textarea { width:100%; min-width:0; padding:9px 10px; border:1px solid #dfe3e7; border-radius:9px; background:#fff; color:#252a31; }
+.sim-admin-fields label.wide { grid-column:span 2; }
+@media(max-width:980px){.sim-admin-fields{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.sim-admin-fields{grid-template-columns:1fr}.sim-admin-fields label.wide{grid-column:auto}}

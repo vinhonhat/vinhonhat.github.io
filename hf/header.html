@@ -18,7 +18,7 @@
                     <a href="/pages/pages-app/checklcd.html" role="menuitem"><span class="download-menu-icon">PC</span><span><strong>Check máy tính</strong><small>Kiểm tra màn hình và phần cứng</small></span></a>
                     <a href="https://vinhonhat.github.io/nihongo" role="menuitem"><span class="download-menu-icon">日</span><span><strong>Nihongo Quest</strong><small>Ứng dụng luyện tiếng Nhật</small></span></a>
                     <a href="/pages/pages-app/ung-dung-di-ong-20260613.html" role="menuitem"><span class="download-menu-icon">APP</span><span><strong>Ứng dụng di động</strong><small>Các tiện ích dành cho điện thoại</small></span></a>
-                    <a href="/pages/pages-app/sim-data.html" role="menuitem"><span class="download-menu-icon">SIM</span><span><strong>SIM Data Nhật Bản</strong><small>Xem 4 loại SIM và thông tin tư vấn</small></span></a>
+                    <a href="/pages/pages-app/sim-data.html" role="menuitem"><span class="download-menu-icon">SIM</span><span><strong>SIM Data Nhật Bản</strong><small>Xem các gói SIM tháng và SIM năm</small></span></a>
                 </div>
             </div>
             <a href="/pages/pages-giaitri/giaitri.html" data-nav="fun">Giải trí</a>
@@ -40,12 +40,12 @@
     </div>
 </header>
 
-<nav class="mobile-bottom-nav" aria-label="Menu di động" data-mobile-nav>
+<nav class="mobile-bottom-nav labels-hidden" aria-label="Menu di động" data-mobile-nav>
     <a href="/" data-nav="home" data-mobile-nav-key="home">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8"></path><path d="M5 10v10h14V10"></path></svg><span data-mobile-nav-label="home">Trang chủ</span>
     </a>
     <a href="/#latest-posts" data-scroll-latest data-mobile-nav-key="latest">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v3M12 18v3M4.2 6.2l2.1 2.1M17.7 17.7l2.1 2.1M3 12h3M18 12h3M4.2 17.8l2.1-2.1M17.7 6.3l2.1-2.1"></path><circle cx="12" cy="12" r="3.2"></circle></svg><span data-mobile-nav-label="latest">Mới nhất</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5c2.7-.7 5.3-.2 8 1.5v13c-2.7-1.7-5.3-2.2-8-1.5z"></path><path d="M20 5.5c-2.7-.7-5.3-.2-8 1.5v13c2.7-1.7 5.3-2.2 8-1.5z"></path></svg><span data-mobile-nav-label="latest">Mới nhất</span>
     </a>
     <button class="search-open mobile-search-button" data-mobile-nav-key="search" type="button" data-search-trigger aria-label="Mở tìm kiếm" aria-controls="search-panel" aria-expanded="false" onclick="return window.VinhSearch ? window.VinhSearch.open(event) : false">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg><span data-mobile-nav-label="search">Tìm kiếm</span>
@@ -59,10 +59,12 @@
     <button class="mobile-menu-backdrop" type="button" data-close-mobile-menu aria-label="Đóng menu"></button>
     <section class="mobile-menu-sheet" role="dialog" aria-modal="true" aria-labelledby="mobile-menu-title">
         <div class="sheet-handle" aria-hidden="true"></div>
-        <div class="mobile-menu-head"><div><small data-mobile-menu-eyebrow>Đi nhanh tới</small><h2 id="mobile-menu-title">Menu</h2></div><button type="button" data-close-mobile-menu aria-label="Đóng">×</button></div>
-        <div class="mobile-menu-intro" data-mobile-menu-intro>
-            <img src="/img/logoQV.png" alt="" width="48" height="48" loading="lazy" decoding="async">
-            <div><strong data-mobile-menu-intro-title>Vinh ở Nhật</strong><p data-mobile-menu-intro-text>Tin tức, hướng dẫn và công cụ hữu ích dành cho người Việt tại Nhật.</p></div>
+        <div class="mobile-menu-head">
+            <div class="mobile-menu-brand" data-mobile-menu-intro>
+                <img src="/img/logoQV.png" alt="" width="46" height="46" loading="lazy" decoding="async">
+                <div><small data-mobile-menu-eyebrow>Đi nhanh tới</small><h2 id="mobile-menu-title" data-mobile-menu-intro-title>Vinh ở Nhật</h2><p data-mobile-menu-intro-text>Tin tức, hướng dẫn và công cụ hữu ích dành cho người Việt tại Nhật.</p></div>
+            </div>
+            <button type="button" data-close-mobile-menu aria-label="Đóng">×</button>
         </div>
         <div class="mobile-menu-grid">
             <a href="/pages/pages-baiviet/bai-viet-hd.html"><span data-mobile-menu-icon="posts">B</span><strong>Bài viết</strong><small>Tất cả hướng dẫn</small></a>

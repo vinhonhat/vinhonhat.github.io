@@ -1,52 +1,111 @@
-/* Trang bán SIM - dữ liệu đọc từ data/sim-plans.json */
-.sim-shop-page { background: #f5f6f8; }
-.sim-shop-main { width: min(1180px, calc(100% - 32px)); margin: 24px auto 0; }
-.sim-shop-hero { min-height: 390px; padding: clamp(28px, 5vw, 64px); display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(300px, .85fr); align-items: center; gap: 38px; overflow: hidden; border: 1px solid #f0dac0; border-radius: 26px; background: radial-gradient(circle at 85% 15%, rgba(255,203,122,.52), transparent 32%), linear-gradient(135deg,#fffdf9 0%,#fff2df 52%,#eaf4ff 100%); box-shadow: 0 18px 50px rgba(57,49,38,.08); }
-.sim-shop-hero-copy > span,.sim-section-heading > span,.sim-contact-card span { color: #d96e00; font-size: 11px; font-weight: 900; letter-spacing: .9px; }
-.sim-shop-hero h1 { max-width: 720px; margin: 10px 0 0; font-size: clamp(34px,5vw,62px); line-height: 1.08; letter-spacing: -1.7px; }
-.sim-shop-hero p { max-width: 670px; margin: 18px 0 0; color: #606872; font-size: 16px; line-height: 1.7; }
-.sim-shop-actions { margin-top: 25px; display: flex; flex-wrap: wrap; gap: 10px; }
-.sim-shop-actions a,.sim-contact-card > a { min-height: 46px; padding: 0 18px; display: inline-flex; align-items: center; justify-content: center; border-radius: 13px; color: #fff; background: #df7500; text-decoration: none; font-weight: 850; box-shadow: 0 9px 22px rgba(223,117,0,.22); }
-.sim-shop-actions a.secondary { color: #9f5400; background: #fff; border: 1px solid #f1c994; box-shadow: none; }
-.sim-shop-visual { position: relative; min-height: 280px; display: grid; place-items: center; }
-.phone-card { position: relative; width: min(330px, 92%); aspect-ratio: 1.48/1; padding: 32px; display: flex; flex-direction: column; justify-content: end; border-radius: 34px; color: #fff; background: linear-gradient(145deg,#141a22,#273447 55%,#147a69); box-shadow: 0 28px 55px rgba(20,26,34,.28); transform: rotate(-5deg); }
-.phone-card::before { content:""; position:absolute; width:92px; height:62px; top:42px; left:56px; border-radius:14px; background:linear-gradient(135deg,#f4d67a,#e0aa35); box-shadow:inset 0 0 0 3px rgba(255,255,255,.34); }
-.phone-card b { font-size: 56px; letter-spacing: -2px; }
-.phone-card small { margin-top: 6px; letter-spacing: 2px; opacity: .72; }
-.signal { position:absolute; top:15px; right:30px; display:flex; align-items:end; gap:7px; }
-.signal i { width:10px; border-radius:99px; background:#df7500; box-shadow:0 4px 12px rgba(223,117,0,.25); }
-.signal i:nth-child(1){height:24px}.signal i:nth-child(2){height:42px}.signal i:nth-child(3){height:62px}.signal i:nth-child(4){height:82px}
-.sim-plans-section,.sim-faq-section { margin-top: 48px; }
-.sim-section-heading { margin-bottom: 18px; }
-.sim-section-heading h2 { margin: 5px 0 0; font-size: clamp(27px,3vw,38px); }
-.sim-section-heading p { margin: 7px 0 0; color:#6d747d; }
-.sim-plan-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:15px; }
-.sim-plan-card { --plan:#df7500; position:relative; min-height:460px; padding:19px; display:flex; flex-direction:column; overflow:hidden; border:1px solid #e2e5e9; border-radius:20px; background:#fff; box-shadow:0 12px 34px rgba(31,37,44,.07); transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease; }
-.sim-plan-card:hover { transform:translateY(-4px); border-color:color-mix(in srgb,var(--plan) 45%,#ddd); box-shadow:0 18px 42px rgba(31,37,44,.12); }
-.sim-plan-card[data-accent="blue"]{--plan:#2779dc}.sim-plan-card[data-accent="violet"]{--plan:#7c5bd7}.sim-plan-card[data-accent="green"]{--plan:#15926e}
-.sim-plan-top { display:flex; align-items:center; justify-content:space-between; gap:10px; }
-.sim-plan-icon { width:54px; height:54px; display:grid; place-items:center; border-radius:16px; color:var(--plan); background:color-mix(in srgb,var(--plan) 11%,#fff); font-size:22px; font-weight:900; }
-.sim-plan-badge { padding:6px 9px; border-radius:999px; color:var(--plan); background:color-mix(in srgb,var(--plan) 10%,#fff); font-size:9px; font-weight:900; letter-spacing:.5px; }
-.sim-plan-card h3 { margin:20px 0 0; font-size:22px; line-height:1.25; }
-.sim-plan-subtitle { min-height:44px; margin:8px 0 0; color:#6b737d; font-size:13px; line-height:1.55; }
-.sim-plan-price { margin:18px 0 0; color:var(--plan); font-size:27px; font-weight:900; }
-.sim-plan-features { margin:17px 0 0; padding:0; display:grid; gap:10px; list-style:none; }
-.sim-plan-features li { position:relative; padding-left:21px; color:#3d444d; font-size:13px; line-height:1.45; }
-.sim-plan-features li::before { content:"✓"; position:absolute; left:0; color:var(--plan); font-weight:900; }
-.sim-plan-for { margin-top:auto; padding-top:18px; color:#777f88; font-size:11.5px; line-height:1.5; }
-.sim-plan-for strong { display:block; margin-bottom:4px; color:#363d45; }
-.sim-plan-action { min-height:42px; margin-top:14px; display:flex; align-items:center; justify-content:center; border:1px solid color-mix(in srgb,var(--plan) 45%,#ddd); border-radius:11px; color:var(--plan); background:color-mix(in srgb,var(--plan) 7%,#fff); text-decoration:none; font-weight:850; }
-.sim-guide-strip { margin-top:24px; display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
-.sim-guide-strip article { padding:18px; display:flex; align-items:flex-start; gap:13px; border:1px solid #e1e4e8; border-radius:16px; background:#fff; }
-.sim-guide-strip strong { width:36px; height:36px; flex:0 0 auto; display:grid; place-items:center; border-radius:11px; color:#c46600; background:#fff0dc; }
-.sim-guide-strip h3 { margin:0; font-size:15px; }.sim-guide-strip p { margin:6px 0 0; color:#717982; font-size:12px; line-height:1.5; }
-.sim-faq-list { display:grid; gap:9px; }
-.sim-faq-item { border:1px solid #e1e4e8; border-radius:15px; background:#fff; overflow:hidden; }
-.sim-faq-item button { width:100%; padding:16px 18px; display:flex; align-items:center; justify-content:space-between; gap:15px; border:0; background:transparent; text-align:left; font-weight:850; cursor:pointer; }
-.sim-faq-item button::after { content:"+"; font-size:22px; color:#d96e00; }.sim-faq-item.open button::after{content:"−"}
-.sim-faq-item p { margin:0; padding:0 18px 17px; color:#66707a; line-height:1.65; }.sim-faq-item:not(.open) p{display:none}
-.sim-contact-card { margin-top:42px; padding:25px 28px; display:flex; align-items:center; justify-content:space-between; gap:24px; border-radius:20px; color:#fff; background:linear-gradient(135deg,#171d25,#253346); }
-.sim-contact-card h2 { margin:5px 0 0; font-size:28px; }.sim-contact-card p{margin:8px 0 0;color:#bec7d2;line-height:1.55}.sim-contact-card>a{flex:0 0 auto}
-.sim-shop-notice { margin:14px 4px 0; color:#7a8189; font-size:11.5px; text-align:center; }
-@media(max-width:980px){.sim-plan-grid{grid-template-columns:repeat(2,1fr)}.sim-shop-hero{grid-template-columns:1fr}.sim-shop-visual{min-height:230px}}
-@media(max-width:640px){.sim-shop-main{width:calc(100% - 24px);margin-top:13px}.sim-shop-hero{min-height:0;padding:24px 18px;border-radius:18px;gap:18px}.sim-shop-hero h1{font-size:34px}.sim-shop-hero p{font-size:13.5px}.sim-shop-actions{display:grid}.sim-shop-visual{min-height:190px}.phone-card{max-width:260px;padding:24px;border-radius:25px}.phone-card::before{width:70px;height:48px;top:28px;left:40px}.phone-card b{font-size:42px}.signal{right:8px}.signal i:nth-child(4){height:64px}.sim-plans-section,.sim-faq-section{margin-top:31px}.sim-plan-grid{grid-template-columns:1fr}.sim-plan-card{min-height:0}.sim-guide-strip{grid-template-columns:1fr}.sim-contact-card{padding:20px;display:grid;text-align:center}.sim-contact-card>a{width:100%}}
+/* V26.8.2 Beta 10 - Cửa hàng SIM dạng catalog, dữ liệu từ data/sim-plans.json */
+.sim-shop-page { background:#f5f6f8; }
+.sim-shop-main { width:min(1180px,calc(100% - 32px)); margin:24px auto 0; }
+.sim-shop-hero { min-height:300px; padding:clamp(28px,5vw,62px); display:grid; grid-template-columns:minmax(0,1.15fr) minmax(270px,.85fr); align-items:center; gap:42px; overflow:hidden; border:1px solid #efd9bf; border-radius:26px; background:radial-gradient(circle at 90% 0,rgba(255,198,105,.54),transparent 34%),linear-gradient(135deg,#fffdf9,#fff2df 58%,#edf5ff); box-shadow:0 18px 50px rgba(57,49,38,.08); }
+.sim-shop-hero-copy>span,.sim-section-heading>span,.sim-product-group-head span { color:#d96e00; font-size:11px; font-weight:900; letter-spacing:.9px; }
+.sim-shop-hero h1 { max-width:680px; margin:10px 0 0; font-size:clamp(36px,5vw,62px); line-height:1.07; letter-spacing:-1.7px; }
+.sim-shop-hero p { max-width:650px; margin:18px 0 0; color:#626b75; font-size:16px; line-height:1.7; }
+.sim-hero-button { min-height:46px; margin-top:24px; padding:0 20px; display:inline-flex; align-items:center; justify-content:center; border-radius:13px; color:#fff; background:#df7500; text-decoration:none; font-weight:900; box-shadow:0 10px 24px rgba(223,117,0,.24); }
+.sim-shop-visual { min-height:280px; display:grid; place-items:center; }
+.sim-shop-visual img { width:min(300px,90%); aspect-ratio:1/1; object-fit:contain; border-radius:28px; background:#fff; box-shadow:0 24px 55px rgba(22,28,37,.18); transform:rotate(2deg); }
+.sim-plans-section,.sim-faq-section { margin-top:46px; }
+.sim-section-heading { margin-bottom:17px; }
+.sim-section-heading h2 { margin:5px 0 0; font-size:clamp(28px,3vw,39px); }
+.sim-section-heading p { margin:7px 0 0; color:#6d747d; }
+.sim-period-tabs { width:max-content; max-width:100%; margin:0 0 22px; padding:5px; display:flex; gap:5px; border:1px solid #e3e6ea; border-radius:15px; background:#fff; box-shadow:0 7px 22px rgba(31,37,44,.05); }
+.sim-period-tabs button { min-height:44px; padding:0 23px; border:0; border-radius:11px; color:#5f6872; background:transparent; font-weight:900; cursor:pointer; }
+.sim-period-tabs button.active { color:#a95400; background:#fff0db; box-shadow:inset 0 0 0 1px #f1bd79; }
+.sim-catalog { display:grid; gap:30px; }
+.sim-product-group { padding:20px; border:1px solid #e2e5e9; border-radius:22px; background:#fff; box-shadow:0 12px 34px rgba(31,37,44,.06); }
+.sim-product-group-head { margin-bottom:15px; display:flex; align-items:end; justify-content:space-between; gap:20px; }
+.sim-product-group-head h3 { margin:4px 0 0; font-size:25px; }
+.sim-product-group-head small { color:#7a828c; }
+.sim-product-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; }
+.sim-product-card { overflow:hidden; border:1px solid #e3e6ea; border-radius:17px; background:#fff; box-shadow:0 8px 24px rgba(31,37,44,.06); cursor:pointer; transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,background .18s ease; }
+.sim-product-card:hover,.sim-product-card:focus-visible { transform:translateY(-3px); border-color:#efb76b; background:#fffaf2; box-shadow:0 15px 34px rgba(31,37,44,.12); outline:none; }
+.sim-product-media { aspect-ratio:1/1; margin:10px 10px 0; overflow:hidden; display:grid; place-items:center; border-radius:13px; background:#fafafa; }
+.sim-product-media img { width:100%; height:100%; object-fit:contain; background:#fff; }
+.sim-product-copy { padding:13px 14px 16px; }
+.sim-product-copy h3 { min-height:44px; margin:0; font-size:16px; line-height:1.38; }
+.sim-product-copy strong { display:block; margin-top:9px; color:#18a247; font-size:20px; }
+.sim-group-empty { grid-column:1/-1; margin:0; padding:28px; border-radius:14px; color:#777f88; background:#f6f7f8; text-align:center; }
+.sim-faq-list { display:grid; gap:10px; }
+.sim-faq-item { overflow:hidden; border:1px solid #e1e4e8; border-radius:14px; background:#fff; }
+.sim-faq-item button { width:100%; min-height:54px; padding:0 18px; display:flex; align-items:center; justify-content:space-between; gap:15px; border:0; background:transparent; text-align:left; font-weight:850; cursor:pointer; }
+.sim-faq-item button::after { content:"+"; color:#d96e00; font-size:22px; }
+.sim-faq-item.open button::after { content:"−"; }
+.sim-faq-item p { margin:0; padding:0 18px 17px; color:#66707a; line-height:1.65; }
+.sim-faq-item:not(.open) p { display:none; }
+.sim-shop-notice { margin:17px 4px 0; color:#7a8189; font-size:11.5px; text-align:center; }
+.sim-detail-modal[hidden] { display:none!important; }
+.sim-detail-modal { position:fixed; inset:0; z-index:5000; display:grid; place-items:center; padding:18px; }
+.sim-detail-backdrop { position:absolute; inset:0; border:0; background:rgba(15,20,27,.66); backdrop-filter:blur(5px); }
+.sim-detail-sheet { position:relative; z-index:1; width:min(980px,100%); max-height:min(91vh,820px); overflow:auto; padding:25px; border-radius:24px; background:#fff; box-shadow:0 28px 90px rgba(0,0,0,.32); }
+.sim-detail-close { position:absolute; top:12px; right:12px; z-index:2; width:42px; height:42px; border:1px solid #dfe3e8; border-radius:50%; background:#fff; font-size:26px; cursor:pointer; }
+.sim-detail-grid { display:grid; grid-template-columns:minmax(300px,.85fr) minmax(0,1.15fr); gap:28px; align-items:start; }
+.sim-detail-image { min-height:430px; display:grid; place-items:center; padding:18px; border:1px solid #e2e5e9; border-radius:19px; background:#f7f8f9; }
+.sim-detail-image img { width:100%; height:100%; max-height:460px; object-fit:contain; border-radius:14px; background:#fff; }
+.sim-detail-copy { padding:8px 5px 4px 0; }
+.sim-detail-badge { color:#d96e00; font-size:10px; font-weight:900; letter-spacing:.8px; }
+.sim-detail-copy h2 { margin:8px 46px 0 0; font-size:clamp(28px,3.4vw,40px); line-height:1.15; }
+.sim-detail-copy>p { margin:9px 0 0; color:#68717b; line-height:1.55; }
+.sim-detail-price { margin:17px 0; color:#16a147; font-size:31px; font-weight:950; }
+.sim-variant-picker { margin:0 0 15px; }
+.sim-variant-picker>span { display:block; margin-bottom:7px; color:#6c747e; font-size:11px; font-weight:800; }
+.sim-variant-picker>div { display:flex; flex-wrap:wrap; gap:8px; }
+.sim-variant-picker button { min-height:44px; padding:7px 13px; display:grid; border:1px solid #dfe3e7; border-radius:11px; color:#454d56; background:#fff; text-align:left; font-weight:850; cursor:pointer; }
+.sim-variant-picker button small { color:#7a828b; font-weight:700; }
+.sim-variant-picker button.active { border-color:#eca94e; color:#a95300; background:#fff4e3; box-shadow:inset 0 0 0 1px #f4c480; }
+.sim-detail-specs { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.sim-detail-specs div { padding:10px 12px; border-radius:11px; background:#f4f6f8; }
+.sim-detail-specs span { display:block; color:#7a828b; font-size:10px; }
+.sim-detail-specs strong { display:block; margin-top:2px; font-size:12px; }
+.sim-detail-columns { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.sim-detail-copy h3 { margin:18px 0 7px; font-size:14px; }
+.sim-detail-copy ul { margin:0; padding-left:19px; color:#4e5660; font-size:12px; line-height:1.68; }
+.sim-detail-for { margin-top:15px; padding:12px; border-radius:11px; color:#626a74; background:#fff5e7; font-size:12px; line-height:1.55; }
+.sim-order-row { margin-top:16px; display:grid; grid-template-columns:150px 1fr; gap:10px; }
+.sim-quantity { padding:9px 10px; border:1px solid #e1e5e9; border-radius:12px; background:#fff; }
+.sim-quantity>span { display:block; color:#747c85; font-size:10px; }
+.sim-quantity>div { margin-top:4px; display:grid; grid-template-columns:34px 1fr 34px; align-items:center; }
+.sim-quantity button { width:32px; height:32px; border:0; border-radius:9px; color:#a95500; background:#fff0dd; font-size:20px; cursor:pointer; }
+.sim-quantity output { text-align:center; font-weight:900; }
+.sim-buy-button { min-height:58px; border:0; border-radius:13px; color:#fff; background:#df7500; font-size:16px; font-weight:950; cursor:pointer; box-shadow:0 10px 24px rgba(223,117,0,.22); }
+.sim-facebook-button { min-height:44px; margin-top:9px; display:flex; align-items:center; justify-content:center; border:1px solid #bfd3f2; border-radius:12px; color:#1769c2; background:#f4f8ff; text-decoration:none; font-weight:900; }
+.sim-order-toast { position:fixed; left:50%; bottom:max(24px,env(safe-area-inset-bottom)); z-index:7000; max-width:min(520px,calc(100% - 30px)); padding:12px 16px; border-radius:13px; color:#fff; background:#18202a; box-shadow:0 16px 45px rgba(0,0,0,.28); transform:translateX(-50%); text-align:center; font-size:13px; }
+body.sim-modal-open { overflow:hidden; }
+@media(max-width:980px) {
+  .sim-shop-hero { grid-template-columns:1fr; }
+  .sim-shop-visual { min-height:220px; }
+  .sim-shop-visual img { width:min(300px,86%); }
+  .sim-product-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .sim-detail-grid { grid-template-columns:1fr; }
+  .sim-detail-image { min-height:280px; }
+  .sim-detail-image img { max-height:320px; }
+}
+@media(max-width:640px) {
+  .sim-shop-main { width:calc(100% - 24px); margin-top:13px; }
+  .sim-shop-hero { min-height:0; padding:23px 18px; gap:17px; border-radius:18px; }
+  .sim-shop-hero h1 { font-size:34px; }
+  .sim-shop-hero p { font-size:13.5px; }
+  .sim-shop-visual { min-height:165px; }
+  .sim-shop-visual img { width:190px; border-radius:20px; }
+  .sim-plans-section,.sim-faq-section { margin-top:30px; }
+  .sim-period-tabs { width:100%; }
+  .sim-period-tabs button { flex:1; padding:0 10px; }
+  .sim-product-group { padding:13px; border-radius:18px; }
+  .sim-product-group-head h3 { font-size:21px; }
+  .sim-product-grid { grid-template-columns:1fr 1fr; gap:9px; }
+  .sim-product-media { margin:7px 7px 0; }
+  .sim-product-copy { padding:10px 10px 12px; }
+  .sim-product-copy h3 { min-height:38px; font-size:13px; }
+  .sim-product-copy strong { font-size:16px; }
+  .sim-detail-modal { padding:0; align-items:end; }
+  .sim-detail-sheet { width:100%; max-height:92vh; padding:18px 15px calc(18px + env(safe-area-inset-bottom)); border-radius:24px 24px 0 0; }
+  .sim-detail-copy h2 { font-size:25px; }
+  .sim-detail-image { min-height:210px; }
+  .sim-detail-image img { max-height:230px; }
+  .sim-detail-specs,.sim-detail-columns { grid-template-columns:1fr; gap:7px; }
+  .sim-order-row { grid-template-columns:118px 1fr; }
+  .sim-buy-button { min-height:56px; }
+}

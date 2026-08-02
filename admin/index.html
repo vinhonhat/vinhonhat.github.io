@@ -66,6 +66,7 @@
         <nav class="cms-tabs" aria-label="Khu vực quản trị">
             <button type="button" class="cms-tab active" data-cms-tab="home">Giao diện</button>
             <button type="button" class="cms-tab" data-cms-tab="categories">Chuyên mục</button>
+            <button type="button" class="cms-tab" data-cms-tab="sim">SIM & đơn hàng</button>
             <button type="button" class="cms-tab" data-cms-tab="posts">Bài viết</button>
         </nav>
 
@@ -97,12 +98,15 @@
                         <label>Chế độ banner<select id="homeBannerMode"><option value="mixed">Ngày lễ + quảng cáo</option><option value="ads-only">Chỉ quảng cáo</option><option value="holiday-only">Ưu tiên ngày lễ</option></select></label>
                         <label>Tỷ lệ banner<select id="homeBannerAspect"><option value="2 / 1">2:1 — ảnh cao</option><option value="3 / 1">3:1 — mặc định</option><option value="4 / 1">4:1 — banner rất dài</option></select></label>
                         <label>Thời gian đổi ảnh (giây)<input id="homeBannerInterval" type="number" min="2.5" max="20" step="0.5"></label>
+                        <label>Vị trí banner lễ<select id="homeHolidayBannerPosition"><option value="after-ads">Sau banner quảng cáo</option><option value="before-ads">Trước banner quảng cáo</option></select></label>
+                        <label>Hiện trước lễ (ngày)<input id="homeHolidayBannerBefore" type="number" min="0" max="120" step="1"></label>
+                        <label>Giữ sau lễ (ngày)<input id="homeHolidayBannerAfter" type="number" min="0" max="120" step="1"></label>
                     </div>
                     <div class="toggle-grid compact">
                         <label><input id="homeBannerAutoplay" type="checkbox"><span>Tự động trượt</span></label>
                         <label><input id="homeBannerArrows" type="checkbox"><span>Hiện nút trái/phải</span></label>
                         <label><input id="homeBannerDots" type="checkbox"><span>Hiện dấu vị trí</span></label>
-                        <label><input id="homeHolidaySlide" type="checkbox"><span>Thêm banner lễ đúng ngày</span></label>
+                        <label><input id="homeHolidaySlide" type="checkbox"><span>Cho phép banner lễ trong khoảng đã đặt</span></label>
                     </div>
                 </section>
 
@@ -121,9 +125,11 @@
                 </section>
 
                 <section class="home-settings-card">
-                    <div class="home-settings-heading"><span class="settings-number">4</span><div><h3>Popup và pháo hoa ngày lễ</h3><p>Chỉ khớp đúng ngày dương hoặc ngày âm, không hiện trước/sau.</p></div></div>
-                    <div class="settings-form-grid">
+                    <div class="home-settings-heading"><span class="settings-number">4</span><div><h3>Popup và pháo hoa ngày lễ</h3><p>Popup có thể hiện trước/sau theo số ngày anh đặt; pháo hoa vẫn chỉ chạy đúng ngày.</p></div></div>
+                    <div class="settings-form-grid three">
                         <label>Thời gian popup (giây)<input id="homeHolidayDuration" type="number" min="3" max="30" step="1"></label>
+                        <label>Popup hiện trước (ngày)<input id="homeHolidayPopupBefore" type="number" min="0" max="120" step="1"></label>
+                        <label>Popup giữ sau (ngày)<input id="homeHolidayPopupAfter" type="number" min="0" max="120" step="1"></label>
                     </div>
                     <div class="toggle-grid compact">
                         <label><input id="homeHolidayPopup" type="checkbox"><span>Popup chúc mừng</span></label>
@@ -146,7 +152,7 @@
                             </select>
                         </label>
                         <button id="previewHolidayBanner" type="button">Mở trang xem thử</button>
-                        <small>Chế độ xem thử chỉ hoạt động khi URL có <code>?holidayTest=...</code>. Khách truy cập bình thường chỉ thấy ảnh lễ đúng ngày.</small>
+                        <small>Chế độ xem thử chỉ hoạt động khi URL có <code>?holidayTest=...</code>. Khách truy cập bình thường thấy banner/popup theo khoảng ngày đã đặt; pháo hoa chỉ đúng ngày.</small>
                     </div>
                 </section>
 
@@ -226,6 +232,49 @@
                 <button id="saveHomeConfigLocal" type="button">Lưu bản đang chỉnh</button>
                 <a id="downloadSiteConfigBottom" download="site-config.json">Tải giao diện</a><a id="downloadBannerConfigBottom" download="banner-config.json">Tải banner</a>
             </div>
+        </section>
+
+        <section id="simAdminPanel" class="cms-panel home-admin-panel" hidden>
+            <div class="home-admin-hero">
+                <div><span>Cửa hàng SIM</span><h2>Sản phẩm và cách nhận đơn</h2><p>Chỉnh gói SIM, giá, ảnh và chuyển giữa Messenger hoặc trang đặt hàng riêng.</p></div>
+                <div class="home-admin-hero-actions">
+                    <label class="home-config-import">Nhập sim-plans.json<input id="importSimPlans" type="file" accept="application/json,.json"></label>
+                    <label class="home-config-import">Nhập order-config.json<input id="importOrderConfig" type="file" accept="application/json,.json"></label>
+                    <a id="downloadSimPlans" download="sim-plans.json">Tải sim-plans.json</a>
+                    <a id="downloadOrderConfig" download="order-config.json">Tải order-config.json</a>
+                </div>
+            </div>
+            <div class="home-admin-grid">
+                <section class="home-settings-card">
+                    <div class="home-settings-heading"><span class="settings-number">1</span><div><h3>Thông tin trang SIM</h3><p>Tiêu đề và mô tả hiển thị phía trên catalog.</p></div></div>
+                    <div class="settings-form-grid two">
+                        <label>Tiêu đề<input id="simAdminTitle" type="text"></label>
+                        <label>Dòng nhỏ<input id="simAdminEyebrow" type="text"></label>
+                        <label class="settings-span-two">Mô tả<textarea id="simAdminDescription" rows="3"></textarea></label>
+                        <label class="settings-span-two">Lưu ý cuối trang<textarea id="simAdminNotice" rows="2"></textarea></label>
+                    </div>
+                </section>
+                <section class="home-settings-card">
+                    <div class="home-settings-heading"><span class="settings-number">2</span><div><h3>Nhận đơn hàng</h3><p>Đổi sang trang riêng sau này chỉ cần chọn chế độ và nhập URL.</p></div></div>
+                    <div class="settings-form-grid two">
+                        <label>Cách nhận đơn<select id="simOrderMode"><option value="messenger">Messenger</option><option value="custom-page">Trang đặt hàng riêng</option></select></label>
+                        <label>Messenger URL<input id="simMessengerUrl" type="url" placeholder="https://m.me/..."></label>
+                        <label>Facebook cá nhân<input id="simFacebookUrl" type="url" placeholder="https://facebook.com/..."></label>
+                        <label>Trang đặt hàng riêng<input id="simCustomOrderUrl" type="text" placeholder="/pages/pages-app/dat-sim.html"></label>
+                        <label class="settings-span-two">Mẫu tin nhắn<textarea id="simMessageTemplate" rows="7"></textarea></label>
+                    </div>
+                    <div class="toggle-grid compact">
+                        <label><input id="simCopyMessage" type="checkbox"><span>Sao chép tin nhắn trước khi mở</span></label>
+                        <label><input id="simAppendText" type="checkbox"><span>Thử gắn nội dung vào URL Messenger</span></label>
+                        <label><input id="simOpenNewTab" type="checkbox"><span>Mở ở tab mới</span></label>
+                    </div>
+                </section>
+            </div>
+            <section class="banner-manager-card sim-admin-manager">
+                <div class="banner-manager-head"><div><span>Sản phẩm</span><h3>Danh sách gói SIM</h3><p>Giá và thông tin ngoài thẻ được lấy từ đây. Chi tiết chỉ hiện khi khách nhấn sản phẩm.</p></div><button id="addSimPlan" type="button">+ Thêm gói SIM</button></div>
+                <div id="simAdminList" class="sim-admin-list"></div>
+            </section>
+            <div class="home-admin-savebar"><span id="simAdminStatus">Đang tải dữ liệu SIM…</span><button id="saveSimDraft" type="button">Lưu bản đang chỉnh</button><a id="downloadSimPlansBottom" download="sim-plans.json">Tải sản phẩm</a><a id="downloadOrderConfigBottom" download="order-config.json">Tải nhận đơn</a></div>
         </section>
 
         <section id="categoriesAdminPanel" class="cms-panel categories-admin-panel" hidden>
@@ -1890,6 +1939,7 @@
     
     <script src="/admin/home-admin.js" defer></script>
     <script src="/admin/categories-admin.js" defer></script>
+    <script src="/admin/sim-admin.js" defer></script>
 </body>
 </html>
 

@@ -30,6 +30,8 @@ const CORE_ASSETS = [
     '/css/sim-shop.css',
     '/js/sim-shop.js',
     '/data/sim-plans.json',
+    '/data/order-config.json',
+    '/img/sim/softbank-demo.png',
     '/hf/header.html',
     '/hf/footer.html'
 ];

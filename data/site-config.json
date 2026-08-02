@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "sections": {
     "banner": true,
     "featured": true,
@@ -19,7 +19,9 @@
     "popupEnabled": true,
     "fireworksEnabled": true,
     "showOncePerDay": true,
-    "popupDurationMs": 7500
+    "popupDurationMs": 7500,
+    "popupBeforeDays": 0,
+    "popupAfterDays": 0
   },
   "social": {
     "facebook": "https://fb.com/tqv2022",
@@ -41,7 +43,7 @@
       "search",
       "menu"
     ],
-    "showLabels": true,
+    "showLabels": false,
     "labels": {
       "home": "Trang chủ",
       "latest": "Mới nhất",
@@ -62,9 +64,9 @@
   },
   "mobileMenu": {
     "showIntro": true,
-    "eyebrow": "Giới thiệu",
+    "eyebrow": "",
     "title": "Vinh ở Nhật",
-    "text": "Tin tức, hướng dẫn và công cụ hữu ích dành cho người Việt đang sinh sống tại Nhật Bản.",
+    "text": "Tin tức, hướng dẫn và tiện ích tại Nhật.",
     "icons": {
       "posts": "B",
       "study": "学",
@@ -77,7 +79,7 @@
     }
   },
   "mobileHome": {
-    "hideTopics": true,
+    "hideTopics": false,
     "guideTitle": "Gợi ý thêm"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 3,
   "enabled": true,
   "settings": {
     "mode": "mixed",
@@ -9,7 +9,10 @@
     "showArrows": true,
     "showDots": true,
     "holidaySlideEnabled": true,
-    "pauseOnHover": true
+    "pauseOnHover": true,
+    "holidayBeforeDays": 45,
+    "holidayAfterDays": 10,
+    "holidayPosition": "after-ads"
   },
   "items": [
     {
@@ -17,7 +20,7 @@
       "enabled": true,
       "kind": "ad",
       "title": "SIM data Nhật Bản",
-      "description": "Xem 4 nhóm SIM data và SIM nghe gọi",
+      "description": "Xem SIM tháng, SIM năm, eSIM và SIM vật lý",
       "imageDesktop": "/img/ads/sim-data-demo-3x1.svg",
       "imageMobile": "/img/ads/sim-data-demo-3x1.svg",
       "actionUrl": "/pages/pages-app/sim-data.html",

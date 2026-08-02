@@ -7,14 +7,14 @@
     const DEFAULT_CONFIG = {
         schemaVersion: 1,
         sections: { banner: true, featured: true, topics: true, latestFeed: true, sidebar: true },
-        banner: { mode: 'mixed', aspectRatio: '3 / 1', autoplay: true, intervalMs: 5500, showArrows: true, showDots: true, holidaySlideEnabled: true, pauseOnHover: true },
+        banner: { mode: 'mixed', aspectRatio: '3 / 1', autoplay: true, intervalMs: 5500, showArrows: true, showDots: true, holidaySlideEnabled: true, holidayBeforeDays: 45, holidayAfterDays: 10, holidayPosition: 'after-ads', pauseOnHover: true },
         feed: { source: 'new', initialCount: 6, batchSize: 4, maxItems: 20, autoLoad: true, showShare: true },
-        holiday: { popupEnabled: true, fireworksEnabled: true, showOncePerDay: true, popupDurationMs: 7500 },
+        holiday: { popupEnabled: true, popupBeforeDays: 0, popupAfterDays: 0, fireworksEnabled: true, showOncePerDay: true, popupDurationMs: 7500 },
         social: { facebook: 'https://fb.com/tqv2022', messenger: 'https://m.me/tqv2022', zalo: '', tiktok: 'https://www.tiktok.com/@tqv2020', email: '' },
         footer: { text: 'Chia sẻ hướng dẫn thực tế, dễ hiểu dành cho người Việt đang sinh sống tại Nhật Bản.', contactLabel: '', showQuickLinks: true },
-        mobileNav: { enabled: true, showLabels: true, labels: { home: 'Trang chủ', latest: 'Mới nhất', search: 'Tìm kiếm', menu: 'Menu' }, icons: { home: '', latest: '', search: '', menu: '' } },
-        mobileMenu: { showIntro: true, eyebrow: 'Giới thiệu', title: 'Vinh ở Nhật', text: 'Tin tức, hướng dẫn và công cụ hữu ích dành cho người Việt đang sinh sống tại Nhật Bản.', icons: { posts: 'B', study: '学', downloads: '↓', fun: '▶', rakuten: 'R', seven: '7', sim: 'S', life: '日' } },
-        mobileHome: { hideTopics: true, guideTitle: 'Gợi ý thêm' },
+        mobileNav: { enabled: true, showLabels: false, labels: { home: 'Trang chủ', latest: 'Mới nhất', search: 'Tìm kiếm', menu: 'Menu' }, icons: { home: '', latest: '', search: '', menu: '' } },
+        mobileMenu: { showIntro: true, eyebrow: '', title: 'Vinh ở Nhật', text: 'Tin tức, hướng dẫn và tiện ích tại Nhật.', icons: { posts: 'B', study: '学', downloads: '↓', fun: '▶', rakuten: 'R', seven: '7', sim: 'S', life: '日' } },
+        mobileHome: { hideTopics: false, guideTitle: 'Gợi ý thêm' },
         lunar: { showMoon: true, showSolarDate: true, showLunarDate: true },
         banners: []
     };
@@ -126,6 +126,9 @@
         setChecked('#homeBannerArrows', state.banner.showArrows);
         setChecked('#homeBannerDots', state.banner.showDots);
         setChecked('#homeHolidaySlide', state.banner.holidaySlideEnabled);
+        setValue('#homeHolidayBannerPosition', state.banner.holidayPosition || 'after-ads');
+        setValue('#homeHolidayBannerBefore', state.banner.holidayBeforeDays ?? 45);
+        setValue('#homeHolidayBannerAfter', state.banner.holidayAfterDays ?? 10);
         setValue('#homeFeedSource', state.feed.source);
         setValue('#homeFeedInitial', state.feed.initialCount);
         setValue('#homeFeedBatch', state.feed.batchSize);
@@ -133,6 +136,8 @@
         setChecked('#homeFeedAuto', state.feed.autoLoad);
         setChecked('#homeFeedShare', state.feed.showShare);
         setValue('#homeHolidayDuration', Number(state.holiday.popupDurationMs || 7500) / 1000);
+        setValue('#homeHolidayPopupBefore', state.holiday.popupBeforeDays ?? 0);
+        setValue('#homeHolidayPopupAfter', state.holiday.popupAfterDays ?? 0);
         setChecked('#homeHolidayPopup', state.holiday.popupEnabled);
         setChecked('#homeHolidayFireworks', state.holiday.fireworksEnabled);
         setChecked('#homeHolidayOnce', state.holiday.showOncePerDay);
@@ -190,6 +195,9 @@
             showArrows: $('#homeBannerArrows')?.checked ?? true,
             showDots: $('#homeBannerDots')?.checked ?? true,
             holidaySlideEnabled: $('#homeHolidaySlide')?.checked ?? true,
+            holidayBeforeDays: numberValue('#homeHolidayBannerBefore', 45),
+            holidayAfterDays: numberValue('#homeHolidayBannerAfter', 10),
+            holidayPosition: $('#homeHolidayBannerPosition')?.value || 'after-ads',
             pauseOnHover: true
         };
         state.feed = {
@@ -202,6 +210,8 @@
         };
         state.holiday = {
             popupEnabled: $('#homeHolidayPopup')?.checked ?? true,
+            popupBeforeDays: numberValue('#homeHolidayPopupBefore', 0),
+            popupAfterDays: numberValue('#homeHolidayPopupAfter', 0),
             fireworksEnabled: $('#homeHolidayFireworks')?.checked ?? true,
             showOncePerDay: $('#homeHolidayOnce')?.checked ?? true,
             popupDurationMs: Math.round(numberValue('#homeHolidayDuration', 7.5) * 1000)
@@ -220,7 +230,7 @@
         };
         state.mobileNav = {
             enabled: $('#homeMobileNavEnabled')?.checked ?? true,
-            showLabels: $('#homeMobileNavLabels')?.checked ?? true,
+            showLabels: $('#homeMobileNavLabels')?.checked ?? false,
             labels: {
                 home: $('#homeMobileLabelHome')?.value?.trim() || 'Trang chủ',
                 latest: $('#homeMobileLabelLatest')?.value?.trim() || 'Mới nhất',
@@ -251,7 +261,7 @@
             }
         };
         state.mobileHome = {
-            hideTopics: $('#homeMobileHideTopics')?.checked ?? true,
+            hideTopics: $('#homeMobileHideTopics')?.checked ?? false,
             guideTitle: $('#homeMobileGuideTitle')?.value?.trim() || 'Gợi ý thêm'
         };
         state.lunar = {
@@ -381,10 +391,12 @@
         const home = $('#homeAdminPanel');
         const banner = $('#bannerAdminPanel');
         const categories = $('#categoriesAdminPanel');
+        const sim = $('#simAdminPanel');
         const posts = $('#postsAdminPanel');
         if (home) home.hidden = tab !== 'home';
         if (banner) banner.hidden = tab !== 'banner';
         if (categories) categories.hidden = tab !== 'categories';
+        if (sim) sim.hidden = tab !== 'sim';
         if (posts) posts.hidden = tab !== 'posts';
         localStorage.setItem('vinh-admin-tab', tab);
     }
@@ -458,7 +470,7 @@
         organizeAdminTabs();
         bindEvents();
         const savedTab = localStorage.getItem('vinh-admin-tab');
-        switchTab(['home', 'banner', 'categories', 'posts'].includes(savedTab) ? savedTab : 'home');
+        switchTab(['home', 'banner', 'categories', 'sim', 'posts'].includes(savedTab) ? savedTab : 'home');
         try {
             const [siteResponse, bannerResponse] = await Promise.all([
                 fetch(SITE_CONFIG_URL, { cache: 'no-cache' }),

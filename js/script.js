@@ -12,14 +12,14 @@
 
     const DEFAULT_HOME_CONFIG = {
         sections: { banner: true, featured: true, topics: true, latestFeed: true, sidebar: true },
-        banner: { mode: 'mixed', aspectRatio: '3 / 1', autoplay: true, intervalMs: 5500, showArrows: true, showDots: true, holidaySlideEnabled: true, pauseOnHover: true },
+        banner: { mode: 'mixed', aspectRatio: '3 / 1', autoplay: true, intervalMs: 5500, showArrows: true, showDots: true, holidaySlideEnabled: true, holidayBeforeDays: 45, holidayAfterDays: 10, holidayPosition: 'after-ads', pauseOnHover: true },
         feed: { source: 'new', initialCount: 6, batchSize: 4, maxItems: 20, autoLoad: true, showShare: true },
-        holiday: { popupEnabled: true, fireworksEnabled: true, showOncePerDay: true, popupDurationMs: 7500 },
+        holiday: { popupEnabled: true, popupBeforeDays: 0, popupAfterDays: 0, fireworksEnabled: true, showOncePerDay: true, popupDurationMs: 7500 },
         social: { facebook: 'https://fb.com/tqv2022', messenger: 'https://m.me/tqv2022', zalo: '', tiktok: 'https://www.tiktok.com/@tqv2020', email: '' },
         footer: { text: 'Chia sẻ hướng dẫn thực tế, dễ hiểu dành cho người Việt đang sinh sống tại Nhật Bản.', contactLabel: '', showQuickLinks: true },
-        mobileNav: { enabled: true, showLabels: true, labels: { home: 'Trang chủ', latest: 'Mới nhất', search: 'Tìm kiếm', menu: 'Menu' }, icons: { home: '', latest: '', search: '', menu: '' } },
-        mobileMenu: { showIntro: true, eyebrow: 'Giới thiệu', title: 'Vinh ở Nhật', text: 'Tin tức, hướng dẫn và công cụ hữu ích dành cho người Việt đang sinh sống tại Nhật Bản.', icons: { posts: 'B', study: '学', downloads: '↓', fun: '▶', rakuten: 'R', seven: '7', sim: 'S', life: '日' } },
-        mobileHome: { hideTopics: true, guideTitle: 'Gợi ý thêm' },
+        mobileNav: { enabled: true, showLabels: false, labels: { home: 'Trang chủ', latest: 'Mới nhất', search: 'Tìm kiếm', menu: 'Menu' }, icons: { home: '', latest: '', search: '', menu: '' } },
+        mobileMenu: { showIntro: true, eyebrow: '', title: 'Vinh ở Nhật', text: 'Tin tức, hướng dẫn và tiện ích tại Nhật.', icons: { posts: 'B', study: '学', downloads: '↓', fun: '▶', rakuten: 'R', seven: '7', sim: 'S', life: '日' } },
+        mobileHome: { hideTopics: false, guideTitle: 'Gợi ý thêm' },
         lunar: { showMoon: true, showSolarDate: true, showLunarDate: true },
         banners: []
     };
@@ -28,6 +28,8 @@
     let homeConfigPromise = null;
     let currentHomeConfig = DEFAULT_HOME_CONFIG;
     let activeHolidayToday = null;
+    let activeHolidayBanner = null;
+    let activeHolidayPopup = null;
     let bannerController = null;
     let headerReadyPromise = null;
     let globalEventsBound = false;
@@ -633,19 +635,57 @@
     }
 
     /* ========================= NGÀY LỄ ========================= */
-    function exactTodayHoliday() {
-        const today = new Date();
-        const testId = new URLSearchParams(location.search).get('holidayTest');
+    function holidayForDate(date) {
         const list = Array.isArray(window.VINH_HOLIDAYS) ? window.VINH_HOLIDAYS : [];
-        if (testId) return list.find(item => item.imagePrefix === testId) || null;
         let lunar = null;
         if (typeof window.getLunarDate === 'function') {
-            lunar = window.getLunarDate(today.getDate(), today.getMonth() + 1, today.getFullYear());
+            lunar = window.getLunarDate(date.getDate(), date.getMonth() + 1, date.getFullYear());
         }
         return list.find(item => item.isLunar
             ? lunar && lunar.day === Number(item.day) && lunar.month === Number(item.month)
-            : today.getDate() === Number(item.day) && today.getMonth() + 1 === Number(item.month)
+            : date.getDate() === Number(item.day) && date.getMonth() + 1 === Number(item.month)
         ) || null;
+    }
+
+    function exactTodayHoliday() {
+        const testId = new URLSearchParams(location.search).get('holidayTest');
+        const list = Array.isArray(window.VINH_HOLIDAYS) ? window.VINH_HOLIDAYS : [];
+        if (testId) return list.find(item => item.imagePrefix === testId) || null;
+        return holidayForDate(new Date());
+    }
+
+    function resolveHolidayWindow(beforeDays = 0, afterDays = 0) {
+        const list = Array.isArray(window.VINH_HOLIDAYS) ? window.VINH_HOLIDAYS : [];
+        const testId = new URLSearchParams(location.search).get('holidayTest');
+        if (testId) {
+            const holiday = list.find(item => item.imagePrefix === testId);
+            return holiday ? { holiday, offsetDays: 0, date: new Date(), test: true } : null;
+        }
+        const before = clampNumber(beforeDays, 0, 120, 0);
+        const after = clampNumber(afterDays, 0, 120, 0);
+        const today = new Date();
+        today.setHours(12, 0, 0, 0);
+        const matches = [];
+        for (let offset = -after; offset <= before; offset += 1) {
+            const date = new Date(today);
+            date.setDate(today.getDate() + offset);
+            const holiday = holidayForDate(date);
+            if (holiday) matches.push({ holiday, offsetDays: offset, date });
+        }
+        matches.sort((a, b) => {
+            const distance = Math.abs(a.offsetDays) - Math.abs(b.offsetDays);
+            if (distance !== 0) return distance;
+            return b.offsetDays - a.offsetDays; // nếu bằng nhau, ưu tiên ngày sắp tới
+        });
+        return matches[0] || null;
+    }
+
+    function holidayTimingLabel(match) {
+        const offset = Number(match?.offsetDays || 0);
+        const name = match?.holiday?.name || 'ngày lễ';
+        if (offset === 0) return `Hôm nay là ${name}`;
+        if (offset > 0) return `Còn ${offset} ngày đến ${name}`;
+        return `${Math.abs(offset)} ngày sau ${name}`;
     }
 
     function holidayImageCandidates(holiday, mobile = false) {
@@ -699,15 +739,17 @@
         setHiddenPanel(document.getElementById('holiday-popup'), false);
     }
 
-    function showHolidayPopup(holiday, config) {
+    function showHolidayPopup(match, config) {
+        const holiday = match?.holiday;
         const popup = document.getElementById('holiday-popup');
-        if (!popup) return;
+        if (!popup || !holiday) return;
         const title = document.getElementById('holiday-popup-title');
         const message = document.getElementById('holiday-popup-message');
         const image = document.getElementById('holiday-popup-image');
         const paths = holidayImagePaths(holiday);
-        title.textContent = `Chào mừng ${holiday.name}`;
-        message.textContent = holiday.message || 'Chúc anh và gia đình có một ngày thật nhiều niềm vui, bình an và ý nghĩa.';
+        title.textContent = match.offsetDays === 0 ? `Chào mừng ${holiday.name}` : holidayTimingLabel(match);
+        const timing = match.offsetDays === 0 ? '' : `${holidayTimingLabel(match)}. `;
+        message.textContent = timing + (holiday.message || 'Chúc anh và gia đình một ngày thật nhiều niềm vui, bình an và ý nghĩa.');
         image.hidden = false;
         const candidates = window.innerWidth < 700 ? paths.mobileCandidates : paths.desktopCandidates;
         setImageWithFallback(image, candidates, paths.fallback);
@@ -717,15 +759,19 @@
     }
 
     async function runTodayCelebration(config) {
-        if (!activeHolidayToday) return;
         const holidayConfig = config.holiday || {};
+        activeHolidayToday = exactTodayHoliday();
+        activeHolidayPopup = resolveHolidayWindow(holidayConfig.popupBeforeDays, holidayConfig.popupAfterDays);
+        if (!activeHolidayPopup && !activeHolidayToday) return;
         if (!holidayConfig.popupEnabled && !holidayConfig.fireworksEnabled) return;
+        const selectedHoliday = activeHolidayPopup?.holiday || activeHolidayToday;
         const todayKey = new Date().toISOString().slice(0, 10);
-        const storageKey = `vinh-holiday-${activeHolidayToday.imagePrefix}-${todayKey}`;
+        const storageKey = `vinh-holiday-${selectedHoliday.imagePrefix}-${todayKey}`;
         if (holidayConfig.showOncePerDay && localStorage.getItem(storageKey) === 'shown' && !new URLSearchParams(location.search).has('holidayTest')) return;
         localStorage.setItem(storageKey, 'shown');
 
-        if (holidayConfig.fireworksEnabled && activeHolidayToday.fireworks) {
+        // Pháo hoa luôn chỉ chạy đúng ngày lễ, không chạy trong cửa sổ trước/sau.
+        if (holidayConfig.fireworksEnabled && activeHolidayToday?.fireworks) {
             try {
                 await loadScriptOnce(`/js/fireworks.js?v=${VERSION}`, () => Boolean(window.VinhHolidayFireworks?.run));
                 await window.VinhHolidayFireworks?.run(activeHolidayToday, new Date().getFullYear());
@@ -733,18 +779,21 @@
                 console.warn('Không thể chạy hiệu ứng pháo hoa:', error);
             }
         }
-        if (holidayConfig.popupEnabled) showHolidayPopup(activeHolidayToday, holidayConfig);
+        if (holidayConfig.popupEnabled && activeHolidayPopup) showHolidayPopup(activeHolidayPopup, holidayConfig);
     }
 
     /* ========================= BANNER ========================= */
-    function createHolidayBanner(holiday) {
+    function createHolidayBanner(match) {
+        const holiday = match?.holiday;
+        if (!holiday) return null;
         const paths = holidayImagePaths(holiday);
+        const timing = holidayTimingLabel(match);
         return {
             id: `holiday-${holiday.imagePrefix}`,
             enabled: true,
             kind: 'holiday',
             title: holiday.name,
-            description: holiday.message || 'Chúc một ngày lễ thật nhiều niềm vui và ý nghĩa.',
+            description: `${timing}. ${holiday.message || 'Chúc một ngày lễ thật nhiều niềm vui và ý nghĩa.'}`,
             imageDesktop: paths.desktop,
             imageMobile: paths.mobile,
             fallbackImagesDesktop: paths.desktopCandidates,
@@ -868,11 +917,16 @@
         if (!config.sections.banner) return;
         container.style.setProperty('--home-banner-ratio', String(config.banner.aspectRatio || '3 / 1'));
         const ads = config.banners.filter(item => item && item.enabled !== false && (item.kind || 'ad') === 'ad');
-        const holidaySlides = activeHolidayToday && config.banner.holidaySlideEnabled ? [createHolidayBanner(activeHolidayToday)] : [];
+        activeHolidayBanner = config.banner.holidaySlideEnabled
+            ? resolveHolidayWindow(config.banner.holidayBeforeDays, config.banner.holidayAfterDays)
+            : null;
+        const holidayBanner = activeHolidayBanner ? createHolidayBanner(activeHolidayBanner) : null;
+        const holidaySlides = holidayBanner ? [holidayBanner] : [];
         let banners = [];
         if (config.banner.mode === 'ads-only') banners = ads;
         else if (config.banner.mode === 'holiday-only') banners = holidaySlides.length ? holidaySlides : ads;
-        else banners = [...holidaySlides, ...ads];
+        else if (config.banner.holidayPosition === 'before-ads') banners = [...holidaySlides, ...ads];
+        else banners = [...ads, ...holidaySlides];
         initBannerSlider(container, banners, config.banner);
     }
 
@@ -1000,7 +1054,7 @@
 
         const menu = config?.mobileMenu || DEFAULT_HOME_CONFIG.mobileMenu;
         const intro = document.querySelector('[data-mobile-menu-intro]');
-        if (intro) intro.hidden = menu.showIntro === false;
+        if (intro) intro.classList.toggle('intro-text-hidden', menu.showIntro === false);
         const eyebrow = document.querySelector('[data-mobile-menu-eyebrow]');
         if (eyebrow) eyebrow.textContent = String(menu.eyebrow || 'Giới thiệu');
         const introTitle = document.querySelector('[data-mobile-menu-intro-title]');
