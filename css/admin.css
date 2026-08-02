@@ -569,3 +569,75 @@ body.admin-body { background: var(--admin-bg) !important; color: var(--admin-tex
 .sim-admin-fields label.wide { grid-column:span 2; }
 @media(max-width:980px){.sim-admin-fields{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:640px){.sim-admin-fields{grid-template-columns:1fr}.sim-admin-fields label.wide{grid-column:auto}}
+
+/* ========================================================================== */
+/* V26.8.2 BETA 17 - menu quản trị cùng hàng với nút đăng xuất                */
+/* ========================================================================== */
+.admin-topbar {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 18px;
+}
+.admin-brand { flex: 1 1 auto; min-width: 210px; }
+.admin-top-actions {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 9px;
+}
+.admin-top-actions .cms-tabs {
+    position: static;
+    top: auto;
+    z-index: auto;
+    margin: 0;
+    flex: 0 1 auto;
+    box-shadow: none;
+    background: #f6f7f9;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+}
+.admin-top-actions .cms-tab {
+    min-height: 40px;
+    padding-inline: 15px;
+    white-space: nowrap;
+}
+.admin-logout-icon {
+    width: 43px;
+    height: 43px;
+    padding: 0;
+    flex: 0 0 43px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ff4d55;
+    border-radius: 11px;
+    color: #ff3e47;
+    background: #fff;
+    cursor: pointer;
+    transition: background .16s ease, color .16s ease, transform .16s ease;
+}
+.admin-logout-icon:hover { color: #fff; background: #ff4851; transform: translateY(-1px); }
+.admin-logout-icon svg { width: 21px; height: 21px; }
+
+@media (max-width: 980px) {
+    .admin-topbar { align-items: stretch !important; flex-wrap: wrap; }
+    .admin-brand { min-width: min(100%, 280px); }
+    .admin-top-actions { width: 100%; }
+    .admin-top-actions .cms-tabs {
+        min-width: 0;
+        flex: 1 1 auto;
+        overflow-x: auto;
+        display: flex;
+        scrollbar-width: none;
+    }
+    .admin-top-actions .cms-tabs::-webkit-scrollbar { display: none; }
+}
+
+@media (max-width: 650px) {
+    .admin-topbar { gap: 10px; }
+    .admin-top-actions { gap: 6px; }
+    .admin-top-actions .cms-tabs { width: auto; grid-template-columns: none; }
+    .admin-top-actions .cms-tab { min-height: 38px; padding-inline: 12px; font-size: 12px; }
+    .admin-logout-icon { width: 40px; height: 40px; flex-basis: 40px; }
+}

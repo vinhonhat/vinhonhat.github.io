@@ -49,26 +49,26 @@
 
 
     <main class="admin-shell">
-        <div class="admin-topbar flex flex-row justify-between items-center mb-6 border-b pb-4">        
-        <div class="flex flex-col">
-            <h1 class="text-3xl font-bold text-gray-800 leading-none">CMS Vinh ở Nhật</h1>
-            <span class="text-xs text-gray-500 mt-1 font-medium"><span data-site-version-label>Phiên bản hiện tại</span> · CMS dữ liệu tách nhẹ</span>
-        </div>
-        
-        <button id="logoutBtn" class="hidden bg-white border border-red-500 text-red-500 px-4 py-2 rounded-lg shadow-sm hover:bg-red-50 transition-all flex items-center font-medium">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
-            Đăng xuất
-        </button>
-    </div>
+        <div class="admin-topbar flex flex-row justify-between items-center mb-6 border-b pb-4">
+            <div class="admin-brand flex flex-col">
+                <h1 class="text-3xl font-bold text-gray-800 leading-none">CMS Vinh ở Nhật</h1>
+                <span class="text-xs text-gray-500 mt-1 font-medium"><span data-site-version-label>Phiên bản hiện tại</span> · CMS dữ liệu tách nhẹ</span>
+            </div>
 
-        <nav class="cms-tabs" aria-label="Khu vực quản trị">
-            <button type="button" class="cms-tab active" data-cms-tab="home">Giao diện</button>
-            <button type="button" class="cms-tab" data-cms-tab="categories">Chuyên mục</button>
-            <button type="button" class="cms-tab" data-cms-tab="sim">SIM & đơn hàng</button>
-            <button type="button" class="cms-tab" data-cms-tab="posts">Bài viết</button>
-        </nav>
+            <div class="admin-top-actions">
+                <nav class="cms-tabs" aria-label="Khu vực quản trị">
+                    <button type="button" class="cms-tab active" data-cms-tab="home">Giao diện</button>
+                    <button type="button" class="cms-tab" data-cms-tab="categories">Chuyên mục</button>
+                    <button type="button" class="cms-tab" data-cms-tab="sim">SIM & đơn hàng</button>
+                    <button type="button" class="cms-tab" data-cms-tab="posts">Bài viết</button>
+                </nav>
+                <button id="logoutBtn" class="admin-logout-icon hidden" type="button" aria-label="Đăng xuất" title="Đăng xuất">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                </button>
+            </div>
+        </div>
 
         <section id="homeAdminPanel" class="cms-panel home-admin-panel">
             <div class="home-admin-hero">

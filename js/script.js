@@ -634,6 +634,16 @@
         return headerReadyPromise;
     }
 
+    async function ensureHolidayCatalog() {
+        if (Array.isArray(window.VINH_HOLIDAYS) && window.VINH_HOLIDAYS.length) return true;
+        try {
+            await loadScriptOnce(`/js/holidays.js?v=${VERSION}`, () => Array.isArray(window.VINH_HOLIDAYS) && window.VINH_HOLIDAYS.length > 0);
+        } catch (error) {
+            console.warn('Không thể tải danh sách ngày lễ:', error);
+        }
+        return Array.isArray(window.VINH_HOLIDAYS) && window.VINH_HOLIDAYS.length > 0;
+    }
+
     /* ========================= NGÀY LỄ ========================= */
     function holidayForDate(date) {
         const list = Array.isArray(window.VINH_HOLIDAYS) ? window.VINH_HOLIDAYS : [];
@@ -673,9 +683,14 @@
             if (holiday) matches.push({ holiday, offsetDays: offset, date });
         }
         matches.sort((a, b) => {
-            const distance = Math.abs(a.offsetDays) - Math.abs(b.offsetDays);
-            if (distance !== 0) return distance;
-            return b.offsetDays - a.offsetDays; // nếu bằng nhau, ưu tiên ngày sắp tới
+            // Nếu đồng thời còn trong khoảng sau một lễ cũ và trước một lễ mới,
+            // luôn ưu tiên lễ sắp tới. Ví dụ 02/08 sẽ chọn Quốc khánh 02/09,
+            // không giữ banner 27/07 chỉ vì ngày đó gần hơn.
+            const aUpcoming = a.offsetDays >= 0;
+            const bUpcoming = b.offsetDays >= 0;
+            if (aUpcoming !== bUpcoming) return aUpcoming ? -1 : 1;
+            if (aUpcoming) return a.offsetDays - b.offsetDays;
+            return Math.abs(a.offsetDays) - Math.abs(b.offsetDays);
         });
         return matches[0] || null;
     }
@@ -688,14 +703,73 @@
         return `${Math.abs(offset)} ngày sau ${name}`;
     }
 
+    function uniqueHolidayPaths(items) {
+        return [...new Set((items || []).filter(Boolean))];
+    }
+
+    function holidayBannerVariants(holiday, _mobile = false) {
+        const prefix = String(holiday?.imagePrefix || '').trim();
+        if (!prefix) return [];
+        // Hai biến thể chuẩn được luân phiên ngẫu nhiên và không lặp liên tiếp.
+        // Ví dụ: tet.png ↔ tet.jpg, 0101.png ↔ 0101.jpg.
+        return [
+            `/img/holidays/${prefix}.png`,
+            `/img/holidays/${prefix}.jpg`
+        ];
+    }
+
     function holidayImageCandidates(holiday, mobile = false) {
         const prefix = String(holiday?.imagePrefix || '').trim();
         if (!prefix) return [];
         const stems = mobile
-            ? [`${prefix}m`, `${prefix}-mobile`, `${prefix}_mobile`, prefix]
-            : [`${prefix}d`, `${prefix}-desktop`, `${prefix}_desktop`, prefix];
-        const extensions = ['webp', 'png', 'jpg', 'jpeg'];
-        return [...new Set(stems.flatMap(stem => extensions.map(ext => `/img/holidays/${stem}.${ext}`)))];
+            ? [prefix, `${prefix}m`, `${prefix}-mobile`, `${prefix}_mobile`]
+            : [prefix, `${prefix}d`, `${prefix}-desktop`, `${prefix}_desktop`];
+        const extensions = ['png', 'jpg', 'webp', 'jpeg'];
+        return uniqueHolidayPaths(stems.flatMap(stem => extensions.map(ext => `/img/holidays/${stem}.${ext}`)));
+    }
+
+    function holidayPopupCandidates(holiday, mobile = false) {
+        const prefix = String(holiday?.imagePrefix || '').trim();
+        if (!prefix) return [];
+        const suffix = mobile ? 'm' : 'd';
+        const extensions = ['png', 'jpg', 'webp', 'jpeg'];
+
+        // Ảnh popup nằm thẳng trong /img/holidays/:
+        // 0101m.* cho mobile, 0101d.* cho desktop.
+        // Tết Âm lịch dùng tetm/tetd; Tết Dương lịch dùng 0101m/0101d.
+        const popupStems = [
+            `${prefix}${suffix}`,
+            `${prefix}-${mobile ? 'mobile' : 'desktop'}`,
+            `${prefix}_${mobile ? 'mobile' : 'desktop'}`
+        ];
+        const popupImages = popupStems.flatMap(stem =>
+            extensions.map(ext => `/img/holidays/${stem}.${ext}`)
+        );
+
+        // Nếu chưa có ảnh popup riêng thì mới dùng ảnh banner của ngày lễ.
+        return uniqueHolidayPaths([
+            ...popupImages,
+            ...holidayBannerVariants(holiday, mobile),
+            ...holidayImageCandidates(holiday, mobile)
+        ]);
+    }
+
+    function chooseNonRepeatingHolidayImage(key, candidates) {
+        const pool = uniqueHolidayPaths(candidates);
+        if (!pool.length) return '';
+        const storageKey = `vinh-holiday-image-last-${key}`;
+        let last = '';
+        try { last = localStorage.getItem(storageKey) || ''; } catch (_) {}
+        const choices = pool.length > 1 ? pool.filter(item => item !== last) : pool;
+        const selected = choices[Math.floor(Math.random() * choices.length)] || pool[0];
+        try { localStorage.setItem(storageKey, selected); } catch (_) {}
+        return selected;
+    }
+
+    function orderHolidayCandidates(key, candidates) {
+        const pool = uniqueHolidayPaths(candidates);
+        const selected = chooseNonRepeatingHolidayImage(key, pool);
+        return selected ? [selected, ...pool.filter(item => item !== selected)] : pool;
     }
 
     function holidayPlaceholderData(holiday) {
@@ -707,12 +781,20 @@
     function holidayImagePaths(holiday) {
         const desktopCandidates = holidayImageCandidates(holiday, false);
         const mobileCandidates = holidayImageCandidates(holiday, true);
+        const desktopVariants = holidayBannerVariants(holiday, false);
+        const mobileVariants = holidayBannerVariants(holiday, true);
+        const desktopPopupCandidates = holidayPopupCandidates(holiday, false);
+        const mobilePopupCandidates = holidayPopupCandidates(holiday, true);
         const placeholder = holidayPlaceholderData(holiday);
         return {
-            desktop: desktopCandidates[0] || placeholder,
-            mobile: mobileCandidates[0] || placeholder,
+            desktop: desktopVariants[0] || desktopCandidates[0] || placeholder,
+            mobile: mobileVariants[0] || mobileCandidates[0] || placeholder,
+            desktopVariants,
+            mobileVariants,
             desktopCandidates,
             mobileCandidates,
+            desktopPopupCandidates,
+            mobilePopupCandidates,
             fallback: placeholder
         };
     }
@@ -751,8 +833,10 @@
         const timing = match.offsetDays === 0 ? '' : `${holidayTimingLabel(match)}. `;
         message.textContent = timing + (holiday.message || 'Chúc anh và gia đình một ngày thật nhiều niềm vui, bình an và ý nghĩa.');
         image.hidden = false;
-        const candidates = window.innerWidth < 700 ? paths.mobileCandidates : paths.desktopCandidates;
-        setImageWithFallback(image, candidates, paths.fallback);
+        const mobile = window.innerWidth < 700;
+        const candidates = mobile ? paths.mobilePopupCandidates : paths.desktopPopupCandidates;
+        const ordered = orderHolidayCandidates(`popup-${holiday.imagePrefix}-${mobile ? 'm' : 'd'}`, candidates);
+        setImageWithFallback(image, ordered, paths.fallback);
         setHiddenPanel(popup, true);
         clearTimeout(showHolidayPopup.timer);
         showHolidayPopup.timer = window.setTimeout(closeHolidayPopup, clampNumber(config.popupDurationMs, 3000, 30000, 7500));
@@ -771,15 +855,20 @@
         localStorage.setItem(storageKey, 'shown');
 
         // Pháo hoa luôn chỉ chạy đúng ngày lễ, không chạy trong cửa sổ trước/sau.
-        if (holidayConfig.fireworksEnabled && activeHolidayToday?.fireworks) {
-            try {
+        // Popup được mở trong finally để dù người xem bỏ qua hoặc hiệu ứng gặp lỗi, lời chúc cuối vẫn xuất hiện.
+        try {
+            if (holidayConfig.fireworksEnabled && activeHolidayToday?.fireworks) {
                 await loadScriptOnce(`/js/fireworks.js?v=${VERSION}`, () => Boolean(window.VinhHolidayFireworks?.run));
                 await window.VinhHolidayFireworks?.run(activeHolidayToday, new Date().getFullYear());
-            } catch (error) {
-                console.warn('Không thể chạy hiệu ứng pháo hoa:', error);
+            }
+        } catch (error) {
+            console.warn('Không thể chạy hiệu ứng pháo hoa:', error);
+        } finally {
+            if (holidayConfig.popupEnabled && activeHolidayPopup) {
+                await new Promise(resolve => window.setTimeout(resolve, 360));
+                showHolidayPopup(activeHolidayPopup, holidayConfig);
             }
         }
-        if (holidayConfig.popupEnabled && activeHolidayPopup) showHolidayPopup(activeHolidayPopup, holidayConfig);
     }
 
     /* ========================= BANNER ========================= */
@@ -796,6 +885,9 @@
             description: `${timing}. ${holiday.message || 'Chúc một ngày lễ thật nhiều niềm vui và ý nghĩa.'}`,
             imageDesktop: paths.desktop,
             imageMobile: paths.mobile,
+            imageVariantsDesktop: paths.desktopVariants,
+            imageVariantsMobile: paths.mobileVariants,
+            variantKey: holiday.imagePrefix,
             fallbackImagesDesktop: paths.desktopCandidates,
             fallbackImagesMobile: paths.mobileCandidates,
             fallbackImage: paths.fallback,
@@ -805,21 +897,46 @@
     }
 
     function bannerSlideTemplate(banner, index) {
+        const desktopVariants = uniqueHolidayPaths(banner.imageVariantsDesktop || []);
+        const mobileVariants = uniqueHolidayPaths(banner.imageVariantsMobile || []);
+        const variants = isMobileViewport() ? mobileVariants : desktopVariants;
+        const variantKey = String(banner.variantKey || banner.id || `banner-${index}`);
+        const selectedVariant = variants.length
+            ? chooseNonRepeatingHolidayImage(`banner-${variantKey}-${isMobileViewport() ? 'm' : 'd'}`, variants)
+            : '';
         const desktop = ensurePath(banner.imageDesktop || banner.imageUrl || '', '');
         const mobile = ensurePath(banner.imageMobile || banner.imageDesktop || banner.imageUrl || '', '');
-        const selected = isMobileViewport() ? mobile : desktop;
+        const selected = ensurePath(selectedVariant || (isMobileViewport() ? mobile : desktop), '');
         const fallbackList = isMobileViewport()
             ? (banner.fallbackImagesMobile || banner.fallbackImagesDesktop || [])
             : (banner.fallbackImagesDesktop || banner.fallbackImagesMobile || []);
-        const fallbacks = [...new Set([selected, ...fallbackList, banner.fallbackImage].filter(Boolean).map(item => ensurePath(item, item)))];
+        const fallbacks = [...new Set([selected, ...variants, ...fallbackList, banner.fallbackImage].filter(Boolean).map(item => ensurePath(item, item)))];
         const url = ensurePath(banner.actionUrl || '', '');
         const target = banner.newTab ? ' target="_blank" rel="noopener"' : '';
         const eager = index === 0;
-        const image = selected ? `<img src="${eager ? escapeHtml(selected) : TRANSPARENT_PIXEL}" ${eager ? '' : `data-src="${escapeHtml(selected)}"`} data-banner-fallbacks="${escapeHtml(JSON.stringify(fallbacks))}" alt="${escapeHtml(banner.title || 'Banner')}" loading="${eager ? 'eager' : 'lazy'}" fetchpriority="${eager ? 'high' : 'low'}" decoding="async" data-banner-image>` : '';
+        const variantData = variants.length ? ` data-banner-variants="${escapeHtml(JSON.stringify(variants))}" data-banner-variant-key="${escapeHtml(variantKey)}"` : '';
+        const image = selected ? `<img src="${eager ? escapeHtml(selected) : TRANSPARENT_PIXEL}" ${eager ? '' : `data-src="${escapeHtml(selected)}"`} data-banner-fallbacks="${escapeHtml(JSON.stringify(fallbacks))}"${variantData} alt="${escapeHtml(banner.title || 'Banner')}" loading="${eager ? 'eager' : 'lazy'}" fetchpriority="${eager ? 'high' : 'low'}" decoding="async" data-banner-image>` : '';
         const media = url
             ? `<a class="home-banner-media home-banner-link" href="${escapeHtml(url)}"${target} aria-label="${escapeHtml(banner.title || 'Mở banner')}">${image}</a>`
             : `<div class="home-banner-media">${image}</div>`;
         return `<article class="home-banner-slide ${banner.kind === 'holiday' ? 'holiday-banner-slide' : 'ad-banner-slide'}" data-banner-index="${index}">${media}</article>`;
+    }
+
+    function rotateHolidayBannerVariant(slide) {
+        const image = slide?.querySelector('img[data-banner-variants]');
+        if (!image) return;
+        let variants = [];
+        try { variants = JSON.parse(image.dataset.bannerVariants || '[]'); } catch (_) {}
+        variants = uniqueHolidayPaths(variants);
+        if (variants.length < 2) return;
+        const key = image.dataset.bannerVariantKey || slide.dataset.bannerIndex || 'holiday';
+        const next = chooseNonRepeatingHolidayImage(`banner-${key}-${isMobileViewport() ? 'm' : 'd'}`, variants);
+        if (!next) return;
+        const absolute = new URL(ensurePath(next, next), location.href).href;
+        if (image.src !== absolute) {
+            image.src = ensurePath(next, next);
+            image.dataset.activeHolidayVariant = next;
+        }
     }
 
     function hydrateBannerSlide(slide) {
@@ -841,6 +958,7 @@
             container.innerHTML = '<div class="home-banner-empty"><strong>Chưa có banner đang bật</strong><p>Thêm banner trong Admin hoặc tắt khu vực banner.</p></div>';
             return;
         }
+
         container.innerHTML = `
             <div class="home-banner-viewport">
                 <div class="home-banner-track">${banners.map(bannerSlideTemplate).join('')}</div>
@@ -849,50 +967,162 @@
             ${count > 1 && config.showDots ? `<div class="home-banner-dots">${banners.map((_, i) => `<button type="button" data-banner-dot="${i}" aria-label="Banner ${i + 1}"></button>`).join('')}</div>` : ''}`;
 
         const track = $('.home-banner-track', container);
-        let index = 0;
+        const originalSlides = $$('.home-banner-slide', track);
+        if (count > 1) {
+            const lastClone = originalSlides[count - 1].cloneNode(true);
+            const firstClone = originalSlides[0].cloneNode(true);
+            lastClone.classList.add('home-banner-clone');
+            firstClone.classList.add('home-banner-clone');
+            lastClone.dataset.bannerClone = 'last';
+            firstClone.dataset.bannerClone = 'first';
+            track.prepend(lastClone);
+            track.append(firstClone);
+        }
+
+        const slides = $$('.home-banner-slide', track);
+        let physicalIndex = count > 1 ? 1 : 0;
+        let logicalIndex = 0;
         let interval = 0;
+        let moving = false;
+        let transitionFallback = 0;
+        let startX = 0;
         const intervalMs = clampNumber(config.intervalMs, 2500, 20000, 5500);
 
-        const go = nextIndex => {
-            index = (nextIndex + count) % count;
-            const slides = $$('.home-banner-slide', container);
-            hydrateBannerSlide(slides[index]);
-            hydrateBannerSlide(slides[(index + 1) % count]);
-            track.style.transform = `translate3d(-${index * 100}%,0,0)`;
-            $$('[data-banner-dot]', container).forEach((dot, dotIndex) => dot.classList.toggle('active', dotIndex === index));
-            slides.forEach((slide, slideIndex) => slide.setAttribute('aria-hidden', String(slideIndex !== index)));
+        const logicalFromPhysical = value => count > 1
+            ? (value - 1 + count) % count
+            : 0;
+
+        const setTransform = (animate = true) => {
+            if (!animate) track.style.transition = 'none';
+            else track.style.removeProperty('transition');
+            track.style.transform = `translate3d(-${physicalIndex * 100}%,0,0)`;
+            if (!animate) {
+                // Buộc trình duyệt ghi nhận vị trí tức thời trước khi bật lại chuyển động.
+                void track.offsetWidth;
+                track.style.removeProperty('transition');
+            }
         };
-        const stop = () => { if (interval) window.clearInterval(interval); interval = 0; };
+
+        const copyActiveImage = (fromSlide, toSlide) => {
+            const from = fromSlide?.querySelector('img[data-banner-image]');
+            const to = toSlide?.querySelector('img[data-banner-image]');
+            if (!from || !to) return;
+            const src = from.currentSrc || from.src;
+            if (src) to.src = src;
+            if (from.dataset.activeHolidayVariant) {
+                to.dataset.activeHolidayVariant = from.dataset.activeHolidayVariant;
+            }
+        };
+
+        const syncState = ({ rotate = true } = {}) => {
+            logicalIndex = logicalFromPhysical(physicalIndex);
+            const activeSlide = slides[physicalIndex];
+            const nextSlide = slides[(physicalIndex + 1) % slides.length];
+            hydrateBannerSlide(activeSlide);
+            hydrateBannerSlide(nextSlide);
+            if (rotate) rotateHolidayBannerVariant(activeSlide);
+            $$('[data-banner-dot]', container).forEach((dot, dotIndex) => {
+                dot.classList.toggle('active', dotIndex === logicalIndex);
+            });
+            slides.forEach((slide, slideIndex) => {
+                slide.setAttribute('aria-hidden', String(slideIndex !== physicalIndex));
+            });
+        };
+
+        const completeMove = () => {
+            window.clearTimeout(transitionFallback);
+            transitionFallback = 0;
+            if (count > 1 && physicalIndex === count + 1) {
+                copyActiveImage(slides[count + 1], slides[1]);
+                physicalIndex = 1;
+                setTransform(false);
+                syncState({ rotate: false });
+            } else if (count > 1 && physicalIndex === 0) {
+                copyActiveImage(slides[0], slides[count]);
+                physicalIndex = count;
+                setTransform(false);
+                syncState({ rotate: false });
+            }
+            moving = false;
+        };
+
+        const scheduleMoveCompletion = () => {
+            window.clearTimeout(transitionFallback);
+            transitionFallback = window.setTimeout(completeMove, 700);
+        };
+
+        const step = delta => {
+            if (count <= 1 || moving) return;
+            moving = true;
+            physicalIndex += delta;
+            setTransform(true);
+            syncState();
+            scheduleMoveCompletion();
+        };
+
+        const goDirect = nextLogical => {
+            if (count <= 1 || moving) return;
+            const target = (Number(nextLogical) + count) % count;
+            logicalIndex = target;
+            physicalIndex = target + 1;
+            moving = true;
+            setTransform(true);
+            syncState();
+            scheduleMoveCompletion();
+        };
+
+        const stop = () => {
+            if (interval) window.clearInterval(interval);
+            interval = 0;
+        };
+
         const start = () => {
             stop();
             if (config.autoplay && count > 1 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                interval = window.setInterval(() => go(index + 1), intervalMs);
+                interval = window.setInterval(() => step(1), intervalMs);
             }
         };
+
+        track.addEventListener('transitionend', event => {
+            if (event.target !== track || event.propertyName !== 'transform') return;
+            completeMove();
+        });
+
         container.addEventListener('click', event => {
             const prev = event.target.closest('[data-banner-prev]');
             const next = event.target.closest('[data-banner-next]');
             const dot = event.target.closest('[data-banner-dot]');
-            if (prev) { go(index - 1); start(); }
-            else if (next) { go(index + 1); start(); }
-            else if (dot) { go(Number(dot.dataset.bannerDot)); start(); }
+            if (prev) { step(-1); start(); }
+            else if (next) { step(1); start(); }
+            else if (dot) { goDirect(Number(dot.dataset.bannerDot)); start(); }
         });
 
-        let startX = 0;
-        container.addEventListener('pointerdown', event => { startX = event.clientX; stop(); }, { passive: true });
+        container.addEventListener('pointerdown', event => {
+            startX = event.clientX;
+            stop();
+        }, { passive: true });
         container.addEventListener('pointerup', event => {
             const distance = event.clientX - startX;
-            if (Math.abs(distance) > 45) go(index + (distance < 0 ? 1 : -1));
+            if (Math.abs(distance) > 45) step(distance < 0 ? 1 : -1);
             start();
         }, { passive: true });
+
         if (config.pauseOnHover) {
             container.addEventListener('mouseenter', stop);
             container.addEventListener('mouseleave', start);
         }
+
         $$('[data-banner-image]', container).forEach(image => {
             let candidates = [];
             try { candidates = JSON.parse(image.dataset.bannerFallbacks || '[]'); } catch (_) {}
             let currentIndex = -1;
+            image.addEventListener('load', () => {
+                const key = image.dataset.bannerVariantKey;
+                const active = image.dataset.activeHolidayVariant;
+                if (key && active) {
+                    try { localStorage.setItem(`vinh-holiday-image-last-banner-${key}-${isMobileViewport() ? 'm' : 'd'}`, active); } catch (_) {}
+                }
+            });
             image.addEventListener('error', () => {
                 const slide = image.closest('.home-banner-slide');
                 currentIndex += 1;
@@ -904,9 +1134,16 @@
                 slide?.classList.add('banner-image-missing');
             });
         });
-        go(0);
+
+        setTransform(false);
+        syncState();
         start();
-        bannerController = { destroy: stop };
+        bannerController = {
+            destroy() {
+                stop();
+                window.clearTimeout(transitionFallback);
+            }
+        };
     }
 
     function renderHomeBanner(config) {
@@ -1112,7 +1349,7 @@
         if (!hero || !latest) return;
 
         try {
-            await ensureLunarCalendar();
+            await Promise.all([ensureLunarCalendar(), ensureHolidayCatalog()]);
             activeHolidayToday = exactTodayHoliday();
             const [posts, config] = await Promise.all([getPosts(), getHomeConfig()]);
             currentHomeConfig = config;

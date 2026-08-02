@@ -1,7 +1,7 @@
 (() => {
     'use strict';
 
-    if (window.VinhHolidayFireworks?.version === 5) return;
+    if (window.VinhHolidayFireworks?.version === 7) return;
 
     const sleep = ms => new Promise(resolve => window.setTimeout(resolve, ms));
     const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
@@ -127,6 +127,7 @@
         let abortResolve = null;
         const aborted = new Promise(resolve => { abortResolve = resolve; });
         const wait = ms => Promise.race([sleep(ms), aborted]);
+        const hardStopTimer = window.setTimeout(() => stopNow(), 30000);
         const rockets = [];
         const particles = [];
         const isMobile = () => width < 720;
@@ -185,8 +186,8 @@
                 this.ageMs = 0;
                 this.startX = x;
                 this.startY = y;
-                this.formationMs = text ? (isMobile() ? 235 : 275) : 0;
-                this.holdMs = text ? (isMobile() ? 2200 : 2500) : 0;
+                this.formationMs = text ? (isMobile() ? 300 : 340) : 0;
+                this.holdMs = text ? (isMobile() ? 9800 : 10400) : 0;
                 this.decay = decay ?? (text ? .0068 : .0105);
                 this.trailLength = trailLength;
                 this.history = [];
@@ -574,21 +575,42 @@
         }
 
         function createTextPointCloud(text, y) {
-            // Chỉ lấy phần viền chữ, hạt nhỏ và thưa hơn để nét giống pháo thật.
-            const gap = isMobile() ? 4 : 5;
-            const cap = isMobile() ? 680 : 1350;
-            return sampleCanvas((octx, w) => {
-                const maxWidth = isMobile() ? w * .90 : w * .80;
+            // Nét chữ vẫn mảnh như pháo thật nhưng lấy đủ điểm để không bị đứt nét.
+            // Sau khi quét, toàn bộ dòng được xoay/nghiêng nhẹ và làm gợn không đều,
+            // tạo cảm giác pháo ghép chữ thủ công thay vì chữ máy hoàn hảo.
+            const gap = isMobile() ? 3 : 4;
+            const cap = isMobile() ? 1080 : 2050;
+            const rawPoints = sampleCanvas((octx, w) => {
+                const maxWidth = isMobile() ? w * .91 : w * .82;
                 const preferred = isMobile() ? 49 : 90;
                 const size = fitFont(octx, text, maxWidth, preferred, isMobile() ? 24 : 32);
                 octx.font = `700 ${size}px "Arial Narrow", Arial, "Segoe UI", sans-serif`;
                 octx.textAlign = 'center';
                 octx.textBaseline = 'middle';
                 octx.strokeStyle = '#fff';
-                octx.lineWidth = isMobile() ? 1.15 : 1.65;
+                octx.lineWidth = isMobile() ? 2.05 : 2.35;
                 octx.lineJoin = 'round';
+                octx.lineCap = 'round';
                 octx.strokeText(text, w / 2, y);
             }, gap, cap);
+
+            const cx = width / 2;
+            const rotation = random(-.021, .021);
+            const shear = random(-.032, .032);
+            const wavePhase = random(0, Math.PI * 2);
+            const cos = Math.cos(rotation);
+            const sin = Math.sin(rotation);
+            return rawPoints.map(point => {
+                const dx = point.x - cx;
+                const dy = point.y - y;
+                const waveX = Math.sin(point.y * .055 + wavePhase) * random(.20, .85);
+                const waveY = Math.sin(point.x * .043 + wavePhase) * random(.18, .70);
+                return {
+                    ...point,
+                    x: cx + dx * cos - dy * sin + shear * dy + waveX + random(-.55, .55),
+                    y: y + dx * sin + dy * cos + waveY + random(-.50, .50)
+                };
+            });
         }
 
         function createTextCluster(points, originX, originY, color) {
@@ -598,12 +620,12 @@
                 addParticle({
                     x: originX + random(-11, 11),
                     y: originY + random(-11, 11),
-                    targetX: point.x + random(-.55, .55),
-                    targetY: point.y + random(-.55, .55),
+                    targetX: point.x + random(-.34, .34),
+                    targetY: point.y + random(-.34, .34),
                     vx: random(-1.05, 1.05),
                     vy: random(-1.05, 1.05),
                     color: hueColor,
-                    size: isMobile() ? random(.42, .66) : random(.46, .74),
+                    size: isMobile() ? random(.48, .74) : random(.52, .82),
                     text: true,
                     gravity: 0,
                     friction: .99,
@@ -632,22 +654,26 @@
 
         function launchTextFormation(text, y, color) {
             const points = createTextPointCloud(text, y);
-            const groupCount = isMobile() ? 6 : 9;
+            const groupCount = isMobile() ? 7 : 11;
             const groups = splitTextPoints(points, groupCount);
-            const bases = isMobile() ? [.08, .30, .50, .70, .92] : [.05, .20, .35, .50, .65, .80, .95];
+            const bases = isMobile()
+                ? [.06, .20, .34, .50, .66, .80, .94]
+                : [.04, .13, .22, .32, .41, .50, .59, .68, .78, .87, .96];
+
+            // Mọi tên lửa tạo chữ rời bệ cùng một nhịp. Mỗi tên lửa ghép một phần nét,
+            // nên nhìn giống cả quạt pháo cùng bắn lên rồi kết lại thành dòng chữ.
             groups.forEach((group, index) => {
                 const centroidX = group.reduce((sum, point) => sum + point.x, 0) / group.length;
                 const centroidY = group.reduce((sum, point) => sum + point.y, 0) / group.length;
-                const baseIndex = Math.min(bases.length - 1, Math.floor(index * bases.length / groups.length));
+                const baseIndex = Math.min(bases.length - 1, index);
                 rockets.push(new FormationRocket({
-                    startX: width * bases[baseIndex] + random(-7, 7),
+                    startX: width * bases[baseIndex] + random(-5, 5),
                     targetX: centroidX,
                     targetY: centroidY,
                     points: group,
                     color,
-                    // Các quạt rời bệ gần như đồng thời, không xếp hàng chờ nhau.
-                    delayMs: (index % 3) * (isMobile() ? 18 : 14),
-                    durationMs: isMobile() ? random(310, 370) : random(350, 420)
+                    delayMs: 0,
+                    durationMs: isMobile() ? random(330, 390) : random(355, 425)
                 }));
             });
             trimParticles();
@@ -796,21 +822,21 @@
             const startAngle = -spread;
             const endAngle = spread;
             const step = (endAngle - startAngle) / Math.max(1, count - 1);
+            // Toàn bộ tên lửa của một quạt rời bệ trong cùng một nhịp để không còn cảm giác slow-motion.
             for (let i = 0; i < count && !stopped; i += 1) {
                 const angle = startAngle + i * step;
                 const rad = angle * Math.PI / 180;
-                const power = (isMobile() ? 12.8 : 16.1) * powerScale;
+                const power = (isMobile() ? 13.4 : 16.8) * powerScale;
                 rockets.push(new Rocket({
-                    x: baseX,
-                    targetY: height * (.18 + Math.abs(angle) / 840),
+                    x: baseX + random(-2.5, 2.5),
+                    targetY: height * (.18 + Math.abs(angle) / 900),
                     color: i % 3 === 0 ? '#fff2ad' : color,
-                    vx: Math.sin(rad) * power * .70,
+                    vx: Math.sin(rad) * power * .72,
                     vy: -Math.cos(rad) * power,
                     fan: true,
                     burstStyle: 'palm',
-                    burstPower: .78
+                    burstPower: .80
                 }));
-                await wait(isMobile() ? 42 : 31);
             }
         }
 
@@ -824,7 +850,7 @@
                 width * base,
                 count + (index === Math.floor(bases.length / 2) ? 2 : 0),
                 index === 0 || index === bases.length - 1 ? 34 : 42,
-                index * (isMobile() ? 38 : 28),
+                0,
                 index === Math.floor(bases.length / 2) ? 1.05 : .88,
                 index % 2 ? '#ff708f' : '#ffd76a'
             ));
@@ -918,7 +944,7 @@
                 if (!isMobile()) {
                     launchNormal(width * (1 - sideX), random(height * .15, height * .29), 'random', i % 2 ? 'peony' : 'ring', .68);
                 }
-                await wait(isMobile() ? 320 : 390);
+                await wait(isMobile() ? 390 : 430);
             }
             if (sequence.special && !stopped) {
                 await wait(140);
@@ -933,9 +959,9 @@
             rockets.push(new Rocket({ x: width * .42, targetY: height * .22, color: '#ff4f88', payload: { type: 'heart' } }));
             await wait(280);
             rockets.push(new Rocket({ x: width * .58, targetY: height * .18, color: '#ff7ba8', payload: { type: 'heart' } }));
-            for (let i = 0; i < (isMobile() ? 7 : 10) && !stopped; i += 1) {
+            for (let i = 0; i < (isMobile() ? 5 : 8) && !stopped; i += 1) {
                 launchNormal(random(width * .08, width * .92), random(height * .10, height * .28), 'random');
-                await wait(240);
+                await wait(165);
             }
         }
 
@@ -958,14 +984,15 @@
                 // Chữ bắt đầu ghép ngay khi các quạt vẫn đang bắn và các tia pháo còn rơi.
                 const fanBackdrop = multiFanSweep();
                 const skyBackdrop = skyBarrage();
-                await wait(isMobile() ? 330 : 280);
+                await wait(isMobile() ? 70 : 55);
                 await textSequence(sequence);
                 await Promise.all([fanBackdrop, skyBackdrop]);
             }
-            if (!stopped) await wait(isMobile() ? 2150 : 2400);
+            if (!stopped) await wait(isMobile() ? 6200 : 6800);
             if (!stopped) await finaleSequence();
-            if (!stopped) await wait(2200);
+            if (!stopped) await wait(1450);
         } finally {
+            window.clearTimeout(hardStopTimer);
             stopped = true;
             cancelAnimationFrame(animationId);
             overlay.classList.remove('active');
@@ -981,5 +1008,5 @@
         }
     }
 
-    window.VinhHolidayFireworks = Object.freeze({ run, version: 5, canChiYear });
+    window.VinhHolidayFireworks = Object.freeze({ run, version: 7, canChiYear });
 })();
