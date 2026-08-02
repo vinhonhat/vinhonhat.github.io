@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>{{POST_TITLE}} | Vinh ở Nhật</title>
+    <meta name="description" content="{{META_DESCRIPTION}}">
+    <meta property="og:title" content="{{POST_TITLE}}">
+    <meta property="og:description" content="{{META_DESCRIPTION}}">
+    <meta property="og:image" content="{{META_IMAGE_URL}}">
+    <meta property="og:url" content="{{POST_LINK}}">
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="{{ARTICLE_PUBLISHED_ISO}}">
+    <meta property="article:modified_time" content="{{ARTICLE_UPDATED_ISO}}">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/img/qvn.png">
+    <link rel="icon" href="/img/logoQV.png" type="image/png">
+    <link rel="stylesheet" href="/css/style.css?v=26.8.1-beta5">
+    <link rel="stylesheet" href="/css/shell-r8.css?v=26.8.1-beta5">
+    <script id="vinh-post-meta" type="application/json">
+{{POST_META_JSON}}
+    </script>
+</head>
+<body class="site-body article-page" data-post-id="{{POST_ID}}" data-post-html-version="2">
+    <div id="header-placeholder" class="site-header-placeholder"></div>
+
+    <main class="article-main">
+        <header class="article-hero-card">
+            <span class="section-kicker">Bài viết hướng dẫn</span>
+            <h1 id="page-title">{{ARTICLE_TITLE}}</h1>
+            <p class="article-summary">{{META_DESCRIPTION}}</p>
+            <div class="article-meta-row">
+                <span class="article-meta-icon" aria-hidden="true">◷</span>
+                <time datetime="{{ARTICLE_DATE_ISO}}" data-date-kind="{{ARTICLE_DATE_KIND}}">{{ARTICLE_DATE_LABEL}}</time>
+            </div>
+            <figure class="article-cover">
+                <img src="{{META_IMAGE_URL}}" alt="{{ARTICLE_TITLE}}" fetchpriority="high" decoding="async" onerror="this.closest('figure').remove()">
+            </figure>
+        </header>
+
+        <div class="article-layout">
+            <article class="article-card">
+                <div id="article-content" class="article-content" data-vinh-post-content>
+                    {{ARTICLE_CONTENT}}
+                </div>
+            </article>
+
+            <aside class="article-sidebar" aria-label="Bài viết gợi ý">
+                <section class="sidebar-card article-suggested-card">
+                    <div class="sidebar-title-row">
+                        <h2>Bài viết gợi ý</h2>
+                        <a href="/pages/pages-baiviet/bai-viet-hd.html">Xem tất cả</a>
+                    </div>
+                    <div id="suggested-posts-container" class="compact-feed"></div>
+                </section>
+            </aside>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <button id="scrollToTopBtn" class="scroll-top" type="button" aria-label="Lên đầu trang">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6"></path></svg>
+    </button>
+
+    <script>
+        document.addEventListener('click', function (event) {
+            const button = event.target.closest('.tab-btn');
+            if (!button) return;
+            const container = button.closest('.tab-container');
+            if (!container) return;
+            const targetId = button.getAttribute('data-tab-id');
+            container.querySelectorAll('.tab-btn').forEach(function (item) {
+                item.classList.toggle('active', item === button);
+            });
+            container.querySelectorAll('.tab-panel').forEach(function (panel) {
+                panel.hidden = panel.getAttribute('data-panel-id') !== targetId;
+            });
+        });
+    </script>
+    <script src="/js/script.js?v=26.8.1-beta5" defer></script>
+    <script src="/pages/page-leve3.js?v=26.8.1-beta5" defer></script>
+</body>
+</html>

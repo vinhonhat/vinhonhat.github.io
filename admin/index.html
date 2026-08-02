@@ -1,0 +1,1856 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Quản Trị Website | Vinh ở Nhật</title>
+    
+    <!-- Tải CSS từ trang chính để đồng bộ giao diện -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/style.css?v=26.8.1-beta5">
+    <link rel="stylesheet" href="/css/shell-r8.css?v=26.8.1-beta5">
+    <link rel="stylesheet" href="/css/admin.css?v=26.8.1-beta5">
+    <!-- 🔹 Icon website (favicon) -->
+    <link rel="icon" href="/img/logoQV.png" type="image/x-icon"> 
+    <!-- Tải TinyMCE (BẮT BUỘC: Bạn phải tải về và đặt vào thư mục /admin/tinymce/) -->
+    <script src="/admin/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="/admin/system_data.js"></script>
+
+    <style>
+        body { background-color: #FBF7F0; font-family: 'Inter', sans-serif; }
+        .tox-tinymce { min-height: 500px !important; border-radius: 0.375rem; }
+        #previewModal { background-color: rgba(0, 0, 0, 0.5); }
+    </style>
+</head>
+<body class="admin-body bg-[#FBF7F0]">
+
+    <!-- PHẦN ĐĂNG NHẬP CHO TRANG ADMIN -->
+    <div id="loginOverlay" class="fixed inset-0 bg-[#FBF7F0] z-[9999] flex flex-col items-center justify-center">
+        <div class="bg-white p-8 rounded-lg shadow-lg text-center w-80">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Đăng Nhập Admin</h2>
+            <img src="/img/logoQV.png" alt="Logo" class="w-16 h-16 mx-auto mb-4 rounded-full shadow-sm" onerror="this.style.display='none'"> 
+            
+            <input type="text" id="adminUser" class="border border-gray-300 p-2 rounded w-full mb-3 text-center focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Tên đăng nhập...">
+            
+            <input type="password" id="adminPass" class="border border-gray-300 p-2 rounded w-full mb-3 text-center focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Nhập mật khẩu...">
+            
+            <div class="flex items-center justify-start mb-4 text-sm text-gray-600">
+                <input type="checkbox" id="rememberMe" class="mr-2 cursor-pointer w-4 h-4">
+                <label for="rememberMe" class="cursor-pointer select-none">Nhớ tôi trên máy này</label>
+            </div>
+            
+            <button id="loginBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full font-bold transition-colors">
+                Mở Khóa
+            </button>
+            <p id="loginError" class="text-red-500 mt-3 hidden text-sm font-semibold">Sai tài khoản hoặc mật khẩu!</p>
+        </div>
+    </div>
+
+
+    <main class="admin-shell">
+        <div class="admin-topbar flex flex-row justify-between items-center mb-6 border-b pb-4">        
+        <div class="flex flex-col">
+            <h1 class="text-3xl font-bold text-gray-800 leading-none">CMS Vinh ở Nhật</h1>
+            <span class="text-xs text-gray-500 mt-1 font-medium">Phiên bản 26.8.1-beta5 · CMS dữ liệu tách nhẹ</span>
+        </div>
+        
+        <button id="logoutBtn" class="hidden bg-white border border-red-500 text-red-500 px-4 py-2 rounded-lg shadow-sm hover:bg-red-50 transition-all flex items-center font-medium">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            Đăng xuất
+        </button>
+    </div>
+
+        <nav class="cms-tabs" aria-label="Khu vực quản trị">
+            <button type="button" class="cms-tab active" data-cms-tab="home">Giao diện</button>
+            <button type="button" class="cms-tab" data-cms-tab="categories">Chuyên mục</button>
+            <button type="button" class="cms-tab" data-cms-tab="posts">Bài viết</button>
+        </nav>
+
+        <section id="homeAdminPanel" class="cms-panel home-admin-panel">
+            <div class="home-admin-hero">
+                <div><span>Thiết kế trang chủ</span><h2>Banner, dòng tin và hiệu ứng ngày lễ</h2><p>Cấu hình giao diện và banner được tách riêng để dễ quản lý. Nội dung bài viết vẫn quản lý tại tab Bài viết.</p></div>
+                <div class="home-admin-hero-actions">
+                    <button id="previewHomeConfig" type="button">Xem trước trang chủ</button>
+                    <label class="home-config-import">Nhập file<input id="importHomeConfig" type="file" accept="application/json,.json"></label>
+                    <a id="downloadSiteConfig" download="site-config.json">Tải site-config.json</a><a id="downloadBannerConfig" download="banner-config.json">Tải banner-config.json</a><a id="downloadHomeConfig" download="home-config.json" title="File tương thích bản cũ">Tải file tương thích</a>
+                </div>
+            </div>
+
+            <div class="home-admin-grid">
+                <section class="home-settings-card">
+                    <div class="home-settings-heading"><span class="settings-number">1</span><div><h3>Bật/tắt khu vực</h3><p>Ẩn phần không dùng mà không phải sửa code.</p></div></div>
+                    <div class="toggle-grid">
+                        <label><input id="homeSectionBanner" type="checkbox"><span>Banner trượt</span></label>
+                        <label><input id="homeSectionFeatured" type="checkbox"><span>Bài nổi bật</span></label>
+                        <label><input id="homeSectionLatest" type="checkbox"><span>Dòng bài mới</span></label>
+                        <label><input id="homeSectionTopics" type="checkbox"><span>Menu chủ đề dưới banner</span></label>
+                        <label><input id="homeSectionSidebar" type="checkbox"><span>Cột bên phải</span></label>
+                    </div>
+                </section>
+
+                <section class="home-settings-card">
+                    <div class="home-settings-heading"><span class="settings-number">2</span><div><h3>Cách chạy banner</h3><p>Chọn chỉ quảng cáo hoặc ghép banner đúng ngày lễ.</p></div></div>
+                    <div class="settings-form-grid three">
+                        <label>Chế độ banner<select id="homeBannerMode"><option value="mixed">Ngày lễ + quảng cáo</option><option value="ads-only">Chỉ quảng cáo</option><option value="holiday-only">Ưu tiên ngày lễ</option></select></label>
+                        <label>Tỷ lệ banner<select id="homeBannerAspect"><option value="2 / 1">2:1 — ảnh cao</option><option value="3 / 1">3:1 — mặc định</option><option value="4 / 1">4:1 — banner rất dài</option></select></label>
+                        <label>Thời gian đổi ảnh (giây)<input id="homeBannerInterval" type="number" min="2.5" max="20" step="0.5"></label>
+                    </div>
+                    <div class="toggle-grid compact">
+                        <label><input id="homeBannerAutoplay" type="checkbox"><span>Tự động trượt</span></label>
+                        <label><input id="homeBannerArrows" type="checkbox"><span>Hiện nút trái/phải</span></label>
+                        <label><input id="homeBannerDots" type="checkbox"><span>Hiện dấu vị trí</span></label>
+                        <label><input id="homeHolidaySlide" type="checkbox"><span>Thêm banner lễ đúng ngày</span></label>
+                    </div>
+                </section>
+
+                <section class="home-settings-card">
+                    <div class="home-settings-heading"><span class="settings-number">3</span><div><h3>Dòng bài kiểu Facebook</h3><p>Tải thêm khi cuộn nhưng dừng ở giới hạn anh đặt.</p></div></div>
+                    <div class="settings-form-grid four">
+                        <label>Nguồn bài<select id="homeFeedSource"><option value="new">Chỉ bài bật “Bài mới”</option><option value="all">Tất cả bài đang hiển thị</option></select></label>
+                        <label>Hiện ban đầu<input id="homeFeedInitial" type="number" min="1" max="50"></label>
+                        <label>Mỗi lần thêm<input id="homeFeedBatch" type="number" min="1" max="30"></label>
+                        <label>Giới hạn tối đa<input id="homeFeedMax" type="number" min="1" max="100"></label>
+                    </div>
+                    <div class="toggle-grid compact">
+                        <label><input id="homeFeedAuto" type="checkbox"><span>Tự tải khi cuộn</span></label>
+                        <label><input id="homeFeedShare" type="checkbox"><span>Hiện nút chia sẻ</span></label>
+                    </div>
+                </section>
+
+                <section class="home-settings-card">
+                    <div class="home-settings-heading"><span class="settings-number">4</span><div><h3>Popup và pháo hoa ngày lễ</h3><p>Chỉ khớp đúng ngày dương hoặc ngày âm, không hiện trước/sau.</p></div></div>
+                    <div class="settings-form-grid">
+                        <label>Thời gian popup (giây)<input id="homeHolidayDuration" type="number" min="3" max="30" step="1"></label>
+                    </div>
+                    <div class="toggle-grid compact">
+                        <label><input id="homeHolidayPopup" type="checkbox"><span>Popup chúc mừng</span></label>
+                        <label><input id="homeHolidayFireworks" type="checkbox"><span>Pháo hoa ngày đặc biệt</span></label>
+                        <label><input id="homeHolidayOnce" type="checkbox"><span>Mỗi ngày chỉ hiện một lần</span></label>
+                    </div>
+                </section>
+
+                <section class="home-settings-card home-social-settings">
+                    <div class="home-settings-heading"><span class="settings-number">5</span><div><h3>Icon liên hệ ở footer</h3><p>Để trống mục nào thì icon đó tự ẩn.</p></div></div>
+                    <div class="settings-form-grid two">
+                        <label>Facebook<input id="homeSocialFacebook" type="url" placeholder="https://facebook.com/..."></label>
+                        <label>Messenger<input id="homeSocialMessenger" type="url" placeholder="https://m.me/..."></label>
+                        <label>Zalo<input id="homeSocialZalo" type="url" placeholder="https://zalo.me/..."></label>
+                        <label>TikTok<input id="homeSocialTiktok" type="url" placeholder="https://tiktok.com/@..."></label>
+                        <label>Email<input id="homeSocialEmail" type="email" placeholder="email@example.com"></label>
+                    </div>
+                </section>
+
+                <section class="home-settings-card">
+                    <div class="home-settings-heading"><span class="settings-number">6</span><div><h3>Footer, trang chủ mobile và menu ứng dụng</h3><p>Đổi chữ, icon và phần giới thiệu mà không sửa file HTML.</p></div></div>
+                    <div class="settings-form-grid two">
+                        <label class="settings-span-two">Nội dung giới thiệu footer<input id="homeFooterText" type="text" placeholder="Nội dung giới thiệu ngắn..."></label>
+                        <label>Tên mục gợi ý trên mobile<input id="homeMobileGuideTitle" type="text" placeholder="Gợi ý thêm"></label>
+                        <label>Dòng nhỏ trong menu<input id="homeMobileMenuEyebrow" type="text" placeholder="Giới thiệu"></label>
+                        <label>Tiêu đề giới thiệu menu<input id="homeMobileMenuTitle" type="text" placeholder="Vinh ở Nhật"></label>
+                        <label class="settings-span-two">Mô tả trong menu<input id="homeMobileMenuText" type="text" placeholder="Giới thiệu ngắn về website hoặc ứng dụng..."></label>
+                        <label>Tên nút Trang chủ<input id="homeMobileLabelHome" type="text" placeholder="Trang chủ"></label>
+                        <label>Icon Trang chủ<input id="homeMobileIconHome" type="text" maxlength="4" placeholder="Để trống dùng icon mặc định"></label>
+                        <label>Tên nút Mới nhất<input id="homeMobileLabelLatest" type="text" placeholder="Mới nhất"></label>
+                        <label>Icon Mới nhất<input id="homeMobileIconLatest" type="text" maxlength="4" placeholder="Ví dụ: ✦"></label>
+                        <label>Tên nút Tìm kiếm<input id="homeMobileLabelSearch" type="text" placeholder="Tìm kiếm"></label>
+                        <label>Icon Tìm kiếm<input id="homeMobileIconSearch" type="text" maxlength="4" placeholder="Ví dụ: ⌕"></label>
+                        <label>Tên nút Menu<input id="homeMobileLabelMenu" type="text" placeholder="Menu"></label>
+                        <label>Icon Menu<input id="homeMobileIconMenu" type="text" maxlength="4" placeholder="Ví dụ: ☰"></label>
+                    </div>
+                    <details class="admin-details">
+                        <summary>Đổi icon 8 ô trong bảng Menu</summary>
+                        <div class="settings-form-grid four">
+                            <label>Bài viết<input id="homeMenuIconPosts" type="text" maxlength="4"></label>
+                            <label>Học tập<input id="homeMenuIconStudy" type="text" maxlength="4"></label>
+                            <label>Tải xuống<input id="homeMenuIconDownloads" type="text" maxlength="4"></label>
+                            <label>Giải trí<input id="homeMenuIconFun" type="text" maxlength="4"></label>
+                            <label>Rakuten<input id="homeMenuIconRakuten" type="text" maxlength="4"></label>
+                            <label>Seven Bank<input id="homeMenuIconSeven" type="text" maxlength="4"></label>
+                            <label>SIM Nhật<input id="homeMenuIconSim" type="text" maxlength="4"></label>
+                            <label>Cuộc sống Nhật<input id="homeMenuIconLife" type="text" maxlength="4"></label>
+                        </div>
+                    </details>
+                    <div class="toggle-grid compact">
+                        <label><input id="homeFooterQuickLinks" type="checkbox"><span>Hiện các nút Bài viết/Học tập/Tải xuống</span></label>
+                        <label><input id="homeMobileNavEnabled" type="checkbox"><span>Hiện menu dưới mobile</span></label>
+                        <label><input id="homeMobileNavLabels" type="checkbox"><span>Hiện chữ dưới icon menu</span></label>
+                        <label><input id="homeMobileMenuIntro" type="checkbox"><span>Hiện phần giới thiệu trong bảng Menu</span></label>
+                        <label><input id="homeMobileHideTopics" type="checkbox"><span>Ẩn menu chủ đề nhỏ trên mobile</span></label>
+                        <label><input id="homeLunarMoon" type="checkbox"><span>Hiện hình mặt trăng</span></label>
+                        <label><input id="homeLunarSolar" type="checkbox"><span>Hiện ngày dương</span></label>
+                        <label><input id="homeLunarDate" type="checkbox"><span>Hiện ngày âm lịch</span></label>
+                    </div>
+                </section>
+
+                <section class="home-settings-card config-save-guide">
+                    <div class="home-settings-heading"><span class="settings-number">7</span><div><h3>Lưu cấu hình lên website</h3><p>Nút “Lưu bản đang chỉnh” chỉ lưu trong trình duyệt của máy đang dùng.</p></div></div>
+                    <ol class="config-save-steps">
+                        <li>Nhấn <strong>Tải giao diện</strong>, sau đó chép file vào <code>/data/site-config.json</code>.</li>
+                        <li>Ở tab Banner, nhấn <strong>Tải banner</strong>, sau đó chép file vào <code>/data/banner-config.json</code>.</li>
+                        <li>Commit/push hai file lên GitHub. Không cần sửa <code>index.html</code>.</li>
+                    </ol>
+                </section>
+            </div>
+
+            <section class="banner-manager-card">
+                <div class="banner-manager-head">
+                    <div><span>Quảng cáo</span><h3>Danh sách banner</h3><p>Ảnh mobile có thể để trống để dùng chung ảnh PC. Người xem nhấn trực tiếp vào ảnh để mở đường link anh nhập.</p></div>
+                    <button id="addHomeBanner" type="button">+ Thêm banner</button>
+                </div>
+                <div id="homeBannerList" class="home-banner-admin-list"></div>
+            </section>
+
+            <div class="home-admin-savebar">
+                <span id="homeConfigStatus">Đang tải cấu hình…</span>
+                <button id="saveHomeConfigLocal" type="button">Lưu bản đang chỉnh</button>
+                <a id="downloadSiteConfigBottom" download="site-config.json">Tải giao diện</a><a id="downloadBannerConfigBottom" download="banner-config.json">Tải banner</a><a id="downloadHomeConfigBottom" download="home-config.json">Tải file tương thích</a>
+            </div>
+        </section>
+
+        <section id="categoriesAdminPanel" class="cms-panel categories-admin-panel" hidden>
+            <div class="home-admin-hero category-admin-hero">
+                <div>
+                    <span>Beta 5 · Chuyên mục dùng chung</span>
+                    <h2>Quản lý toàn bộ menu nội dung</h2>
+                    <p>Rakuten, Seven Bank, SIM, Cuộc sống Nhật, Học tập, Tokutei, Giải trí và Tải xuống cùng dùng một bộ giao diện. Cấu hình nằm tại <code>/data/categories.json</code>.</p>
+                </div>
+                <div class="home-admin-hero-actions">
+                    <button id="previewCategoryConfig" type="button">Xem trước chuyên mục</button>
+                    <label class="home-config-import">Nhập file<input id="importCategoriesConfig" type="file" accept="application/json,.json"></label>
+                    <a id="downloadCategoriesConfig" download="categories.json">Tải categories.json</a>
+                </div>
+            </div>
+
+            <div class="category-admin-grid">
+                <section class="home-settings-card category-admin-settings">
+                    <div class="home-settings-heading"><span class="settings-number">1</span><div><h3>Thông tin chuyên mục</h3><p>Chọn từng menu để sửa tiêu đề, mô tả, màu nhấn và nguồn bài.</p></div></div>
+                    <div class="settings-form-grid three">
+                        <label>Chuyên mục<select id="categorySectionSelector"></select></label>
+                        <label>Kiểu giao diện<select id="categoryLayout"><option value="magazine">Tạp chí hiện đại</option></select></label>
+                        <label>Màu nhấn<input id="categoryIconInput" type="text" placeholder="#e97800"></label>
+                    </div>
+                    <div class="settings-form-grid two">
+                        <label>Dòng nhỏ phía trên<input id="categoryKickerInput" type="text" placeholder="Tạp chí hướng dẫn"></label>
+                        <label>Tên chuyên mục<input id="categoryTitleInput" type="text" placeholder="Bài viết"></label>
+                    </div>
+                    <label class="category-admin-full-label">Mô tả<textarea id="categoryDescriptionInput" rows="3"></textarea></label>
+                    <div class="settings-form-grid two">
+                        <label>Danh mục nguồn<input id="categorySourceCategoriesInput" type="text" placeholder="rakuten, bank"></label>
+                        <label>Loại trừ danh mục<input id="categoryExcludeCategoriesInput" type="text" placeholder="video, game"></label>
+                    </div>
+                    <label class="category-admin-full-label">Link bài chọn riêng <span style="font-weight:400;color:#69717d">(mỗi dòng một link, dùng cho Kho công cụ)</span><textarea id="categoryIncludeLinksInput" rows="3"></textarea></label>
+                    <div class="toggle-grid compact">
+                        <label><input id="categoryEnabledInput" type="checkbox"><span>Bật chuyên mục</span></label>
+                        <label><input id="categorySidebarInput" type="checkbox"><span>Hiện cột bên phải trên PC</span></label>
+                    </div>
+                </section>
+
+                <section class="home-settings-card category-admin-settings">
+                    <div class="home-settings-heading"><span class="settings-number">2</span><div><h3>Cách hiển thị bài</h3><p>Không cần sửa HTML khi muốn tăng hoặc giảm số bài.</p></div></div>
+                    <div class="settings-form-grid three">
+                        <label>Số bài nổi bật<input id="categoryFeaturedCountInput" type="number" min="1" max="5"></label>
+                        <label>Số bài mỗi lần<input id="categoryPageSizeInput" type="number" min="1" max="30"></label>
+                        <label>Tên cột gợi ý<input id="categorySidebarTitleInput" type="text" placeholder="Đáng chú ý"></label>
+                    </div>
+                    <div class="settings-form-grid two">
+                        <label>Tiêu đề phần nổi bật<input id="categoryFeaturedTitleInput" type="text"></label>
+                        <label>Tiêu đề danh sách bài<input id="categoryLatestTitleInput" type="text"></label>
+                    </div>
+                </section>
+            </div>
+
+            <section class="banner-manager-card category-manager-card">
+                <div class="banner-manager-head">
+                    <div><span>Bộ lọc</span><h3>Chủ đề nằm dưới đầu trang</h3><p>Người đọc nhấn để lọc ngay trên cùng một trang, không phải tải lại.</p></div>
+                    <button id="addCategoryTopic" type="button">+ Thêm chủ đề</button>
+                </div>
+                <div id="categoryTopicList" class="category-admin-list"></div>
+            </section>
+
+            <section class="banner-manager-card category-manager-card">
+                <div class="banner-manager-head">
+                    <div><span>Cột phụ</span><h3>Nút chủ đề dễ tìm</h3><p>Các nút này chỉ hiện ở cột bên phải trên PC và nằm dưới nội dung trên mobile.</p></div>
+                    <button id="addCategoryQuickLink" type="button">+ Thêm nút</button>
+                </div>
+                <div id="categoryQuickLinkList" class="category-admin-list"></div>
+            </section>
+
+            <section class="category-admin-help">
+                <strong>Cách đưa thay đổi lên website</strong>
+                <ol>
+                    <li>Nhấn <b>Tải categories.json</b>.</li>
+                    <li>Chép đè file vào <code>/data/categories.json</code> trong repository.</li>
+                    <li>Commit/push lên GitHub rồi nhấn đúp logo để xóa cache.</li>
+                </ol>
+            </section>
+
+            <div class="home-admin-savebar">
+                <span id="categoryConfigStatus">Đang tải cấu hình chuyên mục…</span>
+                <button id="saveCategoryConfigLocal" type="button">Lưu bản đang chỉnh</button>
+                <a id="downloadCategoriesConfigBottom" download="categories.json">Tải categories.json</a>
+            </div>
+        </section>
+
+        <div id="postsAdminPanel" class="cms-panel" hidden>
+        <section class="admin-dashboard" aria-label="Thống kê bài viết">
+            <div class="admin-stat"><span class="admin-stat-icon">Σ</span><span><strong id="totalPostsCount">0</strong><small>Tổng bài viết</small></span></div>
+            <div class="admin-stat"><span class="admin-stat-icon">✓</span><span><strong id="visiblePostsCount">0</strong><small>Đang hiển thị</small></span></div>
+            <div class="admin-stat"><span class="admin-stat-icon">★</span><span><strong id="featuredPostsCount">0</strong><small>Bài nổi bật</small></span></div>
+            <div class="admin-stat"><span class="admin-stat-icon">N</span><span><strong id="newPostsCount">0</strong><small>Bài mới trang chủ</small></span></div>
+        </section>
+
+        <div class="grid grid-cols-1 gap-8">
+            
+            <!-- FORM CHỈNH SỬA (Đã chuyển ra giữa) -->
+            <div class="admin-editor-card bg-white p-6 rounded-lg shadow-md">
+                
+                <!-- 1. CHỌN BÀI VIẾT -->
+                <div class="post-picker-panel">
+                    <div class="post-picker-title"><strong>Chọn hoặc tạo bài viết</strong><small>Tìm nhanh theo tên bài</small></div>
+                    <div class="post-picker-grid">
+                    <input id="postFilterInput" type="search" placeholder="Gõ tên bài cần sửa..." aria-label="Lọc danh sách bài viết">
+                    <select id="postFilterStatus" aria-label="Lọc trạng thái"><option value="all">Tất cả trạng thái</option><option value="visible">Đang hiển thị</option><option value="hidden">Đang ẩn</option><option value="featured">Nổi bật</option><option value="new">Bài mới</option><option value="search-only">Chỉ hiện khi tìm kiếm</option></select>
+                    <select id="postFilterCategory" aria-label="Lọc danh mục"><option value="all">Tất cả danh mục</option></select>
+                    <select id="postSelector" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500">
+                        <option value="">-- Vui lòng chọn một bài viết --</option>
+                        <option value="__NEW__" class="font-bold text-green-600">-- TẠO BÀI VIẾT MỚI --</option>
+                    </select>
+                    </div>
+                </div>
+
+                <!-- 2. FORM METADATA (ẨN KHI CHƯA CHỌN BÀI) -->
+                <form id="editForm" class="admin-edit-form space-y-4" style="display: none;">
+                    
+                    <!-- *** CẬP NHẬT: Thêm chọn đường dẫn *** -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="basePathSelector" class="block text-sm font-medium text-gray-700">Chọn thư mục lưu</label>
+                            <select id="basePathSelector" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
+                        <!-- 1. BÀI VIẾT -->
+                                <!-- 1. BÀI VIẾT                       RAKUTEN -->
+                                <option value="/pages/pages-baiviet/rakuten/">   Rakuten......[/pages/pages-baiviet/rakuten]</option>
+                                <!-- 1. BÀI VIẾT                       SEVEN -->
+                                <option value="/pages/pages-baiviet/seven/">     Seven.........[/pages/pages-baiviet/seven]</option>
+                                <!-- 1. BÀI VIẾT                       SIM -->
+                                <option value="/pages/pages-baiviet/sim/">       Sim.............[/pages/pages-baiviet/sim]</option>
+                                <!-- 1. BÀI VIẾT                       BANK -->
+                                <option value="/pages/pages-baiviet/bank/">      Bank...........[/pages/pages-baiviet/bank]</option>
+                                <!-- 1. BÀI VIẾT                       OTHER -->
+                                <option value="/pages/pages-baiviet/other/">     Other...........[/pages/pages-baiviet/other]</option>
+                        
+                        <!-- 2. TẢI XUỐNG -->        
+                                <!-- 2. TẢI XUỐNG                        -->
+                                <option value="/pages/pages-app/">              Ứng dụng....[/pages/pages-app/]</option>
+
+                        <!-- 3. HỌC TẬP -->        
+                                <!-- 3. HỌC TẬP                  TIẾNG NHẬT      -->
+                                <option value="/pages/pages-hoctap/hoctap/">     Nihongo.......[/pages/pages-hoctap/hoctap]</option>
+                                <!-- 3. HỌC TẬP                  TOKUTEI      -->
+                                <option value="/pages/pages-hoctap/tokutei/">    Tokutei.........[/pages/pages-hoctap/tokutei]</option>
+
+                        <!-- 4. GIẢI TRÍ  -->        
+                                <!-- 4. GIẢI TRÍ                         -->
+                                <option value="/pages/pages-giaitri/">Giải trí..........[/pages/pages-giaitri/]</option>
+
+                        
+
+                                <!-- Thêm các thư mục khác của bạn ở đây nếu cần -->
+                            </select>
+                        </div>
+                        <div>
+                            <!-- *** CẬP NHẬT: Đổi từ "Đường dẫn file" sang "Tên file" *** -->
+                            <label for="postFilename" class="block text-sm font-medium text-gray-700">Tên file (ví dụ: ten-bai-viet.html)</label>
+                            <input type="text" id="postFilename" placeholder="ten-bai-viet.html" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="postId" class="block text-sm font-medium text-gray-700">ID Bài Viết (Tự động, duy nhất)</label>
+                            <input type="text" id="postId" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required>
+                        </div>
+                        <div>
+                            <label for="postDate" class="block text-sm font-medium text-gray-700">Ngày đăng gốc</label>
+                            <input type="date" id="postDate" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required>
+                            <small class="text-gray-500">Giữ nguyên khi sửa bài cũ.</small>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="postUpdatedAt" class="block text-sm font-medium text-gray-700">Ngày cập nhật</label>
+                            <input type="date" id="postUpdatedAt" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-gray-50" readonly>
+                            <small class="text-gray-500">Khi lưu bài cũ, Admin tự đặt thành ngày hôm nay. Ngoài bài sẽ chỉ hiện ngày cập nhật.</small>
+                        </div>
+                        <div class="post-source-panel">
+                            <div>
+                                <strong>Nguồn nội dung</strong>
+                                <span id="postSourceStatus">Chưa chọn bài</span>
+                                <small id="postSourceHint">Admin ưu tiên đọc trực tiếp file HTML, không lấy nội dung dài từ posts.json.</small>
+                            </div>
+                            <div class="post-source-actions">
+                                <button type="button" id="reloadPostHtml">Đọc lại HTML</button>
+                                <label for="postHtmlFile" class="post-file-button">Chọn HTML từ máy</label>
+                                <input type="file" id="postHtmlFile" accept="text/html,.html" hidden>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 flex items-center">
+                        <div>
+                            <label for="postType" class="block text-sm font-medium text-gray-700">Loại (type)</label>
+                            <input type="text" id="postType" placeholder="guide, review, app" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        <div>
+                            <label for="postCategory" class="block text-sm font-medium text-gray-700">Danh mục (category)</label>
+                            <input type="text" id="postCategory" placeholder="sim, bank, life" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        <div>
+                            <label for="postTags" class="block text-sm font-medium text-gray-700">Tags (cách nhau bằng dấu phẩy)</label>
+                            <input type="text" id="postTags" placeholder="tag1, tag2, tag3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
+                        </div>
+                    </div>
+                    
+                    <div class="post-display-options" aria-label="Vị trí hiển thị bài viết">
+                        <label class="display-option display-option-featured" for="postFeatured">
+                            <input id="postFeatured" name="postFeatured" type="checkbox">
+                            <span><strong>Nổi bật</strong><small>Hiện ở khung lớn đầu trang chủ</small></span>
+                        </label>
+                        <label class="display-option display-option-new" for="postIsNew">
+                            <input id="postIsNew" name="postIsNew" type="checkbox">
+                            <span><strong>Bài mới</strong><small>Hiện trong mục “Bài viết mới nhất”</small></span>
+                        </label>
+                        <label class="display-option display-option-status" for="postStatus">
+                            <input id="postStatus" name="postStatus" type="checkbox">
+                            <span><strong>Xuất bản</strong><small>Bài tồn tại công khai và mở được bằng link</small></span>
+                        </label>
+                        <label class="display-option" for="postShowInLists">
+                            <input id="postShowInLists" name="postShowInLists" type="checkbox">
+                            <span><strong>Hiện trong danh sách</strong><small>Tắt để ẩn khỏi trang chủ và trang danh mục</small></span>
+                        </label>
+                        <label class="display-option" for="postSearchable">
+                            <input id="postSearchable" name="postSearchable" type="checkbox">
+                            <span><strong>Cho tìm kiếm</strong><small>Vẫn tìm thấy dù đã ẩn khỏi danh sách</small></span>
+                        </label>
+                        <label class="display-option" for="postShowOnDesktop">
+                            <input id="postShowOnDesktop" name="postShowOnDesktop" type="checkbox">
+                            <span><strong>Hiện trên PC</strong><small>Áp dụng cho các danh sách bài</small></span>
+                        </label>
+                        <label class="display-option" for="postShowOnMobile">
+                            <input id="postShowOnMobile" name="postShowOnMobile" type="checkbox">
+                            <span><strong>Hiện trên mobile</strong><small>Ví dụ chỉ hiện bài tải ứng dụng trên điện thoại</small></span>
+                        </label>
+                    </div>
+                    <p class="home-flag-note"><strong>Ẩn khỏi danh sách nhưng vẫn tìm được:</strong> giữ “Xuất bản” và “Cho tìm kiếm”, bỏ “Hiện trong danh sách”. Có thể tắt riêng PC hoặc mobile mà ô tìm kiếm vẫn trả kết quả.</p>
+
+                    <div>
+                        <label for="postTitle" class="block text-sm font-medium text-gray-700">Tiêu đề</label>
+                        <input type="text" id="postTitle" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required>
+                    </div>
+
+                    <div>
+                        <label for="postSummary" class="block text-sm font-medium text-gray-700">Tóm tắt (Summary) (Dùng cho SEO)</label>
+                        <textarea id="postSummary" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"></textarea>
+                    </div>
+
+                    <div>
+                        <label for="postImageUrl" class="block text-sm font-medium text-gray-700">Link ảnh bìa (ImageUrl) (Dùng cho SEO)</label>
+                        <input type="text" id="postImageUrl" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
+                    </div>
+
+                    
+
+                    <!-- 3. TRÌNH SOẠN THẢO TINYMCE -->
+                    <div class="mt-6">
+                        <div class="editor-heading-row">
+                            <div><label class="block text-sm font-medium text-gray-700">Nội dung bài viết</label><small>Khung soạn thảo mô phỏng giao diện bài mới ngoài website.</small></div>
+                            <span class="editor-style-badge">Phong cách tin tức mới</span>
+                        </div>
+                        <textarea id="contentEditor"></textarea>
+                    </div>
+
+                    <!-- 4. NÚT BẤM -->
+                    <div class="admin-actions flex flex-wrap justify-end gap-4 pt-4">
+                        <button type="button" id="previewButton" class="bg-blue-600 text-white font-semibold py-2 px-6 rounded-full transition-all duration-300 hover:bg-blue-700 shadow-md">
+                            1. Xem trước
+                        </button>
+                        <button type="button" id="saveButton" class="bg-yellow-600 text-white font-semibold py-2 px-6 rounded-full transition-all duration-300 hover:bg-yellow-700 shadow-md">
+                            2. Tạo metadata
+                        </button>
+                        <button type="button" id="generateHtmlButton" class="bg-green-600 text-white font-semibold py-2 px-6 rounded-full transition-all duration-300 hover:bg-green-700 shadow-md">
+                            3. Tải HTML mới
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- HƯỚNG DẪN & OUTPUT (Nằm bên dưới) -->
+            <div class="space-y-6">
+                
+                <div id="guideBox" class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-xl font-bold text-gray-800 border-l-4 border-yellow-600 pl-4 mb-4">Hướng dẫn & Giải đáp</h2>
+                    <dl class="space-y-4 text-gray-700">
+                        <div>
+                            <dt class="font-semibold">Q: Bây giờ nội dung được lưu ở đâu?</dt>
+                            <dd class="text-sm pl-2 border-l-2 border-gray-200 ml-2 mt-1">
+                                A: Nội dung chính nằm trong <strong>file HTML của bài</strong>. <code>posts.json</code> chỉ giữ tiêu đề, ảnh, trạng thái và ngày. Khi chọn bài, Admin tự đọc HTML mới nhất. Sau khi sửa, tải HTML mới và hai file JSON rồi chép đúng vị trí trong repository.
+                            </dd>
+                        </div>
+                        <div>
+                            <dt class="font-semibold">Q: Làm sao để thêm nhiều "Tags"?</dt>
+                            <dd class="text-sm pl-2 border-l-2 border-gray-200 ml-2 mt-1">
+                                A: Bạn chỉ cần nhập vào ô <strong>"Tags"</strong>, các tag khác nhau được ngăn cách bằng <strong>dấu phẩy</strong> (ví dụ: <code>sim, linemo, huong-dan</code>).
+                            </dd>
+                        </div>
+                        <div>
+                            <dt class="font-semibold">Q: "Đường dẫn file" hoạt động thế nào?</dt>
+                            <dd class="text-sm pl-2 border-l-2 border-gray-200 ml-2 mt-1">
+                                A: Giờ đây bạn chỉ cần <strong>chọn thư mục</strong> và <strong>gõ tên file</strong>. Hệ thống sẽ tự ghép lại. Khi nhấn <strong>"Tải File HTML"</strong>, file sẽ được tải về với đúng tên đó. Bạn cần <strong>tự tay di chuyển file</strong> vào đúng thư mục đã chọn trong dự án của mình khi cửa sổ "Save As" hiện ra.
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+
+                <!-- Nơi hiển thị link tải file HTML -->
+                <div id="htmlOutputContainer" class="bg-white p-6 rounded-lg shadow-md" style="display: none;">
+                    <h2 class="text-xl font-bold text-gray-800 border-l-4 border-green-600 pl-4 mb-4">File HTML đã sẵn sàng</h2>
+                    <p class="text-gray-700 mb-3">Nhấn vào link bên dưới để tải file về:</p>
+                    <a id="downloadHtmlLink" class="text-lg font-bold text-green-700 underline hover:text-green-800"></a>
+                    <p class="text-xs text-gray-500 mt-2">Hãy lưu file này vào đúng đường dẫn bạn đã khai báo (ví dụ: <code>pages/bai-viet/</code>).</p>
+                </div>
+                
+                <!-- Nơi hiển thị JSON -->
+                <div id="jsonOutputContainer" class="bg-white p-6 rounded-lg shadow-md" style="display: none;">
+                    <h2 class="text-xl font-bold text-gray-800 border-l-4 border-red-600 pl-4 mb-4">Dữ liệu JSON để lưu</h2>
+                    <p class="admin-note">Sau mỗi lần sửa bài, tải ba file dữ liệu chính bên dưới. <strong>posts.json</strong> chỉ giữ metadata; <strong>posts-index.json</strong> là file nhẹ cho trang hiển thị; <strong>posts-search.json</strong> chỉ tải khi tìm kiếm; <strong>legacy-content.json</strong> chỉ là bản dự phòng cho bài cũ chưa chuyển.</p>
+                    <div class="data-downloads">
+                        <a id="downloadPostsJson" download="posts.json">Tải posts.json metadata</a>
+                        <a id="downloadPostsIndexJson" download="posts-index.json">Tải posts-index.json nhẹ</a>
+                        <a id="downloadPostsSearchJson" download="posts-search.json">Tải posts-search.json tìm kiếm</a>
+                        <a id="downloadLegacyContentJson" download="legacy-content.json">Tải legacy-content.json dự phòng</a>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-2">JSON riêng của bài hiện tại để kiểm tra hoặc sao chép:</p>
+                    <textarea id="jsonOutput" rows="15" class="w-full p-2 border border-gray-300 rounded-md bg-gray-50 font-mono text-sm" readonly></textarea>
+                </div>
+            </div>
+
+        </div>
+        </div><!-- /postsAdminPanel -->
+    </main>
+    
+    <!-- MODAL XEM TRƯỚC (Không đổi) -->
+    <div id="previewModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
+    <div class="bg-white w-full max-w-6xl h-[90vh] rounded-lg shadow-xl flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b">
+                <h2 class="text-xl font-bold">Bản xem trước nội dung</h2>
+                <button id="closePreview" class="text-2xl text-gray-500 hover:text-gray-800">&times;</button>
+            </div>
+            <div class="flex-1 overflow-y-auto">
+                <iframe id="previewIframe" class="w-full h-full border-0"></iframe>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- JAVASCRIPT CỦA TRANG CMS -->
+    <script src="/admin/config.js" type="module"></script>
+
+    <script type="module">
+        import { SITE_CONFIG } from '/admin/config.js';
+        import { normalizePostsPayload, normalizePost, buildPostsPayload, buildPostsIndex, buildPostsSearchIndex, effectiveDate, parseArticleHtml, fetchAndParsePost, parseArticleFile, makeEmbeddedMeta, jsonForHtmlScript, formatViDate, isInternalLink, htmlToText } from '/admin/post-data-v2.js?v=26.8.1-beta5';
+
+        // Cập nhật tiêu đề trang
+        document.title = `Trang Quản Trị | ${SITE_CONFIG.titleSuffix || 'Vinh ở Nhật'}`;
+
+        // --- HÀM CHUYỂN TIÊU ĐỀ THÀNH KHÔNG DẤU & KÝ TỰ HỢP LỆ ---
+        // (MỚI: Di chuyển hàm này lên đầu để dễ sử dụng)
+        function toSlug(str) {
+            return str
+                .normalize('NFD') // tách dấu
+                .replace(/[\u0300-\u036f]/g, '') // xoá dấu
+                .toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, '') // bỏ ký tự đặc biệt
+                .trim()
+                .replace(/\s+/g, '-'); // khoảng trắng → gạch nối
+        }
+
+        // --- CÁC BIẾN TOÀN CỤC ---
+        let allPostsData = [];
+        let legacyContentById = {};
+        let currentLoadedContent = '';
+        let currentSourceFormat = '';
+        let currentPostWasExisting = false;
+        let currentOriginalLink = '';
+        let postTemplateHtml = ''; // Lưu trữ file template.html
+        const postSelector = document.getElementById('postSelector');
+        const postFilterInput = document.getElementById('postFilterInput');
+        const postFilterStatus = document.getElementById('postFilterStatus');
+        const postFilterCategory = document.getElementById('postFilterCategory');
+        const editForm = document.getElementById('editForm');
+        
+        // Form fields
+        const basePathSelector = document.getElementById('basePathSelector');
+        const postFilename = document.getElementById('postFilename');
+        const postId = document.getElementById('postId');
+        const postDate = document.getElementById('postDate');
+        const postUpdatedAt = document.getElementById('postUpdatedAt');
+        const postSourceStatus = document.getElementById('postSourceStatus');
+        const postSourceHint = document.getElementById('postSourceHint');
+        const reloadPostHtml = document.getElementById('reloadPostHtml');
+        const postHtmlFile = document.getElementById('postHtmlFile');
+        const postTitle = document.getElementById('postTitle');
+        const postSummary = document.getElementById('postSummary');
+        const postImageUrl = document.getElementById('postImageUrl');
+        const postType = document.getElementById('postType');
+        const postCategory = document.getElementById('postCategory');
+        const postTags = document.getElementById('postTags');
+        const postFeatured = document.getElementById('postFeatured');
+        const postIsNew = document.getElementById('postIsNew');
+        const postStatus = document.getElementById('postStatus');
+        const postShowInLists = document.getElementById('postShowInLists');
+        const postSearchable = document.getElementById('postSearchable');
+        const postShowOnDesktop = document.getElementById('postShowOnDesktop');
+        const postShowOnMobile = document.getElementById('postShowOnMobile');
+
+        // Buttons
+        const saveButton = document.getElementById('saveButton');
+        const previewButton = document.getElementById('previewButton');
+        const generateHtmlButton = document.getElementById('generateHtmlButton');
+        
+        // Output
+        const jsonOutputContainer = document.getElementById('jsonOutputContainer');
+        const jsonOutput = document.getElementById('jsonOutput');
+        const htmlOutputContainer = document.getElementById('htmlOutputContainer');
+        const downloadHtmlLink = document.getElementById('downloadHtmlLink');
+        const downloadPostsJson = document.getElementById('downloadPostsJson');
+        const downloadPostsIndexJson = document.getElementById('downloadPostsIndexJson');
+        const downloadPostsSearchJson = document.getElementById('downloadPostsSearchJson');
+        const downloadLegacyContentJson = document.getElementById('downloadLegacyContentJson');
+        const totalPostsCount = document.getElementById('totalPostsCount');
+        const visiblePostsCount = document.getElementById('visiblePostsCount');
+        const featuredPostsCount = document.getElementById('featuredPostsCount');
+        const newPostsCount = document.getElementById('newPostsCount');
+        let postsJsonObjectUrl = '';
+        let postsIndexObjectUrl = '';
+        let postsSearchObjectUrl = '';
+        let legacyContentObjectUrl = '';
+
+        // Preview Modal
+        const previewModal = document.getElementById('previewModal');
+        const closePreview = document.getElementById('closePreview');
+        const previewIframe = document.getElementById('previewIframe');
+
+        const guideBox = document.getElementById('guideBox');
+
+        // MỚI: Biến cờ để theo dõi việc sửa tên file
+        let isFilenameManuallyEdited = false;
+
+
+        // --- KIỂM TRA TINYMCE ---
+        if (typeof tinymce === 'undefined') {
+            alert('LỖI: Không thể tải TinyMCE. Hãy đảm bảo bạn đã tải về và đặt vào thư mục /admin/tinymce/ theo hướng dẫn.');
+            throw new Error('TinyMCE not found.'); 
+        }
+        // MỚI: Thêm danh sách ảnh gợi ý thủ công
+        // Bạn có thể thêm/sửa/xóa các ảnh trong danh sách này
+        const myPathList = [
+            { title: '--- Chọn thư mục ---', value: '' }, // Tùy chọn rỗng
+            { title: 'Thư mục Gốc ', value: '/img/posts/' },
+            //{ title: 'Ảnh bài viết (/img/posts/)', value: '/img/posts/' },
+
+            { title: 'Ảnh giải trí', value: '/img/posts/giaitri/' },
+
+
+            { title: 'Ảnh rakuten ', value: '/img/posts/rakuten/' },
+
+
+            { title: 'Ảnh học tập', value: '/img/posts/hoctap/' },
+            { title: 'Ảnh tiếng nhật', value: '/img/posts/hoctap/nihongo/' },
+            { title: 'Ảnh tokutei', value: '/img/posts/tokutei/' },
+
+            
+            { title: 'Ảnh sim', value: '/img/posts/sim/' },
+
+
+            { title: 'Ảnh bank ', value: '/img/posts/bank/' },
+            { title: 'Ảnh yucho ', value: '/img/posts/bank/yucho/' },
+            { title: 'Ảnh seven', value: '/img/posts/bank/seven/' },
+
+
+            { title: 'Ảnh other ', value: '/img/posts/other/' },
+            
+            
+
+            { title: 'Ảnh baito ', value: '/img/baito/' }
+        ];
+
+        // --- KHỞI TẠO TINYMCE ---
+        tinymce.init({
+            selector: '#contentEditor',
+            plugins: 'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons',
+            menubar: 'file edit view insert format tools table help',
+            toolbar: 'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
+            image_advtab: true,
+            
+            image_list: myPathList, // <-- Trỏ đến danh sách thư mục MỚI
+            image_list_label: 'Gợi ý thư mục', // <-- Đổi tên menu cho dễ hiểu
+            relative_urls: false, // <-- MỚI: THÊM DÒNG NÀY ĐỂ TẮT CHUYỂN ĐỔI
+            importcss_append: true,
+            content_style: `
+                body { max-width: 820px; margin: 0 auto; padding: 28px; color: #292d32; background: #fff; font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; font-size: 16px; line-height: 1.8; }
+                p { margin: 0 0 1.15em; }
+                h2 { margin: 1.8em 0 .7em; padding: 10px 14px; border-left: 5px solid #df7500; border-radius: 0 10px 10px 0; color: #1f242a; background: #fff8ed; font-size: 26px; line-height: 1.35; }
+                h3 { margin: 1.5em 0 .6em; color: #1f242a; font-size: 21px; }
+                a { color: #0969da; font-weight: 650; }
+                img { display: block; max-width: 100%; height: auto; margin: 18px auto; border-radius: 14px; box-shadow: 0 6px 22px rgba(22,27,33,.09); }
+                blockquote { margin: 1.4em 0; padding: 14px 17px; border-left: 4px solid #f0b86f; border-radius: 0 12px 12px 0; color: #5d4931; background: #fff9f0; }
+                table { width: 100%; border-collapse: collapse; } th, td { padding: 10px 12px; border: 1px solid #dfe3e8; } th { background: #f4f6f8; }
+                .tab-container { margin: 20px 0; padding: 12px; border: 1px solid #e2e6eb; border-radius: 14px; } .tab-btn { padding: 8px 12px; border: 1px solid #e2e6eb; border-radius: 9px; background: #fff; } .hidden { display: none; }
+            `,
+
+            // nếu cần thêm mới thì chèn vào từ dấu { đến hết }, nếu sau cùng thì k thêm , nhé
+            // --- DANH SÁCH MẪU TAB ĐẦY ĐỦ (2, 3, 4 TAB) ---
+            
+            templates: [
+                {
+                    title: '📱 Lưới 2 Tab (iPhone/Android)',
+                    description: 'Mẫu chuẩn 2 tab',
+                    content: `
+                        <div class="tab-container my-6 border rounded-lg overflow-hidden bg-white shadow-sm">
+                            <div class="tab-buttons flex border-b bg-gray-50">
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-yellow-500 text-yellow-600" data-tab-id="tab1">iPhone</button>
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700" data-tab-id="tab2">Android</button>
+                            </div>
+                            <div class="p-4 md:p-6">
+                                <div class="tab-panel" data-panel-id="tab1"><h3 class="text-2xl font-bold mb-3">Nội dung iPhone</h3><p>Viết nội dung...</p></div>
+                                <div class="tab-panel hidden" data-panel-id="tab2"><h3 class="text-2xl font-bold mb-3">Nội dung Android</h3><p>Viết nội dung...</p></div>
+                            </div>
+                        </div><p>&nbsp;</p>`
+                },
+                // --- CÁC MẪU CŨ KHÁC (GIỮ NGUYÊN HOẶC XÓA TÙY BẠN) ---
+                {
+                    title: '🖼️ Lưới 2 Cột (Ảnh lớn)',
+                    description: 'Chia đôi màn hình, tự động xuống dòng trên mobile',
+                    content: `
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+                            <div class="bg-white p-4 rounded-lg shadow-sm border text-center">
+                                <img src="https://placehold.co/400x250" alt="Ảnh 1" class="w-full h-auto rounded-md mb-3">
+                                <p class="font-bold text-gray-800">Tiêu đề 1</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow-sm border text-center">
+                                <img src="https://placehold.co/400x250" alt="Ảnh 2" class="w-full h-auto rounded-md mb-3">
+                                <p class="font-bold text-gray-800">Tiêu đề 2</p>
+                            </div>
+                        </div><p>&nbsp;</p>`
+                },
+                {
+                    title: '📑 Khung 3 Tab',
+                    description: 'Mẫu mở rộng 3 tab',
+                    content: `
+                        <div class="tab-container my-6 border rounded-lg overflow-hidden bg-white shadow-sm">
+                            <div class="tab-buttons flex border-b bg-gray-50 overflow-x-auto">
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-yellow-500 text-yellow-600 whitespace-nowrap" data-tab-id="t3-1">Tab 1</button>
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700 whitespace-nowrap" data-tab-id="t3-2">Tab 2</button>
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700 whitespace-nowrap" data-tab-id="t3-3">Tab 3</button>
+                            </div>
+                            <div class="p-4 md:p-6">
+                                <div class="tab-panel" data-panel-id="t3-1"><h3 class="text-2xl font-bold mb-3">Tiêu đề 1</h3><p>Nội dung 1...</p></div>
+                                <div class="tab-panel hidden" data-panel-id="t3-2"><h3 class="text-2xl font-bold mb-3">Tiêu đề 2</h3><p>Nội dung 2...</p></div>
+                                <div class="tab-panel hidden" data-panel-id="t3-3"><h3 class="text-2xl font-bold mb-3">Tiêu đề 3</h3><p>Nội dung 3...</p></div>
+                            </div>
+                        </div><p>&nbsp;</p>`
+                },
+                {
+                    title: '🗂️ Khung 4 Tab',
+                    description: 'Mẫu mở rộng 4 tab',
+                    content: `
+                        <div class="tab-container my-6 border rounded-lg overflow-hidden bg-white shadow-sm">
+                            <div class="tab-buttons flex border-b bg-gray-50 overflow-x-auto">
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-yellow-500 text-yellow-600 whitespace-nowrap" data-tab-id="t4-1">Tab 1</button>
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700 whitespace-nowrap" data-tab-id="t4-2">Tab 2</button>
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700 whitespace-nowrap" data-tab-id="t4-3">Tab 3</button>
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700 whitespace-nowrap" data-tab-id="t4-4">Tab 4</button>
+                            </div>
+                            <div class="p-4 md:p-6">
+                                <div class="tab-panel" data-panel-id="t4-1"><h3 class="text-2xl font-bold mb-3">Tiêu đề 1</h3><p>Nội dung 1...</p></div>
+                                <div class="tab-panel hidden" data-panel-id="t4-2"><h3 class="text-2xl font-bold mb-3">Tiêu đề 2</h3><p>Nội dung 2...</p></div>
+                                <div class="tab-panel hidden" data-panel-id="t4-3"><h3 class="text-2xl font-bold mb-3">Tiêu đề 3</h3><p>Nội dung 3...</p></div>
+                                <div class="tab-panel hidden" data-panel-id="t4-4"><h3 class="text-2xl font-bold mb-3">Tiêu đề 4</h3><p>Nội dung 4...</p></div>
+                            </div>
+                        </div><p>&nbsp;</p>`
+                },
+                {
+                    title: '📱 Lưới 3 Cột (Icon App)',
+                    description: 'Giống hình mẫu: Icon vuông + Tên ở dưới',
+                    content: `
+                        <div class="grid grid-cols-3 gap-4 my-6 text-center">
+                            <div class="flex flex-col items-center group cursor-pointer">
+                                <a href="#" class="block transform transition-transform group-hover:scale-105">
+                                    <img src="https://placehold.co/100x100/ec4899/ffffff?text=App+1" alt="App 1" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                </a>
+                                <span class="text-sm font-semibold text-gray-700">Tên App 1</span>
+                            </div>
+                            <div class="flex flex-col items-center group cursor-pointer">
+                                <a href="#" class="block transform transition-transform group-hover:scale-105">
+                                    <img src="https://placehold.co/100x100/3b82f6/ffffff?text=App+2" alt="App 2" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                </a>
+                                <span class="text-sm font-semibold text-gray-700">Tên App 2</span>
+                            </div>
+                            <div class="flex flex-col items-center group cursor-pointer">
+                                <a href="#" class="block transform transition-transform group-hover:scale-105">
+                                    <img src="https://placehold.co/100x100/22c55e/ffffff?text=App+3" alt="App 3" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                </a>
+                                <span class="text-sm font-semibold text-gray-700">Tên App 3</span>
+                            </div>
+                        </div><p>&nbsp;</p>`
+                },
+
+               {
+                    title: '📲 COMBO: 2 Tab + Lưới App (3 Cột)',
+                    description: 'Tab iPhone/Android có sẵn lưới icon App bên trong',
+                    content: `
+                        <div class="tab-container my-6 border rounded-lg overflow-hidden bg-white shadow-sm">
+                            <div class="tab-buttons flex border-b bg-gray-50">
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-yellow-500 text-yellow-600" data-tab-id="tab1">iPhone (iOS)</button>
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700" data-tab-id="tab2">Android</button>
+                            </div>
+                            
+                            <div class="p-4 md:p-6">
+                                <div class="tab-panel" data-panel-id="tab1">
+                                    <h3 class="text-xl font-bold mb-4 text-center text-gray-700">Tải về cho iPhone</h3>
+                                    
+                                    <div class="grid grid-cols-3 gap-4 text-center">
+                                        <div class="flex flex-col items-center group">
+                                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                                <img src="https://placehold.co/100x100/ec4899/ffffff?text=App+iOS" alt="App 1" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                            </a>
+                                            <span class="text-sm font-semibold text-gray-700">Tên App 1</span>
+                                        </div>
+                                        <div class="flex flex-col items-center group">
+                                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                                <img src="https://placehold.co/100x100/ec4899/ffffff?text=App+iOS" alt="App 2" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                            </a>
+                                            <span class="text-sm font-semibold text-gray-700">Tên App 2</span>
+                                        </div>
+                                        <div class="flex flex-col items-center group">
+                                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                                <img src="https://placehold.co/100x100/ec4899/ffffff?text=App+iOS" alt="App 3" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                            </a>
+                                            <span class="text-sm font-semibold text-gray-700">Tên App 3</span>
+                                        </div>
+                                    </div>
+                                    <p class="text-center mt-4 text-sm text-gray-500">(Bấm vào icon để tải)</p>
+                                </div>
+
+                                <div class="tab-panel hidden" data-panel-id="tab2">
+                                    <h3 class="text-xl font-bold mb-4 text-center text-gray-700">Tải về cho Android</h3>
+                                    
+                                    <div class="grid grid-cols-3 gap-4 text-center">
+                                        <div class="flex flex-col items-center group">
+                                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                                <img src="https://placehold.co/100x100/3b82f6/ffffff?text=App+Android" alt="App 1" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                            </a>
+                                            <span class="text-sm font-semibold text-gray-700">App Android 1</span>
+                                        </div>
+                                        <div class="flex flex-col items-center group">
+                                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                                <img src="https://placehold.co/100x100/3b82f6/ffffff?text=App+Android" alt="App 2" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                            </a>
+                                            <span class="text-sm font-semibold text-gray-700">App Android 2</span>
+                                        </div>
+                                        <div class="flex flex-col items-center group">
+                                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                                <img src="https://placehold.co/100x100/3b82f6/ffffff?text=App+Android" alt="App 3" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                            </a>
+                                            <span class="text-sm font-semibold text-gray-700">App Android 3</span>
+                                        </div>
+                                    </div>
+                                    <p class="text-center mt-4 text-sm text-gray-500">(Bấm vào icon để tải)</p>
+                                </div>
+                            </div>
+                        </div><p>&nbsp;</p>`
+                },
+                {
+                    title: '📲 COMBO LINH HOẠT: Tab + Lưới App (Tự động chia)',
+                    description: 'Tự động chia 2 cột trên Mobile, 4 cột trên PC. Thêm bao nhiêu app cũng được.',
+                    content: `
+                        <div class="tab-container my-6 border rounded-lg overflow-hidden bg-white shadow-sm">
+                            <div class="tab-buttons flex border-b bg-gray-50">
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-yellow-500 text-yellow-600" data-tab-id="tab1">iPhone (iOS)</button>
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700" data-tab-id="tab2">Android</button>
+                            </div>
+                            
+                            <div class="p-4 md:p-6">
+                                <div class="tab-panel" data-panel-id="tab1">
+                                    <h3 class="text-xl font-bold mb-4 text-center text-gray-700">Tải về cho iPhone</h3>
+                                    
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                                        
+                                        <div class="flex flex-col items-center group">
+                                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                                <img src="https://placehold.co/100x100/ec4899/ffffff?text=App+1" alt="App 1" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                            </a>
+                                            <span class="text-sm font-semibold text-gray-700">Tên App 1</span>
+                                        </div>
+
+                                        <div class="flex flex-col items-center group">
+                                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                                <img src="https://placehold.co/100x100/ec4899/ffffff?text=App+2" alt="App 2" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                            </a>
+                                            <span class="text-sm font-semibold text-gray-700">Tên App 2</span>
+                                        </div>
+
+                                        <div class="flex flex-col items-center group">
+                                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                                <img src="https://placehold.co/100x100/ec4899/ffffff?text=App+3" alt="App 3" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                            </a>
+                                            <span class="text-sm font-semibold text-gray-700">Tên App 3</span>
+                                        </div>
+
+                                        <div class="flex flex-col items-center group">
+                                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                                <img src="https://placehold.co/100x100/ec4899/ffffff?text=App+4" alt="App 4" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                            </a>
+                                            <span class="text-sm font-semibold text-gray-700">Tên App 4</span>
+                                        </div>
+
+                                    </div>
+                                    <p class="text-center mt-4 text-sm text-gray-500">(Bấm vào icon để tải)</p>
+                                </div>
+
+                                <div class="tab-panel hidden" data-panel-id="tab2">
+                                    <h3 class="text-xl font-bold mb-4 text-center text-gray-700">Tải về cho Android</h3>
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                                        <div class="flex flex-col items-center group">
+                                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                                <img src="https://placehold.co/100x100/3b82f6/ffffff?text=App+1" alt="App 1" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                            </a>
+                                            <span class="text-sm font-semibold text-gray-700">App 1</span>
+                                        </div>
+                                        <div class="flex flex-col items-center group">
+                                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                                <img src="https://placehold.co/100x100/3b82f6/ffffff?text=App+2" alt="App 2" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                            </a>
+                                            <span class="text-sm font-semibold text-gray-700">App 2</span>
+                                        </div>
+                                        <div class="flex flex-col items-center group">
+                                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                                <img src="https://placehold.co/100x100/3b82f6/ffffff?text=App+3" alt="App 3" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                            </a>
+                                            <span class="text-sm font-semibold text-gray-700">App 3</span>
+                                        </div>
+                                        <div class="flex flex-col items-center group">
+                                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                                <img src="https://placehold.co/100x100/3b82f6/ffffff?text=App+4" alt="App 4" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                            </a>
+                                            <span class="text-sm font-semibold text-gray-700">App 4</span>
+                                        </div>
+                                    </div>
+                                    <p class="text-center mt-4 text-sm text-gray-500">(Bấm vào icon để tải)</p>
+                                </div>
+                            </div>
+                        </div><p>&nbsp;</p>`
+                },
+                // --- CẬP NHẬT TEMPLATES (V26.1.31) ---
+           
+                {
+                    title: '📲 COMBO CHUẨN: Tab + Lưới (2 Mobile / 4 iPad)',
+                    description: 'Tự động chia cột: Điện thoại 2 cột, iPad/PC 4 cột.',
+                    content: `
+                        <div class="tab-container my-6 border rounded-lg overflow-hidden bg-white shadow-sm">
+                            <div class="tab-buttons flex border-b bg-gray-50">
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-yellow-500 text-yellow-600" data-tab-id="tab1">iPhone (iOS)</button>
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700" data-tab-id="tab2">Android</button>
+                            </div>
+                            
+                            <div class="p-4 md:p-6">
+                                <div class="tab-panel" data-panel-id="tab1">
+                                    <h3 class="text-xl font-bold mb-4 text-center text-gray-700">Tải về cho iPhone</h3>
+                                    
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                                        
+                                        <div class="flex flex-col items-center group">
+                                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                                <img src="https://placehold.co/100x100/ec4899/ffffff?text=App+1" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                            </a>
+                                            <span class="text-sm font-semibold text-gray-700">Tên App 1</span>
+                                        </div>
+
+                                        <div class="flex flex-col items-center group">
+                                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                                <img src="https://placehold.co/100x100/ec4899/ffffff?text=App+2" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                            </a>
+                                            <span class="text-sm font-semibold text-gray-700">Tên App 2</span>
+                                        </div>
+
+                                        <div class="flex flex-col items-center group">
+                                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                                <img src="https://placehold.co/100x100/ec4899/ffffff?text=App+3" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                            </a>
+                                            <span class="text-sm font-semibold text-gray-700">Tên App 3</span>
+                                        </div>
+
+                                        <div class="flex flex-col items-center group">
+                                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                                <img src="https://placehold.co/100x100/ec4899/ffffff?text=App+4" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                            </a>
+                                            <span class="text-sm font-semibold text-gray-700">Tên App 4</span>
+                                        </div>
+
+                                    </div>
+                                    <p class="text-center mt-4 text-sm text-gray-500">(Bấm vào icon để tải)</p>
+                                </div>
+
+                                <div class="tab-panel hidden" data-panel-id="tab2">
+                                    <h3 class="text-xl font-bold mb-4 text-center text-gray-700">Tải về cho Android</h3>
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                                        <div class="flex flex-col items-center group">
+                                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                                <img src="https://placehold.co/100x100/3b82f6/ffffff?text=App+1" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                                            </a>
+                                            <span class="text-sm font-semibold text-gray-700">App Android 1</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><p>&nbsp;</p>`
+                },
+
+                
+
+                               
+            
+
+            
+                // =================================================================
+                // NHÓM 1: CÁC KHUNG TAB CƠ BẢN (TRỐNG)
+                // =================================================================
+                {
+                    title: '1. 📱 Khung 2 Tab (Trống)',
+                    description: 'Khung chuyển tab iPhone/Android cơ bản',
+                    content: `
+                        <div class="tab-container my-6 border rounded-lg overflow-hidden bg-white shadow-sm">
+                            <div class="tab-buttons flex border-b bg-gray-50">
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-yellow-500 text-yellow-600" data-tab-id="t2-1">iPhone</button>
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700" data-tab-id="t2-2">Android</button>
+                            </div>
+                            <div class="p-4 md:p-6">
+                                <div class="tab-panel" data-panel-id="t2-1"><p>Nội dung iPhone...</p></div>
+                                <div class="tab-panel hidden" data-panel-id="t2-2"><p>Nội dung Android...</p></div>
+                            </div>
+                        </div><p>&nbsp;</p>`
+                },
+                {
+                    title: '2. 📑 Khung 3 Tab (Trống)',
+                    description: 'Khung 3 tab cơ bản',
+                    content: `
+                        <div class="tab-container my-6 border rounded-lg overflow-hidden bg-white shadow-sm">
+                            <div class="tab-buttons flex border-b bg-gray-50 overflow-x-auto">
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-yellow-500 text-yellow-600 whitespace-nowrap" data-tab-id="t3-1">Tab 1</button>
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700 whitespace-nowrap" data-tab-id="t3-2">Tab 2</button>
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700 whitespace-nowrap" data-tab-id="t3-3">Tab 3</button>
+                            </div>
+                            <div class="p-4 md:p-6">
+                                <div class="tab-panel" data-panel-id="t3-1"><p>Nội dung 1...</p></div>
+                                <div class="tab-panel hidden" data-panel-id="t3-2"><p>Nội dung 2...</p></div>
+                                <div class="tab-panel hidden" data-panel-id="t3-3"><p>Nội dung 3...</p></div>
+                            </div>
+                        </div><p>&nbsp;</p>`
+                },
+                {
+                    title: '3. 🗂️ Khung 4 Tab (Trống)',
+                    description: 'Khung 4 tab cơ bản',
+                    content: `
+                        <div class="tab-container my-6 border rounded-lg overflow-hidden bg-white shadow-sm">
+                            <div class="tab-buttons flex border-b bg-gray-50 overflow-x-auto">
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-yellow-500 text-yellow-600 whitespace-nowrap" data-tab-id="t4-1">Tab 1</button>
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700 whitespace-nowrap" data-tab-id="t4-2">Tab 2</button>
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700 whitespace-nowrap" data-tab-id="t4-3">Tab 3</button>
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700 whitespace-nowrap" data-tab-id="t4-4">Tab 4</button>
+                            </div>
+                            <div class="p-4 md:p-6">
+                                <div class="tab-panel" data-panel-id="t4-1"><p>Nội dung 1...</p></div>
+                                <div class="tab-panel hidden" data-panel-id="t4-2"><p>Nội dung 2...</p></div>
+                                <div class="tab-panel hidden" data-panel-id="t4-3"><p>Nội dung 3...</p></div>
+                                <div class="tab-panel hidden" data-panel-id="t4-4"><p>Nội dung 4...</p></div>
+                            </div>
+                        </div><p>&nbsp;</p>`
+                },
+
+                // =================================================================
+                // NHÓM 2: COMBO TAB + LƯỚI APP (CÓ SẴN 4 Ô)
+                // =================================================================
+                {
+                    title: '4. 📲 COMBO: 2 Tab + 4 App',
+                    description: '2 Tab (iOS/Android) có sẵn lưới 4 ô app bên trong.',
+                    content: `
+                        <div class="tab-container my-6 border rounded-lg overflow-hidden bg-white shadow-sm">
+                            <div class="tab-buttons flex border-b bg-gray-50">
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-yellow-500 text-yellow-600" data-tab-id="cb2-1">iPhone (iOS)</button>
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700" data-tab-id="cb2-2">Android</button>
+                            </div>
+                            <div class="p-4 md:p-6">
+                                <div class="tab-panel" data-panel-id="cb2-1">
+                                    <h3 class="text-xl font-bold mb-4 text-center text-gray-700">Tải về cho iPhone</h3>
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                                        <div class="flex flex-col items-center group"><a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105"><img src="https://placehold.co/100x100/ec4899/ffffff?text=App+1" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover"></a><span class="text-sm font-semibold text-gray-700">App 1</span></div>
+                                        <div class="flex flex-col items-center group"><a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105"><img src="https://placehold.co/100x100/ec4899/ffffff?text=App+2" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover"></a><span class="text-sm font-semibold text-gray-700">App 2</span></div>
+                                        <div class="flex flex-col items-center group"><a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105"><img src="https://placehold.co/100x100/ec4899/ffffff?text=App+3" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover"></a><span class="text-sm font-semibold text-gray-700">App 3</span></div>
+                                        <div class="flex flex-col items-center group"><a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105"><img src="https://placehold.co/100x100/ec4899/ffffff?text=App+4" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover"></a><span class="text-sm font-semibold text-gray-700">App 4</span></div>
+                                    </div>
+                                    <p class="text-center mt-4 text-sm text-gray-500">(Bấm vào icon để tải)</p>
+                                </div>
+                                <div class="tab-panel hidden" data-panel-id="cb2-2">
+                                    <h3 class="text-xl font-bold mb-4 text-center text-gray-700">Tải về cho Android</h3>
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                                        <div class="flex flex-col items-center group"><a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105"><img src="https://placehold.co/100x100/3b82f6/ffffff?text=App+1" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover"></a><span class="text-sm font-semibold text-gray-700">App 1</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><p>&nbsp;</p>`
+                },
+                
+                {
+                    title: '5. 📲 COMBO: 3 Tab + 4 App',
+                    description: '3 Tab có sẵn lưới 4 ô app dàn đều.',
+                    content: `
+                        <div class="tab-container my-6 border rounded-lg overflow-hidden bg-white shadow-sm">
+                            <div class="tab-buttons flex border-b bg-gray-50 overflow-x-auto">
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-yellow-500 text-yellow-600 whitespace-nowrap" data-tab-id="cb3-1">Mục 1</button>
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700 whitespace-nowrap" data-tab-id="cb3-2">Mục 2</button>
+                                <button class="tab-btn py-3 px-5 font-semibold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700 whitespace-nowrap" data-tab-id="cb3-3">Mục 3</button>
+                            </div>
+                            <div class="p-4 md:p-6">
+                                <div class="tab-panel" data-panel-id="cb3-1">
+                                    <h3 class="text-xl font-bold mb-4 text-center text-gray-700">Danh sách Mục 1</h3>
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                                        <div class="flex flex-col items-center group"><a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105"><img src="https://placehold.co/100x100/10b981/ffffff?text=App+1" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover"></a><span class="text-sm font-semibold text-gray-700">App 1</span></div>
+                                        <div class="flex flex-col items-center group"><a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105"><img src="https://placehold.co/100x100/10b981/ffffff?text=App+2" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover"></a><span class="text-sm font-semibold text-gray-700">App 2</span></div>
+                                        <div class="flex flex-col items-center group"><a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105"><img src="https://placehold.co/100x100/10b981/ffffff?text=App+3" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover"></a><span class="text-sm font-semibold text-gray-700">App 3</span></div>
+                                        <div class="flex flex-col items-center group"><a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105"><img src="https://placehold.co/100x100/10b981/ffffff?text=App+4" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover"></a><span class="text-sm font-semibold text-gray-700">App 4</span></div>
+                                    </div>
+                                    <p class="text-center mt-4 text-sm text-gray-500">(Bấm vào icon để tải)</p>
+                                </div>
+                                <div class="tab-panel hidden" data-panel-id="cb3-2"><p>Nội dung Mục 2...</p></div>
+                                <div class="tab-panel hidden" data-panel-id="cb3-3"><p>Nội dung Mục 3...</p></div>
+                            </div>
+                        </div><p>&nbsp;</p>`
+                },
+                
+
+                // =================================================================
+                // NHÓM 3: CÔNG CỤ CHÈN THÊM (INSERT)
+                // =================================================================
+                {
+                    title: '➕ Thêm 1 Icon Lẻ',
+                    description: 'Tự động xếp vào chỗ trống, hết chỗ tự xuống dòng',
+                    content: `
+                        <div class="flex flex-col items-center group">
+                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                <img src="https://placehold.co/100x100/f59e0b/ffffff?text=NEW" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                            </a>
+                            <span class="text-sm font-semibold text-gray-700">App Mới</span>
+                        </div>
+                    `
+                },
+                {
+                    title: '➕ Thêm 1 Icon Lẻ',
+                    description: 'Chèn thêm 1 App vào lưới đang có',
+                    content: `
+                        <div class="flex flex-col items-center group">
+                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                <img src="https://placehold.co/100x100/10b981/ffffff?text=NEW" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                            </a>
+                            <span class="text-sm font-semibold text-gray-700">Tên App Mới</span>
+                        </div>
+                    `
+                },
+                {
+                    title: '➕ Thêm 4 Icon (Full Hàng)',
+                    description: 'Chèn nhanh 4 App cùng lúc',
+                    content: `
+                        <div class="flex flex-col items-center group"><a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105"><img src="https://placehold.co/100x100/10b981/ffffff?text=Moi+1" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover"></a><span class="text-sm font-semibold text-gray-700">Mới 1</span></div>
+                        <div class="flex flex-col items-center group"><a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105"><img src="https://placehold.co/100x100/10b981/ffffff?text=Moi+2" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover"></a><span class="text-sm font-semibold text-gray-700">Mới 2</span></div>
+                        <div class="flex flex-col items-center group"><a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105"><img src="https://placehold.co/100x100/10b981/ffffff?text=Moi+3" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover"></a><span class="text-sm font-semibold text-gray-700">Mới 3</span></div>
+                        <div class="flex flex-col items-center group"><a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105"><img src="https://placehold.co/100x100/10b981/ffffff?text=Moi+4" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover"></a><span class="text-sm font-semibold text-gray-700">Mới 4</span></div>
+                    `
+                },
+
+                
+
+                {
+                    title: '➕ Thêm 4 Icon (Cả dòng ngang) dọc',
+                    description: 'Chèn nhanh 4 App cùng lúc',
+                    content: `
+                        <div class="flex flex-col items-center group">
+                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                <img src="https://placehold.co/100x100/10b981/ffffff?text=APP+1" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                            </a>
+                            <span class="text-sm font-semibold text-gray-700">App 1</span>
+                        </div>
+                        <div class="flex flex-col items-center group">
+                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                <img src="https://placehold.co/100x100/10b981/ffffff?text=APP+2" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                            </a>
+                            <span class="text-sm font-semibold text-gray-700">App 2</span>
+                        </div>
+                        <div class="flex flex-col items-center group">
+                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                <img src="https://placehold.co/100x100/10b981/ffffff?text=APP+3" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                            </a>
+                            <span class="text-sm font-semibold text-gray-700">App 3</span>
+                        </div>
+                        <div class="flex flex-col items-center group">
+                            <a href="#" target="_blank" class="block transform transition-transform group-hover:scale-105">
+                                <img src="https://placehold.co/100x100/10b981/ffffff?text=APP+4" class="w-20 h-20 rounded-2xl shadow-md mb-2 object-cover">
+                            </a>
+                            <span class="text-sm font-semibold text-gray-700">App 4</span>
+                        </div>
+                    `
+                },
+
+                // =================================================================
+                // NHÓM 4: ⚠️ Khung Lưu ý (Vàng)
+                // =================================================================
+                
+                {
+                    title: '⚠️ Khung Lưu ý (Vàng)',
+                    description: 'Tạo khung cảnh báo màu vàng',
+                    content: `
+                        <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 my-4">
+                            <p class="font-bold text-yellow-700">Lưu ý quan trọng:</p>
+                            <p>Nội dung lưu ý viết ở đây...</p>
+                        </div>`
+                }
+                
+            ],
+
+            
+            content_css: ['/css/style.css?v=26.8.1-beta5'], 
+            height: 600,
+            image_caption: true,
+            quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+            toolbar_mode: 'sliding',
+            contextmenu: 'link image table',
+            skin: 'oxide',
+            placeholder: 'Bắt đầu viết nội dung ở đây...', // <-- THÊM DÒNG NÀY
+            setup: (editor) => {
+                editor.on('init', () => {
+                    loadInitialData();
+                });
+            }
+        });
+
+        // --- TẢI DỮ LIỆU BAN ĐẦU (Data và Template) ---
+        async function loadInitialData() {
+            try {
+                const [postsResponse, templateResponse, legacyResponse] = await Promise.all([
+                    fetch('/data/posts.json?t=' + Date.now(), { cache: 'no-store' }),
+                    fetch('/admin/post-template.html?t=' + Date.now(), { cache: 'no-store' }),
+                    fetch('/data/legacy-content.json?t=' + Date.now(), { cache: 'no-store' }).catch(() => null)
+                ]);
+
+                if (!postsResponse.ok) throw new Error(`Không thể tải posts.json: ${postsResponse.statusText}`);
+                if (!templateResponse.ok) throw new Error(`Không thể tải post-template.html: ${templateResponse.statusText}`);
+
+                const postsPayload = await postsResponse.json();
+                allPostsData = normalizePostsPayload(postsPayload);
+                postTemplateHtml = await templateResponse.text();
+
+                if (legacyResponse && legacyResponse.ok) {
+                    const legacyPayload = await legacyResponse.json();
+                    legacyContentById = legacyPayload?.contentById || {};
+                }
+
+                allPostsData.sort((a, b) => new Date(effectiveDate(b)) - new Date(effectiveDate(a)));
+                populateSelector();
+                console.log(`CMS Beta 2 đã tải ${allPostsData.length} bài. Nội dung được ưu tiên đọc từ HTML.`);
+            } catch (error) {
+                console.error('Lỗi khi tải dữ liệu:', error);
+                alert('Không thể tải dữ liệu bài viết hoặc file template. Vui lòng kiểm tra console.');
+            }
+        }
+
+        function updateDashboardStats() {
+            if (totalPostsCount) totalPostsCount.textContent = allPostsData.length;
+            if (visiblePostsCount) visiblePostsCount.textContent = allPostsData.filter(post => post.status !== 0).length;
+            if (featuredPostsCount) featuredPostsCount.textContent = allPostsData.filter(post => post.featured && post.status !== 0).length;
+            if (newPostsCount) newPostsCount.textContent = allPostsData.filter(post => (post.isNew === true || post.new === true) && post.status !== 0).length;
+        }
+
+        function filterPostSelector() {
+            if (!postFilterInput) return;
+            const query = postFilterInput.value.trim().toLowerCase();
+            const status = postFilterStatus?.value || 'all';
+            const category = postFilterCategory?.value || 'all';
+            Array.from(postSelector.options).forEach((option, index) => {
+                if (index < 2) return;
+                const post = allPostsData.find(item => item.id === option.value);
+                if (!post) return;
+                const matchesText = !query || [post.title, post.summary, ...(post.tags || []), ...(post.category || [])].join(' ').toLowerCase().includes(query);
+                const matchesStatus = status === 'all' || (status === 'visible' && post.status !== 0) || (status === 'hidden' && post.status === 0) || (status === 'featured' && post.featured === true) || (status === 'new' && (post.isNew === true || post.new === true)) || (status === 'search-only' && post.status !== 0 && post.showInLists === false && post.searchable !== false);
+                const matchesCategory = category === 'all' || (Array.isArray(post.category) && post.category.includes(category));
+                option.hidden = !(matchesText && matchesStatus && matchesCategory);
+            });
+        }
+
+        // --- ĐƯA DỮ LIỆU VÀO DROPDOWN ---
+        function populateSelector() {
+            while (postSelector.options.length > 2) postSelector.remove(2);
+            allPostsData.forEach(post => {
+                const option = document.createElement('option');
+                option.value = post.id;
+                option.textContent = `${post.title} (${effectiveDate(post)})`;
+                postSelector.appendChild(option);
+            });
+            if (postFilterCategory) {
+                const selected = postFilterCategory.value;
+                const categories = [...new Set(allPostsData.flatMap(post => Array.isArray(post.category) ? post.category : []))].sort((a,b) => a.localeCompare(b, 'vi'));
+                postFilterCategory.innerHTML = '<option value="all">Tất cả danh mục</option>' + categories.map(item => `<option value="${item}">${item}</option>`).join('');
+                if (categories.includes(selected)) postFilterCategory.value = selected;
+            }
+            updateDashboardStats();
+            filterPostSelector();
+        }
+
+        if (postFilterInput) {
+            postFilterInput.addEventListener('input', filterPostSelector);
+            postFilterStatus?.addEventListener('change', filterPostSelector);
+            postFilterCategory?.addEventListener('change', filterPostSelector);
+        }
+
+        // --- XỬ LÝ KHI CHỌN BÀI VIẾT ---
+        postSelector.addEventListener('change', async () => {
+            const selectedId = postSelector.value;
+            if (!selectedId) {
+                editForm.style.display = 'none';
+                guideBox.style.display = 'block';
+                return;
+            }
+
+            const postData = selectedId === '__NEW__' ? null : allPostsData.find(item => item.id === selectedId);
+            editForm.style.display = 'block';
+            guideBox.style.display = 'none';
+            jsonOutputContainer.style.display = 'none';
+            htmlOutputContainer.style.display = 'none';
+            await loadPostData(postData);
+        });
+
+        function setSourceState(label, hint, tone = '') {
+            postSourceStatus.textContent = label;
+            postSourceStatus.dataset.tone = tone;
+            postSourceHint.textContent = hint;
+        }
+
+        function applyPostFields(post) {
+            const normalized = normalizePost(post);
+            currentOriginalLink = normalized.link;
+            postId.value = normalized.id;
+            postId.readOnly = currentPostWasExisting;
+            postDate.value = normalized.publishedAt || '';
+            postUpdatedAt.value = normalized.updatedAt || '';
+            postTitle.value = normalized.title;
+            postSummary.value = normalized.summary;
+            postImageUrl.value = normalized.imageUrl;
+            postType.value = normalized.type;
+            postCategory.value = normalized.category.join(', ');
+            postCategory.placeholder = 'sim, bank, life';
+            postTags.value = normalized.tags.join(', ');
+            postFeatured.checked = normalized.featured;
+            if (postIsNew) postIsNew.checked = normalized.isNew;
+            if (postStatus) postStatus.checked = normalized.status !== 0;
+            if (postShowInLists) postShowInLists.checked = normalized.showInLists;
+            if (postSearchable) postSearchable.checked = normalized.searchable;
+            if (postShowOnDesktop) postShowOnDesktop.checked = normalized.showOnDesktop;
+            if (postShowOnMobile) postShowOnMobile.checked = normalized.showOnMobile;
+
+            const lastSlashIndex = normalized.link.lastIndexOf('/');
+            if (lastSlashIndex > -1 && normalized.link.startsWith('/')) {
+                basePathSelector.value = normalized.link.substring(0, lastSlashIndex + 1);
+                if (!basePathSelector.value) basePathSelector.value = '/pages/pages-baiviet/other/';
+                postFilename.value = normalized.link.substring(lastSlashIndex + 1);
+            } else {
+                basePathSelector.value = '/pages/pages-baiviet/other/';
+                postFilename.value = normalized.link.startsWith('/') ? normalized.link.split('/').pop() : '';
+            }
+            isFilenameManuallyEdited = currentPostWasExisting;
+        }
+
+        async function readContentForPost(post, force = false) {
+            setSourceState('Đang đọc HTML…', 'Admin đang lấy nội dung mới nhất từ file bài viết.', 'loading');
+            try {
+                const parsed = await fetchAndParsePost(post);
+                currentLoadedContent = parsed.contentHtml;
+                currentSourceFormat = parsed.format;
+                const merged = normalizePost({
+                    ...post,
+                    ...parsed.post,
+                    link: post.link || parsed.post.link,
+                    title: parsed.post.title || post.title,
+                    summary: parsed.post.summary || post.summary,
+                    imageUrl: parsed.post.imageUrl || post.imageUrl,
+                    publishedAt: parsed.post.publishedAt || post.publishedAt,
+                    updatedAt: parsed.post.updatedAt || post.updatedAt,
+                    category: parsed.post.category?.length ? parsed.post.category : post.category,
+                    tags: parsed.post.tags?.length ? parsed.post.tags : post.tags,
+                    contentSource: 'html',
+                    contentVersion: parsed.format === 'html-v2' ? 2 : 1
+                });
+                applyPostFields(merged);
+                tinymce.get('contentEditor').setContent(currentLoadedContent || '');
+                const warning = parsed.warnings.length ? ` ${parsed.warnings.join(' ')}` : '';
+                setSourceState(parsed.format === 'html-v2' ? 'HTML mới – đã đồng bộ' : 'HTML cũ – sẽ tự chuyển khi lưu', `Nội dung đang lấy trực tiếp từ ${post.link}.${warning}`, parsed.format === 'html-v2' ? 'ok' : 'legacy');
+                return;
+            } catch (error) {
+                const legacy = legacyContentById[post.id] || post.contentHtml || '';
+                currentLoadedContent = legacy;
+                currentSourceFormat = legacy ? 'json-legacy' : (isInternalLink(post.link) ? 'html-unreadable' : 'external');
+                tinymce.get('contentEditor').setContent(legacy || '');
+                if (legacy) {
+                    setSourceState('JSON cũ dự phòng', `Không đọc được HTML: ${error.message} Nội dung dự phòng vẫn được giữ để anh chuyển bài.`, 'warning');
+                } else if (!isInternalLink(post.link)) {
+                    setSourceState('Liên kết ngoài', 'Admin chỉ quản lý tiêu đề, ảnh và trạng thái. Không thể đọc nội dung từ website khác do giới hạn trình duyệt.', 'external');
+                } else {
+                    setSourceState('Không đọc được HTML', `${error.message} Anh có thể chọn file HTML từ máy.`, 'error');
+                }
+            }
+        }
+
+        async function loadPostData(post) {
+            currentPostWasExisting = Boolean(post);
+            if (post) {
+                const normalized = normalizePost(post);
+                applyPostFields(normalized);
+                await readContentForPost(normalized);
+                return;
+            }
+
+            const now = new Date();
+            const today = now.toISOString().slice(0, 10);
+            const dateSlug = today.replace(/-/g, '');
+            const timeSlug = now.toTimeString().slice(0, 5).replace(':', '');
+            const newPost = normalizePost({
+                id: `post-${dateSlug}-${timeSlug}`,
+                type: 'post',
+                status: 1,
+                category: [],
+                tags: [],
+                publishedAt: today,
+                updatedAt: null,
+                featured: false,
+                isNew: true,
+                showInLists: true,
+                searchable: true,
+                showOnDesktop: true,
+                showOnMobile: true,
+                title: 'Tiêu đề bài viết mới',
+                summary: 'Tóm tắt bài viết mới',
+                imageUrl: '/img/posts/',
+                link: `/pages/pages-baiviet/other/tieu-de-bai-viet-moi-${dateSlug}.html`,
+                contentSource: 'html',
+                contentVersion: 2
+            });
+            applyPostFields(newPost);
+            postId.readOnly = false;
+            basePathSelector.value = '/pages/pages-baiviet/other/';
+            postFilename.value = `tieu-de-bai-viet-moi-${dateSlug}.html`;
+            isFilenameManuallyEdited = false;
+            currentLoadedContent = '<p>Viết phần mở đầu ngắn gọn tại đây...</p><h2>Nội dung hướng dẫn</h2><p>Nhập nội dung chi tiết của bài viết...</p>';
+            currentSourceFormat = 'html-v2-new';
+            tinymce.get('contentEditor').setContent(currentLoadedContent);
+            setSourceState('Bài mới – HTML v2', 'Khi tải file, metadata và nội dung sẽ được nhúng vào HTML để lần sau Admin tự đọc lại.', 'ok');
+        }
+
+        reloadPostHtml.addEventListener('click', async () => {
+            const selectedId = postSelector.value;
+            const post = allPostsData.find(item => item.id === selectedId);
+            if (!post) return alert('Hãy chọn một bài cũ trước.');
+            await readContentForPost(post, true);
+        });
+
+        postHtmlFile.addEventListener('change', async () => {
+            const file = postHtmlFile.files?.[0];
+            if (!file) return;
+            try {
+                const fallback = allPostsData.find(item => item.id === postSelector.value) || getPostObjectFromForm(false) || {};
+                const parsed = await parseArticleFile(file, fallback);
+                currentLoadedContent = parsed.contentHtml;
+                currentSourceFormat = parsed.format;
+                applyPostFields({ ...fallback, ...parsed.post, link: fallback.link || parsed.post.link });
+                tinymce.get('contentEditor').setContent(currentLoadedContent || '');
+                setSourceState(parsed.format === 'html-v2' ? 'Đã đọc file HTML mới' : 'Đã đọc file HTML cũ', 'Khi lưu, bài sẽ được xuất lại theo HTML v2.', parsed.format === 'html-v2' ? 'ok' : 'legacy');
+            } catch (error) {
+                alert(`Không đọc được file HTML: ${error.message}`);
+            } finally {
+                postHtmlFile.value = '';
+            }
+        });
+
+        // --- HÀM LẤY DỮ LIỆU TỪ FORM ---
+        function getPostObjectFromForm(markUpdated = true) {
+            if (!validateForm()) {
+                alert('Vui lòng điền đầy đủ ID, ngày đăng gốc, tiêu đề và đường dẫn bài.');
+                return null;
+            }
+
+            const existing = allPostsData.find(item => item.id === postId.value.trim());
+            const filename = postFilename.value.trim();
+            const fullLink = filename ? basePathSelector.value + filename : (existing?.link || currentOriginalLink || '');
+            const today = new Date().toISOString().slice(0, 10);
+            const isExisting = currentPostWasExisting;
+            const internalHtml = fullLink.startsWith('/') && /\.html(?:[?#].*)?$/i.test(fullLink);
+
+            return normalizePost({
+                ...(existing || {}),
+                id: postId.value.trim(),
+                type: postType.value.trim() || 'post',
+                status: postStatus.checked ? 1 : 0,
+                category: postCategory.value.split(',').map(value => value.trim()).filter(Boolean),
+                tags: postTags.value.split(',').map(value => value.trim()).filter(Boolean),
+                publishedAt: postDate.value,
+                updatedAt: markUpdated && isExisting ? today : (postUpdatedAt.value || null),
+                featured: postFeatured.checked,
+                isNew: postIsNew ? postIsNew.checked : false,
+                showInLists: postShowInLists ? postShowInLists.checked : true,
+                searchable: postSearchable ? postSearchable.checked : true,
+                showOnDesktop: postShowOnDesktop ? postShowOnDesktop.checked : true,
+                showOnMobile: postShowOnMobile ? postShowOnMobile.checked : true,
+                title: postTitle.value.trim(),
+                summary: postSummary.value.trim(),
+                searchText: htmlToText(tinymce.get('contentEditor').getContent()),
+                imageUrl: postImageUrl.value.trim(),
+                link: fullLink,
+                contentSource: internalHtml ? 'html' : (fullLink.startsWith('/') ? 'page' : 'external'),
+                contentVersion: internalHtml ? 2 : Number(existing?.contentVersion || 0),
+                contentSelector: internalHtml ? '#article-content' : (existing?.contentSelector || '#article-content')
+            });
+        }
+
+        function validateForm() {
+            const existing = allPostsData.find(item => item.id === postId.value.trim());
+            const hasLink = Boolean(postFilename.value.trim() || existing?.link || currentOriginalLink);
+            return Boolean(postId.value.trim() && postDate.value && postTitle.value.trim() && hasLink);
+        }
+
+        // --- TẠO HTML V2: metadata nằm trong HTML, posts.json không chứa nội dung dài ---
+        function generateFullHtml(post) {
+            if (!postTemplateHtml) {
+                alert('Lỗi: Chưa tải được file template. Vui lòng thử tải lại trang.');
+                return null;
+            }
+
+            const escapeText = value => String(value || '').replace(/[&<>]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[char]);
+            const escapeAttr = value => escapeText(value).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            const displayedDate = post.updatedAt || post.publishedAt;
+            const displayedLabel = post.updatedAt ? `Cập nhật: ${formatViDate(post.updatedAt)}` : `Ngày đăng: ${formatViDate(post.publishedAt)}`;
+            const displayedKind = post.updatedAt ? 'updated' : 'published';
+            const contentHtml = tinymce.get('contentEditor').getContent();
+            currentLoadedContent = contentHtml;
+
+            let finalHtml = postTemplateHtml;
+            const replacements = {
+                POST_ID: escapeAttr(post.id),
+                POST_TITLE: escapeText(post.title),
+                META_DESCRIPTION: escapeAttr(post.summary),
+                META_IMAGE_URL: escapeAttr(post.imageUrl),
+                POST_LINK: escapeAttr(post.link),
+                ARTICLE_TITLE: escapeText(post.title),
+                ARTICLE_DATE_ISO: escapeAttr(displayedDate),
+                ARTICLE_DATE_KIND: escapeAttr(displayedKind),
+                ARTICLE_DATE_LABEL: escapeText(displayedLabel),
+                ARTICLE_PUBLISHED_ISO: escapeAttr(post.publishedAt),
+                ARTICLE_UPDATED_ISO: escapeAttr(post.updatedAt || ''),
+                ARTICLE_CONTENT: contentHtml,
+                POST_META_JSON: jsonForHtmlScript(makeEmbeddedMeta(post))
+            };
+            Object.entries(replacements).forEach(([key, value]) => {
+                finalHtml = finalHtml.replace(new RegExp(`{{${key}}}`, 'g'), value);
+            });
+            return finalHtml;
+        }
+
+
+        // --- XỬ LÝ NÚT "CẬP NHẬT JSON" ---
+        // (Sử dụng code ghi đè ở cuối file)
+
+        
+        // --- XỬ LÝ NÚT "TẠO & TẢI FILE HTML" ---
+        generateHtmlButton.addEventListener('click', () => {
+            const post = getPostObjectFromForm();
+            if (!post) return;
+
+            const finalHtml = generateFullHtml(post);
+            if (!finalHtml) return;
+            
+            const blob = new Blob([finalHtml], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            
+            // *** CẬP NHẬT: Dùng postFilename làm tên file ***
+            const fileName = postFilename.value.trim() || 'bai-viet.html';
+            
+            downloadHtmlLink.href = url;
+            downloadHtmlLink.download = fileName; 
+            downloadHtmlLink.textContent = `Tải về: ${fileName}`;
+            htmlOutputContainer.style.display = 'block';
+            
+            alert('Đã tạo file HTML! Nhấn vào link vừa xuất hiện để tải về.');
+        });
+
+        // --- *** SỬA LỖI: XỬ LÝ XEM TRƯỚC (Preview) *** ---
+        // Sử dụng lại file template đã tải, không inject script
+        previewButton.addEventListener('click', () => {
+            const post = getPostObjectFromForm();
+            if (!post) return;
+            
+            // 1. Tạo HTML từ template
+            let finalHtml = generateFullHtml(post);
+            if (!finalHtml) return;
+
+            // 2. Tải nội dung vào iframe
+            // Không cần chèn script nữa vì post-template.html đã có sẵn
+            previewIframe.srcdoc = finalHtml;
+            previewModal.style.display = 'flex';
+        });
+
+        closePreview.addEventListener('click', () => {
+            previewModal.style.display = 'none';
+            previewIframe.srcdoc = '';
+        });
+
+        // --- MỚI: LẮNG NGHE SỰ KIỆN NHẬP TIÊU ĐỀ VÀ TÊN FILE ---
+        postTitle.addEventListener('input', () => {
+            if (!isFilenameManuallyEdited) {
+                const slug = toSlug(postTitle.value);
+                const dateSlug = postDate.value.replace(/-/g, ''); // Lấy ngày từ ô input
+                postFilename.value = slug ? `${slug}-${dateSlug}.html` : '';
+            }
+        });
+
+        postFilename.addEventListener('input', () => {
+            // Khi người dùng tự gõ vào ô tên file, đặt cờ
+            if (postFilename.value.trim() !== '') {
+                isFilenameManuallyEdited = true;
+            }
+        });
+
+
+        // --- HÀM CHỈ TẠO JSON CHO 1 BÀI VIẾT ---
+        function generateSinglePostJson(post) {
+            // 1. Stringify RIÊNG các mảng. 
+            //    Hàm JSON.stringify không có 'null, 2' sẽ tạo ra chuỗi trên 1 dòng.
+            const categoryString = JSON.stringify(post.category);
+            const tagsString = JSON.stringify(post.tags);
+
+            // 2. Tạo một bản sao tạm thời của bài viết
+            const tempPost = { ...post };
+            
+            // 3. Thay thế các mảng bằng chuỗi placeholder (để đánh lừa)
+            tempPost.category = "__CATEGORY_PLACEHOLDER__";
+            tempPost.tags = "__TAGS_PLACEHOLDER__";
+
+            // 4. Stringify đối tượng chính với 'null, 2' (để các trường khác thụt đầu dòng)
+            let jsonString = JSON.stringify(tempPost, null, 2);
+
+            // 5. Thay thế các placeholder (nay đã bị stringify thành chuỗi)
+            //    bằng các chuỗi mảng 1 dòng mà chúng ta đã tạo ở bước 1.
+            jsonString = jsonString.replace('"__CATEGORY_PLACEHOLDER__"', categoryString);
+            jsonString = jsonString.replace('"__TAGS_PLACEHOLDER__"', tagsString);
+
+            return jsonString;
+        }
+
+        function createDataDownload(linkElement, filename, content) {
+            if (!linkElement) return '';
+            const blob = new Blob([content], { type: 'application/json;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            linkElement.href = url;
+            linkElement.download = filename;
+            return url;
+        }
+
+        // --- TẠO DỮ LIỆU METADATA V2 + CHỈ MỤC TÌM KIẾM ---
+        saveButton.addEventListener('click', () => {
+            const savedPost = getPostObjectFromForm(true);
+            if (!savedPost) return;
+
+            if (!savedPost.link && !postFilename.value.trim()) {
+                const dateSlug = savedPost.publishedAt.replace(/-/g, '');
+                const slug = toSlug(savedPost.title);
+                postFilename.value = `${slug}-${dateSlug}.html`;
+                savedPost.link = basePathSelector.value + postFilename.value;
+            }
+
+            const existingIndex = allPostsData.findIndex(item => item.id === savedPost.id);
+            if (existingIndex >= 0) allPostsData[existingIndex] = savedPost;
+            else allPostsData.push(savedPost);
+
+            allPostsData.sort((a, b) => new Date(effectiveDate(b)) - new Date(effectiveDate(a)));
+            postUpdatedAt.value = savedPost.updatedAt || '';
+
+            const shortJson = generateSinglePostJson(savedPost);
+            jsonOutput.value = shortJson;
+
+            const fullJson = JSON.stringify(buildPostsPayload(allPostsData), null, 2);
+            const lightJson = JSON.stringify(buildPostsIndex(allPostsData));
+            const searchJson = JSON.stringify(buildPostsSearchIndex(allPostsData));
+            const legacyJson = JSON.stringify({
+                schemaVersion: 1,
+                purpose: 'Dữ liệu dự phòng khi bài HTML cũ chưa đọc được. Không dùng cho trang người đọc.',
+                contentById: legacyContentById
+            }, null, 2);
+
+            if (postsJsonObjectUrl) URL.revokeObjectURL(postsJsonObjectUrl);
+            if (postsIndexObjectUrl) URL.revokeObjectURL(postsIndexObjectUrl);
+            if (postsSearchObjectUrl) URL.revokeObjectURL(postsSearchObjectUrl);
+            if (legacyContentObjectUrl) URL.revokeObjectURL(legacyContentObjectUrl);
+            postsJsonObjectUrl = createDataDownload(downloadPostsJson, 'posts.json', fullJson);
+            postsIndexObjectUrl = createDataDownload(downloadPostsIndexJson, 'posts-index.json', lightJson);
+            postsSearchObjectUrl = createDataDownload(downloadPostsSearchJson, 'posts-search.json', searchJson);
+            legacyContentObjectUrl = createDataDownload(downloadLegacyContentJson, 'legacy-content.json', legacyJson);
+
+            jsonOutputContainer.style.display = 'block';
+            htmlOutputContainer.style.display = 'none';
+            populateSelector();
+            postSelector.value = savedPost.id;
+
+            alert('✅ Đã tạo dữ liệu Beta 2. Nếu có sửa nội dung, hãy tải cả file HTML rồi thay đúng đường dẫn; sau đó thay posts.json, posts-index.json và posts-search.json. legacy-content.json chỉ cần thay khi anh muốn giữ bản dự phòng mới nhất.');
+        });
+
+    </script>
+    
+    <!-- PHẦN MẬT KHẨU ĐỂ LOGIN CỦA TRANG ADMIN-->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const loginOverlay = document.getElementById('loginOverlay');
+        const adminUserInput = document.getElementById('adminUser');
+        const adminPassInput = document.getElementById('adminPass');
+        const rememberMeCheckbox = document.getElementById('rememberMe');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginError = document.getElementById('loginError');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // --- HÀM GIẢI MÃ ĐÚNG QUY LUẬT CỦA VINH ---
+        // Lấy 2 ký tự (bỏ 3) -> Lấy 3 ký tự (bỏ 4) -> Lấy 4 ký tự (bỏ 5)...
+        function decodeCustom(encodedStr) {
+            if (!encodedStr) return "";
+            let result = "";
+            let pointer = 0;
+            let correctLen = 2; 
+            let junkLen = 3;    
+
+            while (pointer < encodedStr.length) {
+                // Lấy phần ký tự có khả năng là đúng
+                let fragment = encodedStr.substring(pointer, pointer + correctLen);
+                
+                // KIỂM TRA: Nếu trong phần vừa lấy có chữ 'W'
+                if (fragment.includes('W')) {
+                    // Chỉ lấy phần trước chữ W và dừng hẳn
+                    result += fragment.split('W')[0];
+                    break; 
+                }
+
+                result += fragment;
+                pointer += correctLen;
+                
+                // Sau khi lấy phần đúng, kiểm tra xem phần rác tiếp theo có chứa 'W' không
+                let junkPart = encodedStr.substring(pointer, pointer + junkLen);
+                if (junkPart.includes('W')) {
+                    break; // Thấy W trong phần rác cũng dừng luôn
+                }
+                
+                pointer += junkLen;
+                correctLen++;
+                junkLen++;
+            }
+            return result;
+        }
+
+        // Giải mã và áp dụng vào cấu hình
+        const CONFIG = {
+            adminUser: decodeCustom(_sys_config.u),
+            adminPass: decodeCustom(_sys_config.p),
+            expiryDays: _sys_config.e || 7
+        };
+        
+        // DÒNG NÀY ĐỂ KIỂM TRA:
+        //alert("Tên đăng nhập máy đọc được là: " + CONFIG.adminUser);
+        //alert("Mật khẩu máy đọc được là: " + CONFIG.adminPass);
+
+        function showAdminUI() {
+            loginOverlay.style.display = 'none';
+            document.body.style.overflow = '';
+            if (logoutBtn) {
+                logoutBtn.classList.remove('hidden');
+                logoutBtn.classList.add('flex');
+            }
+        }
+
+        // 1. Kiểm tra bộ nhớ tạm (Remember Me)
+        const loggedInTime = localStorage.getItem('adminLoginTime');
+        const isRemembered = localStorage.getItem('adminLoggedIn') === 'true';
+
+        if (isRemembered && loggedInTime) {
+            const now = new Date().getTime();
+            const diffDays = (now - parseInt(loggedInTime)) / (1000 * 60 * 60 * 24);
+            if (diffDays < CONFIG.expiryDays) {
+                showAdminUI();
+            } else {
+                localStorage.removeItem('adminLoggedIn');
+                localStorage.removeItem('adminLoginTime');
+            }
+        }
+
+        if (loginOverlay.style.display !== 'none') {
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 2. Hàm xử lý đăng nhập
+        function handleLogin() {
+            // SO SÁNH VỚI GIÁ TRỊ ĐÃ GIẢI MÃ
+            if (adminUserInput.value === CONFIG.adminUser && adminPassInput.value === CONFIG.adminPass) {
+                if (rememberMeCheckbox.checked) {
+                    localStorage.setItem('adminLoggedIn', 'true');
+                    localStorage.setItem('adminLoginTime', new Date().getTime().toString());
+                }
+                showAdminUI();
+            } else {
+                loginError.classList.remove('hidden');
+                adminPassInput.value = ''; 
+                adminPassInput.focus();
+            }
+        }
+
+        // 3. Sự kiện nút bấm và phím Enter
+        loginBtn.addEventListener('click', handleLogin);
+        
+        adminUserInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') adminPassInput.focus();
+        });
+        
+        adminPassInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleLogin();
+        });
+
+        // 4. Sự kiện Đăng xuất
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', function() {
+                if (confirm('Bạn có chắc chắn muốn đăng xuất không?')) {
+                    localStorage.removeItem('adminLoggedIn');
+                    localStorage.removeItem('adminLoginTime');
+                    location.reload();
+                }
+            });
+        }
+        
+        if (loginOverlay.style.display !== 'none') adminUserInput.focus();
+    });
+</script>
+    
+    <script src="/admin/home-admin.js?v=26.8.1-beta5" defer></script>
+    <script src="/admin/categories-admin.js?v=26.8.1-beta5" defer></script>
+</body>
+</html>
+
