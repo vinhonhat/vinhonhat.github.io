@@ -1,83 +1,107 @@
-// --- BIẾN CẤU HÌNH ---
-// Tên của bộ nhớ cache. Rất quan trọng: MỖI KHI BẠN CẬP NHẬT WEBSITE,
-// BẠN PHẢI THAY ĐỔI TÊN NÀY 
-// GHI CHÚ 1: THAY ĐỔI TÊN CACHE MỖI KHI BẠN CẬP NHẬT WEBSITE (VÍ DỤ: TỪ v2 thành v3) ĐỂ KÍCH HOẠT CẬP NHẬT.
-const CACHE_NAME = ' V26.0705'; 
-
-// GHI CHÚ 2: DANH SÁCH FILE CẦN LƯU
-// Danh sách các file cốt lõi cần được lưu vào cache để chạy offline.
-const urlsToCache = [
-    // 1. CÁC FILE CHÍNH CỦA WEBSITE
-    //'/',                  // 1
-    '/index.html',        // 2
-    '/css/style.css',     // 3
-    '/js/script.js',      // 4
-    '/manifest.json',     // 5
-    '/data/posts.json',   // 6  
-    '/data/banner.js',    // 7    
-    '/hf/header.html',    // 8     
-    '/hf/footer.html',    // 9
-
-    // Các file khác (Giữ nguyên)
-
-    // 3. HÌNH ẢNH ICON
-    '/img/logoQV.png',
-    // 4. CÁC THƯ VIỆN BÊN NGOÀI (CDN - BẮT BUỘC ĐỂ OFFLINE)
-
+const CACHE_NAME = 'vinhonhat-26.8.1-beta6';
+const CORE_ASSETS = [
+    '/',
+    '/index.html',
+    '/css/style.css',
+    '/css/shell-r8.css',
+    '/js/script.js',
+    '/js/lunar-calendar.js',
+    '/js/holidays.js',
+    '/manifest.json',
+    '/data/posts-index.json',
+    '/data/site-config.json',
+    '/data/banner-config.json',
+    '/data/home-config.json',
+    '/data/categories.json',
+    '/css/category-page.css',
+    '/js/category-page.js',
+    '/pages/pages-baiviet/bai-viet-hd.html',
+    '/pages/pages-baiviet/rakuten.html',
+    '/pages/pages-baiviet/seven.html',
+    '/pages/pages-baiviet/sim.html',
+    '/pages/pages-baiviet/other.html',
+    '/pages/pages-hoctap/hoctap.html',
+    '/pages/pages-hoctap/nihongo.html',
+    '/pages/pages-hoctap/tokutei.html',
+    '/pages/pages-giaitri/giaitri.html',
+    '/pages/pages-app/tai-xuong.html',
+    '/hf/header.html',
+    '/hf/footer.html'
 ];
 
-
-// GHI CHÚ 3: CÀI ĐẶT VÀ KÍCH HOẠT NGAY
-// --- SỰ KIỆN 1: CÀI ĐẶT (install) ---
-// Sự kiện này chỉ chạy một lần khi Service Worker được cài đặt lần đầu hoặc khi có phiên bản mới.
 self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('Đã mở cache');
-        // Tải tất cả các file trong danh sách và lưu vào cache.
-        return cache.addAll(urlsToCache);
-      })
-      // Yêu cầu Service Worker mới bỏ qua trạng thái chờ và kích hoạt ngay.
-      .then(() => self.skipWaiting()) 
-  );
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then(cache => Promise.allSettled(CORE_ASSETS.map(asset => cache.add(asset))))
+            .then(() => self.skipWaiting())
+    );
 });
 
-
-
-
-// --- SỰ KIỆN 2: KÍCH HOẠT (activate) ---
-// Sự kiện này chạy sau khi Service Worker đã cài đặt xong và sẵn sàng przejąć kontrolę.
 self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        // Lặp qua tất cả các cache đang có.
-        cacheNames.map(cacheName => {
-          // Nếu tên cache không phải là tên cache mới nhất (CACHE_NAME), thì xóa nó đi.
-          if (cacheName !== CACHE_NAME) {
-            console.log('Đang xóa cache cũ:', cacheName);
-            return caches.delete(cacheName);
-          }
-        })
-      );
-      // Yêu cầu Service Worker przejąć kontrolę tất cả các tab đang mở.
-    }).then(() => self.clients.claim()) 
-  );
+    event.waitUntil(
+        caches.keys()
+            .then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))))
+            .then(() => self.clients.claim())
+    );
 });
 
+async function networkFirst(request) {
+    const cache = await caches.open(CACHE_NAME);
+    try {
+        const response = await fetch(request, { cache: 'no-store' });
+        if (response && response.ok) cache.put(request, response.clone());
+        return response;
+    } catch (error) {
+        return (await cache.match(request))
+            || (await cache.match(request, { ignoreSearch: true }))
+            || (request.mode === 'navigate' ? cache.match('/index.html') : Response.error());
+    }
+}
 
-// GHI CHÚ 5: LẤY FILE TỪ CACHE (GIỮ NGUYÊN)
-// --- SỰ KIỆN 3: LẤY DỮ LIỆU (fetch) ---
-// Sự kiện này chạy mỗi khi trang web yêu cầu một tài nguyên (ảnh, css, js...).
+async function staleWhileRevalidate(request, ignoreSearch = false) {
+    const cache = await caches.open(CACHE_NAME);
+    const cached = await cache.match(request, { ignoreSearch });
+    const update = fetch(request).then(response => {
+        if (response && response.ok) cache.put(request, response.clone());
+        return response;
+    }).catch(() => null);
+    if (cached) {
+        update.catch(() => null);
+        return cached;
+    }
+    return (await update) || Response.error();
+}
+
+async function cacheFirst(request) {
+    const cache = await caches.open(CACHE_NAME);
+    const cached = await cache.match(request);
+    if (cached) return cached;
+    try {
+        const response = await fetch(request);
+        if (response && response.ok) cache.put(request, response.clone());
+        return response;
+    } catch (_) {
+        return Response.error();
+    }
+}
+
 self.addEventListener('fetch', event => {
-  event.respondWith(
-    // Kiểm tra xem tài nguyên này có trong cache không.
-    caches.match(event.request)
-      .then(response => {
-        // Nếu có, trả về từ cache (rất nhanh). Nếu không, tải từ mạng.
-        return response || fetch(event.request);
-      })
-  );
+    const request = event.request;
+    if (request.method !== 'GET') return;
+    const url = new URL(request.url);
+    if (url.origin !== self.location.origin) return;
 
+    const extension = url.pathname.split('.').pop()?.toLowerCase();
+    if (request.mode === 'navigate' || extension === 'html' || extension === 'json' || url.pathname.startsWith('/hf/')) {
+        event.respondWith(networkFirst(request));
+        return;
+    }
+    if (extension === 'js' || extension === 'css') {
+        // Giữ query phiên bản để Beta mới không bị trả nhầm file JavaScript/CSS cũ.
+        event.respondWith(staleWhileRevalidate(request, false));
+        return;
+    }
+    if (['png', 'jpg', 'jpeg', 'webp', 'gif', 'svg', 'ico', 'woff', 'woff2'].includes(extension)) {
+        event.respondWith(cacheFirst(request));
+    }
 });
