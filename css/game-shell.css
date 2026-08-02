@@ -1,4 +1,4 @@
-/* Vinh ở Nhật - Game shell Beta 7 */
+/* Vinh ở Nhật - giao diện game dùng chung */
 :root{--game-bg:#10141c;--game-panel:#19212e;--game-border:#2d3a4d;--game-text:#f7f9fc;--game-muted:#9aa8ba;--game-accent:#ff9d2e;--game-safe-bottom:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100%;margin:0;overflow:hidden;overscroll-behavior:none;background:var(--game-bg);color:var(--game-text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;touch-action:none;user-select:none;-webkit-user-select:none}

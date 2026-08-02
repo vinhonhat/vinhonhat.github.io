@@ -2,7 +2,8 @@
 (() => {
     'use strict';
 
-    const DATA_URL = '/data/posts-index.json?v=26.8.1-beta7';
+    const VERSION = window.VinhSiteVersion?.id || 'dev';
+    const DATA_URL = `/data/posts-index.json?v=${VERSION}`;
 
     const canShowPostInCurrentList = post => {
         if (!post || post.showInLists === false) return false;

@@ -1,5 +1,5 @@
 {
-  "version": "26.7.31.8",
+  "schemaVersion": 1,
   "enabled": true,
   "settings": {
     "mode": "mixed",
@@ -17,10 +17,10 @@
       "enabled": true,
       "kind": "ad",
       "title": "SIM data Nhật Bản",
-      "description": "Banner mẫu tỷ lệ 3:1",
+      "description": "Xem 4 nhóm SIM data và SIM nghe gọi",
       "imageDesktop": "/img/ads/sim-data-demo-3x1.svg",
       "imageMobile": "/img/ads/sim-data-demo-3x1.svg",
-      "actionUrl": "/pages/pages-baiviet/sim.html",
+      "actionUrl": "/pages/pages-app/sim-data.html",
       "newTab": false
     },
     {

@@ -51,7 +51,7 @@ function main() {
   }
 
   const rows = Array.isArray(payload) ? payload : payload?.posts;
-  if (!Array.isArray(rows)) return fail('posts.json phải là mảng cũ hoặc object Beta 7 có trường posts.');
+  if (!Array.isArray(rows)) return fail('posts.json phải là mảng cũ hoặc object cấu trúc mới có trường posts.');
 
   let existingSearchById = new Map();
   if (fs.existsSync(searchOutputPath)) {

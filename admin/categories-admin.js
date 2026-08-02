@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '26.8.1-beta7';
+  const VERSION = window.VinhSiteVersion?.id || 'dev';
   const CONFIG_URL = `/data/categories.json?v=${VERSION}`;
   const DRAFT_KEY = 'vinhonhat-categories-beta5-draft';
   const SECTION_LABELS = {
@@ -37,7 +37,7 @@
     quickLinks: []
   };
 
-  let state = { version: VERSION, sections: { articles: structuredClone(DEFAULT_SECTION) } };
+  let state = { schemaVersion: 1, sections: { articles: structuredClone(DEFAULT_SECTION) } };
   let activeKey = 'articles';
   let objectUrl = '';
 
@@ -73,7 +73,7 @@
     const sections = {};
     Object.entries(sourceSections).forEach(([key, value]) => { sections[key] = normalizeSection(value); });
     if (!sections.articles) sections.articles = structuredClone(DEFAULT_SECTION);
-    return { version: VERSION, sections };
+    return { schemaVersion: 1, sections };
   }
 
   const section = () => state.sections[activeKey] || state.sections.articles;
@@ -155,7 +155,7 @@
       link.topic = card.querySelector('[data-field="topic"]')?.value || 'all';
       link.icon = card.querySelector('[data-field="icon"]')?.value?.trim() || '';
     });
-    state.version = VERSION;
+    state.schemaVersion = 1;
   }
 
   function moveItem(list, index, direction) {

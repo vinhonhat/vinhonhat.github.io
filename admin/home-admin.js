@@ -1,10 +1,11 @@
 (() => {
     'use strict';
 
-    const SITE_CONFIG_URL = '/data/site-config.json?v=26.8.1-beta7';
-    const BANNER_CONFIG_URL = '/data/banner-config.json?v=26.8.1-beta7';
+    const VERSION = window.VinhSiteVersion?.id || 'dev';
+    const SITE_CONFIG_URL = `/data/site-config.json?v=${VERSION}`;
+    const BANNER_CONFIG_URL = `/data/banner-config.json?v=${VERSION}`;
     const DEFAULT_CONFIG = {
-        version: '26.8.1-beta7',
+        schemaVersion: 1,
         sections: { banner: true, featured: true, topics: true, latestFeed: true, sidebar: true },
         banner: { mode: 'mixed', aspectRatio: '3 / 1', autoplay: true, intervalMs: 5500, showArrows: true, showDots: true, holidaySlideEnabled: true, pauseOnHover: true },
         feed: { source: 'new', initialCount: 6, batchSize: 4, maxItems: 20, autoLoad: true, showShare: true },
@@ -69,7 +70,7 @@
         return {
             ...DEFAULT_CONFIG,
             ...input,
-            version: '26.8.1-beta7',
+            schemaVersion: 1,
             sections: { ...DEFAULT_CONFIG.sections, ...(input.sections || {}) },
             banner: { ...DEFAULT_CONFIG.banner, ...(input.banner || {}) },
             feed: { ...DEFAULT_CONFIG.feed, ...(input.feed || {}) },
@@ -172,7 +173,7 @@
     }
 
     function readSettings() {
-        state.version = '26.8.1-beta7';
+        state.schemaVersion = 1;
         state.sections = {
             banner: $('#homeSectionBanner')?.checked ?? true,
             featured: $('#homeSectionFeatured')?.checked ?? true,
@@ -318,7 +319,7 @@
     function updateDownloadLinks() {
         collectAll();
         const siteConfig = {
-            version: state.version,
+            schemaVersion: 1,
             sections: state.sections,
             feed: state.feed,
             holiday: state.holiday,
@@ -329,7 +330,7 @@
             mobileHome: state.mobileHome,
             lunar: state.lunar
         };
-        const bannerConfig = { version: state.version, enabled: state.sections.banner !== false, settings: state.banner, items: state.banners };
+        const bannerConfig = { schemaVersion: 1, enabled: state.sections.banner !== false, settings: state.banner, items: state.banners };
         const urls = { site: makeJsonUrl('site', siteConfig), banner: makeJsonUrl('banner', bannerConfig) };
         [['#downloadSiteConfig','site-config.json','site'],['#downloadSiteConfigBottom','site-config.json','site'],['#downloadBannerConfig','banner-config.json','banner'],['#downloadBannerConfigBottom','banner-config.json','banner'],['#downloadBannerConfigTab','banner-config.json','banner'],['#downloadBannerConfigTabBottom','banner-config.json','banner']].forEach(([selector, filename, key]) => {
             const link = $(selector); if (link) { link.href = urls[key]; link.download = filename; }
@@ -440,6 +441,19 @@
         });
     }
 
+
+    function bindHolidayPreview() {
+        const button = $('#previewHolidayBanner');
+        if (!button || button.dataset.bound === '1') return;
+        button.dataset.bound = '1';
+        button.addEventListener('click', () => {
+            const id = $('#homeHolidayPreview')?.value || '0902';
+            const url = new URL('/', location.origin);
+            url.searchParams.set('holidayTest', id);
+            url.searchParams.set('_preview', Date.now().toString());
+            window.open(url.href, '_blank', 'noopener');
+        });
+    }
     async function init() {
         organizeAdminTabs();
         bindEvents();
@@ -466,6 +480,7 @@
         }
         fillSettings();
         renderBanners();
+        bindHolidayPreview();
         updateDownloadLinks();
     }
 

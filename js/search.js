@@ -1,7 +1,7 @@
 (() => {
     'use strict';
 
-    const VERSION = '26.8.1-beta7';
+    const VERSION = window.VinhSiteVersion?.id || 'dev';
     const POSTS_URLS = [`/data/posts-search.json?v=${VERSION}`, `/data/posts-index.json?v=${VERSION}`, `/data/posts.json?v=${VERSION}`];
     const DEFAULT_IMAGE = '/img/logoQV.png';
     const HISTORY_KEY = 'vinhonhat-search-history-v1';

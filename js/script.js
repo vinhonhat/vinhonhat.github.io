@@ -1,7 +1,7 @@
 (() => {
     'use strict';
 
-    const VERSION = '26.8.1-beta7';
+    const VERSION = window.VinhSiteVersion?.id || 'dev';
     const POSTS_INDEX_URL = `/data/posts-index.json?v=${VERSION}`;
     const SITE_CONFIG_URL = `/data/site-config.json?v=${VERSION}`;
     const BANNER_CONFIG_URL = `/data/banner-config.json?v=${VERSION}`;
@@ -648,12 +648,51 @@
         ) || null;
     }
 
+    function holidayImageCandidates(holiday, mobile = false) {
+        const prefix = String(holiday?.imagePrefix || '').trim();
+        if (!prefix) return [];
+        const stems = mobile
+            ? [`${prefix}m`, `${prefix}-mobile`, `${prefix}_mobile`, prefix]
+            : [`${prefix}d`, `${prefix}-desktop`, `${prefix}_desktop`, prefix];
+        const extensions = ['webp', 'png', 'jpg', 'jpeg'];
+        return [...new Set(stems.flatMap(stem => extensions.map(ext => `/img/holidays/${stem}.${ext}`)))];
+    }
+
+    function holidayPlaceholderData(holiday) {
+        const title = String(holiday?.name || 'Ngày lễ').replace(/[&<>"']/g, '');
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="500" viewBox="0 0 1500 500"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ff7a59"/><stop offset=".55" stop-color="#ffb33b"/><stop offset="1" stop-color="#fff0bd"/></linearGradient></defs><rect width="1500" height="500" rx="36" fill="url(#g)"/><circle cx="1280" cy="90" r="115" fill="#fff" opacity=".18"/><circle cx="1320" cy="330" r="180" fill="#fff" opacity=".12"/><text x="90" y="215" fill="#fff" font-family="Arial,sans-serif" font-size="42" font-weight="700">Vinh ở Nhật</text><text x="90" y="305" fill="#fff" font-family="Arial,sans-serif" font-size="70" font-weight="800">${title}</text><text x="92" y="370" fill="#fff" opacity=".92" font-family="Arial,sans-serif" font-size="28">Chúc anh và gia đình một ngày thật nhiều niềm vui</text></svg>`;
+        return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+    }
+
     function holidayImagePaths(holiday) {
+        const desktopCandidates = holidayImageCandidates(holiday, false);
+        const mobileCandidates = holidayImageCandidates(holiday, true);
+        const placeholder = holidayPlaceholderData(holiday);
         return {
-            desktop: `/img/holidays/${holiday.imagePrefix}d.jpg`,
-            mobile: `/img/holidays/${holiday.imagePrefix}m.jpg`,
-            fallback: `/img/holidays/${holiday.imagePrefix}.jpg`
+            desktop: desktopCandidates[0] || placeholder,
+            mobile: mobileCandidates[0] || placeholder,
+            desktopCandidates,
+            mobileCandidates,
+            fallback: placeholder
         };
+    }
+
+    function setImageWithFallback(image, candidates, finalFallback = '') {
+        if (!image) return;
+        const queue = [...new Set((candidates || []).filter(Boolean))];
+        let index = 0;
+        image.onerror = () => {
+            index += 1;
+            if (index < queue.length) {
+                image.src = queue[index];
+                return;
+            }
+            image.onerror = null;
+            if (finalFallback) image.src = finalFallback;
+            else image.hidden = true;
+        };
+        if (queue.length) image.src = queue[0];
+        else if (finalFallback) image.src = finalFallback;
     }
 
     function closeHolidayPopup() {
@@ -670,14 +709,8 @@
         title.textContent = `Chào mừng ${holiday.name}`;
         message.textContent = holiday.message || 'Chúc anh và gia đình có một ngày thật nhiều niềm vui, bình an và ý nghĩa.';
         image.hidden = false;
-        image.src = window.innerWidth < 700 ? paths.mobile : paths.desktop;
-        image.onerror = () => {
-            if (!image.src.endsWith(paths.fallback)) {
-                image.src = paths.fallback;
-                return;
-            }
-            image.hidden = true;
-        };
+        const candidates = window.innerWidth < 700 ? paths.mobileCandidates : paths.desktopCandidates;
+        setImageWithFallback(image, candidates, paths.fallback);
         setHiddenPanel(popup, true);
         clearTimeout(showHolidayPopup.timer);
         showHolidayPopup.timer = window.setTimeout(closeHolidayPopup, clampNumber(config.popupDurationMs, 3000, 30000, 7500));
@@ -714,6 +747,8 @@
             description: holiday.message || 'Chúc một ngày lễ thật nhiều niềm vui và ý nghĩa.',
             imageDesktop: paths.desktop,
             imageMobile: paths.mobile,
+            fallbackImagesDesktop: paths.desktopCandidates,
+            fallbackImagesMobile: paths.mobileCandidates,
             fallbackImage: paths.fallback,
             buttonText: 'Xem lời chúc',
             actionType: 'holiday'
@@ -723,22 +758,19 @@
     function bannerSlideTemplate(banner, index) {
         const desktop = ensurePath(banner.imageDesktop || banner.imageUrl || '', '');
         const mobile = ensurePath(banner.imageMobile || banner.imageDesktop || banner.imageUrl || '', '');
+        const selected = isMobileViewport() ? mobile : desktop;
+        const fallbackList = isMobileViewport()
+            ? (banner.fallbackImagesMobile || banner.fallbackImagesDesktop || [])
+            : (banner.fallbackImagesDesktop || banner.fallbackImagesMobile || []);
+        const fallbacks = [...new Set([selected, ...fallbackList, banner.fallbackImage].filter(Boolean).map(item => ensurePath(item, item)))];
         const url = ensurePath(banner.actionUrl || '', '');
         const target = banner.newTab ? ' target="_blank" rel="noopener"' : '';
         const eager = index === 0;
-        const source = mobile
-            ? `<source media="(max-width: 700px)" ${eager ? `srcset="${escapeHtml(mobile)}"` : `data-srcset="${escapeHtml(mobile)}"`}>`
-            : '';
-        const image = desktop ? `<picture>
-            ${source}
-            <img src="${eager ? escapeHtml(desktop) : TRANSPARENT_PIXEL}" ${eager ? '' : `data-src="${escapeHtml(desktop)}"`} alt="${escapeHtml(banner.title || 'Banner')}" loading="${eager ? 'eager' : 'lazy'}" fetchpriority="${eager ? 'high' : 'low'}" decoding="async" data-banner-image>
-        </picture>` : '';
+        const image = selected ? `<img src="${eager ? escapeHtml(selected) : TRANSPARENT_PIXEL}" ${eager ? '' : `data-src="${escapeHtml(selected)}"`} data-banner-fallbacks="${escapeHtml(JSON.stringify(fallbacks))}" alt="${escapeHtml(banner.title || 'Banner')}" loading="${eager ? 'eager' : 'lazy'}" fetchpriority="${eager ? 'high' : 'low'}" decoding="async" data-banner-image>` : '';
         const media = url
             ? `<a class="home-banner-media home-banner-link" href="${escapeHtml(url)}"${target} aria-label="${escapeHtml(banner.title || 'Mở banner')}">${image}</a>`
             : `<div class="home-banner-media">${image}</div>`;
-        return `<article class="home-banner-slide ${banner.kind === 'holiday' ? 'holiday-banner-slide' : 'ad-banner-slide'}" data-banner-index="${index}">
-            ${media}
-        </article>`;
+        return `<article class="home-banner-slide ${banner.kind === 'holiday' ? 'holiday-banner-slide' : 'ad-banner-slide'}" data-banner-index="${index}">${media}</article>`;
     }
 
     function hydrateBannerSlide(slide) {
@@ -809,13 +841,19 @@
             container.addEventListener('mouseleave', start);
         }
         $$('[data-banner-image]', container).forEach(image => {
+            let candidates = [];
+            try { candidates = JSON.parse(image.dataset.bannerFallbacks || '[]'); } catch (_) {}
+            let currentIndex = -1;
             image.addEventListener('error', () => {
                 const slide = image.closest('.home-banner-slide');
-                const bannerIndex = Number(slide?.dataset.bannerIndex);
-                const fallback = banners[bannerIndex]?.fallbackImage;
-                if (fallback && image.src !== new URL(fallback, location.href).href) image.src = fallback;
-                else slide?.classList.add('banner-image-missing');
-            }, { once: false });
+                currentIndex += 1;
+                while (candidates[currentIndex] && image.src === new URL(candidates[currentIndex], location.href).href) currentIndex += 1;
+                if (candidates[currentIndex]) {
+                    image.src = candidates[currentIndex];
+                    return;
+                }
+                slide?.classList.add('banner-image-missing');
+            });
         });
         go(0);
         start();

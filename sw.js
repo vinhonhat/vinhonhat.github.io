@@ -1,9 +1,11 @@
-const CACHE_NAME = 'vinhonhat-26.8.1-beta7';
+importScripts('/js/site-version.js');
+const CACHE_NAME = self.VinhSiteVersion?.cacheName || 'vinhonhat-runtime';
 const CORE_ASSETS = [
     '/',
     '/index.html',
     '/css/style.css',
     '/css/shell-r8.css',
+    '/js/site-version.js',
     '/js/script.js',
     '/js/lunar-calendar.js',
     '/js/holidays.js',
@@ -24,6 +26,10 @@ const CORE_ASSETS = [
     '/pages/pages-hoctap/tokutei.html',
     '/pages/pages-giaitri/giaitri.html',
     '/pages/pages-app/tai-xuong.html',
+    '/pages/pages-app/sim-data.html',
+    '/css/sim-shop.css',
+    '/js/sim-shop.js',
+    '/data/sim-plans.json',
     '/hf/header.html',
     '/hf/footer.html'
 ];
@@ -91,6 +97,10 @@ self.addEventListener('fetch', event => {
     if (url.origin !== self.location.origin) return;
 
     const extension = url.pathname.split('.').pop()?.toLowerCase();
+    if (url.pathname === '/js/site-version.js') {
+        event.respondWith(networkFirst(request));
+        return;
+    }
     if (request.mode === 'navigate' || extension === 'html' || extension === 'json' || url.pathname.startsWith('/hf/')) {
         event.respondWith(networkFirst(request));
         return;
