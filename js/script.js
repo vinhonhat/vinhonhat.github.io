@@ -707,15 +707,68 @@
         return [...new Set((items || []).filter(Boolean))];
     }
 
-    function holidayBannerVariants(holiday, _mobile = false) {
+    const holidayImageProbeCache = new Map();
+
+    function versionedImagePath(path) {
+        const raw = String(path || '').trim();
+        if (!raw || raw.startsWith('data:') || raw.startsWith('blob:')) return raw;
+        const separator = raw.includes('?') ? '&' : '?';
+        return `${raw}${separator}v=${encodeURIComponent(VERSION)}`;
+    }
+
+    function probeHolidayImage(path) {
+        const raw = String(path || '').trim();
+        if (!raw) return Promise.resolve(null);
+        if (raw.startsWith('data:') || raw.startsWith('blob:')) return Promise.resolve(raw);
+        if (holidayImageProbeCache.has(raw)) return holidayImageProbeCache.get(raw);
+        const promise = new Promise(resolve => {
+            const image = new Image();
+            let finished = false;
+            const done = value => {
+                if (finished) return;
+                finished = true;
+                image.onload = null;
+                image.onerror = null;
+                resolve(value);
+            };
+            image.onload = () => done(raw);
+            image.onerror = () => done(null);
+            image.decoding = 'async';
+            image.src = versionedImagePath(raw);
+            if (image.complete) {
+                if (image.naturalWidth > 0) done(raw);
+                else window.setTimeout(() => done(null), 0);
+            }
+            window.setTimeout(() => done(null), 5000);
+        });
+        holidayImageProbeCache.set(raw, promise);
+        return promise;
+    }
+
+    async function existingHolidayImages(candidates) {
+        const pool = uniqueHolidayPaths(candidates);
+        const results = await Promise.all(pool.map(probeHolidayImage));
+        return results.filter(Boolean);
+    }
+
+    function holidayBannerVariants(holiday, mobile = false) {
         const prefix = String(holiday?.imagePrefix || '').trim();
         if (!prefix) return [];
-        // Hai biến thể chuẩn được luân phiên ngẫu nhiên và không lặp liên tiếp.
-        // Ví dụ: tet.png ↔ tet.jpg, 0101.png ↔ 0101.jpg.
-        return [
+        const deviceSuffix = mobile ? 'm' : 'd';
+        // Banner chuẩn dùng hai biến thể không hậu tố: 0902.png và 0902.jpg.
+        // Hậu tố m/d chỉ là dự phòng để tương thích kho ảnh cũ.
+        return uniqueHolidayPaths([
             `/img/holidays/${prefix}.png`,
-            `/img/holidays/${prefix}.jpg`
-        ];
+            `/img/holidays/${prefix}.jpg`,
+            `/img/holidays/${prefix}.webp`,
+            `/img/holidays/${prefix}.jpeg`,
+            `/img/holidays/${prefix}.PNG`,
+            `/img/holidays/${prefix}.JPG`,
+            `/img/holidays/${prefix}${deviceSuffix}.png`,
+            `/img/holidays/${prefix}${deviceSuffix}.jpg`,
+            `/img/holidays/${prefix}${deviceSuffix}.webp`,
+            `/img/holidays/${prefix}${deviceSuffix}.jpeg`
+        ]);
     }
 
     function holidayImageCandidates(holiday, mobile = false) {
@@ -872,24 +925,36 @@
     }
 
     /* ========================= BANNER ========================= */
-    function createHolidayBanner(match) {
+    async function createHolidayBanner(match) {
         const holiday = match?.holiday;
         if (!holiday) return null;
         const paths = holidayImagePaths(holiday);
         const timing = holidayTimingLabel(match);
+        const [desktopExisting, mobileExisting] = await Promise.all([
+            existingHolidayImages([
+                ...paths.desktopVariants,
+                ...paths.desktopCandidates
+            ]),
+            existingHolidayImages([
+                ...paths.mobileVariants,
+                ...paths.mobileCandidates
+            ])
+        ]);
+        const desktopVariants = desktopExisting.length ? desktopExisting : [paths.fallback];
+        const mobileVariants = mobileExisting.length ? mobileExisting : desktopVariants;
         return {
             id: `holiday-${holiday.imagePrefix}`,
             enabled: true,
             kind: 'holiday',
             title: holiday.name,
             description: `${timing}. ${holiday.message || 'Chúc một ngày lễ thật nhiều niềm vui và ý nghĩa.'}`,
-            imageDesktop: paths.desktop,
-            imageMobile: paths.mobile,
-            imageVariantsDesktop: paths.desktopVariants,
-            imageVariantsMobile: paths.mobileVariants,
+            imageDesktop: desktopVariants[0],
+            imageMobile: mobileVariants[0],
+            imageVariantsDesktop: desktopVariants,
+            imageVariantsMobile: mobileVariants,
             variantKey: holiday.imagePrefix,
-            fallbackImagesDesktop: paths.desktopCandidates,
-            fallbackImagesMobile: paths.mobileCandidates,
+            fallbackImagesDesktop: desktopVariants,
+            fallbackImagesMobile: mobileVariants,
             fallbackImage: paths.fallback,
             buttonText: 'Xem lời chúc',
             actionType: 'holiday'
@@ -915,7 +980,8 @@
         const target = banner.newTab ? ' target="_blank" rel="noopener"' : '';
         const eager = index === 0;
         const variantData = variants.length ? ` data-banner-variants="${escapeHtml(JSON.stringify(variants))}" data-banner-variant-key="${escapeHtml(variantKey)}"` : '';
-        const image = selected ? `<img src="${eager ? escapeHtml(selected) : TRANSPARENT_PIXEL}" ${eager ? '' : `data-src="${escapeHtml(selected)}"`} data-banner-fallbacks="${escapeHtml(JSON.stringify(fallbacks))}"${variantData} alt="${escapeHtml(banner.title || 'Banner')}" loading="${eager ? 'eager' : 'lazy'}" fetchpriority="${eager ? 'high' : 'low'}" decoding="async" data-banner-image>` : '';
+        const imageAlt = banner.kind === 'holiday' ? '' : (banner.title || 'Banner');
+        const image = selected ? `<img src="${eager ? escapeHtml(versionedImagePath(selected)) : TRANSPARENT_PIXEL}" ${eager ? '' : `data-src="${escapeHtml(versionedImagePath(selected))}"`} data-banner-fallbacks="${escapeHtml(JSON.stringify(fallbacks.map(versionedImagePath)))}"${variantData} alt="${escapeHtml(imageAlt)}" loading="${eager ? 'eager' : 'lazy'}" fetchpriority="${eager ? 'high' : 'low'}" decoding="async" data-banner-image>` : '';
         const media = url
             ? `<a class="home-banner-media home-banner-link" href="${escapeHtml(url)}"${target} aria-label="${escapeHtml(banner.title || 'Mở banner')}">${image}</a>`
             : `<div class="home-banner-media">${image}</div>`;
@@ -934,7 +1000,7 @@
         if (!next) return;
         const absolute = new URL(ensurePath(next, next), location.href).href;
         if (image.src !== absolute) {
-            image.src = ensurePath(next, next);
+            image.src = versionedImagePath(ensurePath(next, next));
             image.dataset.activeHolidayVariant = next;
         }
     }
@@ -1146,7 +1212,7 @@
         };
     }
 
-    function renderHomeBanner(config) {
+    async function renderHomeBanner(config) {
         const section = document.getElementById('home-banner-section');
         const container = document.getElementById('home-banner');
         if (!section || !container) return;
@@ -1157,7 +1223,7 @@
         activeHolidayBanner = config.banner.holidaySlideEnabled
             ? resolveHolidayWindow(config.banner.holidayBeforeDays, config.banner.holidayAfterDays)
             : null;
-        const holidayBanner = activeHolidayBanner ? createHolidayBanner(activeHolidayBanner) : null;
+        const holidayBanner = activeHolidayBanner ? await createHolidayBanner(activeHolidayBanner) : null;
         const holidaySlides = holidayBanner ? [holidayBanner] : [];
         let banners = [];
         if (config.banner.mode === 'ads-only') banners = ads;
@@ -1353,7 +1419,7 @@
             activeHolidayToday = exactTodayHoliday();
             const [posts, config] = await Promise.all([getPosts(), getHomeConfig()]);
             currentHomeConfig = config;
-            renderHomeBanner(config);
+            await renderHomeBanner(config);
             applyFooterSocials(config);
             const topics = document.querySelector('.home-topic-strip');
             const heroSection = document.querySelector('.news-hero');
