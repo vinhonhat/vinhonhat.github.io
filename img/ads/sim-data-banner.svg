@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="520" viewBox="0 0 1600 520" role="img" aria-labelledby="title desc">
+  <title id="title">SIM data Nhật Bản</title>
+  <desc id="desc">Banner trang trí cho dịch vụ SIM data tại Nhật Bản</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#19324b"/>
+      <stop offset="0.58" stop-color="#245f85"/>
+      <stop offset="1" stop-color="#e07a16"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="75%" cy="32%" r="60%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".42"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#07111b" flood-opacity=".35"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="520" fill="url(#bg)"/>
+  <rect width="1600" height="520" fill="url(#glow)"/>
+  <g opacity=".13" fill="none" stroke="#fff" stroke-width="2">
+    <circle cx="1300" cy="130" r="250"/>
+    <circle cx="1300" cy="130" r="190"/>
+    <circle cx="1300" cy="130" r="130"/>
+  </g>
+  <g transform="translate(1120 72) rotate(8 170 190)" filter="url(#shadow)">
+    <rect x="0" y="0" width="330" height="380" rx="44" fill="#fff"/>
+    <rect x="22" y="22" width="286" height="336" rx="32" fill="#f4f7f9" stroke="#d8e1e8" stroke-width="3"/>
+    <path d="M108 88h114a24 24 0 0 1 24 24v155a24 24 0 0 1-24 24H108a24 24 0 0 1-24-24V112a24 24 0 0 1 24-24z" fill="#e57c18"/>
+    <path d="M132 88v60h66V88" fill="#fff" opacity=".88"/>
+    <rect x="113" y="182" width="104" height="18" rx="9" fill="#fff" opacity=".95"/>
+    <rect x="113" y="214" width="75" height="14" rx="7" fill="#fff" opacity=".7"/>
+    <circle cx="165" cy="315" r="14" fill="#245f85"/>
+  </g>
+  <g transform="translate(930 112)" opacity=".94">
+    <path d="M0 190c60-104 132-156 216-156s156 52 216 156" fill="none" stroke="#fff" stroke-width="18" stroke-linecap="round" opacity=".22"/>
+    <path d="M52 190c46-70 101-105 164-105s118 35 164 105" fill="none" stroke="#fff" stroke-width="18" stroke-linecap="round" opacity=".42"/>
+    <path d="M112 190c29-36 64-54 104-54s75 18 104 54" fill="none" stroke="#fff" stroke-width="18" stroke-linecap="round" opacity=".72"/>
+    <circle cx="216" cy="205" r="20" fill="#fff"/>
+  </g>
+</svg>
