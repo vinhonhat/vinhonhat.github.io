@@ -3,6 +3,15 @@
 // 📌 Dùng cho trang bai-viet-hd.html, hoctap. html, cấp độ đầu tiên sau trang chủ
 // Hiển thị 2 bài mới nhất của mỗi category, layout y chang rakuten (card PC + list mobile + sidebar gợi ý)
 // Nếu category không có bài => ẩn luôn cả section
+
+function canShowPostInCurrentList(post) {
+    if (!post || post.showInLists === false) return false;
+    const mobile = window.matchMedia('(max-width: 700px)').matches;
+    if (mobile && post.showOnMobile === false) return false;
+    if (!mobile && post.showOnDesktop === false) return false;
+    return true;
+}
+
 // Hàm này dùng để đổi định dạng ngày sang kiểu "ngày 07 tháng 11 năm 2025"
 function formatDate(dateString) {
     if (!dateString) return ""; 
@@ -46,7 +55,7 @@ function renderPostsForCategory(category, containerId, allContent, maxPosts = 2)
     // SỬA THÀNH ĐOẠN NÀY (đã thêm logic "status" và đơn giản hóa "category"):
     const categoryPosts = allContent.filter(post => {
         // 1. Ẩn bài nếu status là 0
-        if (post.status === 0) return false;
+        if (post.status === 0 || !canShowPostInCurrentList(post)) return false;
         // 2. Lọc theo category (chỉ kiểm tra array)
         if (Array.isArray(post.category)) {
             return post.category.includes(category);
@@ -126,7 +135,7 @@ function renderSuggestions(containerId, allContent) {
     // SỬA THÀNH ĐOẠN NÀY (đã thêm logic "status"):
     const recentPosts = allContent.filter(post => {
         // 1. Ẩn bài nếu status là 0
-        if (post.status === 0) return false;
+        if (post.status === 0 || !canShowPostInCurrentList(post)) return false;
 
         // 2. Lọc theo ngày
         if (!post.date) return false;
@@ -181,9 +190,9 @@ function renderSuggestions(containerId, allContent) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-        fetch('/data/posts.json') // Tải file JSON
+        fetch('/data/posts-index.json?v=26.8.1-beta5') // Tải file JSON
             .then(response => {
-                if (!response.ok) throw new Error("Không thể tải /data/posts.json");
+                if (!response.ok) throw new Error("Không thể tải /data/posts-index.json");
                 return response.json();
             })
             .then(allContent => {

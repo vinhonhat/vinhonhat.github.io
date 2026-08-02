@@ -1,0 +1,83 @@
+{
+  "version": "26.7.31.8",
+  "sections": {
+    "banner": true,
+    "featured": true,
+    "topics": true,
+    "latestFeed": true,
+    "sidebar": true
+  },
+  "feed": {
+    "source": "new",
+    "initialCount": 8,
+    "batchSize": 4,
+    "maxItems": 20,
+    "autoLoad": true,
+    "showShare": true
+  },
+  "holiday": {
+    "popupEnabled": true,
+    "fireworksEnabled": true,
+    "showOncePerDay": true,
+    "popupDurationMs": 7500
+  },
+  "social": {
+    "facebook": "https://fb.com/tqv2022",
+    "messenger": "https://m.me/tqv2022",
+    "zalo": "",
+    "tiktok": "https://www.tiktok.com/@tqv2020",
+    "email": ""
+  },
+  "footer": {
+    "text": "Chia sẻ hướng dẫn thực tế, dễ hiểu dành cho người Việt đang sinh sống tại Nhật Bản.",
+    "showQuickLinks": true,
+    "contactLabel": ""
+  },
+  "mobileNav": {
+    "enabled": true,
+    "items": [
+      "home",
+      "latest",
+      "search",
+      "menu"
+    ],
+    "showLabels": true,
+    "labels": {
+      "home": "Trang chủ",
+      "latest": "Mới nhất",
+      "search": "Tìm kiếm",
+      "menu": "Menu"
+    },
+    "icons": {
+      "home": "",
+      "latest": "",
+      "search": "",
+      "menu": ""
+    }
+  },
+  "lunar": {
+    "showMoon": true,
+    "showSolarDate": true,
+    "showLunarDate": true
+  },
+  "mobileMenu": {
+    "showIntro": true,
+    "eyebrow": "Giới thiệu",
+    "title": "Vinh ở Nhật",
+    "text": "Tin tức, hướng dẫn và công cụ hữu ích dành cho người Việt đang sinh sống tại Nhật Bản.",
+    "icons": {
+      "posts": "B",
+      "study": "学",
+      "downloads": "↓",
+      "fun": "▶",
+      "rakuten": "R",
+      "seven": "7",
+      "sim": "S",
+      "life": "日"
+    }
+  },
+  "mobileHome": {
+    "hideTopics": true,
+    "guideTitle": "Gợi ý thêm"
+  }
+}

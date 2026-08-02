@@ -1,222 +1,76 @@
-// page-leve3.js  <!-- PHIÊN BẢN V26.1.18 -->
-// 📌 Dùng cho các trang bài viết chi tiết (để hiện gợi ý) HOẶC các trang trống (để hiện thông báo chưa có bài)
+// Gợi ý cho trang bài viết chi tiết - V26.7.28.3
+(() => {
+    'use strict';
 
-// Hàm đổi định dạng ngày: "ngày 07 tháng 11 năm 2025"
-function formatDate(dateString) {
-    if (!dateString) return ""; 
-    try {
-        const date = new Date(dateString);
-        const day = String(date.getDate()).padStart(2, '0');
-        const monthName = date.toLocaleDateString('vi-VN', { month: 'long' });
-        const year = date.getFullYear();
-        if (!day || !monthName || isNaN(year)) return dateString;
-        return `ngày ${day} ${monthName} năm ${year}`;
-    } catch (e) {
-        return dateString;
-    }
-}
+    const DATA_URL = '/data/posts-index.json?v=26.8.1-beta5';
 
-// Hàm này dùng để đổi định dạng ngày sang kiểu "07-11-2025" (ngắn gọn)
-function formatDateSimple(dateString) {
-    if (!dateString) return ""; 
-    try {
-        const date = new Date(dateString);
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        if (isNaN(day) || isNaN(month) || isNaN(year)) return dateString;
-        return `${day}-${month}-${year}`; // Định dạng DD-MM-YYYY
-    } catch (e) {
-        return dateString;
-    }
-}
-
-function initializeFlexiblePage(allContent) {
-    console.log('[LOGIC-CUSTOM] Khởi tạo trang linh hoạt.');
-
-    const el = {
-        body: document.body,
-        main: document.getElementById("main-content-container"),
-        suggestions: document.getElementById("suggested-posts-container"),
-        pagination: document.getElementById("pagination-container"),
-        title: document.getElementById("page-title"),
-        desc: document.getElementById("page-description"),
+    const canShowPostInCurrentList = post => {
+        if (!post || post.showInLists === false) return false;
+        const mobile = window.matchMedia('(max-width: 700px)').matches;
+        if (mobile && post.showOnMobile === false) return false;
+        if (!mobile && post.showOnDesktop === false) return false;
+        return true;
     };
 
-    const cfg = {
-        category: el.body.dataset.category || "",
-        title: el.body.dataset.title || "Danh mục bài viết",
-        desc: el.body.dataset.description || "",
+    const DEFAULT_IMAGE = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" width="320" height="220"><rect width="100%" height="100%" fill="#eceff1"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#8a929b" font-family="Arial" font-size="20">Vinh ở Nhật</text></svg>'
+    );
+
+    const escapeHtml = (value = '') => String(value).replace(/[&<>'"]/g, char => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+    })[char]);
+
+    const ensurePath = (value, fallback = '#') => {
+        const path = String(value || '').trim();
+        if (!path) return fallback;
+        if (/^(https?:|data:|blob:|\/)/i.test(path)) return path;
+        return '/' + path.replace(/^\.\//, '');
     };
 
-    /// ================================================================
-    // PHẦN 1: XỬ LÝ TIÊU ĐỀ & TRANG TRỐNG
-    // ================================================================
-    // Logic: Chỉ thay đổi tiêu đề nếu là trang danh mục (có data-category)
-    // Nếu là trang bài viết chi tiết thì giữ nguyên tiêu đề gốc của bài.
-    // CHỈ nên chạy trên CÁC TRANG DANH MỤC (có data-category)
-    // hoặc các trang trống đặc biệt (có el.main).
-    // Nó KHÔNG được chạy trên trang bài viết chi tiết (vì tiêu đề/mô tả đã do CMS điền).
-    
-    if (el.body.dataset.category || el.main) {
-        console.log('[LOGIC-CUSTOM] Phát hiện trang danh mục, đang đặt tiêu đề/mô tả.');
-        // Chỉ chạy nếu tìm thấy các ID này
-        if (el.title) {
-            el.title.textContent = cfg.title;
+    const parseDate = value => {
+        const match = String(value || '').match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+        if (match) return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3])).getTime();
+        const parsed = Date.parse(value || '');
+        return Number.isNaN(parsed) ? 0 : parsed;
+    };
+
+    const formatDate = value => {
+        const stamp = parseDate(value);
+        if (!stamp) return '';
+        return new Intl.DateTimeFormat('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(stamp));
+    };
+
+    const template = post => {
+        const image = ensurePath(post.imageUrl, DEFAULT_IMAGE);
+        const link = ensurePath(post.link);
+        return `<a class="compact-post" href="${escapeHtml(link)}">
+            <img src="${escapeHtml(image)}" alt="${escapeHtml(post.title || 'Ảnh bài viết')}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='${DEFAULT_IMAGE}'">
+            <span><strong>${escapeHtml(post.title || '')}</strong><small>${escapeHtml(formatDate(post.date))}</small></span>
+        </a>`;
+    };
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const container = document.getElementById('suggested-posts-container');
+        if (!container) return;
+        try {
+            const response = await fetch(DATA_URL, { cache: 'no-cache' });
+            if (!response.ok) throw new Error(`Không thể tải dữ liệu (${response.status})`);
+            const currentPath = decodeURI(location.pathname).replace(/\/+$/, '');
+            const posts = (await response.json())
+                .filter(post => post && post.status !== 0 && canShowPostInCurrentList(post) && post.type !== 'video' && post.title && post.link)
+                .filter(post => {
+                    try {
+                        return decodeURI(new URL(ensurePath(post.link), location.origin).pathname).replace(/\/+$/, '') !== currentPath;
+                    } catch (_) {
+                        return true;
+                    }
+                })
+                .sort((a, b) => parseDate(b.date) - parseDate(a.date))
+                .slice(0, 5);
+            container.innerHTML = posts.map(template).join('') || '<p class="search-empty">Chưa có bài gợi ý.</p>';
+        } catch (error) {
+            console.error(error);
+            container.innerHTML = '<p class="search-empty">Không thể tải bài gợi ý.</p>';
         }
-        if (el.desc) {
-            el.desc.textContent = cfg.desc;
-        }
-        
-        // Chỉ chạy nếu tìm thấy el.main (trang trống)
-        if (el.main) {
-            el.main.innerHTML = `
-        		<div class="bg-white p-8 rounded-lg shadow text-center text-gray-600">
-        			<p class="mb-4">Hiện chưa có bài viết nào trong mục này.</p>
-        		</div>
-        	`;
-        }
-    } else {
-         console.log('[LOGIC-CUSTOM] Phát hiện trang bài viết chi tiết, bỏ qua đặt tiêu đề.');
-    }
-    // === KẾT THÚC SỬA LỖI ===
-
-
-    // ================================================================
-    // PHẦN 2: MỤC GỢI Ý (Sidebar hoặc Cuối trang)
-    // ================================================================
-    // Hàm này bây giờ sẽ luôn luôn chạy được
-    function renderSuggestions() {
-        
-        // SỬA LỖI NHỎ: Phải kiểm tra el.suggestions trước khi dùng
-        if (!el.suggestions) {
-             console.log('[LOGIC-CUSTOM] Không tìm thấy "suggested-posts-container", bỏ qua gợi ý.');
-             return;
-        }
-        
-        el.suggestions.innerHTML = "";
-
-        const sixMonthsAgo = new Date();
-        sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-
-        // SỬA THÀNH ĐOẠN NÀY (đã thêm logic "status"):
-        let recent = allContent.filter(p => {
-            // 1. Ẩn bài nếu status là 0
-            if (p.status === 0) return false;
-
-            // 2. Lọc theo ngày
-            if (!p.date) return false;
-            const d = new Date(p.date);
-            return d >= sixMonthsAgo;
-        });
-
-        if (recent.length === 0 && allContent.length > 0) {
-            recent = [...allContent];
-        }
-
-        const shuffled = recent.sort(() => 0.5 - Math.random());
-        const max = window.innerWidth < 640 ? 4 : 6;
-        const show = shuffled.slice(0, max);
-
-        show.forEach(post => {
-            let img = post.imageUrl || "https://placehold.co/80x80/ccc/fff?text=IMG";
-            if (!img.startsWith("http") && !img.startsWith("/")) img = "/" + img;
-            let link = post.link || "#";
-            if (!link.startsWith("http") && !link.startsWith("/"))
-                link = "/" + link;
-
-            el.suggestions.innerHTML += `
-                <a href="${link}" 
-                    class="hidden sm:flex items-center p-2 rounded-lg hover:bg-yellow-100 transition-colors duration-200 group mb-4">
-                    <img src="${img}" alt="${post.title}" class="w-16 h-16 object-cover rounded-md flex-shrink-0">
-                    <div class="ml-4">
-                        <h4 class="truncate-2-lines font-semibold text-gray-800 group-hover:text-yellow-700">${post.title}</h4>
-                        <div class="text-xs text-gray-500 mt-1 flex items-center">
-                            <i class="far fa-calendar-alt mr-1"></i>
-                            <span>${formatDateSimple(post.date)}</span>
-                        </div>
-                    </div>
-                </a>
-
-                <a href="${link}" 
-                    class="block sm:hidden p-2 rounded-lg hover:bg-yellow-100 transition-colors duration-200 group mb-4 text-center">
-                    <img src="${img}" alt="${post.title}" class="w-16 h-16 object-cover rounded-md mx-auto mb-2">
-                    <h4 class="truncate-2-lines font-semibold text-gray-800 group-hover:text-yellow-700 ">${post.title}</h4>
-                    <div class="text-xs text-gray-500 mt-1 flex justify-center items-center">
-                        <i class="far fa-calendar-alt mr-1"></i><span>${formatDateSimple(post.date)}</span>
-                    </div>
-                </a>`;
-        });
-    }
-
-    renderSuggestions();
-
-    // ============= 3️⃣ FORM THÊM BÀI VIẾT =============
-    
-    // ================================================================
-    // PHẦN 3: FORM THÊM BÀI VIẾT THỦ CÔNG (Nếu có nút Toggle)
-    // ================================================================
-    // Toàn bộ logic form chỉ chạy NẾU tìm thấy nút 'toggle-add-form'
-    const toggleBtn = document.getElementById("toggle-add-form");
-    if (toggleBtn) {
-        const form = document.getElementById("add-form");
-        const addBtn = document.getElementById("add-post-btn");
-        const list = document.getElementById("manual-posts");
-
-        toggleBtn.addEventListener("click", () => {
-            form.classList.toggle("hidden");
-        });
-
-        addBtn.addEventListener("click", () => {
-            const title = document.getElementById("post-title").value.trim();
-            const image = document.getElementById("post-image").value.trim() || "https://placehold.co/400x250/ccc/fff?text=Ảnh";
-            const link = document.getElementById("post-link").value.trim() || "#";
-            const summary = document.getElementById("post-summary").value.trim() || "Không có mô tả.";
-
-            if (!title) {
-                alert("Vui lòng nhập tiêu đề bài viết!");
-                return;
-            }
-
-            const html = `
-                <div class="bg-white rounded-lg shadow overflow-hidden hover:shadow-lg transition">
-                    <a href="${link}" target="_blank">
-                        <img src="${image}" alt="${title}" class="w-full h-48 object-cover">
-                    </a>
-                    <div class="p-4">
-                        <h3 class="font-bold text-lg mb-1 text-gray-800">${title}</h3>
-                        <p class="text-gray-600 text-sm mb-3">${summary}</p>
-                        <a href="${link}" target="_blank" class="text-yellow-600 hover:underline">Xem chi tiết →</a>
-                    </div>
-                </div>
-            `;
-            list.insertAdjacentHTML("afterbegin", html);
-
-            form.reset();
-            form.classList.add("hidden");
-        });
-    }
-
-}
-
-// ================================================================
-// PHẦN 4: TẢI DỮ LIỆU TỪ JSON
-// ================================================================
-// (Phần này đã đúng, giữ nguyên)
-document.addEventListener('DOMContentLoaded', () => {
-    fetch('/data/posts.json')
-        .then(response => {
-            if (!response.ok) throw new Error("Không thể tải /data/posts.json");
-            return response.json();
-        })
-        .then(allContent => {
-            // Dữ liệu đã sẵn sàng, gọi hàm khởi tạo chính
-            initializeFlexiblePage(allContent);
-        })
-        .catch(error => {
-            console.error('[LỖI] Không thể tải dữ liệu JSON cho page-logic-custom:', error);
-            // Bạn có thể thêm 1 thông báo lỗi vào phần gợi ý nếu muốn
-            const suggestionsContainer = document.getElementById('suggested-posts-container');
-            if (suggestionsContainer) suggestionsContainer.innerHTML = "<p>Lỗi tải gợi ý.</p>";
-        });
-});
+    });
+})();

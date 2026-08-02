@@ -1,0 +1,284 @@
+{
+  "version": "26.8.1-beta5",
+  "sections": {
+    "articles": {
+      "enabled": true,
+      "pagePath": "/pages/pages-baiviet/bai-viet-hd.html",
+      "layout": "magazine",
+      "accent": "#e97800",
+      "kicker": "Cẩm nang tại Nhật",
+      "title": "Cẩm nang & Hướng dẫn",
+      "description": "Hướng dẫn thực tế, kinh nghiệm và tài liệu hữu ích được sắp xếp theo từng chủ đề để dễ tìm và dễ đọc.",
+      "featuredTitle": "Nổi bật",
+      "latestTitle": "Mới cập nhật",
+      "sidebarTitle": "Gợi ý thêm",
+      "featuredCount": 5,
+      "pageSize": 8,
+      "showSidebar": true,
+      "excludeCategories": ["video", "game", "app"],
+      "topics": [
+        {"id": "all", "label": "Tất cả", "icon": "⌂", "categories": []},
+        {"id": "rakuten", "label": "Rakuten", "icon": "R", "categories": ["rakuten"]},
+        {"id": "seven", "label": "Seven Bank", "icon": "7", "categories": ["seven"]},
+        {"id": "sim", "label": "SIM & điện thoại", "icon": "S", "categories": ["sim", "iphone"]},
+        {"id": "life", "label": "Cuộc sống Nhật", "icon": "日", "categories": ["other", "bank", "vneid"]},
+        {"id": "study", "label": "Học tập", "icon": "学", "categories": ["nihongo", "n0", "tokutei", "kaigo", "nongnghiep", "thucpham", "nhahang", "hotel", "tokuteikhac"]}
+      ],
+      "quickLinks": [
+        {"label": "Rakuten", "description": "SIM, thẻ và dịch vụ", "topic": "rakuten", "icon": "R"},
+        {"label": "Seven Bank", "description": "Tài khoản và ứng dụng", "topic": "seven", "icon": "7"},
+        {"label": "SIM Nhật", "description": "Cấu hình và sử dụng", "topic": "sim", "icon": "S"},
+        {"label": "Học tập", "description": "Tiếng Nhật và Tokutei", "topic": "study", "icon": "学"}
+      ]
+    },
+    "rakuten": {
+      "enabled": true,
+      "pagePath": "/pages/pages-baiviet/rakuten.html",
+      "layout": "magazine",
+      "accent": "#d90027",
+      "kicker": "Dịch vụ tại Nhật",
+      "title": "Rakuten",
+      "description": "Cước SIM, hóa đơn, nhóm gia đình, thẻ tín dụng và những dịch vụ Rakuten thường dùng.",
+      "featuredTitle": "Hướng dẫn Rakuten nổi bật",
+      "latestTitle": "Bài Rakuten mới cập nhật",
+      "sidebarTitle": "Có thể anh cần",
+      "featuredCount": 5,
+      "pageSize": 8,
+      "showSidebar": true,
+      "categories": ["rakuten"],
+      "topics": [
+        {"id": "all", "label": "Tất cả", "icon": "R", "categories": []},
+        {"id": "mobile", "label": "Rakuten Mobile", "icon": "SIM", "keywords": ["sim", "mobile", "cước", "mnp", "hóa đơn", "hoá đơn", "gia đình"]},
+        {"id": "card", "label": "Thẻ & thanh toán", "icon": "¥", "keywords": ["thẻ", "credit", "thanh toán", "bank"]},
+        {"id": "video", "label": "Video nhanh", "icon": "▶", "categories": ["video"], "keywords": ["rakuten"]}
+      ],
+      "quickLinks": [
+        {"label": "Rakuten Mobile", "description": "Cước, SIM và chuyển mạng", "topic": "mobile", "icon": "SIM"},
+        {"label": "Thẻ Rakuten", "description": "Mất thẻ và thanh toán", "topic": "card", "icon": "¥"}
+      ]
+    },
+    "seven": {
+      "enabled": true,
+      "pagePath": "/pages/pages-baiviet/seven.html",
+      "layout": "magazine",
+      "accent": "#ef6b00",
+      "kicker": "Ngân hàng tại Nhật",
+      "title": "Seven Bank",
+      "description": "Mở tài khoản, cài ứng dụng, đăng nhập, cập nhật thẻ ngoại kiều và sử dụng Seven Bank.",
+      "featuredTitle": "Hướng dẫn Seven Bank nổi bật",
+      "latestTitle": "Mới cập nhật",
+      "sidebarTitle": "Bài liên quan",
+      "featuredCount": 5,
+      "pageSize": 8,
+      "showSidebar": true,
+      "categories": ["seven"],
+      "topics": [
+        {"id": "all", "label": "Tất cả", "icon": "7", "categories": []},
+        {"id": "register", "label": "Đăng ký", "icon": "+", "keywords": ["đăng ký", "mở tài khoản", "create"]},
+        {"id": "app", "label": "Ứng dụng", "icon": "APP", "keywords": ["ứng dụng", "đăng nhập", "app"]},
+        {"id": "card", "label": "Thẻ & cập nhật", "icon": "ID", "keywords": ["thẻ", "ngoại kiều", "debit", "cập nhật"]}
+      ],
+      "quickLinks": [
+        {"label": "Mở tài khoản", "description": "Đăng ký Seven Bank", "topic": "register", "icon": "+"},
+        {"label": "Dùng ứng dụng", "description": "Cài và đăng nhập", "topic": "app", "icon": "APP"},
+        {"label": "Cập nhật giấy tờ", "description": "Thẻ ngoại kiều và Debit", "topic": "card", "icon": "ID"}
+      ]
+    },
+    "sim": {
+      "enabled": true,
+      "pagePath": "/pages/pages-baiviet/sim.html",
+      "layout": "magazine",
+      "accent": "#178a4b",
+      "kicker": "Điện thoại tại Nhật",
+      "title": "SIM & Điện thoại",
+      "description": "Cấu hình SIM data, chuyển mạng, thanh toán cước và các hướng dẫn điện thoại cần dùng tại Nhật.",
+      "featuredTitle": "Hướng dẫn SIM nổi bật",
+      "latestTitle": "Mới cập nhật",
+      "sidebarTitle": "Bài nên xem",
+      "featuredCount": 5,
+      "pageSize": 8,
+      "showSidebar": true,
+      "categories": ["sim", "iphone", "vneid"],
+      "topics": [
+        {"id": "all", "label": "Tất cả", "icon": "S", "categories": []},
+        {"id": "setup", "label": "Cấu hình SIM", "icon": "APN", "keywords": ["cấu hình", "apn", "data", "nghe gọi"]},
+        {"id": "mnp", "label": "Chuyển mạng", "icon": "MNP", "keywords": ["mnp", "chuyển mạng"]},
+        {"id": "payment", "label": "Thanh toán cước", "icon": "¥", "keywords": ["cước", "smartpit", "combini", "thanh toán"]},
+        {"id": "iphone", "label": "iPhone & iPad", "icon": "", "categories": ["iphone"], "keywords": ["iphone", "ipad", "apple"]}
+      ],
+      "quickLinks": [
+        {"label": "Cài APN", "description": "SIM data và nghe gọi", "topic": "setup", "icon": "APN"},
+        {"label": "Mã MNP", "description": "Chuyển sang mạng khác", "topic": "mnp", "icon": "MNP"},
+        {"label": "Đóng cước", "description": "SmartPit và combini", "topic": "payment", "icon": "¥"}
+      ]
+    },
+    "life": {
+      "enabled": true,
+      "pagePath": "/pages/pages-baiviet/other.html",
+      "layout": "magazine",
+      "accent": "#3867c8",
+      "kicker": "Kinh nghiệm thực tế",
+      "title": "Cuộc sống tại Nhật",
+      "description": "Ngân hàng, giao nhận, giấy tờ, điện thoại và những tiện ích thường gặp trong cuộc sống hằng ngày.",
+      "featuredTitle": "Hướng dẫn đáng chú ý",
+      "latestTitle": "Mới cập nhật",
+      "sidebarTitle": "Xem thêm",
+      "featuredCount": 5,
+      "pageSize": 8,
+      "showSidebar": true,
+      "categories": ["other", "bank", "vneid", "iphone"],
+      "topics": [
+        {"id": "all", "label": "Tất cả", "icon": "日", "categories": []},
+        {"id": "bank", "label": "Ngân hàng", "icon": "¥", "categories": ["bank"], "keywords": ["ngân hàng", "yucho", "chuyển khoản"]},
+        {"id": "delivery", "label": "Giao hàng", "icon": "箱", "keywords": ["yamato", "giao hàng", "giao lại"]},
+        {"id": "documents", "label": "Giấy tờ", "icon": "ID", "keywords": ["mynumber", "vneid", "ngoại kiều", "giấy tờ"]},
+        {"id": "utility", "label": "Tiện ích", "icon": "✓", "keywords": ["iphone", "thẻ thành viên", "check máy tính", "city"]}
+      ],
+      "quickLinks": [
+        {"label": "Ngân hàng", "description": "Yucho và chuyển khoản", "topic": "bank", "icon": "¥"},
+        {"label": "Giao nhận", "description": "Hẹn giao lại hàng", "topic": "delivery", "icon": "箱"},
+        {"label": "Giấy tờ", "description": "My Number và VNeID", "topic": "documents", "icon": "ID"}
+      ]
+    },
+    "study": {
+      "enabled": true,
+      "pagePath": "/pages/pages-hoctap/hoctap.html",
+      "layout": "magazine",
+      "accent": "#9a4bc4",
+      "kicker": "Học tập",
+      "title": "Học tập & Tokutei",
+      "description": "Tài liệu tiếng Nhật, luyện viết, học cho bé và ôn thi các ngành kỹ năng đặc định.",
+      "featuredTitle": "Tài liệu nổi bật",
+      "latestTitle": "Mới cập nhật",
+      "sidebarTitle": "Gợi ý học tập",
+      "featuredCount": 5,
+      "pageSize": 8,
+      "showSidebar": true,
+      "categories": ["nihongo", "n0", "tokutei", "kaigo", "nongnghiep", "thucpham", "nhahang", "hotel", "tokuteikhac", "post"],
+      "includeLinks": ["https://vinhonhat.github.io/behoc/"],
+      "topics": [
+        {"id": "all", "label": "Tất cả", "icon": "学", "categories": []},
+        {"id": "nihongo", "label": "Tiếng Nhật", "icon": "日", "categories": ["nihongo", "n0"]},
+        {"id": "tokutei", "label": "Tokutei", "icon": "技", "categories": ["tokutei", "kaigo", "nongnghiep", "thucpham", "nhahang", "hotel", "tokuteikhac"]},
+        {"id": "kids", "label": "Học cho bé", "icon": "★", "keywords": ["bé", "học vừa chơi"]}
+      ],
+      "quickLinks": [
+        {"label": "Tiếng Nhật", "description": "Ứng dụng và luyện viết", "topic": "nihongo", "icon": "日"},
+        {"label": "Tài liệu Tokutei", "description": "Ôn thi theo ngành", "topic": "tokutei", "icon": "技"},
+        {"label": "Học cho bé", "description": "Vừa học vừa chơi", "topic": "kids", "icon": "★"}
+      ]
+    },
+    "nihongo": {
+      "enabled": true,
+      "pagePath": "/pages/pages-hoctap/nihongo.html",
+      "layout": "magazine",
+      "accent": "#e84c72",
+      "kicker": "Tiếng Nhật",
+      "title": "Học tiếng Nhật",
+      "description": "Ứng dụng luyện tiếng Nhật, tài liệu luyện viết và nội dung hỗ trợ học hằng ngày.",
+      "featuredTitle": "Nội dung nên bắt đầu",
+      "latestTitle": "Tài liệu mới",
+      "sidebarTitle": "Học thêm",
+      "featuredCount": 5,
+      "pageSize": 8,
+      "showSidebar": true,
+      "categories": ["nihongo", "n0"],
+      "topics": [
+        {"id": "all", "label": "Tất cả", "icon": "日", "categories": []},
+        {"id": "app", "label": "Ứng dụng", "icon": "APP", "keywords": ["ứng dụng", "quest"]},
+        {"id": "writing", "label": "Luyện viết", "icon": "字", "keywords": ["luyện viết", "kanji", "chữ"]}
+      ],
+      "quickLinks": [
+        {"label": "Nihongo Quest", "description": "Học từ nhập môn đến N1", "topic": "app", "icon": "APP"},
+        {"label": "Luyện viết", "description": "Mẫu giấy và Kanji", "topic": "writing", "icon": "字"}
+      ]
+    },
+    "tokutei": {
+      "enabled": true,
+      "pagePath": "/pages/pages-hoctap/tokutei.html",
+      "layout": "magazine",
+      "accent": "#25795e",
+      "kicker": "Kỹ năng đặc định",
+      "title": "Tài liệu Tokutei",
+      "description": "Tài liệu ôn thi thực phẩm, nhà hàng, kaigo, nông nghiệp, khách sạn và các ngành Tokutei khác.",
+      "featuredTitle": "Tài liệu được chọn",
+      "latestTitle": "Tài liệu mới cập nhật",
+      "sidebarTitle": "Ngành khác",
+      "featuredCount": 5,
+      "pageSize": 10,
+      "showSidebar": true,
+      "categories": ["tokutei", "kaigo", "nongnghiep", "thucpham", "nhahang", "hotel", "tokuteikhac"],
+      "topics": [
+        {"id": "all", "label": "Tất cả", "icon": "技", "categories": []},
+        {"id": "food", "label": "Thực phẩm", "icon": "食", "categories": ["thucpham"]},
+        {"id": "restaurant", "label": "Nhà hàng", "icon": "店", "categories": ["nhahang"]},
+        {"id": "kaigo", "label": "Kaigo", "icon": "介", "categories": ["kaigo"]},
+        {"id": "farm", "label": "Nông nghiệp", "icon": "農", "categories": ["nongnghiep"]},
+        {"id": "hotel", "label": "Khách sạn", "icon": "宿", "categories": ["hotel"]},
+        {"id": "other", "label": "Ngành khác", "icon": "+", "categories": ["tokuteikhac"]}
+      ],
+      "quickLinks": [
+        {"label": "Thực phẩm", "description": "Lý thuyết và thực hành", "topic": "food", "icon": "食"},
+        {"label": "Kaigo", "description": "Tài liệu Nhật và Việt", "topic": "kaigo", "icon": "介"},
+        {"label": "Nông nghiệp", "description": "Trồng trọt và chăn nuôi", "topic": "farm", "icon": "農"}
+      ]
+    },
+    "entertainment": {
+      "enabled": true,
+      "pagePath": "/pages/pages-giaitri/giaitri.html",
+      "layout": "magazine",
+      "accent": "#e54d38",
+      "kicker": "Thư giãn",
+      "title": "Giải trí",
+      "description": "Các trò chơi nhỏ, đồng hồ và tiện ích nhẹ có thể mở trực tiếp trên trình duyệt.",
+      "featuredTitle": "Trò chơi nổi bật",
+      "latestTitle": "Chơi ngay",
+      "sidebarTitle": "Gợi ý khác",
+      "featuredCount": 5,
+      "pageSize": 8,
+      "showSidebar": true,
+      "categories": ["game"],
+      "topics": [
+        {"id": "all", "label": "Tất cả", "icon": "▶", "categories": []},
+        {"id": "game", "label": "Trò chơi", "icon": "🎮", "keywords": ["game", "chơi", "rắn", "flappy", "sudoku", "xếp hình", "vòng quay"]},
+        {"id": "timer", "label": "Đồng hồ", "icon": "⌛", "keywords": ["đồng hồ", "timer", "cát"]}
+      ],
+      "quickLinks": [
+        {"label": "Game nhanh", "description": "Mở và chơi ngay", "topic": "game", "icon": "🎮"},
+        {"label": "Đồng hồ cát", "description": "Đếm ngược thời gian", "topic": "timer", "icon": "⌛"}
+      ]
+    },
+    "downloads": {
+      "enabled": true,
+      "pagePath": "/pages/pages-app/tai-xuong.html",
+      "layout": "magazine",
+      "accent": "#2377c7",
+      "kicker": "Ứng dụng & tiện ích",
+      "title": "Kho công cụ",
+      "description": "Các ứng dụng, công cụ kiểm tra và tiện ích có thể mở hoặc tải về theo từng thiết bị.",
+      "featuredTitle": "Công cụ nên dùng",
+      "latestTitle": "Tất cả công cụ",
+      "sidebarTitle": "Nội dung liên quan",
+      "featuredCount": 4,
+      "pageSize": 8,
+      "showSidebar": true,
+      "includeLinks": [
+        "/pages/pages-app/checklcd.html",
+        "https://vinhonhat.github.io/nihongo",
+        "/pages/pages-app/ung-dung-di-ong-20260613.html",
+        "/pages/pages-app/ok.html"
+      ],
+      "topics": [
+        {"id": "all", "label": "Tất cả", "icon": "↓", "categories": []},
+        {"id": "pc", "label": "Máy tính", "icon": "PC", "keywords": ["máy tính", "check", "màn hình"]},
+        {"id": "mobile", "label": "Điện thoại", "icon": "APP", "keywords": ["di động", "điện thoại", "app"]},
+        {"id": "web", "label": "Dùng trên web", "icon": "WEB", "keywords": ["nihongo", "web", "trình duyệt", "thẻ thành viên"]}
+      ],
+      "quickLinks": [
+        {"label": "Công cụ PC", "description": "Kiểm tra máy và màn hình", "topic": "pc", "icon": "PC"},
+        {"label": "Ứng dụng mobile", "description": "Tiện ích điện thoại", "topic": "mobile", "icon": "APP"},
+        {"label": "Dùng trực tuyến", "description": "Không cần cài đặt", "topic": "web", "icon": "WEB"}
+      ]
+    }
+  }
+}

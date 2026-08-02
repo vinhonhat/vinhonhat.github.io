@@ -1,45 +1,28 @@
-const holidays = [
-    // ---------------- NGÀY DƯƠNG LỊCH --------------------------------------------------------------------CHƯA CÓ-------ĐÃ OK------NĂM NAY---------MOBILE ------PC--
-    
-    
-    
-    { day: 1, month: 1, isLunar: false, name: "Tết Dương Lịch", imagePrefix: "0101" },                                      //ok    OK-----------------------------
-    { day: 1, month: 1, isLunar: true, name: "Tết Nguyên Đán", imagePrefix: "tet" },    //                   chưa                                        // 2026
-    { day: 3, month: 2, isLunar: false, name: "Thành lập Đảng Cộng Sản Việt Nam ", imagePrefix: "0203" },                   //OK    OK  
-    //{ day: 14, month: 2, isLunar: false, name: "Lễ Tình Nhân", imagePrefix: "0214" },                                     //ok    ok
-    { day: 27, month: 2, isLunar: false, name: "Thầy thuốc Việt Nam", imagePrefix: "0227" },                                //ok    ok
-    { day: 8, month: 3, isLunar: false, name: "Quốc tế Phụ nữ", imagePrefix: "0308" },                                      //ok    ok
-
-    { day: 10, month: 3, isLunar: true, name: "Giỗ Tổ Hùng Vương", imagePrefix: "0310" },// ÂM LỊCH                         //ok    ok
-
-    { day: 26, month: 3, isLunar: false, name: "Thành lập Đoàn TNCS Hồ Chí Minh ", imagePrefix: "0326" },                   //ok    ok
-    { day: 30, month: 4, isLunar: false, name: "Giải phóng miền Nam 30/4 và Quốc tế Lao Động 1/5", imagePrefix: "0430" },   //ok    
-    //{ day: 30, month: 4, isLunar: false, name: "Giải phóng miền Nam 30/4 Thống nhất đất nước", imagePrefix: "0430" },     //        
-    //{ day: 01, month: 5, isLunar: false, name: "Quốc tế Lao Động 1/5", imagePrefix: "0501" },                             //      ok
-    { day: 19, month: 5, isLunar: false, name: "sinh Chủ tịch Hồ Chí Minh", imagePrefix: "0519" },                          //ok    ok
-    { day: 1, month: 6, isLunar: false, name: "Quốc tế Thiếu nhi", imagePrefix: "0601" },                                   //ok    ok
-    { day: 27, month: 7, isLunar: false, name: "Thương binh liệt sỹ", imagePrefix: "0727" },                                //ok    ok
-
-    { day: 15, month: 8, isLunar: true, name: "Tết Trung Thu", imagePrefix: "0815" },   // ÂM LỊCH                          //ok    ok
-
-    { day: 2, month: 9, isLunar: false, name: "Quốc khánh Việt Nam", imagePrefix: "0902" },                                 //ok    ok
-    { day: 20, month: 10, isLunar: false, name: "Phụ nữ Việt Nam", imagePrefix: "1020" },                                   //ok    ok
-    { day: 9, month: 11, isLunar: false, name: " Quốc tế Nam giới", imagePrefix: "1109" },                                  //ok    ok
-    { day: 20, month: 11, isLunar: false, name: "Nhà giáo Việt Nam", imagePrefix: "1120" },                                 //ok    ok
-    { day: 24, month: 11, isLunar: false, name: "Văn hóa Việt Nam", imagePrefix: "1124" },                                  //ok    ok
-    { day: 22, month: 12, isLunar: false, name: "Thành Lập Quân Đội Nhân Dân Việt Nam", imagePrefix: "1222" },              //ok    ok
-    { day: 24, month: 12, isLunar: false, name: "Lễ Giáng Sinh", imagePrefix: "1224" },                                     //ok    ok
-    
-    
-    
-    
-
-];
-    // ---------------- NGÀY DƯƠNG LỊCH -----------------
-    // { day: 09, month: 11, isLunar: false, name: " Quốc tế Nam giới", imagePrefix: "1109" },
-        
-    // ---------------- NGÀY ÂM LỊCH -----------------
-    // { day: 1, month: 1, isLunar: true, name: "Tết Nguyên Đán", imagePrefix: "tet" },                                        // 2026
-  
-
-    
+(() => {
+    'use strict';
+    const fireworks = new Set(['tet', '0101', '0430', '0902']);
+    const items = [
+        [1, 1, false, 'Tết Dương Lịch', '0101'],
+        [1, 1, true, 'Tết Nguyên Đán', 'tet'],
+        [3, 2, false, 'Thành lập Đảng Cộng sản Việt Nam', '0203'],
+        [27, 2, false, 'Ngày Thầy thuốc Việt Nam', '0227'],
+        [8, 3, false, 'Ngày Quốc tế Phụ nữ', '0308'],
+        [10, 3, true, 'Giỗ Tổ Hùng Vương', '0310'],
+        [26, 3, false, 'Thành lập Đoàn TNCS Hồ Chí Minh', '0326'],
+        [30, 4, false, 'Giải phóng miền Nam và Quốc tế Lao động', '0430'],
+        [19, 5, false, 'Ngày sinh Chủ tịch Hồ Chí Minh', '0519'],
+        [1, 6, false, 'Ngày Quốc tế Thiếu nhi', '0601'],
+        [27, 7, false, 'Ngày Thương binh Liệt sĩ', '0727'],
+        [15, 8, true, 'Tết Trung Thu', '0815'],
+        [2, 9, false, 'Quốc khánh Việt Nam', '0902'],
+        [20, 10, false, 'Ngày Phụ nữ Việt Nam', '1020'],
+        [9, 11, false, 'Ngày Quốc tế Nam giới', '1109'],
+        [20, 11, false, 'Ngày Nhà giáo Việt Nam', '1120'],
+        [24, 11, false, 'Ngày Văn hóa Việt Nam', '1124'],
+        [22, 12, false, 'Thành lập Quân đội Nhân dân Việt Nam', '1222'],
+        [24, 12, false, 'Lễ Giáng Sinh', '1224']
+    ];
+    window.VINH_HOLIDAYS = items.map(([day, month, isLunar, name, imagePrefix]) => ({
+        day, month, isLunar, name, imagePrefix, fireworks: fireworks.has(imagePrefix)
+    }));
+})();

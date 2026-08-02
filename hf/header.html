@@ -1,75 +1,77 @@
-<div class="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-24">
-<canvas id="seasonEffect" class="fixed top-0 left-0 w-full h-full pointer-events-none z-50"></canvas>
-    <header class="py-4">
-        <div class="flex justify-between items-center">
-            <a id="site-logo" href="/" class="flex items-center space-x-2" title="Nhấn 1 lần về Trang chủ, Nhấn đúp 2 lần để Xóa Cache">
-                <img id="site-logo-img" src="/img/logoQV.png" onerror="this.onerror=null; this.src='https://placehold.co/40x40/F6AD55/ffffff?text=V';" alt="Logo" class="h-12 w-12 rounded-full transition-transform duration-300">
-                <span class="text-xl font-bold text-gray-800 hidden sm:block">Vinh ở Nhật</span>
-            </a>
-            <div class="flex items-center space-x-4">
-                <div class="text-right time-display">
-                    <div id="time" class="time text-2xl font-bold leading-none">00:00:00</div>
-                    <div id="date" class="date text-xs mt-1">...</div>
-                </div>
-                <div class="md:hidden">
-                    <button id="menu-toggle" class="text-gray-700 hover:text-yellow-600"><i class="fas fa-bars text-2xl"></i></button>
+<header class="site-header">
+    <div class="header-inner">
+        <a id="site-logo" class="brand" href="/" title="Trang chủ; nhấn đúp để làm mới bộ nhớ đệm">
+            <img id="site-logo-img" src="/img/logoQV.png" alt="Vinh ở Nhật" width="44" height="44" decoding="async">
+            <span class="brand-copy"><strong>Vinh ở Nhật</strong><small>Tin tức & hướng dẫn tại Nhật</small></span>
+        </a>
+
+        <nav class="desktop-nav" aria-label="Menu chính">
+            <a href="/" data-nav="home">Trang chủ</a>
+            <a href="/pages/pages-baiviet/bai-viet-hd.html" data-nav="posts">Bài viết</a>
+            <a href="/pages/pages-hoctap/hoctap.html" data-nav="study">Học tập</a>
+            <div class="desktop-dropdown" data-download-dropdown>
+                <button id="downloads-menu-toggle" class="desktop-dropdown-toggle" type="button" data-nav="downloads" aria-expanded="false" aria-controls="downloads-menu">
+                    <span>Tải xuống</span>
+                </button>
+                <div id="downloads-menu" class="desktop-dropdown-menu" role="menu">
+                    <a class="download-menu-featured" href="/pages/pages-app/tai-xuong.html" role="menuitem"><span class="download-menu-icon">↓</span><span><strong>Kho công cụ</strong><small>Xem tất cả ứng dụng và tool</small></span></a>
+                    <a href="/pages/pages-app/checklcd.html" role="menuitem"><span class="download-menu-icon">PC</span><span><strong>Check máy tính</strong><small>Kiểm tra màn hình và phần cứng</small></span></a>
+                    <a href="https://vinhonhat.github.io/nihongo" role="menuitem"><span class="download-menu-icon">日</span><span><strong>Nihongo Quest</strong><small>Ứng dụng luyện tiếng Nhật</small></span></a>
+                    <a href="/pages/pages-app/ung-dung-di-ong-20260613.html" role="menuitem"><span class="download-menu-icon">APP</span><span><strong>Ứng dụng di động</strong><small>Các tiện ích dành cho điện thoại</small></span></a>
                 </div>
             </div>
+            <a href="/pages/pages-giaitri/giaitri.html" data-nav="fun">Giải trí</a>
+        </nav>
+
+        <div class="header-actions">
+            <div class="header-clock" aria-label="Ngày giờ và âm lịch hiện tại">
+                <span class="moon-phase-wrap" title="Tuần trăng hôm nay"><canvas id="moon-phase-canvas" class="moon-phase-canvas" width="64" height="64" aria-hidden="true"></canvas></span>
+                <span class="clock-copy">
+                    <strong id="time">--:--:--</strong>
+                    <span id="date">Đang tải ngày...</span>
+                    <span id="lunar-date" class="lunar-date">Đang tải âm lịch...</span>
+                </span>
+            </div>
+            <button class="desktop-search-button search-open" type="button" data-search-trigger aria-label="Mở tìm kiếm" aria-controls="search-panel" aria-expanded="false" onclick="return window.VinhSearch ? window.VinhSearch.open(event) : false">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg><span>Tìm kiếm</span>
+            </button>
         </div>
-    </header>
+    </div>
+</header>
 
-    <nav>
-        <div id="nav-content" class="py-2 transition-all duration-300 ease-in-out">
-            <ul class="hidden md:flex justify-center md:justify-between items-center space-x-4">
-                <li class="relative group">
-                    <a href="/pages/pages-baiviet/bai-viet-hd.html" class="menu-link hover:text-yellow-600 flex items-center">Bài Viết HD</a>
-                    <ul class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 py-2 w-40 z-10 dropdown-menu">
-                        <li><a href="/pages/pages-baiviet/rakuten.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Rakuten</a></li>
-                        <li><a href="/pages/pages-baiviet/seven.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Seven</a></li>
-                        <li><a href="/pages/pages-baiviet/sim.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Sim Thẻ</a></li>
-                        <li><a href="/pages/pages-baiviet/other.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Bài viết khác</a></li>
-                    </ul>
-                </li>
+<nav class="mobile-bottom-nav" aria-label="Menu di động" data-mobile-nav>
+    <a href="/" data-nav="home" data-mobile-nav-key="home">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8"></path><path d="M5 10v10h14V10"></path></svg><span data-mobile-nav-label="home">Trang chủ</span>
+    </a>
+    <a href="/#latest-posts" data-scroll-latest data-mobile-nav-key="latest">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v3M12 18v3M4.2 6.2l2.1 2.1M17.7 17.7l2.1 2.1M3 12h3M18 12h3M4.2 17.8l2.1-2.1M17.7 6.3l2.1-2.1"></path><circle cx="12" cy="12" r="3.2"></circle></svg><span data-mobile-nav-label="latest">Mới nhất</span>
+    </a>
+    <button class="search-open mobile-search-button" data-mobile-nav-key="search" type="button" data-search-trigger aria-label="Mở tìm kiếm" aria-controls="search-panel" aria-expanded="false" onclick="return window.VinhSearch ? window.VinhSearch.open(event) : false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg><span data-mobile-nav-label="search">Tìm kiếm</span>
+    </button>
+    <button id="mobile-menu-open" class="mobile-menu-button" data-mobile-nav-key="menu" type="button" aria-label="Mở menu" aria-controls="mobile-menu-panel" aria-expanded="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h14"></path></svg><span data-mobile-nav-label="menu">Menu</span>
+    </button>
+</nav>
 
-                <li><a href="/pages/pages-video/video.html" class="menu-link hover:text-yellow-600">Video HD</a></li>
-
-                <li class="relative group">
-                    <a href="/pages/pages-app/app.html" class="menu-link hover:text-yellow-600 flex items-center">Tải xuống</a>
-                    <ul class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 py-2 w-40 z-10 dropdown-menu">
-                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Windows</a></li>
-                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">PM Văn Phòng</a></li>
-                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Đồ Hoạ</a></li>
-                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Ứng dụng khác</a></li>
-                        <!-- <li><a href="https://drive.google.com/file/d/1n0d3ebfnm1_kLZAD7Q0k-tafRLj6sz0w/view" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Tiện ích</a></li> 
-                        <li><a href="https://github.com/vinhonhat/QVIT_TOOLKIT/releases/download/QVIT_AIO.exe/QVIT_online.rar" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Tiện ích</a></li> 
-                        -->
-                        <li><a href="https://drive.usercontent.google.com/uc?id=1MmXdCew9MIXXAwEZnY6fuDyhP23Pwxc3&export=download" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Tiện ích</a></li>
-                        <li><a href="/pages/pages-app/checklcd.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Check PC</a></li>
-                    </ul>
-                </li>
-                <li class="relative group">
-                    <a href="/pages/pages-hoctap/hoctap.html" class="menu-link hover:text-yellow-600 flex items-center">Học Tập</a>
-                    <ul class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 py-2 w-40 z-10 dropdown-menu">
-                        <li><a href="/pages/pages-hoctap/nihongo.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Tiếng Nhật</a></li>
-                        <li><a href="/pages/pages-hoctap/tokutei.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Tokutei</a></li>
-                        <li><a href="/pages/pages-hoctap/driver.html" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Bằng Lái JP</a></li>
-                        <li><a href="/behoc/" class="block px-4 py-2 text-gray-700 hover:bg-yellow-100">Bé Học</a></li>
-                    </ul>
-                </li>
-                <li><a href="/pages/pages-giaitri/giaitri.html" class="menu-link hover:text-yellow-600">Giải Trí</a></li>
-            </ul>
+<div id="mobile-menu-panel" class="mobile-menu-panel" hidden>
+    <button class="mobile-menu-backdrop" type="button" data-close-mobile-menu aria-label="Đóng menu"></button>
+    <section class="mobile-menu-sheet" role="dialog" aria-modal="true" aria-labelledby="mobile-menu-title">
+        <div class="sheet-handle" aria-hidden="true"></div>
+        <div class="mobile-menu-head"><div><small data-mobile-menu-eyebrow>Đi nhanh tới</small><h2 id="mobile-menu-title">Menu</h2></div><button type="button" data-close-mobile-menu aria-label="Đóng">×</button></div>
+        <div class="mobile-menu-intro" data-mobile-menu-intro>
+            <img src="/img/logoQV.png" alt="" width="48" height="48" loading="lazy" decoding="async">
+            <div><strong data-mobile-menu-intro-title>Vinh ở Nhật</strong><p data-mobile-menu-intro-text>Tin tức, hướng dẫn và công cụ hữu ích dành cho người Việt tại Nhật.</p></div>
         </div>
-        
-        <div id="mobile-menu" class="hidden md:hidden absolute left-0 w-full bg-white shadow-lg py-4 z-40"> <ul class="flex flex-col items-center space-y-4">
-                <li><a href="/pages/pages-baiviet/bai-viet-hd.html" class="menu-link">Bài viết HD</a></li>
-                <li><a href="/pages/pages-video/video.html" class="menu-link">Video hướng dẫn</a></li>
-                <li><a href="/pages/pages-app/ung-dung-di-ong-20260613.html" class="menu-link">Tải Ứng Dụng</a></li>
-                <li><a href="/pages/pages-hoctap/hoctap.html" class="menu-link">Học tập</a></li>
-                <li><a href="/pages/pages-giaitri/giaitri.html" class="menu-link">Giải trí</a></li>
-            </ul>
+        <div class="mobile-menu-grid">
+            <a href="/pages/pages-baiviet/bai-viet-hd.html"><span data-mobile-menu-icon="posts">B</span><strong>Bài viết</strong><small>Tất cả hướng dẫn</small></a>
+            <a href="/pages/pages-hoctap/hoctap.html"><span data-mobile-menu-icon="study">学</span><strong>Học tập</strong><small>Tiếng Nhật, Tokutei</small></a>
+            <a href="/pages/pages-app/tai-xuong.html"><span data-mobile-menu-icon="downloads">↓</span><strong>Tải xuống</strong><small>Ứng dụng và tool</small></a>
+            <a href="/pages/pages-giaitri/giaitri.html"><span data-mobile-menu-icon="fun">▶</span><strong>Giải trí</strong><small>Game và tiện ích</small></a>
+            <a href="/pages/pages-baiviet/rakuten.html"><span data-mobile-menu-icon="rakuten">R</span><strong>Rakuten</strong><small>Sim, ngân hàng</small></a>
+            <a href="/pages/pages-baiviet/seven.html"><span data-mobile-menu-icon="seven">7</span><strong>Seven Bank</strong><small>Tài khoản, ATM</small></a>
+            <a href="/pages/pages-baiviet/sim.html"><span data-mobile-menu-icon="sim">S</span><strong>SIM Nhật</strong><small>Cài đặt, sử dụng</small></a>
+            <a href="/pages/pages-baiviet/other.html"><span data-mobile-menu-icon="life">日</span><strong>Cuộc sống Nhật</strong><small>Kinh nghiệm thực tế</small></a>
         </div>
-    </nav>
-
+    </section>
 </div>
-
-<!-- phiên bản HEADER cập nhật  V26.03.24 -->

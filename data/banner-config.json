@@ -1,0 +1,49 @@
+{
+  "version": "26.7.31.8",
+  "enabled": true,
+  "settings": {
+    "mode": "mixed",
+    "aspectRatio": "3 / 1",
+    "autoplay": true,
+    "intervalMs": 5200,
+    "showArrows": true,
+    "showDots": true,
+    "holidaySlideEnabled": true,
+    "pauseOnHover": true
+  },
+  "items": [
+    {
+      "id": "sim-data-demo",
+      "enabled": true,
+      "kind": "ad",
+      "title": "SIM data Nhật Bản",
+      "description": "Banner mẫu tỷ lệ 3:1",
+      "imageDesktop": "/img/ads/sim-data-demo-3x1.svg",
+      "imageMobile": "/img/ads/sim-data-demo-3x1.svg",
+      "actionUrl": "/pages/pages-baiviet/sim.html",
+      "newTab": false
+    },
+    {
+      "id": "nihongo-demo",
+      "enabled": true,
+      "kind": "ad",
+      "title": "Nihongo Quest",
+      "description": "Banner mẫu tỷ lệ 3:1",
+      "imageDesktop": "/img/ads/nihongo-demo-3x1.svg",
+      "imageMobile": "/img/ads/nihongo-demo-3x1.svg",
+      "actionUrl": "https://vinhonhat.github.io/nihongo",
+      "newTab": false
+    },
+    {
+      "id": "tools-demo",
+      "enabled": true,
+      "kind": "ad",
+      "title": "Kho công cụ",
+      "description": "Banner mẫu tỷ lệ 3:1",
+      "imageDesktop": "/img/ads/tools-demo-3x1.svg",
+      "imageMobile": "/img/ads/tools-demo-3x1.svg",
+      "actionUrl": "/pages/pages-app/tai-xuong.html",
+      "newTab": false
+    }
+  ]
+}
