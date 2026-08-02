@@ -47,7 +47,7 @@
             transition: background-color 0.3s ease; /* Hiệu ứng đổi màu */
             background-color: #333; /* Màu nền ban đầu */
             position: relative;
-            border-radius: 8px; /* Bo góc */
+            border-radius: 10px; /* Bo góc */
             box-shadow: 0 3px 8px rgba(0,0,0,0.1); /* Thêm bóng (như file copy) */
         }
 
@@ -81,261 +81,66 @@
 
 
         /* ======================
-           [CSS] BÀN PHÍM MỚI - Layout thật theo vị trí phím
+           [CSS] BÀN PHÍM (GIỮ NGUYÊN TỪ BẢN CHÍNH)
            ====================== */
-
-        /* Giữ khối bàn phím gọn trong khung web cũ, không phình rộng sang phải */
-        #keyboard-tester {
-            width: min(900px, calc(100vw - 24px));
-            margin-left: 50%;
-            transform: translateX(-50%);
-        }
-
         #keyboard-layout-container {
-            background:
-                radial-gradient(circle at 20% 0%, rgba(255,255,255,0.08), transparent 35%),
-                linear-gradient(145deg, #16212b 0%, #101820 100%);
-            border: 1px solid rgba(255,255,255,0.14);
-            box-shadow: 0 18px 45px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.08);
-            border-radius: 18px;
-            padding: 14px;
-            overflow-x: auto;
-            overflow-y: hidden;
-            user-select: none;
+            overflow-x: hidden; /* Ẩn thanh cuộn ngang (nếu layout quá rộng) */
         }
 
-        #keyboard-layout-container::-webkit-scrollbar {
-            height: 10px;
-        }
-        #keyboard-layout-container::-webkit-scrollbar-track {
-            background: rgba(255,255,255,0.08);
-            border-radius: 999px;
-        }
-        #keyboard-layout-container::-webkit-scrollbar-thumb {
-            background: rgba(246,173,85,0.75);
-            border-radius: 999px;
+        /* Một HÀNG phím */
+        .key-row {
+            display: flex; /* Dùng flexbox để xếp các phím trên 1 hàng */
+            margin-bottom: 5px; /* khoảng cách giữa các hàng */
+            gap: 5px; /* khoảng cách (gap) giữa các phím */
         }
 
-        .keyboard-head {
-            min-width: 864px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            padding: 0 3px 12px;
-        }
-
-        .keyboard-os-tabs {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .kb-tab {
-            height: 34px;
-            padding: 0 14px;
-            border-radius: 999px;
-            border: 1px solid rgba(255,255,255,0.25);
-            color: #dbe5ee;
-            background: rgba(255,255,255,0.06);
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: .2px;
-            cursor: pointer;
-            transition: .16s ease;
-        }
-
-        .kb-tab:hover {
-            border-color: #f6ad55;
-            color: #f6ad55;
-        }
-
-        .kb-tab.active {
-            background: #f6ad55;
-            color: #111827;
-            border-color: #ffd166;
-            box-shadow: 0 0 18px rgba(246,173,85,.35);
-        }
-
-        .kb-live {
-            min-height: 34px;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 7px;
-            flex-wrap: wrap;
-            color: rgba(255,255,255,0.72);
-            font-size: 13px;
-        }
-
-        .kb-live .chip {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 32px;
-            height: 28px;
-            padding: 0 10px;
-            border-radius: 999px;
-            border: 1px solid #00d5bf;
-            color: #00d5bf;
-            background: rgba(0,213,191,.08);
-            font-weight: 700;
-        }
-
-        .keyboard-board {
-            width: 864px;               /* 96 cột x 9px: gọn vừa khung 900px */
-            min-width: 864px;
-            display: grid;
-            grid-template-columns: repeat(96, 9px);
-            grid-template-rows: repeat(6, 43px);
-            position: relative;
-        }
-
+        /* Một PHÍM ảo */
         .key {
-            grid-column: var(--x) / span var(--w);
-            grid-row: var(--y) / span var(--h);
-            margin: 2px;
-            min-width: 0;
-            min-height: 0;
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.72);
-            background:
-                linear-gradient(180deg, rgba(255,255,255,0.045), rgba(0,0,0,0.08)),
-                rgba(17, 27, 37, .96);
-            color: #eef4fb;
-            box-shadow:
-                inset 0 1px 0 rgba(255,255,255,0.11),
-                inset 0 -5px 12px rgba(0,0,0,0.16),
-                0 6px 14px rgba(0,0,0,0.18);
+            background-color: #333; /* Nền xám tối */
+            color: white; /* Chữ trắng */
+            border: 1px solid #555;
+            padding: 2px 5px;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 12px;
+            min-width: 0; /* Cho phép phím co lại */
+            flex-grow: 1; /* [LOGIC CSS QUAN TRỌNG]: Cho phép phím tự co giãn lấp đầy hàng */
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 1px;
-            text-align: center;
-            line-height: 1.05;
-            font-size: 13px;
-            font-weight: 600;
-            transition: transform .08s ease, background-color .08s ease, box-shadow .08s ease, border-color .08s ease;
+            height: 35px;
+            transition: background-color 0.1s, border-color 0.1s;
             cursor: default;
-            overflow: hidden;
+            flex-direction: column;
+            line-height: 1.1;
         }
 
-        .key .key-label {
-            display: block;
-            max-width: 100%;
-            padding: 0 2px;
-            white-space: pre-line;
-        }
-
-        .key .key-sub {
-            display: block;
-            font-size: 9px;
-            opacity: .66;
-            font-weight: 500;
-            white-space: nowrap;
-        }
-
-        .key.key-small {
-            font-size: 10px;
-        }
-
-        .key.key-modifier {
-            justify-content: flex-end;
-            align-items: flex-start;
-            padding: 0 0 7px 8px;
-            font-size: 11px;
-        }
-
-        .key.key-space {
-            border-radius: 10px;
-        }
-
-        .key.key-enter,
-        .key.key-backspace,
-        .key.key-shift {
-            font-size: 11px;
-        }
-
-        .key.key-arrow {
-            font-size: 20px;
-        }
-
-        .key.key-numpad-tall {
-            border-radius: 12px;
-        }
-
-        .key.key-fn {
-            font-size: 11px;
-            color: #d7e1eb;
-        }
-
-        #keyboard-layout-container.is-mac .key {
-            border-radius: 999px;
-        }
-
-        #keyboard-layout-container.is-mac .key.key-space,
-        #keyboard-layout-container.is-mac .key.key-numpad-tall,
-        #keyboard-layout-container.is-mac .key.key-enter {
-            border-radius: 22px;
-        }
-
-        /* Trạng thái phím khi ĐANG ĐƯỢC NHẤN */
+        /* Trạng thái phím khi ĐANG ĐƯỢC NHẤN (active) */
         .key.active {
-            transform: translateY(2px);
-            background: #f6ad55 !important;
-            border-color: #ffe08a !important;
-            color: #111827 !important;
-            box-shadow:
-                inset 0 2px 7px rgba(0,0,0,0.22),
-                0 0 18px rgba(246, 173, 85, 0.9) !important;
+            background-color: #F6AD55 !important; /* Nền cam */
+            border-color: #FFD700 !important;
+            color: #111 !important; /* Chữ đen */
+            box-shadow: 0 0 10px rgba(246, 173, 85, 0.8); /* Hiệu ứng sáng */
         }
 
-        /* Trạng thái phím khi ĐÃ ĐƯỢC TEST */
+        /* Trạng thái phím khi ĐÃ ĐƯỢC TEST (checked) */
         .key.checked {
-            background: #d6d6d6 !important;
-            border-color: #ffffff !important;
-            color: #111827 !important;
-            box-shadow:
-                inset 0 1px 0 rgba(255,255,255,0.7),
-                0 0 0 2px rgba(246,173,85,0.35) !important;
+            background-color: #9b9a9a !important; /* Nền xám (đã test) */
+            border-color: #cc4e4e !important; /* Viền đỏ (đã test) */
+            color: rgb(38, 0, 255) !important; /* Chữ xanh (đã test) */
         }
 
-        .keyboard-hint {
-            min-width: 864px;
-            text-align: center;
-            color: rgba(255,255,255,0.78);
-            font-size: 13px;
-            padding: 12px 0 2px;
-        }
+        /* Tỉ lệ phím (dùng flex-grow để co giãn, thay vì width cố định) */
+        .key.key-tab { flex-grow: 1.5; }
+        .key.key-caps { flex-grow: 1.75; }
+        .key.key-shift-l { flex-grow: 2.25; }
+        .key.key-shift-r { flex-grow: 2.75; }
+        .key.key-enter { flex-grow: 2.25; }
+        .key.key-backslash { flex-grow: 1.5; }
+        .key.key-space { flex-grow: 5; max-width: none; } /* Phím Space rộng nhất */
 
-        .keyboard-hint strong {
-            color: #00d5bf;
-            font-weight: 800;
-        }
-
-        @media (max-width: 900px) {
-            #keyboard-tester {
-                width: calc(100vw - 16px);
-            }
-            #keyboard-layout-container {
-                padding: 12px;
-                border-radius: 12px;
-            }
-        }
-
-        /* Vùng test chuột: bỏ nền/khung, chỉ còn 3 nút như bản cũ */
-        #trackpad-area {
-            width: fit-content;
-            max-width: 100%;
-            margin: 16px auto 0;
-            padding: 0 !important;
-            border: none;
-            border-radius: 0;
-            background: transparent;
-            cursor: default;
-            user-select: none;
-        }
+        /* Phím modifier (Ctrl, Alt...) có độ rộng tối thiểu */
+        .key.key-modifier { min-width: 50px; }
 
         /* [CSS MỚI] Dành cho nút chuột */
         .mouse-btn-display {
@@ -535,7 +340,7 @@
 
         </div>
 
-        <div id="trackpad-area" class="mt-4 flex justify-center items-center gap-2">
+        <div id="trackpad-area" class="mt-4 p-4 flex justify-center items-center gap-2">
             <div id="mouse-left" class="mouse-btn-display">
                 Trái
             </div>
@@ -547,7 +352,7 @@
             </div>
         </div>
 
-        <p class="text-center text-sm text-gray-500">Click trong vùng bàn phím hoặc vùng chuột để kiểm tra</p>
+        <p class="text-center text-sm text-gray-500">Click bất cứ đâu trong khu vực bàn phím để kiểm tra</p>
 
         <div class="text-center mt-6">
             <button id="reset-all-btn" class="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-5 rounded">
@@ -565,7 +370,7 @@
         <br>
 
         <p class="font-style: italic text-center text-gray-600 mb-8">
-            đây là công cụ được tổng hợp để kiểm tra nhanh máy tính của bạn. Phiên bản cập nhật V26.7.5
+            đây là công cụ được tổng hợp để kiểm tra nhanh máy tính của bạn. Phiên bản cập nhật V26.1.18
         </p>
     </div>
 </main>
@@ -882,347 +687,184 @@
     });
 
     // =========================================================================
-    // [JS] BÀN PHÍM MỚI - Layout theo đúng vị trí phím thật
+    // [JS] BÀN PHÍM (GIỮ NGUYÊN TỪ BẢN CHÍNH)
     // =========================================================================
 
+    // Lấy các phần tử DOM
     const keyboardLayoutContainer = document.getElementById('keyboard-layout-container');
     const osDisplay = document.getElementById('os-display');
-    const keyboardStatus = document.getElementById('keyboard-status');
 
-    const pressedCodes = new Set();
-    let selectedKeyboardOS = detectOS();
-
-    function detectOS() {
-        const userAgent = window.navigator.userAgent.toLowerCase();
-        if (userAgent.includes('mac')) return 'macos';
-        if (userAgent.includes('win')) return 'windows';
-        return 'windows';
-    }
-
-    function updateOSDisplay() {
-        osDisplay.textContent = selectedKeyboardOS === 'macos' ? 'macOS' : 'Windows OS';
-    }
-
-    function escHtml(value) {
-        return String(value)
-            .replaceAll('&', '&amp;')
-            .replaceAll('<', '&lt;')
-            .replaceAll('>', '&gt;')
-            .replaceAll('"', '&quot;')
-            .replaceAll("'", '&#039;');
-    }
-
-    function makeKey(code, label, x, y, w = 4, h = 1, extraClass = '', sub = '') {
-        return { code, label, x, y, w, h, extraClass, sub };
-    }
-
-    function addRowKeys(out, items, startX, y, normalW = 4) {
-        items.forEach((item, index) => {
-            const [code, label, extraClass = '', sub = ''] = item;
-            out.push(makeKey(code, label, startX + index * normalW, y, normalW, 1, extraClass, sub));
-        });
-    }
-
-    function getWindowsLayout() {
-        const k = [];
-
-        // Hàng F
-        k.push(makeKey('Escape', 'Esc', 1, 1, 4, 1, 'key-fn'));
-        addRowKeys(k, [['F1','F1'], ['F2','F2'], ['F3','F3'], ['F4','F4']], 9, 1, 4);
-        addRowKeys(k, [['F5','F5'], ['F6','F6'], ['F7','F7'], ['F8','F8']], 29, 1, 4);
-        addRowKeys(k, [['F9','F9'], ['F10','F10'], ['F11','F11'], ['F12','F12']], 49, 1, 4);
-        addRowKeys(k, [
-            ['PrintScreen', 'Prt\nSc', 'key-small'],
-            ['ScrollLock', 'Scr\nLk', 'key-small'],
-            ['Pause', 'Pause', 'key-small']
-        ], 69, 1, 4);
-
-        // Hàng số
-        addRowKeys(k, [
-            ['Backquote', '~\n`'], ['Digit1', '1'], ['Digit2', '2'], ['Digit3', '3'], ['Digit4', '4'],
-            ['Digit5', '5'], ['Digit6', '6'], ['Digit7', '7'], ['Digit8', '8'], ['Digit9', '9'],
-            ['Digit0', '0'], ['Minus', '-\n_'], ['Equal', '+\n=']
-        ], 1, 2, 4);
-        k.push(makeKey('Backspace', 'Backspace', 53, 2, 8, 1, 'key-backspace'));
-        addRowKeys(k, [['Insert','Ins'], ['Home','Home'], ['PageUp','Pg\nUp', 'key-small']], 65, 2, 4);
-        addRowKeys(k, [['NumLock','Num\nLock', 'key-small'], ['NumpadDivide','/'], ['NumpadMultiply','*'], ['NumpadSubtract','-']], 81, 2, 4);
-
-        // Hàng QWERTY
-        k.push(makeKey('Tab', 'Tab', 1, 3, 6, 1, 'key-modifier'));
-        addRowKeys(k, [
-            ['KeyQ','Q'], ['KeyW','W'], ['KeyE','E'], ['KeyR','R'], ['KeyT','T'], ['KeyY','Y'],
-            ['KeyU','U'], ['KeyI','I'], ['KeyO','O'], ['KeyP','P'], ['BracketLeft','{\n['],
-            ['BracketRight','}\n]']
-        ], 7, 3, 4);
-        k.push(makeKey('Backslash', '|\n\\', 55, 3, 6, 1));
-        addRowKeys(k, [['Delete','Del'], ['End','End'], ['PageDown','Pg\nDn', 'key-small']], 65, 3, 4);
-        addRowKeys(k, [['Numpad7','7'], ['Numpad8','8'], ['Numpad9','9']], 81, 3, 4);
-        k.push(makeKey('NumpadAdd', '+', 93, 3, 4, 2, 'key-numpad-tall'));
-
-        // Hàng ASDF
-        k.push(makeKey('CapsLock', 'Caps', 1, 4, 7, 1, 'key-modifier'));
-        addRowKeys(k, [
-            ['KeyA','A'], ['KeyS','S'], ['KeyD','D'], ['KeyF','F'], ['KeyG','G'], ['KeyH','H'],
-            ['KeyJ','J'], ['KeyK','K'], ['KeyL','L'], ['Semicolon',':\n;'], ['Quote','"\n\'']
-        ], 8, 4, 4);
-        k.push(makeKey('Enter', 'Enter', 52, 4, 9, 1, 'key-enter'));
-        addRowKeys(k, [['Numpad4','4'], ['Numpad5','5'], ['Numpad6','6']], 81, 4, 4);
-
-        // Hàng Shift
-        k.push(makeKey('ShiftLeft', 'Shift', 1, 5, 9, 1, 'key-modifier key-shift'));
-        addRowKeys(k, [
-            ['KeyZ','Z'], ['KeyX','X'], ['KeyC','C'], ['KeyV','V'], ['KeyB','B'], ['KeyN','N'],
-            ['KeyM','M'], ['Comma','<\n,'], ['Period','>\n.'], ['Slash','?\n/']
-        ], 10, 5, 4);
-        k.push(makeKey('ShiftRight', 'Shift', 50, 5, 11, 1, 'key-modifier key-shift'));
-        k.push(makeKey('ArrowUp', '⌃', 69, 5, 4, 1, 'key-arrow'));
-        addRowKeys(k, [['Numpad1','1'], ['Numpad2','2'], ['Numpad3','3']], 81, 5, 4);
-        k.push(makeKey('NumpadEnter', 'Enter', 93, 5, 4, 2, 'key-numpad-tall key-small'));
-
-        // Hàng dưới
-        k.push(makeKey('ControlLeft', 'Ctrl', 1, 6, 5, 1, 'key-modifier'));
-        k.push(makeKey('MetaLeft', '⊞ Win', 6, 6, 5, 1, 'key-modifier'));
-        k.push(makeKey('AltLeft', 'Alt', 11, 6, 5, 1, 'key-modifier'));
-        k.push(makeKey('Space', '', 16, 6, 28, 1, 'key-space'));
-        k.push(makeKey('AltRight', 'Alt', 44, 6, 5, 1, 'key-modifier'));
-        k.push(makeKey('ContextMenu', '☰', 49, 6, 5, 1, 'key-small'));
-        k.push(makeKey('ControlRight', 'Ctrl', 54, 6, 7, 1, 'key-modifier'));
-        k.push(makeKey('ArrowLeft', '‹', 65, 6, 4, 1, 'key-arrow'));
-        k.push(makeKey('ArrowDown', '⌄', 69, 6, 4, 1, 'key-arrow'));
-        k.push(makeKey('ArrowRight', '›', 73, 6, 4, 1, 'key-arrow'));
-        k.push(makeKey('Numpad0', '0', 81, 6, 8, 1));
-        k.push(makeKey('NumpadDecimal', '.', 89, 6, 4, 1));
-
-        return k;
-    }
-
-    function getMacLayout() {
-        const k = [];
-
-        // Hàng F kiểu Apple extended
-        k.push(makeKey('Escape', 'esc', 1, 1, 4, 1, 'key-fn'));
-        addRowKeys(k, [
-            ['F1','F1'], ['F2','F2'], ['F3','F3'], ['F4','F4'],
-        ], 9, 1, 4);
-        addRowKeys(k, [
-            ['F5','F5'], ['F6','F6'], ['F7','F7'], ['F8','F8'],
-        ], 29, 1, 4);
-        addRowKeys(k, [
-            ['F9','F9'], ['F10','F10'], ['F11','F11'], ['F12','F12'],
-        ], 49, 1, 4);
-        addRowKeys(k, [
-            ['F13','F13'], ['F14','F14'], ['F15','F15'], ['F16','F16'],
-            ['F17','F17'], ['F18','F18'], ['F19','F19']
-        ], 69, 1, 4);
-
-        // Hàng số
-        addRowKeys(k, [
-            ['Backquote', '±\n§'], ['Digit1', '1'], ['Digit2', '2'], ['Digit3', '3'], ['Digit4', '4'],
-            ['Digit5', '5'], ['Digit6', '6'], ['Digit7', '7'], ['Digit8', '8'], ['Digit9', '9'],
-            ['Digit0', '0'], ['Minus', '–\n-'], ['Equal', '+\n=']
-        ], 1, 2, 4);
-        k.push(makeKey('Backspace', 'delete', 53, 2, 8, 1, 'key-backspace'));
-        addRowKeys(k, [['Home','↖'], ['PageUp','⇞'], ['Clear','clear']], 65, 2, 4);
-        addRowKeys(k, [['NumLock','clear', 'key-small'], ['NumpadEqual','='], ['NumpadDivide','/'], ['NumpadMultiply','*']], 81, 2, 4);
-
-        // Hàng QWERTY
-        k.push(makeKey('Tab', 'tab', 1, 3, 6, 1, 'key-modifier'));
-        addRowKeys(k, [
-            ['KeyQ','Q'], ['KeyW','W'], ['KeyE','E'], ['KeyR','R'], ['KeyT','T'], ['KeyY','Y'],
-            ['KeyU','U'], ['KeyI','I'], ['KeyO','O'], ['KeyP','P'], ['BracketLeft','{\n['],
-            ['BracketRight','}\n]']
-        ], 7, 3, 4);
-        k.push(makeKey('Backslash', '|\n\\', 55, 3, 6, 1));
-        addRowKeys(k, [['Delete','⌦'], ['End','↘'], ['PageDown','⇟']], 65, 3, 4);
-        addRowKeys(k, [['Numpad7','7'], ['Numpad8','8'], ['Numpad9','9']], 81, 3, 4);
-        k.push(makeKey('NumpadSubtract', '−', 93, 3, 4, 1));
-
-        // Hàng ASDF
-        k.push(makeKey('CapsLock', 'caps', 1, 4, 7, 1, 'key-modifier'));
-        addRowKeys(k, [
-            ['KeyA','A'], ['KeyS','S'], ['KeyD','D'], ['KeyF','F'], ['KeyG','G'], ['KeyH','H'],
-            ['KeyJ','J'], ['KeyK','K'], ['KeyL','L'], ['Semicolon',':\n;'], ['Quote','"\n\'']
-        ], 8, 4, 4);
-        k.push(makeKey('Enter', 'return', 52, 4, 9, 1, 'key-enter'));
-        addRowKeys(k, [['Numpad4','4'], ['Numpad5','5'], ['Numpad6','6']], 81, 4, 4);
-        k.push(makeKey('NumpadAdd', '+', 93, 4, 4, 2, 'key-numpad-tall'));
-
-        // Hàng Shift
-        k.push(makeKey('ShiftLeft', 'shift', 1, 5, 9, 1, 'key-modifier key-shift'));
-        addRowKeys(k, [
-            ['KeyZ','Z'], ['KeyX','X'], ['KeyC','C'], ['KeyV','V'], ['KeyB','B'], ['KeyN','N'],
-            ['KeyM','M'], ['Comma','<\n,'], ['Period','>\n.'], ['Slash','?\n/']
-        ], 10, 5, 4);
-        k.push(makeKey('ShiftRight', 'shift', 50, 5, 11, 1, 'key-modifier key-shift'));
-        k.push(makeKey('ArrowUp', '⌃', 69, 5, 4, 1, 'key-arrow'));
-        addRowKeys(k, [['Numpad1','1'], ['Numpad2','2'], ['Numpad3','3']], 81, 5, 4);
-        k.push(makeKey('NumpadEnter', 'enter', 93, 6, 4, 1, 'key-small'));
-
-        // Hàng dưới
-        k.push(makeKey('ControlLeft', 'control', 1, 6, 5, 1, 'key-modifier'));
-        k.push(makeKey('AltLeft', 'option', 6, 6, 5, 1, 'key-modifier'));
-        k.push(makeKey('MetaLeft', 'command', 11, 6, 7, 1, 'key-modifier'));
-        k.push(makeKey('Space', '', 18, 6, 24, 1, 'key-space'));
-        k.push(makeKey('MetaRight', 'command', 42, 6, 7, 1, 'key-modifier'));
-        k.push(makeKey('AltRight', 'option', 49, 6, 5, 1, 'key-modifier'));
-        k.push(makeKey('ControlRight', 'control', 54, 6, 7, 1, 'key-modifier'));
-        k.push(makeKey('ArrowLeft', '‹', 65, 6, 4, 1, 'key-arrow'));
-        k.push(makeKey('ArrowDown', '⌄', 69, 6, 4, 1, 'key-arrow'));
-        k.push(makeKey('ArrowRight', '›', 73, 6, 4, 1, 'key-arrow'));
-        k.push(makeKey('Numpad0', '0', 81, 6, 8, 1));
-        k.push(makeKey('NumpadDecimal', '.', 89, 6, 4, 1));
-
-        return k;
-    }
-
+    /**
+     * [LOGIC ĐỂ PORT]: Định nghĩa Layout Bàn Phím
+     */
     const KEY_LAYOUTS = {
-        windows: getWindowsLayout,
-        macos: getMacLayout
+        windows: [
+            ['Escape', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', 'PrintScreen', 'ScrollLock', 'Pause', 'Home', 'End'],
+            ['Backquote', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus', 'Equal', 'Backspace', 'NumLock', 'NumpadDivide', 'NumpadMultiply', 'NumpadSubtract', 'NumpadAdd'],
+            ['Tab', 'KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'BracketLeft', 'BracketRight', 'Backslash', '','Numpad7', 'Numpad8', 'Numpad9'],
+            ['CapsLock', 'KeyA', 'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'Semicolon', 'Quote', 'Enter', 'Delete','Numpad4', 'Numpad5', 'Numpad6'],
+            ['ShiftLeft', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'Comma', 'Period', 'Slash', 'ShiftRight', '','Numpad1', 'Numpad2', 'Numpad3'],
+            ['ControlLeft', 'MetaLeft', 'AltLeft', 'Space', 'AltRight', 'ContextMenu', 'ControlRight', 'ArrowUp', '','Numpad0', 'NumpadDecimal', 'NumpadEnter'],
+            ['', '', '', '', '', '', '','', '','', '','', '', '', 'ArrowLeft', 'ArrowDown', 'ArrowRight','','', '','','']
+        ],
+        macos: [
+            ['Escape', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', 'VolumeUp', 'VolumeDown', 'Mute', 'PlayPause', 'Eject'],
+            ['Backquote', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus', 'Equal', 'Backspace'],
+            ['Tab', 'KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'BracketLeft', 'BracketRight', 'Backslash'],
+            ['CapsLock', 'KeyA', 'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'Semicolon', 'Quote', 'Enter'],
+            ['ShiftLeft', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'Comma', 'Period', 'Slash', 'ShiftRight'],
+            ['ControlLeft', 'AltLeft', 'MetaLeft', 'Space', 'MetaRight', 'AltRight', 'ControlRight', 'ArrowUp', '', ''],
+            ['', '', '', '', '', '', '', '', '', '', '', '', '', '','','','','', 'ArrowLeft', 'ArrowDown', 'ArrowRight']
+        ]
     };
 
-    function updatePressedChips() {
-        const live = document.getElementById('kb-live');
-        if (!live) return;
+    /**
+     * [LOGIC ĐỂ PORT]: Ánh xạ (Map) 'e.code' sang Nhãn (text)
+     */
+    const KEY_LABELS = {
+        'Escape': 'Esc', 'Tab': 'Tab', 'CapsLock': 'Caps', 'ShiftLeft': 'Shift', 'ShiftRight': 'Shift',
+        'ControlLeft': 'Ctrl', 'ControlRight': 'Ctrl', 'AltLeft': 'Alt', 'AltRight': 'Alt',
+        'MetaLeft': '⌘/Win', 'MetaRight': '⌘/Win', 'Space': 'Space', 'Enter': 'Enter',
+        'Backspace': 'Delete', 'Backquote': '` ~', 'Minus': '- _', 'Equal': '= +',
+        'BracketLeft': '[ {', 'BracketRight': '] }', 'Backslash': '\\ |', 'Semicolon': '; :',
+        'Quote': `' "`, 'Comma': ', <', 'Period': '. >', 'Slash': '/ ?',
+        'Digit1': '1', 'Digit2': '2', 'Digit3': '3', 'Digit4': '4', 'Digit5': '5',
+        'Digit6': '6 ', 'Digit7': '7 ', 'Digit8': '8 ', 'Digit9': '9', 'Digit0': '0',
+        'PrintScreen': 'PrtSc', 'ScrollLock': 'ScrLk', 'Pause': 'Pause', 'Insert': 'Ins', 'Delete': 'Del',
+        'ArrowUp': '↑', 'ArrowDown': '↓', 'ArrowLeft': '←', 'ArrowRight': '→',
+        'ContextMenu': 'Menu', 'NumpadDivide': '/', 'NumpadMultiply': '*', 'NumpadSubtract': '-',
+        'NumpadAdd': '+', 'NumpadDecimal': '.', 'NumpadEnter': 'Enter',
+        'Numpad0': '0', 'Numpad1': '1', 'Numpad2': '2', 'Numpad3': '3', 'Numpad4': '4',
+        'Numpad5': '5', 'Numpad6': '6', 'Numpad7': '7', 'Numpad8': '8', 'Numpad9': '9',
+        // Tự động thêm A-Z
+        'KeyA': 'A', 'KeyB': 'B', 'KeyC': 'C', 'KeyD': 'D', 'KeyE': 'E', 'KeyF': 'F',
+        'KeyG': 'G', 'KeyH': 'H', 'KeyI': 'I', 'KeyJ': 'J', 'KeyK': 'K', 'KeyL': 'L',
+        'KeyM': 'M', 'KeyN': 'N', 'KeyO': 'O', 'KeyP': 'P', 'KeyQ': 'Q', 'KeyR': 'R',
+        'KeyS': 'S', 'KeyT': 'T', 'KeyU': 'U', 'KeyV': 'V', 'KeyW': 'W', 'KeyX': 'X',
+        'KeyY': 'Y', 'KeyZ': 'Z',
+    };
+    // Thêm tự động nhãn F1..F12
+    for (let i = 1; i <= 12; i++) { KEY_LABELS[`F${i}`] = `F${i}`; }
 
-        if (pressedCodes.size === 0) {
-            live.innerHTML = '<span>Nhấn phím để kiểm tra</span>';
-            return;
+    /**
+     * Hàm: detectOS()
+     */
+    function detectOS() {
+        const userAgent = window.navigator.userAgent.toLowerCase();
+        if (userAgent.indexOf('mac') > -1) {
+            return 'macos';
         }
-
-        live.innerHTML = [...pressedCodes]
-            .slice(0, 8)
-            .map(code => {
-                const keyEl = document.getElementById(`key-${code}`);
-                const label = keyEl ? keyEl.dataset.label : code;
-                return `<span class="chip">${escHtml(label.replace(/\n/g, ' '))}</span>`;
-            })
-            .join('');
+        if (userAgent.indexOf('win') > -1) {
+            return 'windows';
+        }
+        return 'windows'; // Mặc định là Windows
     }
+    const currentOS = detectOS(); // Chạy hàm
+    osDisplay.textContent = currentOS === 'macos' ? 'macOS' : 'Windows OS'; // Hiển thị HĐH
 
-    function setKeyboardOS(os) {
-        selectedKeyboardOS = os;
-        buildKeyboardLayout(selectedKeyboardOS);
-        updateOSDisplay();
-    }
-
+    /**
+     * [LOGIC ĐỂ PORT]: Hàm Xây Dựng (Tạo) Layout Bàn Phím
+     */
     function buildKeyboardLayout(os) {
-        const layoutFactory = KEY_LAYOUTS[os] || KEY_LAYOUTS.windows;
-        const layout = layoutFactory();
+        const layout = KEY_LAYOUTS[os]; // Lấy layout (Windows hoặc Mac)
+        keyboardLayoutContainer.innerHTML = ''; // Xóa sạch layout cũ (nếu có)
 
-        keyboardLayoutContainer.classList.toggle('is-mac', os === 'macos');
-        keyboardLayoutContainer.innerHTML = `
-            <div class="keyboard-head">
-                <div class="keyboard-os-tabs">
-                    <button type="button" class="kb-tab ${os === 'windows' ? 'active' : ''}" data-os="windows">⊞ Windows</button>
-                    <button type="button" class="kb-tab ${os === 'macos' ? 'active' : ''}" data-os="macos"> macOS</button>
-                </div>
-                <div class="kb-live" id="kb-live"><span>Nhấn phím để kiểm tra</span></div>
-            </div>
-            <div class="keyboard-board" id="virtual-keyboard-board"></div>
-            <div class="keyboard-hint">
-                Dùng layout <strong>English / US keyboard</strong> để mã phím khớp chính xác. Phím <strong>Fn</strong> thường không gửi tín hiệu riêng cho trình duyệt.
-            </div>
-        `;
+        // Lặp qua từng HÀNG (row)
+        layout.forEach(row => {
+            const rowDiv = document.createElement('div'); // Tạo <div> cho hàng
+            rowDiv.className = 'key-row'; // Gán class CSS (đã định nghĩa ở <style>)
 
-        const board = document.getElementById('virtual-keyboard-board');
-
-        layout.forEach(item => {
-            const keyDiv = document.createElement('div');
-            keyDiv.className = `key ${item.extraClass || ''}`;
-            keyDiv.id = `key-${item.code}`;
-            keyDiv.dataset.code = item.code;
-            keyDiv.dataset.label = item.label;
-
-            keyDiv.style.setProperty('--x', item.x);
-            keyDiv.style.setProperty('--y', item.y);
-            keyDiv.style.setProperty('--w', item.w);
-            keyDiv.style.setProperty('--h', item.h || 1);
-
-            const labelHtml = escHtml(item.label).replace(/\n/g, '<br>');
-            const subHtml = item.sub ? `<span class="key-sub">${escHtml(item.sub)}</span>` : '';
-            keyDiv.innerHTML = `<span class="key-label">${labelHtml}</span>${subHtml}`;
-
-            board.appendChild(keyDiv);
-        });
-
-        keyboardLayoutContainer.querySelectorAll('.kb-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                const newOS = tab.getAttribute('data-os');
-                if (newOS && newOS !== selectedKeyboardOS) {
-                    setKeyboardOS(newOS);
-                    resetKeyboard();
+            // Lặp qua từng PHÍM (keyCode) trong hàng
+            row.forEach(keyCode => {
+                if (!keyCode) { // Nếu keyCode là '' (chuỗi rỗng) -> tạo spacer
+                    const spacer = document.createElement('div');
+                    spacer.style.width = '30px';
+                    rowDiv.appendChild(spacer);
+                    return; // Bỏ qua, sang phím tiếp
                 }
+
+                // Tạo <div> cho phím
+                const keyDiv = document.createElement('div');
+                keyDiv.className = 'key';
+                keyDiv.id = `key-${keyCode}`; 
+                keyDiv.textContent = KEY_LABELS[keyCode] || keyCode.replace('Key', '');
+
+                // Thêm các class CSS đặc biệt cho các phím dài (để flex-grow)
+                if (keyCode === 'Tab') keyDiv.classList.add('key-tab');
+                if (keyCode === 'CapsLock') keyDiv.classList.add('key-caps');
+                if (keyCode === 'ShiftLeft') keyDiv.classList.add('key-shift-l');
+                if (keyCode === 'ShiftRight') keyDiv.classList.add('key-shift-r');
+                if (keyCode === 'Enter') keyDiv.classList.add('key-enter');
+                if (keyCode === 'Space') keyDiv.classList.add('key-space');
+                if (['ControlLeft', 'ControlRight', 'AltLeft', 'AltRight', 'MetaLeft', 'MetaRight'].includes(keyCode)) {
+                    keyDiv.classList.add('key-modifier');
+                }
+
+                rowDiv.appendChild(keyDiv); // Gắn phím vào hàng
             });
+
+            keyboardLayoutContainer.appendChild(rowDiv); // Gắn hàng vào container
         });
-
-        updatePressedChips();
     }
 
-    buildKeyboardLayout(selectedKeyboardOS);
-    updateOSDisplay();
+    // Chạy hàm build bàn phím ngay khi script tải
+    buildKeyboardLayout(currentOS);
 
-    function markKeyDown(code) {
-        const targetKey = document.getElementById(`key-${code}`);
-        pressedCodes.add(code);
-
-        if (targetKey) {
-            targetKey.classList.add('active');
-            targetKey.classList.remove('checked');
-            if (keyboardStatus) keyboardStatus.textContent = `Đang nhấn: ${targetKey.dataset.label.replace(/\n/g, ' ')}`;
-        } else if (keyboardStatus) {
-            keyboardStatus.textContent = `Đang nhấn: ${code} (phím này không có trong layout đang hiển thị)`;
-        }
-
-        updatePressedChips();
-    }
-
-    function markKeyUp(code) {
-        const targetKey = document.getElementById(`key-${code}`);
-        pressedCodes.delete(code);
-
-        if (targetKey) {
-            targetKey.classList.remove('active');
-            targetKey.classList.add('checked');
-            if (keyboardStatus) keyboardStatus.textContent = `Đã test: ${targetKey.dataset.label.replace(/\n/g, ' ')}`;
-        }
-
-        updatePressedChips();
-    }
-
+    // --- Xử lý sự kiện bàn phím (keydown và keyup) ---
+    
+    /**
+     * [LOGIC ĐỂ PORT]: Bắt sự kiện phím ĐANG NHẤN (keydown)
+     * (Đã xóa logic kiểm tra 'peripheralTester.style.display')
+     */
     document.addEventListener('keydown', (e) => {
-        // Không bắt phím khi đang test màn hình fullscreen hoặc đang focus vào vùng test màn hình
-        if (document.fullscreenElement || document.activeElement === screenTester) return;
-
-        // Tránh lặp hiệu ứng khi giữ phím lâu
-        if (!pressedCodes.has(e.code)) {
-            markKeyDown(e.code);
+        // CHỈ xử lý khi:
+        // 1. KHÔNG ở fullscreen (tránh xung đột với phím Space đổi màu)
+        // 2. Focus KHÔNG nằm trên hộp test màn hình (screenTester)
+        if (!document.fullscreenElement && document.activeElement !== screenTester) {
+            const targetKey = document.getElementById(`key-${e.code}`);
+            if (targetKey) { // Nếu tìm thấy phím
+                e.preventDefault(); // Ngăn hành vi mặc định (vd: gõ chữ)
+                targetKey.classList.add('active');
+                targetKey.classList.remove('checked'); // Xóa class 'checked' (nếu có)
+            }
         }
+    }); 
 
-        // Chặn scroll trang do Space / Arrow / PageUp / PageDown
-        if (document.getElementById(`key-${e.code}`)) {
-            e.preventDefault();
-        }
-    });
-
+    /**
+     * [LOGIC ĐỂ PORT]: Bắt sự kiện phím được THẢ RA (keyup)
+     * (Đã xóa logic kiểm tra 'peripheralTester.style.display')
+     */
     document.addEventListener('keyup', (e) => {
-        if (document.fullscreenElement) return;
-        markKeyUp(e.code);
+        // CHỈ xử lý khi KHÔNG ở fullscreen
+        if (!document.fullscreenElement) {
+            const targetKey = document.getElementById(`key-${e.code}`);
+            if (targetKey) {
+                targetKey.classList.remove('active'); // Bỏ class 'active' (hết cam)
+                targetKey.classList.add('checked'); // Thêm class 'checked' (màu xám, đã test)
+            }
+        }
     });
 
+    /**
+     * [LOGIC ĐỂ PORT]: Hàm Reset bàn phím (xóa trạng thái)
+     */
     function resetKeyboard() {
-        pressedCodes.clear();
-        keyboardLayoutContainer.querySelectorAll('.key.checked, .key.active').forEach(key => {
+        // Tìm tất cả các phím đã 'checked' hoặc 'active'
+        const checkedKeys = keyboardLayoutContainer.querySelectorAll('.key.checked, .key.active');
+        // Xóa class của chúng
+        checkedKeys.forEach(key => {
             key.classList.remove('checked');
             key.classList.remove('active');
         });
-
-        if (keyboardStatus) {
-            keyboardStatus.textContent = 'Nhấn bất kỳ phím nào trên bàn phím của bạn để kiểm tra phản hồi.';
+        const statusEl = document.getElementById('keyboard-status');
+        if (statusEl) {
+            statusEl.textContent = 'Nhấn bất kỳ phím nào trên bàn phím của bạn để kiểm tra phản hồi.';
         }
-
-        updatePressedChips();
     }
 
+    /**
+     * [LOGIC MỚI]: Hàm Reset Chuột
+     */
     function resetMouse() {
         document.querySelectorAll('.mouse-btn-display.checked, .mouse-btn-display.active').forEach(btn => {
             btn.classList.remove('checked');
@@ -1230,90 +872,80 @@
         });
     }
 
+    // [LOGIC MỚI] Gán sự kiện cho nút Reset All
     document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('reset-all-btn').addEventListener('click', () => {
             resetKeyboard();
             resetMouse();
         });
     });
-
+    
     // =========================================================================
 // [JS] CHUỘT / TRACKPAD (ĐÃ CẬP NHẬT LOGIC)
 // =========================================================================
 (function() {
-    // Vùng bắt sự kiện chuột: gồm cả bàn phím và phần hiển thị chuột bên dưới
-    const captureZones = [
-        document.getElementById('keyboard-tester'),
-        document.getElementById('trackpad-area')
-    ].filter(Boolean);
-
-    // 3 ô hiển thị trạng thái
+    // Vùng bắt sự kiện chuột (vẫn dùng vùng bàn phím)
+    const captureZone = document.getElementById('keyboard-tester'); 
+    // 3 ô hiển thị trạng thái (lấy bằng ID mới)
     const leftDisplay = document.getElementById('mouse-left');
     const rightDisplay = document.getElementById('mouse-right');
     const middleDisplay = document.getElementById('mouse-middle');
 
-    if (!captureZones.length || !leftDisplay || !rightDisplay || !middleDisplay) {
+    if (!captureZone || !leftDisplay || !rightDisplay || !middleDisplay) {
         console.error('Không tìm thấy các thành phần của trackpad.');
         return;
     }
 
-    function setMouseState(button, state) {
-        let display = null;
-
-        if (button === 0) display = leftDisplay;       // Chuột trái
-        if (button === 1) display = middleDisplay;     // Chuột giữa / con lăn
-        if (button === 2) display = rightDisplay;      // Chuột phải
-
-        if (!display) return;
-
-        if (state === 'down') {
-            display.classList.add('active');
-            display.classList.remove('checked');
-        } else {
-            display.classList.remove('active');
-            display.classList.add('checked');
+    /**
+     * [LOGIC ĐÃ SỬA]: Hàm xử lý khi NHẤN chuột (mousedown)
+     * Dùng classList thay vì inline style
+     */
+    function handleMouseDown(e) {
+        e.preventDefault(); // Ngăn chọn (select) text
+        switch (e.button) {
+            case 0: // 0 = Chuột TRÁI
+                leftDisplay.classList.add('active');
+                leftDisplay.classList.remove('checked');
+                break;
+            case 1: // 1 = Chuột GIỮA (con lăn)
+                middleDisplay.classList.add('active');
+                middleDisplay.classList.remove('checked');
+                break;
+            case 2: // 2 = Chuột PHẢI
+                rightDisplay.classList.add('active');
+                rightDisplay.classList.remove('checked');
+                break;
         }
     }
 
-    const buttonsStartedInCapture = new Set();
-
-    function handleMouseDown(e) {
-        e.preventDefault();
-        buttonsStartedInCapture.add(e.button);
-        setMouseState(e.button, 'down');
-    }
-
+    /**
+     * [LOGIC ĐÃ SỬA]: Hàm xử lý khi THẢ chuột (mouseup)
+     * Xóa 'active' và thêm 'checked'
+     */
     function handleMouseUp(e) {
         e.preventDefault();
-        buttonsStartedInCapture.delete(e.button);
-        setMouseState(e.button, 'up');
+        switch (e.button) {
+            case 0: // Trái
+                leftDisplay.classList.remove('active');
+                leftDisplay.classList.add('checked');
+                break;
+            case 1: // Giữa
+                middleDisplay.classList.remove('active');
+                middleDisplay.classList.add('checked');
+                break;
+            case 2: // Phải
+                rightDisplay.classList.remove('active');
+                rightDisplay.classList.add('checked');
+                break;
+        }
     }
 
-    // Bắt chuột trong cả vùng bàn phím và vùng chuột bên dưới
-    captureZones.forEach(zone => {
-        zone.addEventListener('mousedown', handleMouseDown);
-        zone.addEventListener('mouseup', handleMouseUp);
-        zone.addEventListener('contextmenu', (e) => e.preventDefault());
-    });
+    // Gán sự kiện cho vùng captureZone
+    captureZone.addEventListener('mousedown', handleMouseDown);
+    captureZone.addEventListener('mouseup', handleMouseUp);
 
-    // Nếu bấm giữ trong vùng test rồi kéo ra ngoài, vẫn kết thúc trạng thái active khi thả chuột
-    document.addEventListener('mouseup', (e) => {
-        if (!buttonsStartedInCapture.has(e.button)) return;
-        buttonsStartedInCapture.delete(e.button);
-        setMouseState(e.button, 'up');
-    });
-
-    // Tắt menu chuột phải ở phần kiểm tra Mic/Camera trở lên
-    // Vùng này chỉ chặn chuột phải, không tính là test chuột.
-    const rightClickBlockedZones = [
-        document.getElementById('screen-tester'),
-        document.getElementById('speaker-tester'),
-        document.getElementById('camera-mic-tester')
-    ].filter(Boolean);
-
-    rightClickBlockedZones.forEach(zone => {
-        zone.addEventListener('contextmenu', (e) => e.preventDefault());
-    });
+    // Ngăn menu chuột phải hiện lên trong vùng test
+    captureZone.addEventListener('contextmenu', (e) => e.preventDefault());
 
 })();
 
