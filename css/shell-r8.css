@@ -1267,3 +1267,50 @@
     bottom: max(4px, calc(env(safe-area-inset-bottom, 0px) - 24px)) !important;
   }
 }
+
+
+/* ========================= V26.8.3 BETA 11: giới thiệu đủ chữ + menu sát thanh dưới ========================= */
+@media (max-width: 640px) {
+  :root {
+    --pwa-nav-bottom: 6px;
+    --pwa-nav-height: 54px;
+    --pwa-menu-gap: 4px;
+  }
+
+  .mobile-menu-brand p {
+    display: block;
+    width: auto !important;
+    max-width: none !important;
+    margin-top: 3px !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    overflow-wrap: anywhere;
+    -webkit-line-clamp: unset !important;
+    line-clamp: unset !important;
+    font-size: 10px !important;
+    line-height: 1.35 !important;
+  }
+  .mobile-menu-brand.intro-text-hidden p,
+  .mobile-menu-brand p:empty {
+    display: none !important;
+  }
+
+  .mobile-bottom-nav {
+    bottom: var(--pwa-nav-bottom) !important;
+    height: var(--pwa-nav-height) !important;
+    min-height: var(--pwa-nav-height) !important;
+  }
+  .mobile-menu-panel {
+    padding-bottom: calc(var(--pwa-nav-bottom) + var(--pwa-nav-height) + var(--pwa-menu-gap)) !important;
+  }
+  .mobile-menu-sheet {
+    max-height: calc(100dvh - var(--pwa-nav-bottom) - var(--pwa-nav-height) - var(--pwa-menu-gap) - 18px) !important;
+  }
+}
+
+@media (display-mode: standalone) and (max-width: 640px) {
+  :root {
+    --pwa-nav-bottom: max(4px, calc(env(safe-area-inset-bottom, 0px) - 24px));
+  }
+}
