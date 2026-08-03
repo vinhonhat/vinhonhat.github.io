@@ -803,3 +803,149 @@ label,
 .holiday-image-size-guide strong { color: #9a4f00; font-size: 13px; }
 .holiday-image-size-guide code { color: #9a4f00; font-weight: 750; }
 .holiday-image-size-guide small { color: #7a828d; }
+
+/* ========================================================================== */
+/* V26.8.3 BETA 15 - menu phụ trái cho SIM và đơn hàng                       */
+/* ========================================================================== */
+.sim-admin-workspace {
+  --sim-menu-width: 196px;
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: var(--sim-menu-width) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  transition: grid-template-columns .2s ease;
+}
+.sim-admin-workspace.menu-collapsed { --sim-menu-width: 66px; }
+.sim-admin-sidebar {
+  position: sticky;
+  top: 12px;
+  overflow: hidden;
+  padding: 8px;
+  border: 1px solid #e2e5e9;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(31,37,44,.06);
+}
+.sim-admin-menu-toggle,
+.sim-admin-subnav button {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  border-radius: 11px;
+  color: #5f6872;
+  background: transparent;
+  text-align: left;
+  font-weight: 850;
+  cursor: pointer;
+}
+.sim-admin-menu-toggle { margin-bottom: 7px; color: #8a5a20; background: #fff7ec; }
+.sim-admin-subnav { display: grid; gap: 5px; }
+.sim-admin-subnav button:hover { color: #a95400; background: #fff8ef; }
+.sim-admin-subnav button.active { color: #fff; background: linear-gradient(135deg,#d87508,#ef9637); box-shadow: 0 7px 16px rgba(216,117,8,.2); }
+.sim-menu-icon,
+.sim-menu-toggle-icon {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: rgba(255,255,255,.68);
+  font-size: 13px;
+  font-weight: 950;
+}
+.sim-admin-subnav button:not(.active) .sim-menu-icon { background: #f2f4f6; }
+.sim-menu-text { overflow: hidden; white-space: nowrap; }
+.sim-admin-workspace.menu-collapsed .sim-menu-text { display: none; }
+.sim-admin-workspace.menu-collapsed .sim-admin-menu-toggle,
+.sim-admin-workspace.menu-collapsed .sim-admin-subnav button { justify-content: center; padding-inline: 8px; }
+.sim-admin-workspace.menu-collapsed .sim-menu-toggle-icon { transform: rotate(180deg); }
+.sim-admin-content { min-width: 0; }
+.sim-admin-view-card,
+.sim-admin-manager { margin: 0; }
+.sim-admin-tip {
+  margin-top: 14px;
+  padding: 12px 14px;
+  display: grid;
+  gap: 4px;
+  border: 1px solid #efcf9f;
+  border-radius: 12px;
+  color: #71502b;
+  background: #fff8ed;
+  font-size: 12px;
+  line-height: 1.55;
+}
+.sim-admin-card > header { align-items: flex-start; }
+.sim-admin-card-title { min-width: 0; }
+.sim-admin-card-title strong { overflow-wrap: anywhere; }
+.sim-admin-card-actions { display: flex !important; flex-wrap: wrap; justify-content: flex-end; gap: 7px; }
+.sim-admin-card > header .sim-card-action {
+  width: auto;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 850;
+}
+.sim-admin-card > header .sim-card-action.split { border-color: #e8b875; color: #a95700; background: #fff8ed; }
+.sim-admin-card > header .sim-card-action.merge { border-color: #8bc9a6; color: #13733c; background: #effaf3; }
+.sim-admin-card > header .sim-card-action.copy { border-color: #b7c8df; color: #315f99; background: #f3f7fc; }
+.sim-admin-card > header .sim-card-action.remove { width: 34px; padding: 0; border-color: #efc8c8; color: #b22; background: #fff; font-size: 20px; }
+.sim-admin-check { align-content: start; }
+.sim-admin-check input { width: 20px !important; height: 20px; padding: 0 !important; }
+.sim-admin-empty {
+  padding: 42px 18px;
+  border: 1px dashed #d4d9df;
+  border-radius: 14px;
+  color: #6e7781;
+  background: #fafbfc;
+  text-align: center;
+}
+.sim-admin-empty strong { display: block; color: #3f4852; font-size: 16px; }
+.sim-admin-empty p { margin: 5px 0 0; }
+.sim-admin-savebar { margin-top: 16px; }
+@media (max-width: 980px) {
+  .sim-admin-workspace { --sim-menu-width: 72px; gap: 11px; }
+  .sim-admin-workspace .sim-menu-text { display: none; }
+  .sim-admin-menu-toggle,
+  .sim-admin-subnav button { justify-content: center; padding-inline: 8px; }
+  .sim-admin-card-actions { width: 100%; justify-content: flex-start; }
+  .sim-admin-card > header { flex-wrap: wrap; }
+}
+@media (max-width: 640px) {
+  .sim-admin-hero .home-admin-hero-actions { grid-template-columns: 1fr 1fr; }
+  .sim-admin-workspace { --sim-menu-width: 58px; gap: 8px; }
+  .sim-admin-sidebar { top: 6px; padding: 5px; border-radius: 13px; }
+  .sim-menu-icon,
+  .sim-menu-toggle-icon { width: 28px; height: 28px; flex-basis: 28px; }
+  .sim-admin-menu-toggle,
+  .sim-admin-subnav button { min-height: 42px; padding: 6px 4px; }
+  .sim-admin-card > header .sim-card-action { padding-inline: 8px; }
+}
+
+
+/* V26.8.3 Beta 16 - cấu hình link APN */
+.sim-admin-inline-check {
+  min-height: 42px;
+  padding: 8px 10px;
+  grid-template-columns: minmax(0,1fr) auto !important;
+  align-items: center;
+  gap: 10px !important;
+  border: 1px solid #dfe3e7;
+  border-radius: 9px;
+  background: #fffaf2;
+}
+.sim-admin-inline-check input { width: 20px !important; height: 20px; padding: 0 !important; }
+@media (max-width: 640px) {
+  .sim-admin-hero { padding: 14px; gap: 11px; }
+  .sim-admin-hero h2 { font-size: 20px; }
+  .sim-admin-hero p { margin-top: 5px; display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+  .sim-admin-hero .home-admin-hero-actions { gap: 7px; }
+  .sim-admin-hero .home-admin-hero-actions > * { min-height: 39px; padding-inline: 8px; font-size: 10px; }
+}

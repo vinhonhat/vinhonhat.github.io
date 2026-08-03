@@ -273,8 +273,8 @@
         </section>
 
         <section id="simAdminPanel" class="cms-panel home-admin-panel" hidden>
-            <div class="home-admin-hero">
-                <div><span>Cửa hàng SIM</span><h2>Sản phẩm và cách nhận đơn</h2><p>Chỉnh gói SIM, giá, ảnh và chuyển giữa Messenger hoặc trang đặt hàng riêng.</p></div>
+            <div class="home-admin-hero sim-admin-hero">
+                <div><span>Cửa hàng SIM</span><h2>Sản phẩm và cách nhận đơn</h2><p>Quản lý gọn theo từng mục: cài đặt, đơn hàng, SIM tháng, SIM năm và SIM nghe gọi.</p></div>
                 <div class="home-admin-hero-actions">
                     <label class="home-config-import">Nhập sim-plans.json<input id="importSimPlans" type="file" accept="application/json,.json"></label>
                     <label class="home-config-import">Nhập order-config.json<input id="importOrderConfig" type="file" accept="application/json,.json"></label>
@@ -282,37 +282,80 @@
                     <a id="downloadOrderConfig" download="order-config.json">Tải order-config.json</a>
                 </div>
             </div>
-            <div class="home-admin-grid">
-                <section class="home-settings-card">
-                    <div class="home-settings-heading"><span class="settings-number">1</span><div><h3>Thông tin trang SIM</h3><p>Tiêu đề và mô tả hiển thị phía trên catalog.</p></div></div>
-                    <div class="settings-form-grid two">
-                        <label>Tiêu đề<input id="simAdminTitle" type="text"></label>
-                        <label>Dòng nhỏ<input id="simAdminEyebrow" type="text"></label>
-                        <label class="settings-span-two">Mô tả<textarea id="simAdminDescription" rows="3"></textarea></label>
-                        <label class="settings-span-two">Lưu ý cuối trang<textarea id="simAdminNotice" rows="2"></textarea></label>
-                    </div>
-                </section>
-                <section class="home-settings-card">
-                    <div class="home-settings-heading"><span class="settings-number">2</span><div><h3>Nhận đơn hàng</h3><p>Đổi sang trang riêng sau này chỉ cần chọn chế độ và nhập URL.</p></div></div>
-                    <div class="settings-form-grid two">
-                        <label>Cách nhận đơn<select id="simOrderMode"><option value="messenger">Messenger</option><option value="custom-page">Trang đặt hàng riêng</option></select></label>
-                        <label>Messenger URL<input id="simMessengerUrl" type="url" placeholder="https://m.me/..."></label>
-                        <label>Facebook cá nhân<input id="simFacebookUrl" type="url" placeholder="https://facebook.com/..."></label>
-                        <label>Trang đặt hàng riêng<input id="simCustomOrderUrl" type="text" placeholder="/pages/pages-app/dat-sim.html"></label>
-                        <label class="settings-span-two">Mẫu tin nhắn<textarea id="simMessageTemplate" rows="7"></textarea></label>
-                    </div>
-                    <div class="toggle-grid compact">
-                        <label><input id="simCopyMessage" type="checkbox"><span>Sao chép tin nhắn trước khi mở</span></label>
-                        <label><input id="simAppendText" type="checkbox"><span>Thử gắn nội dung vào URL Messenger</span></label>
-                        <label><input id="simOpenNewTab" type="checkbox"><span>Mở ở tab mới</span></label>
-                    </div>
-                </section>
+
+            <div id="simAdminWorkspace" class="sim-admin-workspace">
+                <aside class="sim-admin-sidebar" aria-label="Menu quản lý SIM">
+                    <button id="toggleSimAdminMenu" class="sim-admin-menu-toggle" type="button" aria-label="Thu gọn hoặc mở rộng menu SIM" title="Thu gọn/mở rộng menu">
+                        <span class="sim-menu-toggle-icon">⇤</span><span class="sim-menu-text">Thu gọn</span>
+                    </button>
+                    <nav class="sim-admin-subnav">
+                        <button type="button" class="active" data-sim-admin-view="settings" title="Cài đặt">
+                            <span class="sim-menu-icon">⚙</span><span class="sim-menu-text">Cài đặt</span>
+                        </button>
+                        <button type="button" data-sim-admin-view="order" title="Đơn hàng">
+                            <span class="sim-menu-icon">▣</span><span class="sim-menu-text">Đơn hàng</span>
+                        </button>
+                        <button type="button" data-sim-admin-view="monthly" title="SIM tháng">
+                            <span class="sim-menu-icon">M</span><span class="sim-menu-text">SIM tháng</span>
+                        </button>
+                        <button type="button" data-sim-admin-view="yearly" title="SIM năm">
+                            <span class="sim-menu-icon">Y</span><span class="sim-menu-text">SIM năm</span>
+                        </button>
+                        <button type="button" data-sim-admin-view="voice" title="SIM nghe gọi">
+                            <span class="sim-menu-icon">☎</span><span class="sim-menu-text">SIM nghe gọi</span>
+                        </button>
+                    </nav>
+                </aside>
+
+                <div class="sim-admin-content">
+                    <section class="home-settings-card sim-admin-view-card" data-sim-admin-section="settings">
+                        <div class="home-settings-heading"><span class="settings-number">1</span><div><h3>Cài đặt trang SIM</h3><p>Tiêu đề, mô tả và tên các nhóm hiển thị ngoài trang.</p></div></div>
+                        <div class="settings-form-grid two">
+                            <label>Tiêu đề<input id="simAdminTitle" type="text"></label>
+                            <label>Dòng nhỏ<input id="simAdminEyebrow" type="text"></label>
+                            <label class="settings-span-two">Mô tả<textarea id="simAdminDescription" rows="3"></textarea></label>
+                            <label class="settings-span-two">Lưu ý cuối trang<textarea id="simAdminNotice" rows="2"></textarea></label>
+                            <label>Tên mục SIM tháng<input id="simAdminMonthlyLabel" type="text"></label>
+                            <label>Tên mục SIM năm<input id="simAdminYearlyLabel" type="text"></label>
+                            <label>Tên mục SIM nghe gọi<input id="simAdminVoiceLabel" type="text"></label>
+                            <label>Tên SIM vật lý<input id="simAdminPhysicalLabel" type="text"></label>
+                            <label>Tên eSIM<input id="simAdminEsimLabel" type="text"></label>
+                            <label>Tên loại dùng chung<input id="simAdminBothLabel" type="text"></label>
+                            <label class="settings-span-two">Link trang tải cấu hình / APN<input id="simAdminApnUrl" type="text" placeholder="/pages/pages-baiviet/sim/cau-hinh-sim-data-sim-nghe-goi-20251109.html"></label>
+                            <label>Tên nút cấu hình<input id="simAdminApnLabel" type="text" placeholder="Tải cấu hình / APN"></label>
+                            <label class="sim-admin-inline-check"><span>Hiện nút cấu hình ngoài trang</span><input id="simAdminApnEnabled" type="checkbox"></label>
+                        </div>
+                        <div class="sim-admin-tip"><strong>Gộp hay tách eSIM?</strong><span>Khi eSIM và SIM vật lý cùng giá, chọn “eSIM + vật lý dùng chung giá”. Khi giá khác nhau, bấm “Tách 2 giá” trong sản phẩm để nhập riêng.</span></div>
+                        <div class="sim-admin-tip"><strong>Trang cấu hình/APN đã có sẵn</strong><span>Mặc định nút sẽ mở bài “Cấu hình Sim data, sim nghe gọi”, trong đó có link tải cấu hình iPhone và hướng dẫn Android. Anh có thể đổi đường dẫn ở trên.</span></div>
+                    </section>
+
+                    <section class="home-settings-card sim-admin-view-card" data-sim-admin-section="order" hidden>
+                        <div class="home-settings-heading"><span class="settings-number">2</span><div><h3>Nhận đơn hàng</h3><p>Chọn Messenger hoặc chuyển sang trang đặt hàng riêng.</p></div></div>
+                        <div class="settings-form-grid two">
+                            <label>Cách nhận đơn<select id="simOrderMode"><option value="messenger">Messenger</option><option value="custom-page">Trang đặt hàng riêng</option></select></label>
+                            <label>Messenger URL<input id="simMessengerUrl" type="url" placeholder="https://m.me/..."></label>
+                            <label>Facebook cá nhân<input id="simFacebookUrl" type="url" placeholder="https://facebook.com/..."></label>
+                            <label>Trang đặt hàng riêng<input id="simCustomOrderUrl" type="text" placeholder="/pages/pages-app/dat-sim.html"></label>
+                            <label class="settings-span-two">Mẫu tin nhắn<textarea id="simMessageTemplate" rows="8"></textarea></label>
+                        </div>
+                        <div class="toggle-grid compact">
+                            <label><input id="simCopyMessage" type="checkbox"><span>Sao chép tin nhắn trước khi mở</span></label>
+                            <label><input id="simAppendText" type="checkbox"><span>Thử gắn nội dung vào URL Messenger</span></label>
+                            <label><input id="simOpenNewTab" type="checkbox"><span>Mở ở tab mới</span></label>
+                        </div>
+                    </section>
+
+                    <section class="banner-manager-card sim-admin-manager" data-sim-admin-section="products" hidden>
+                        <div class="banner-manager-head">
+                            <div><span>Sản phẩm</span><h3 id="simProductManagerTitle">SIM data tháng</h3><p id="simProductManagerDescription">Các gói data gia hạn hoặc thanh toán theo tháng.</p></div>
+                            <button id="addSimPlan" type="button">+ Thêm gói SIM</button>
+                        </div>
+                        <div id="simAdminList" class="sim-admin-list"></div>
+                    </section>
+                </div>
             </div>
-            <section class="banner-manager-card sim-admin-manager">
-                <div class="banner-manager-head"><div><span>Sản phẩm</span><h3>Danh sách gói SIM</h3><p>Giá và thông tin ngoài thẻ được lấy từ đây. Chi tiết chỉ hiện khi khách nhấn sản phẩm.</p></div><button id="addSimPlan" type="button">+ Thêm gói SIM</button></div>
-                <div id="simAdminList" class="sim-admin-list"></div>
-            </section>
-            <div class="home-admin-savebar"><span id="simAdminStatus">Đang tải dữ liệu SIM…</span><button id="saveSimDraft" type="button">Lưu bản đang chỉnh</button><a id="downloadSimPlansBottom" download="sim-plans.json">Tải sản phẩm</a><a id="downloadOrderConfigBottom" download="order-config.json">Tải nhận đơn</a></div>
+
+            <div class="home-admin-savebar sim-admin-savebar"><span id="simAdminStatus">Đang tải dữ liệu SIM…</span><button id="saveSimDraft" type="button">Lưu bản đang chỉnh</button><a id="downloadSimPlansBottom" download="sim-plans.json">Tải sản phẩm</a><a id="downloadOrderConfigBottom" download="order-config.json">Tải nhận đơn</a></div>
         </section>
 
         <section id="categoriesAdminPanel" class="cms-panel categories-admin-panel" hidden>

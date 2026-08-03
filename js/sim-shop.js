@@ -7,6 +7,8 @@
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   })[char]);
 
+  const DEFAULT_APN_URL = '/pages/pages-baiviet/sim/cau-hinh-sim-data-sim-nghe-goi-20251109.html';
+
   const DEFAULT_ORDER = {
     mode: 'messenger',
     messengerUrl: 'https://m.me/tqv2022',
@@ -27,7 +29,7 @@
   let pageConfig = {};
   let plans = [];
   let orderConfig = structuredClone(DEFAULT_ORDER);
-  let currentPeriod = 'monthly';
+  let currentView = 'monthly';
   let activePlan = null;
   let quantity = 1;
 
@@ -40,30 +42,69 @@
     };
   }
 
-  function periodLabel(period) {
-    return period === 'yearly'
-      ? (pageConfig.yearlyLabel || 'SIM năm')
-      : (pageConfig.monthlyLabel || 'SIM tháng');
+  function normalizePlan(plan = {}) {
+    return {
+      ...plan,
+      planKind: plan.planKind === 'voice' ? 'voice' : 'data',
+      period: plan.period === 'yearly' ? 'yearly' : 'monthly',
+      simType: ['both', 'physical', 'esim'].includes(plan.simType) ? plan.simType : 'physical'
+    };
+  }
+
+  function viewLabel(view) {
+    if (view === 'voice') return pageConfig.voiceLabel || 'SIM nghe gọi';
+    return view === 'yearly' ? (pageConfig.yearlyLabel || 'SIM năm') : (pageConfig.monthlyLabel || 'SIM tháng');
   }
 
   function typeLabel(type) {
-    return type === 'esim'
-      ? (pageConfig.esimLabel || 'eSIM')
-      : (pageConfig.physicalLabel || 'SIM vật lý');
+    if (type === 'both') return pageConfig.bothLabel || 'eSIM + SIM vật lý';
+    if (type === 'esim') return pageConfig.esimLabel || 'eSIM';
+    return pageConfig.physicalLabel || 'SIM vật lý';
   }
 
-  function enabledPlans(period, simType) {
-    return plans.filter(plan => plan.enabled !== false && plan.showCard !== false && plan.period === period && (!simType || plan.simType === simType));
+  function apnSettings() {
+    return {
+      enabled: pageConfig.apnEnabled !== false,
+      url: String(pageConfig.apnUrl || DEFAULT_APN_URL).trim() || DEFAULT_APN_URL,
+      label: String(pageConfig.apnLabel || 'Tải cấu hình / APN').trim() || 'Tải cấu hình / APN'
+    };
+  }
+
+  function configureApnHeroLink() {
+    const link = $('#simApnHeroLink');
+    if (!link) return;
+    const apn = apnSettings();
+    link.hidden = !apn.enabled;
+    link.href = apn.url;
+    link.textContent = apn.label;
+  }
+
+  function planMatchesView(plan, view) {
+    if (view === 'voice') return plan.planKind === 'voice';
+    return plan.planKind !== 'voice' && plan.period === view;
+  }
+
+  function enabledPlans(view, simType) {
+    return plans.filter(plan => plan.enabled !== false
+      && plan.showCard !== false
+      && planMatchesView(plan, view)
+      && (!simType || plan.simType === simType));
   }
 
   function familyPlans(plan) {
-    return plans.filter(item => item.enabled !== false && item.familyId && item.familyId === plan.familyId);
+    return plans.filter(item => item.enabled !== false
+      && item.familyId
+      && item.familyId === plan.familyId
+      && item.planKind === plan.planKind
+      && item.period === plan.period
+      && item.simType !== 'both');
   }
 
   function productCard(plan) {
     return `<article class="sim-product-card" data-sim-id="${escapeHtml(plan.id)}" tabindex="0" role="button" aria-label="Xem ${escapeHtml(plan.name)}">
       <div class="sim-product-media">
         <img src="${escapeHtml(plan.image || '/img/sim/softbank-demo.png')}" alt="${escapeHtml(plan.name)}" loading="lazy" decoding="async">
+        <span class="sim-product-type-badge">${escapeHtml(typeLabel(plan.simType))}</span>
       </div>
       <div class="sim-product-copy">
         <h3>${escapeHtml(plan.cardName || plan.name)}</h3>
@@ -72,32 +113,36 @@
     </article>`;
   }
 
-  function groupTemplate(period, simType) {
-    const items = enabledPlans(period, simType);
-    return `<section class="sim-product-group" data-sim-group="${simType}">
+  function groupMeta(simType) {
+    if (simType === 'both') return { eyebrow: 'CHỌN LOẠI KHI ĐẶT', title: typeLabel('both') };
+    if (simType === 'esim') return { eyebrow: 'KÍCH HOẠT TRỰC TUYẾN', title: typeLabel('esim') };
+    return { eyebrow: 'GIAO SIM TẬN NƠI', title: typeLabel('physical') };
+  }
+
+  function groupTemplate(view, simType) {
+    const items = enabledPlans(view, simType);
+    if (!items.length) return '';
+    const meta = groupMeta(simType);
+    return `<section class="sim-product-group sim-product-group-${simType}" data-sim-group="${simType}">
       <header class="sim-product-group-head">
-        <div>
-          <span>${simType === 'esim' ? 'KÍCH HOẠT TRỰC TUYẾN' : 'GIAO SIM TẬN NƠI'}</span>
-          <h3>${escapeHtml(typeLabel(simType))}</h3>
-        </div>
+        <div><span>${escapeHtml(meta.eyebrow)}</span><h3>${escapeHtml(meta.title)}</h3></div>
         <small>${items.length} sản phẩm</small>
       </header>
-      <div class="sim-product-grid">
-        ${items.length ? items.map(productCard).join('') : `<p class="sim-group-empty">${escapeHtml(pageConfig.emptyText || 'Chưa có sản phẩm trong nhóm này.')}</p>`}
-      </div>
+      <div class="sim-product-grid">${items.map(productCard).join('')}</div>
     </section>`;
   }
 
-  function renderCatalog(period = currentPeriod) {
-    currentPeriod = period;
+  function renderCatalog(view = currentView) {
+    currentView = view;
     document.querySelectorAll('[data-sim-period]').forEach(button => {
-      const active = button.dataset.simPeriod === period;
+      const active = button.dataset.simPeriod === view;
       button.classList.toggle('active', active);
       button.setAttribute('aria-selected', String(active));
     });
     const container = $('#simPlanGrid');
     if (!container) return;
-    container.innerHTML = groupTemplate(period, 'physical') + groupTemplate(period, 'esim');
+    const content = ['both', 'physical', 'esim'].map(type => groupTemplate(view, type)).join('');
+    container.innerHTML = content || `<div class="sim-catalog-empty"><strong>Chưa có ${escapeHtml(viewLabel(view).toLowerCase())}</strong><p>Sản phẩm trong mục này đang được cập nhật.</p></div>`;
   }
 
   function variantButtons(plan) {
@@ -113,10 +158,11 @@
     const features = (plan.features || []).map(item => `<li>${escapeHtml(item)}</li>`).join('');
     const requirements = (plan.requirements || []).map(item => `<li>${escapeHtml(item)}</li>`).join('');
     const labels = orderConfig.labels || DEFAULT_ORDER.labels;
+    const apn = apnSettings();
     return `<div class="sim-detail-grid">
       <div class="sim-detail-image"><img src="${escapeHtml(plan.image || '/img/sim/softbank-demo.png')}" alt="${escapeHtml(plan.name)}"></div>
       <div class="sim-detail-copy">
-        <span class="sim-detail-badge">${escapeHtml(periodLabel(plan.period))}</span>
+        <span class="sim-detail-badge">${escapeHtml(viewLabel(plan.planKind === 'voice' ? 'voice' : plan.period))} · ${escapeHtml(typeLabel(plan.simType))}</span>
         <h2 id="simDetailTitle">${escapeHtml(plan.name)}</h2>
         <p>${escapeHtml(plan.subtitle || '')}</p>
         <div class="sim-detail-price">${escapeHtml(plan.price || 'Liên hệ')}</div>
@@ -125,7 +171,7 @@
           <div><span>Nhà mạng</span><strong>${escapeHtml(plan.carrier || 'Đang cập nhật')}</strong></div>
           <div><span>Dung lượng</span><strong>${escapeHtml(plan.dataLabel || 'Đang cập nhật')}</strong></div>
           <div><span>Loại SIM</span><strong>${escapeHtml(typeLabel(plan.simType))}</strong></div>
-          <div><span>Chu kỳ</span><strong>${escapeHtml(plan.durationLabel || periodLabel(plan.period))}</strong></div>
+          <div><span>Chu kỳ</span><strong>${escapeHtml(plan.durationLabel || viewLabel(plan.planKind === 'voice' ? 'voice' : plan.period))}</strong></div>
         </div>
         <div class="sim-detail-columns">
           <section><h3>Thông tin chính</h3><ul>${features}</ul></section>
@@ -140,6 +186,7 @@
           <button class="sim-buy-button" type="button" data-sim-buy>${escapeHtml(orderConfig.mode === 'custom-page' ? labels.custom : labels.buy)}</button>
         </div>
         ${orderConfig.facebookUrl ? `<a class="sim-facebook-button" href="${escapeHtml(orderConfig.facebookUrl)}" target="_blank" rel="noopener">${escapeHtml(labels.friend)}</a>` : ''}
+        ${apn.enabled ? `<a class="sim-apn-detail-button" href="${escapeHtml(apn.url)}">${escapeHtml(apn.label)}</a>` : ''}
       </div>
     </div>`;
   }
@@ -182,7 +229,7 @@
       id: plan.id,
       name: plan.name,
       simType: typeLabel(plan.simType),
-      period: periodLabel(plan.period),
+      period: viewLabel(plan.planKind === 'voice' ? 'voice' : plan.period),
       data: plan.dataLabel || '',
       quantity: String(quantity),
       price: plan.price || 'Liên hệ',
@@ -208,35 +255,42 @@
     return copied;
   }
 
-  function showToast(message) {
+  function showToast(text) {
     const toast = $('#simOrderToast');
     if (!toast) return;
-    toast.textContent = message;
+    toast.textContent = text;
     toast.hidden = false;
     clearTimeout(showToast.timer);
-    showToast.timer = window.setTimeout(() => { toast.hidden = true; }, 4200);
+    showToast.timer = setTimeout(() => { toast.hidden = true; }, 4500);
   }
 
   function orderUrl(plan, message) {
     if (orderConfig.mode === 'custom-page') {
-      const url = new URL(orderConfig.customPageUrl || '/pages/pages-app/dat-sim.html', location.origin);
-      url.searchParams.set('plan', plan.id);
-      url.searchParams.set('quantity', String(quantity));
-      url.searchParams.set('type', plan.simType);
-      url.searchParams.set('period', plan.period);
-      url.searchParams.set('message', message);
-      return url.href;
+      try {
+        const url = new URL(orderConfig.customPageUrl || DEFAULT_ORDER.customPageUrl, location.href);
+        url.searchParams.set('plan', plan.id);
+        url.searchParams.set('quantity', String(quantity));
+        return url.href;
+      } catch (_) {
+        return orderConfig.customPageUrl || DEFAULT_ORDER.customPageUrl;
+      }
     }
-    const url = new URL(orderConfig.messengerUrl || 'https://m.me/tqv2022', location.href);
-    if (orderConfig.appendTextQuery !== false) url.searchParams.set('text', message);
-    return url.href;
+    const base = orderConfig.messengerUrl || DEFAULT_ORDER.messengerUrl;
+    if (orderConfig.appendTextQuery === false) return base;
+    try {
+      const url = new URL(base, location.href);
+      if (!url.searchParams.has('text')) url.searchParams.set('text', message);
+      return url.href;
+    } catch (_) {
+      return base;
+    }
   }
 
   async function buyCurrentPlan() {
     if (!activePlan) return;
     const message = interpolate(orderConfig.messageTemplate, activePlan);
-    let opened = null;
-    if (orderConfig.openInNewTab !== false) opened = window.open('about:blank', '_blank');
+    const openNew = orderConfig.openInNewTab !== false;
+    const opened = openNew ? window.open('about:blank', '_blank', 'noopener') : null;
     try {
       if (orderConfig.copyMessageBeforeOpen !== false) await copyText(message);
     } catch (error) {
@@ -293,18 +347,28 @@
       const data = await dataResponse.json();
       const order = orderResponse.ok ? await orderResponse.json() : DEFAULT_ORDER;
       pageConfig = data.page || {};
-      plans = Array.isArray(data.plans) ? data.plans.filter(item => item.enabled !== false) : [];
+      plans = Array.isArray(data.plans) ? data.plans.map(normalizePlan).filter(item => item.enabled !== false) : [];
       orderConfig = normalizeOrder(order);
 
       $('#simEyebrow').textContent = pageConfig.eyebrow || 'SIM NHẬT BẢN';
-      $('#simTitle').textContent = pageConfig.title || 'Chọn SIM data phù hợp';
+      $('#simTitle').textContent = pageConfig.title || 'Chọn SIM phù hợp';
       $('#simDescription').textContent = pageConfig.description || '';
       $('#simPlansTitle').textContent = pageConfig.catalogTitle || 'Các gói SIM đang giới thiệu';
+      $('#simCatalogDescription').textContent = pageConfig.catalogDescription || 'Chọn nhóm SIM, sau đó nhấn vào sản phẩm để xem chi tiết và đặt mua.';
+      configureApnHeroLink();
       $('[data-sim-period="monthly"]').textContent = pageConfig.monthlyLabel || 'SIM tháng';
       $('[data-sim-period="yearly"]').textContent = pageConfig.yearlyLabel || 'SIM năm';
+      const voiceButton = $('[data-sim-period="voice"]');
+      const hasVoice = plans.some(plan => plan.planKind === 'voice' && plan.showCard !== false);
+      if (voiceButton) {
+        voiceButton.textContent = pageConfig.voiceLabel || 'SIM nghe gọi';
+        voiceButton.hidden = !hasVoice;
+      }
       $('#simFaqList').innerHTML = (data.faqs || []).map(faqTemplate).join('');
       $('#simNotice').textContent = pageConfig.notice || '';
-      renderCatalog('monthly');
+
+      const firstView = ['monthly', 'yearly', 'voice'].find(view => enabledPlans(view).length) || 'monthly';
+      renderCatalog(firstView);
     } catch (error) {
       console.error(error);
       $('#simPlanGrid').innerHTML = '<div class="home-empty-state"><strong>Chưa tải được thông tin SIM</strong><p>Kiểm tra data/sim-plans.json và data/order-config.json rồi tải lại trang.</p></div>';

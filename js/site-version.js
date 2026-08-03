@@ -7,7 +7,7 @@
 
   const RELEASE = '26.8.3';
   const CHANNEL = 'Beta';
-  const BUILD = 14;
+  const BUILD = 16;
 
   const channelSlug = CHANNEL.toLowerCase().replace(/[^a-z0-9]+/g, '-');
   const id = `${RELEASE}-${channelSlug}${BUILD}`;

@@ -22,10 +22,13 @@
         <span id="simEyebrow">SIM NHẬT BẢN</span>
         <h1 id="simTitle">Chọn SIM data phù hợp</h1>
         <p id="simDescription">Đang tải thông tin…</p>
-        <a class="sim-hero-button" href="#simPlans">Xem sản phẩm</a>
       </div>
       <div class="sim-shop-visual" aria-hidden="true">
         <img src="/img/sim/softbank-demo.png" alt="" width="520" height="520" decoding="async">
+      </div>
+      <div class="sim-hero-actions">
+        <a class="sim-hero-button" href="#simPlans">Xem gói SIM</a>
+        <a id="simApnHeroLink" class="sim-hero-button sim-hero-button-secondary" href="/pages/pages-baiviet/sim/cau-hinh-sim-data-sim-nghe-goi-20251109.html">Tải cấu hình / APN</a>
       </div>
     </section>
 
@@ -33,12 +36,13 @@
       <div class="sim-section-heading">
         <span>CHỌN THEO NHU CẦU</span>
         <h2 id="simPlansTitle">Các gói SIM đang giới thiệu</h2>
-        <p>Chọn SIM tháng hoặc SIM năm. Nhấn vào sản phẩm để xem chi tiết và mua SIM.</p>
+        <p id="simCatalogDescription">Chọn nhóm SIM, sau đó nhấn vào sản phẩm để xem chi tiết và đặt mua.</p>
       </div>
 
       <div class="sim-period-tabs" role="tablist" aria-label="Chọn chu kỳ SIM">
         <button type="button" class="active" data-sim-period="monthly" role="tab" aria-selected="true">SIM tháng</button>
         <button type="button" data-sim-period="yearly" role="tab" aria-selected="false">SIM năm</button>
+        <button type="button" data-sim-period="voice" role="tab" aria-selected="false" hidden>SIM nghe gọi</button>
       </div>
 
       <div id="simPlanGrid" class="sim-catalog" aria-live="polite"></div>
