@@ -751,59 +751,32 @@
         return results.filter(Boolean);
     }
 
-    function holidayBannerVariants(holiday, mobile = false) {
+    function holidayBannerVariants(holiday) {
         const prefix = String(holiday?.imagePrefix || '').trim();
         if (!prefix) return [];
-        const deviceSuffix = mobile ? 'm' : 'd';
-        // Banner chuẩn dùng hai biến thể không hậu tố: 0902.png và 0902.jpg.
-        // Hậu tố m/d chỉ là dự phòng để tương thích kho ảnh cũ.
-        return uniqueHolidayPaths([
-            `/img/holidays/${prefix}.png`,
-            `/img/holidays/${prefix}.jpg`,
-            `/img/holidays/${prefix}.webp`,
-            `/img/holidays/${prefix}.jpeg`,
-            `/img/holidays/${prefix}.PNG`,
-            `/img/holidays/${prefix}.JPG`,
-            `/img/holidays/${prefix}${deviceSuffix}.png`,
-            `/img/holidays/${prefix}${deviceSuffix}.jpg`,
-            `/img/holidays/${prefix}${deviceSuffix}.webp`,
-            `/img/holidays/${prefix}${deviceSuffix}.jpeg`
-        ]);
-    }
 
-    function holidayImageCandidates(holiday, mobile = false) {
-        const prefix = String(holiday?.imagePrefix || '').trim();
-        if (!prefix) return [];
-        const stems = mobile
-            ? [prefix, `${prefix}m`, `${prefix}-mobile`, `${prefix}_mobile`]
-            : [prefix, `${prefix}d`, `${prefix}-desktop`, `${prefix}_desktop`];
-        const extensions = ['png', 'jpg', 'webp', 'jpeg'];
-        return uniqueHolidayPaths(stems.flatMap(stem => extensions.map(ext => `/img/holidays/${stem}.${ext}`)));
+        // Banner ngày lễ là bộ ảnh RIÊNG, chỉ đọc trong /img/banners/.
+        // Quy ước: 0902.png / 0902.jpg, 0101.png / 0101.jpg,
+        // Tết Âm lịch dùng tet.png / tet.jpg.
+        return uniqueHolidayPaths([
+            `/img/banners/${prefix}.png`,
+            `/img/banners/${prefix}.jpg`
+        ]);
     }
 
     function holidayPopupCandidates(holiday, mobile = false) {
         const prefix = String(holiday?.imagePrefix || '').trim();
         if (!prefix) return [];
         const suffix = mobile ? 'm' : 'd';
-        const extensions = ['png', 'jpg', 'webp', 'jpeg'];
 
-        // Ảnh popup nằm thẳng trong /img/holidays/:
-        // 0101m.* cho mobile, 0101d.* cho desktop.
-        // Tết Âm lịch dùng tetm/tetd; Tết Dương lịch dùng 0101m/0101d.
-        const popupStems = [
-            `${prefix}${suffix}`,
-            `${prefix}-${mobile ? 'mobile' : 'desktop'}`,
-            `${prefix}_${mobile ? 'mobile' : 'desktop'}`
-        ];
-        const popupImages = popupStems.flatMap(stem =>
-            extensions.map(ext => `/img/holidays/${stem}.${ext}`)
-        );
-
-        // Nếu chưa có ảnh popup riêng thì mới dùng ảnh banner của ngày lễ.
+        // Ảnh popup ngày lễ là bộ ảnh RIÊNG, chỉ đọc trong /img/holidays/.
+        // Mobile: 0902m.*, 0101m.*, tetm.*
+        // Desktop: 0902d.*, 0101d.*, tetd.*
         return uniqueHolidayPaths([
-            ...popupImages,
-            ...holidayBannerVariants(holiday, mobile),
-            ...holidayImageCandidates(holiday, mobile)
+            `/img/holidays/${prefix}${suffix}.png`,
+            `/img/holidays/${prefix}${suffix}.jpg`,
+            `/img/holidays/${prefix}${suffix}.webp`,
+            `/img/holidays/${prefix}${suffix}.jpeg`
         ]);
     }
 
@@ -832,20 +805,12 @@
     }
 
     function holidayImagePaths(holiday) {
-        const desktopCandidates = holidayImageCandidates(holiday, false);
-        const mobileCandidates = holidayImageCandidates(holiday, true);
-        const desktopVariants = holidayBannerVariants(holiday, false);
-        const mobileVariants = holidayBannerVariants(holiday, true);
+        const bannerVariants = holidayBannerVariants(holiday);
         const desktopPopupCandidates = holidayPopupCandidates(holiday, false);
         const mobilePopupCandidates = holidayPopupCandidates(holiday, true);
         const placeholder = holidayPlaceholderData(holiday);
         return {
-            desktop: desktopVariants[0] || desktopCandidates[0] || placeholder,
-            mobile: mobileVariants[0] || mobileCandidates[0] || placeholder,
-            desktopVariants,
-            mobileVariants,
-            desktopCandidates,
-            mobileCandidates,
+            bannerVariants,
             desktopPopupCandidates,
             mobilePopupCandidates,
             fallback: placeholder
@@ -930,32 +895,29 @@
         if (!holiday) return null;
         const paths = holidayImagePaths(holiday);
         const timing = holidayTimingLabel(match);
-        const [desktopExisting, mobileExisting] = await Promise.all([
-            existingHolidayImages([
-                ...paths.desktopVariants,
-                ...paths.desktopCandidates
-            ]),
-            existingHolidayImages([
-                ...paths.mobileVariants,
-                ...paths.mobileCandidates
-            ])
-        ]);
-        const desktopVariants = desktopExisting.length ? desktopExisting : [paths.fallback];
-        const mobileVariants = mobileExisting.length ? mobileExisting : desktopVariants;
+
+        // Chỉ kiểm tra ảnh trong /img/banners/. Tuyệt đối không lấy ảnh popup
+        // trong /img/holidays/ để làm banner.
+        const existingVariants = await existingHolidayImages(paths.bannerVariants);
+        if (!existingVariants.length) {
+            console.warn(`Không tìm thấy banner ngày lễ: /img/banners/${holiday.imagePrefix}.png hoặc .jpg`);
+            return null;
+        }
+
         return {
             id: `holiday-${holiday.imagePrefix}`,
             enabled: true,
             kind: 'holiday',
             title: holiday.name,
             description: `${timing}. ${holiday.message || 'Chúc một ngày lễ thật nhiều niềm vui và ý nghĩa.'}`,
-            imageDesktop: desktopVariants[0],
-            imageMobile: mobileVariants[0],
-            imageVariantsDesktop: desktopVariants,
-            imageVariantsMobile: mobileVariants,
+            imageDesktop: existingVariants[0],
+            imageMobile: existingVariants[0],
+            imageVariantsDesktop: existingVariants,
+            imageVariantsMobile: existingVariants,
             variantKey: holiday.imagePrefix,
-            fallbackImagesDesktop: desktopVariants,
-            fallbackImagesMobile: mobileVariants,
-            fallbackImage: paths.fallback,
+            fallbackImagesDesktop: existingVariants,
+            fallbackImagesMobile: existingVariants,
+            fallbackImage: '',
             buttonText: 'Xem lời chúc',
             actionType: 'holiday'
         };
