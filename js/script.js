@@ -34,6 +34,12 @@
     let headerReadyPromise = null;
     let globalEventsBound = false;
     let downloadMenuCloseTimer = 0;
+
+    // Trên thiết bị cảm ứng, ngăn thao tác nhấn đúp làm Safari/Chrome phóng to trang.
+    // Không chặn sự kiện dblclick của website (ví dụ nhấn đúp logo để xóa cache).
+    document.addEventListener('dblclick', event => {
+        if (window.matchMedia?.('(pointer: coarse)').matches) event.preventDefault();
+    }, { passive: false });
     const lazyScriptPromises = new Map();
     const TRANSPARENT_PIXEL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
 
@@ -1138,6 +1144,13 @@
         let dragStartAt = 0;
         let dragMoved = false;
         let dragHorizontal = false;
+        let touchTracking = false;
+        let touchHorizontal = false;
+        let touchVertical = false;
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchLastX = 0;
+        let touchStartAt = 0;
         let suppressClick = false;
         const viewport = $('.home-banner-viewport', container);
         const intervalMs = clampNumber(config.intervalMs, 2500, 20000, 5500);
@@ -1284,10 +1297,39 @@
             start();
         };
 
+        const finishTouchDrag = (cancelled = false) => {
+            if (!touchTracking && !touchHorizontal) return;
+            const distance = touchLastX - touchStartX;
+            const elapsed = Math.max(1, performance.now() - touchStartAt);
+            const velocity = distance / elapsed;
+            const width = Math.max(1, viewport?.clientWidth || container.clientWidth || 1);
+            const shouldMove = !cancelled && touchHorizontal && (Math.abs(distance) > Math.min(58, width * 0.13) || Math.abs(velocity) > 0.38);
+            touchTracking = false;
+            touchHorizontal = false;
+            touchVertical = false;
+            viewport?.classList.remove('is-dragging');
+            track.style.removeProperty('transition');
+            if (shouldMove) {
+                suppressClick = true;
+                physicalIndex += distance < 0 ? 1 : -1;
+                moving = true;
+                setTransform(true);
+                syncState();
+                scheduleMoveCompletion();
+            } else {
+                setTransform(true);
+            }
+            window.setTimeout(() => { suppressClick = false; }, 180);
+            start();
+        };
+
         if (dragEnabled && viewport) {
             viewport.addEventListener('dragstart', event => event.preventDefault());
+
+            // Chuột/bút: dùng Pointer Events. Cảm ứng được xử lý riêng bằng Touch Events
+            // để khóa hướng ngang trước khi trình duyệt cuộn trang.
             viewport.addEventListener('pointerdown', event => {
-                if (!event.isPrimary || event.button !== 0 || moving || event.target.closest('.home-banner-arrow, .home-banner-dots')) return;
+                if (event.pointerType === 'touch' || !event.isPrimary || event.button !== 0 || moving || event.target.closest('.home-banner-arrow, .home-banner-dots')) return;
                 dragPointerId = event.pointerId;
                 dragStartX = dragLastX = event.clientX;
                 dragStartY = event.clientY;
@@ -1303,7 +1345,7 @@
                 const dy = event.clientY - dragStartY;
                 dragLastX = event.clientX;
                 if (!dragMoved && Math.abs(dx) > 5) dragMoved = true;
-                if (!dragHorizontal && Math.abs(dx) > 9 && Math.abs(dx) > Math.abs(dy) * 1.15) dragHorizontal = true;
+                if (!dragHorizontal && Math.abs(dx) > 7 && Math.abs(dx) > Math.abs(dy) * 1.08) dragHorizontal = true;
                 if (!dragHorizontal) return;
                 event.preventDefault();
                 viewport.classList.add('is-dragging');
@@ -1314,6 +1356,51 @@
             viewport.addEventListener('lostpointercapture', event => {
                 if (event.pointerId === dragPointerId) finishDrag(event, true);
             });
+
+            // Mobile/PWA: nhận diện hướng rất sớm. Vuốt ngang chuyển banner;
+            // vuốt dọc được trả lại cho trang để cuộn bình thường.
+            viewport.addEventListener('touchstart', event => {
+                if (event.touches.length !== 1 || moving || event.target.closest('.home-banner-arrow, .home-banner-dots')) return;
+                const touch = event.touches[0];
+                touchTracking = true;
+                touchHorizontal = false;
+                touchVertical = false;
+                touchStartX = touchLastX = touch.clientX;
+                touchStartY = touch.clientY;
+                touchStartAt = performance.now();
+                stop();
+            }, { passive: true });
+
+            viewport.addEventListener('touchmove', event => {
+                if (!touchTracking || event.touches.length !== 1) return;
+                const touch = event.touches[0];
+                const dx = touch.clientX - touchStartX;
+                const dy = touch.clientY - touchStartY;
+                touchLastX = touch.clientX;
+
+                if (!touchHorizontal && !touchVertical && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
+                    if (Math.abs(dx) > Math.abs(dy) * 1.04) touchHorizontal = true;
+                    else if (Math.abs(dy) > Math.abs(dx) * 1.04) touchVertical = true;
+                }
+
+                if (touchVertical) {
+                    touchTracking = false;
+                    viewport.classList.remove('is-dragging');
+                    setTransform(true);
+                    start();
+                    return;
+                }
+                if (!touchHorizontal) return;
+
+                // Chỉ khóa cuộn sau khi đã chắc chắn người dùng vuốt ngang.
+                event.preventDefault();
+                viewport.classList.add('is-dragging');
+                dragTransform(dx);
+            }, { passive: false });
+
+            viewport.addEventListener('touchend', () => finishTouchDrag(false), { passive: true });
+            viewport.addEventListener('touchcancel', () => finishTouchDrag(true), { passive: true });
+
             viewport.addEventListener('click', event => {
                 if (!suppressClick) return;
                 event.preventDefault();

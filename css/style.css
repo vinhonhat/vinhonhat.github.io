@@ -2163,3 +2163,30 @@ body.article-page {
     -webkit-user-drag: none;
     user-drag: none;
 }
+
+
+/* V26.8.3 Beta 9 — chống nhấn đúp phóng to và khóa hướng vuốt banner */
+html {
+    /* Giữ cuộn + chụm hai ngón, nhưng bỏ thao tác double-tap zoom. */
+    touch-action: manipulation;
+}
+button,
+a,
+input,
+select,
+textarea,
+label,
+[role="button"] {
+    touch-action: manipulation;
+}
+.home-banner-viewport {
+    /* Trình duyệt chỉ giữ quyền cuộn dọc; vuốt ngang do slider xử lý. */
+    touch-action: pan-y pinch-zoom;
+    overscroll-behavior-x: contain;
+}
+.home-banner-track,
+.home-banner-slide,
+.home-banner-media,
+.home-banner-link {
+    touch-action: pan-y pinch-zoom;
+}

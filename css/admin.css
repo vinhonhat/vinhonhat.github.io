@@ -750,3 +750,14 @@ body.admin-body { background: var(--admin-bg) !important; color: var(--admin-tex
 }
 
 .sr-only { position:absolute !important; width:1px !important; height:1px !important; padding:0 !important; margin:-1px !important; overflow:hidden !important; clip:rect(0,0,0,0) !important; white-space:nowrap !important; border:0 !important; }
+
+
+/* V26.8.3 Beta 9 — tránh nhấn đúp làm phóng to giao diện Admin trên mobile */
+html,
+button,
+a,
+input,
+select,
+textarea,
+label,
+[role="button"] { touch-action: manipulation; }
