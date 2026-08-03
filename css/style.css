@@ -2190,3 +2190,31 @@ label,
 .home-banner-link {
     touch-action: pan-y pinch-zoom;
 }
+
+
+/* V26.8.3 Beta 13 — link kiểm tra ngày lễ/pháo hoa thân thiện */
+.holiday-preview-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+.holiday-preview-link {
+    grid-column: 1 / -1;
+}
+.holiday-preview-link input {
+    width: 100%;
+    min-height: 42px;
+    padding: 0 11px;
+    border: 1px solid #dfe3e8;
+    border-radius: 10px;
+    background: #fff;
+    color: #39414a;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+}
+@media (max-width: 640px) {
+    .holiday-preview-actions { display: grid; grid-template-columns: 1fr 1fr; }
+    .holiday-preview-actions button:last-child { grid-column: 1 / -1; }
+    .holiday-preview-link { grid-column: auto; }
+}

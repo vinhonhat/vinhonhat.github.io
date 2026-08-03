@@ -4,10 +4,39 @@
     const VERSION = window.VinhSiteVersion?.id || 'dev';
     const SITE_CONFIG_URL = `/data/site-config.json?v=${VERSION}`;
     const BANNER_CONFIG_URL = `/data/banner-config.json?v=${VERSION}`;
+
+
+    function parseAdminHolidayTest(source = window.location) {
+        const params = new URLSearchParams(String(source?.search || ''));
+        const normalize = value => {
+            const id = String(value || '').trim().toLowerCase().replace(/[^a-z0-9_-]/g, '');
+            return id === '1109' ? '1119' : id;
+        };
+        const directFireworks = params.get('testfireworks') || params.get('testfirework') || params.get('testphaohoa');
+        const directHoliday = params.get('holidayTest') || params.get('testholiday') || params.get('testholyday');
+        if (directFireworks) return { id: normalize(directFireworks), mode: 'fireworks' };
+        if (directHoliday) return { id: normalize(directHoliday), mode: 'holiday' };
+        const tokens = [...params.keys(), decodeURIComponent(String(source?.hash || '').replace(/^#/, ''))].filter(Boolean);
+        for (const raw of tokens) {
+            const token = String(raw).trim().toLowerCase();
+            let match = token.match(/^test(?:fireworks?|phaohoa)([a-z0-9_-]+)$/i);
+            if (match) return { id: normalize(match[1]), mode: 'fireworks' };
+            match = token.match(/^test(?:holiday|holyday)([a-z0-9_-]+)$/i);
+            if (match) return { id: normalize(match[1]), mode: 'holiday' };
+        }
+        return null;
+    }
+
+    const ADMIN_HOLIDAY_TEST = parseAdminHolidayTest();
+    if (ADMIN_HOLIDAY_TEST?.id) {
+        const token = `${ADMIN_HOLIDAY_TEST.mode === 'fireworks' ? 'testfireworks' : 'testholiday'}${ADMIN_HOLIDAY_TEST.id}`;
+        window.location.replace(`${window.location.origin}/?${token}`);
+        return;
+    }
     const DEFAULT_CONFIG = {
         schemaVersion: 1,
         sections: { banner: true, featured: true, topics: true, latestFeed: true, sidebar: true },
-        banner: { mode: 'mixed', aspectRatio: '3 / 1', autoplay: true, intervalMs: 5500, showArrows: true, showDots: true, dragEnabled: true, holidaySlideEnabled: true, holidayBeforeDays: 45, holidayAfterDays: 10, holidayPosition: 'after-ads', holidayMaxSlides: 2, holidayEnabledIds: ["0101", "tet", "0203", "0227", "0308", "0310", "0326", "0430", "0519", "0601", "0727", "0815", "0902", "1020", "1119", "1120", "1124", "1222", "1224"], pauseOnHover: true },
+        banner: { mode: 'mixed', aspectRatio: '3 / 1', autoplay: true, intervalMs: 5500, showArrows: true, showDots: true, dragEnabled: true, holidaySlideEnabled: true, holidayBeforeDays: 45, holidayAfterDays: 10, holidayPosition: 'after-ads', holidayMaxSlides: 2, holidayEnabledIds: ["0101", "tet", "0203", "0227", "0308", "0310", "0326", "0430", "0501", "0519", "0601", "0727", "0815", "0902", "1020", "1119", "1120", "1124", "1222", "1224"], pauseOnHover: true },
         feed: { source: 'new', initialCount: 6, batchSize: 4, maxItems: 20, autoLoad: true, showShare: true },
         holiday: { popupEnabled: true, popupBeforeDays: 0, popupAfterDays: 0, fireworksEnabled: true, showOncePerDay: true, popupDurationMs: 7500 },
         social: { facebook: 'https://fb.com/tqv2022', messenger: 'https://m.me/tqv2022', zalo: '', tiktok: 'https://www.tiktok.com/@tqv2020', email: '' },
@@ -101,7 +130,7 @@
     }
 
 
-    const HOLIDAY_BANNER_CODES = ['0101','tet','0203','0227','0308','0310','0326','0430','0519','0601','0727','0815','0902','1020','1119','1120','1124','1222','1224'];
+    const HOLIDAY_BANNER_CODES = ['0101','tet','0203','0227','0308','0310','0326','0430','0501','43051','0519','0601','0727','0815','0902','1020','1119','1120','1124','1222','1224'];
     const HOLIDAY_BANNER_LABELS = Object.freeze({
         '0101': 'Tết Dương lịch',
         'tet': 'Tết Âm lịch',
@@ -110,7 +139,9 @@
         '0308': 'Quốc tế Phụ nữ',
         '0310': 'Giỗ Tổ Hùng Vương',
         '0326': 'Đoàn TNCS',
-        '0430': '30/4 & 1/5',
+        '0430': 'Giải phóng miền Nam 30/4',
+        '0501': 'Quốc tế Lao động 1/5',
+        '43051': 'Ảnh dùng chung 30/4 & 1/5',
         '0519': 'Ngày sinh Bác Hồ',
         '0601': 'Quốc tế Thiếu nhi',
         '0727': 'Thương binh Liệt sĩ',
@@ -125,6 +156,32 @@
     });
     const normalizeHolidayBannerCode = value => String(value) === '1109' ? '1119' : String(value);
     const holidayBannerLabel = code => `${code} — ${HOLIDAY_BANNER_LABELS[code] || 'Ngày lễ'}`;
+
+    function normalizeAprilMayBannerSelection(values) {
+        const ids = [...new Set((Array.isArray(values) ? values : []).map(normalizeHolidayBannerCode))];
+        if (ids.includes('43051')) return ids.filter(id => id !== '0430' && id !== '0501');
+        return ids;
+    }
+
+    function enforceAprilMayBannerChoice(changedCode = '') {
+        const combined = document.querySelector('[data-holiday-banner-id="43051"]');
+        const april = document.querySelector('[data-holiday-banner-id="0430"]');
+        const may = document.querySelector('[data-holiday-banner-id="0501"]');
+        if (!combined || !april || !may) return;
+        if (changedCode === '43051' && combined.checked) {
+            april.checked = false;
+            may.checked = false;
+            return;
+        }
+        if ((changedCode === '0430' || changedCode === '0501') && (april.checked || may.checked)) {
+            combined.checked = false;
+            return;
+        }
+        if (combined.checked) {
+            april.checked = false;
+            may.checked = false;
+        }
+    }
 
     function bannerImageExists(url) {
         return new Promise(resolve => {
@@ -199,8 +256,9 @@
         setValue('#homeHolidayBannerBefore', state.banner.holidayBeforeDays ?? 45);
         setValue('#homeHolidayBannerAfter', state.banner.holidayAfterDays ?? 10);
         setValue('#homeHolidayBannerMax', state.banner.holidayMaxSlides ?? 2);
-        const enabledHolidayIds = new Set(Array.isArray(state.banner.holidayEnabledIds) ? state.banner.holidayEnabledIds.map(normalizeHolidayBannerCode) : ["0101", "tet", "0203", "0227", "0308", "0310", "0326", "0430", "0519", "0601", "0727", "0815", "0902", "1020", "1119", "1120", "1124", "1222", "1224"]);
+        const enabledHolidayIds = new Set(normalizeAprilMayBannerSelection(Array.isArray(state.banner.holidayEnabledIds) ? state.banner.holidayEnabledIds : ["0101", "tet", "0203", "0227", "0308", "0310", "0326", "0430", "0501", "0519", "0601", "0727", "0815", "0902", "1020", "1119", "1120", "1124", "1222", "1224"]));
         $$('[data-holiday-banner-id]').forEach(input => { input.checked = enabledHolidayIds.has(input.dataset.holidayBannerId); });
+        enforceAprilMayBannerChoice(enabledHolidayIds.has('43051') ? '43051' : '');
         setValue('#homeFeedSource', state.feed.source);
         setValue('#homeFeedInitial', state.feed.initialCount);
         setValue('#homeFeedBatch', state.feed.batchSize);
@@ -250,6 +308,7 @@
     }
 
     function readSettings() {
+        enforceAprilMayBannerChoice();
         state.schemaVersion = 1;
         state.sections = {
             banner: $('#homeSectionBanner')?.checked ?? true,
@@ -272,7 +331,7 @@
             holidayAfterDays: numberValue('#homeHolidayBannerAfter', 10),
             holidayPosition: $('#homeHolidayBannerPosition')?.value || 'after-ads',
             holidayMaxSlides: numberValue('#homeHolidayBannerMax', 2),
-            holidayEnabledIds: $$('[data-holiday-banner-id]:checked').map(input => normalizeHolidayBannerCode(input.dataset.holidayBannerId)),
+            holidayEnabledIds: normalizeAprilMayBannerSelection($$('[data-holiday-banner-id]:checked').map(input => input.dataset.holidayBannerId)),
             pauseOnHover: true
         };
         state.feed = {
@@ -435,7 +494,7 @@
             mobileHome: state.mobileHome,
             lunar: state.lunar
         };
-        const bannerConfig = { schemaVersion: 4, enabled: state.sections.banner !== false, settings: state.banner, holiday: state.holiday, items: state.banners };
+        const bannerConfig = { schemaVersion: 5, enabled: state.sections.banner !== false, settings: state.banner, holiday: state.holiday, items: state.banners };
         const urls = { site: makeJsonUrl('site', siteConfig), banner: makeJsonUrl('banner', bannerConfig) };
         [['#downloadSiteConfig','site-config.json','site'],['#downloadSiteConfigBottom','site-config.json','site'],['#downloadBannerConfig','banner-config.json','banner'],['#downloadBannerConfigBottom','banner-config.json','banner'],['#downloadBannerConfigTab','banner-config.json','banner'],['#downloadBannerConfigTabBottom','banner-config.json','banner']].forEach(([selector, filename, key]) => {
             const link = $(selector); if (link) { link.href = urls[key]; link.download = filename; }
@@ -499,6 +558,7 @@
             if (holidaySelect) {
                 const checked = holidaySelect.dataset.holidaySelect === 'all';
                 $$('[data-holiday-banner-id]').forEach(input => { input.checked = checked; });
+                if (checked) enforceAprilMayBannerChoice('43051');
                 updateDownloadLinks();
                 return;
             }
@@ -526,6 +586,8 @@
             }
         });
         document.addEventListener('change', event => {
+            const holidayToggle = event.target.closest('[data-holiday-banner-id]');
+            if (holidayToggle) enforceAprilMayBannerChoice(holidayToggle.dataset.holidayBannerId);
             if (event.target.closest('#homeAdminPanel, #bannerAdminPanel')) updateDownloadLinks();
         });
 
@@ -578,16 +640,48 @@
 
 
     function bindHolidayPreview() {
-        const button = $('#previewHolidayBanner');
-        if (!button || button.dataset.bound === '1') return;
-        button.dataset.bound = '1';
-        button.addEventListener('click', () => {
-            const id = $('#homeHolidayPreview')?.value || '0902';
-            const url = new URL('/', location.origin);
-            url.searchParams.set('holidayTest', id);
-            url.searchParams.set('_preview', Date.now().toString());
-            window.open(url.href, '_blank', 'noopener');
+        const holidayButton = $('#previewHolidayBanner');
+        const fireworksButton = $('#previewHolidayFireworks');
+        const copyButton = $('#copyHolidayPreviewLink');
+        const selector = $('#homeHolidayPreview');
+        const linkInput = $('#holidayPreviewLink');
+        if (!holidayButton || holidayButton.dataset.bound === '1') return;
+        holidayButton.dataset.bound = '1';
+
+        let selectedMode = 'holiday';
+        const makeUrl = (mode = selectedMode) => {
+            const id = String(selector?.value || '0101').trim();
+            const token = `${mode === 'fireworks' ? 'testfireworks' : 'testholiday'}${id}`;
+            return `${location.origin}/?${token}`;
+        };
+        const updateLink = (mode = selectedMode) => {
+            selectedMode = mode;
+            if (linkInput) linkInput.value = makeUrl(mode);
+        };
+        const openTest = mode => {
+            updateLink(mode);
+            window.open(makeUrl(mode), '_blank', 'noopener');
+        };
+
+        holidayButton.addEventListener('click', () => openTest('holiday'));
+        fireworksButton?.addEventListener('click', () => openTest('fireworks'));
+        selector?.addEventListener('change', () => updateLink(selectedMode));
+        linkInput?.addEventListener('focus', () => linkInput.select());
+        copyButton?.addEventListener('click', async () => {
+            const value = makeUrl(selectedMode);
+            updateLink(selectedMode);
+            try {
+                await navigator.clipboard.writeText(value);
+                copyButton.textContent = 'Đã sao chép';
+            } catch (_) {
+                linkInput?.focus();
+                linkInput?.select();
+                try { document.execCommand('copy'); } catch (_) {}
+                copyButton.textContent = 'Đã chọn link';
+            }
+            window.setTimeout(() => { copyButton.textContent = 'Sao chép link'; }, 1400);
         });
+        updateLink('holiday');
     }
     async function init() {
         organizeAdminTabs();

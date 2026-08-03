@@ -33,7 +33,13 @@
             
             <input type="text" id="adminUser" class="border border-gray-300 p-2 rounded w-full mb-3 text-center focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Tên đăng nhập...">
             
-            <input type="password" id="adminPass" class="border border-gray-300 p-2 rounded w-full mb-3 text-center focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Nhập mật khẩu...">
+            <div class="admin-password-field mb-3">
+                <input type="password" id="adminPass" class="border border-gray-300 p-2 pr-12 rounded w-full text-center focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Nhập mật khẩu..." autocomplete="current-password">
+                <button id="toggleAdminPass" class="admin-password-toggle" type="button" aria-label="Hiện mật khẩu" title="Hiện mật khẩu" aria-pressed="false">
+                    <svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.7"></circle></svg>
+                    <svg class="eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 3 18 18"></path><path d="M10.6 6.2A10.6 10.6 0 0 1 12 6c6 0 9.5 6 9.5 6a16 16 0 0 1-2.1 2.8M6.2 6.3C3.8 8 2.5 12 2.5 12s3.5 6 9.5 6c1 0 2-.2 2.8-.5"></path><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"></path></svg>
+                </button>
+            </div>
             
             <div class="flex items-center justify-start mb-4 text-sm text-gray-600">
                 <input type="checkbox" id="rememberMe" class="mr-2 cursor-pointer w-4 h-4">
@@ -101,7 +107,7 @@
                         <label>Vị trí banner lễ<select id="homeHolidayBannerPosition"><option value="after-ads">Sau banner quảng cáo</option><option value="before-ads">Trước banner quảng cáo</option></select></label>
                         <label>Hiện trước lễ (ngày)<input id="homeHolidayBannerBefore" type="number" min="0" max="120" step="1"></label>
                         <label>Giữ sau lễ (ngày)<input id="homeHolidayBannerAfter" type="number" min="0" max="120" step="1"></label>
-                        <label>Giới hạn banner lễ <small>(không tính quảng cáo)</small><input id="homeHolidayBannerMax" type="number" min="1" max="19" step="1"></label>
+                        <label>Giới hạn banner lễ <small>(không tính quảng cáo)</small><input id="homeHolidayBannerMax" type="number" min="1" max="21" step="1"></label>
                     </div>
                     <div class="toggle-grid compact">
                         <label><input id="homeBannerAutoplay" type="checkbox"><span>Tự động trượt</span></label>
@@ -113,7 +119,7 @@
                     <details class="admin-details holiday-banner-details" open>
                         <summary>Chọn những banner lễ được phép chạy</summary>
                         <div class="holiday-banner-select-actions"><button type="button" data-holiday-select="all">Chọn tất cả</button><button type="button" data-holiday-select="none">Bỏ tất cả</button><button type="button" id="checkHolidayBannerFiles">Kiểm tra ảnh lễ</button><small id="holidayBannerFileStatus">Giới hạn chỉ tính ảnh lễ, không tính banner quảng cáo. Chỉ mã có file trong <code>/img/banners/</code> mới xuất hiện.</small></div>
-                        <div class="holiday-banner-checkboxes"><label><input type="checkbox" data-holiday-banner-id="0101"><span><strong>0101</strong> — Tết Dương lịch</span></label><label><input type="checkbox" data-holiday-banner-id="tet"><span><strong>tet</strong> — Tết Âm lịch</span></label><label><input type="checkbox" data-holiday-banner-id="0203"><span><strong>0203</strong> — Thành lập Đảng</span></label><label><input type="checkbox" data-holiday-banner-id="0227"><span><strong>0227</strong> — Thầy thuốc Việt Nam</span></label><label><input type="checkbox" data-holiday-banner-id="0308"><span><strong>0308</strong> — Quốc tế Phụ nữ</span></label><label><input type="checkbox" data-holiday-banner-id="0310"><span><strong>0310</strong> — Giỗ Tổ Hùng Vương</span></label><label><input type="checkbox" data-holiday-banner-id="0326"><span><strong>0326</strong> — Đoàn TNCS</span></label><label><input type="checkbox" data-holiday-banner-id="0430"><span><strong>0430</strong> — 30/4 & 1/5</span></label><label><input type="checkbox" data-holiday-banner-id="0519"><span><strong>0519</strong> — Ngày sinh Bác Hồ</span></label><label><input type="checkbox" data-holiday-banner-id="0601"><span><strong>0601</strong> — Quốc tế Thiếu nhi</span></label><label><input type="checkbox" data-holiday-banner-id="0727"><span><strong>0727</strong> — Thương binh Liệt sĩ</span></label><label><input type="checkbox" data-holiday-banner-id="0815"><span><strong>0815</strong> — Trung Thu</span></label><label><input type="checkbox" data-holiday-banner-id="0902"><span><strong>0902</strong> — Quốc khánh 2/9</span></label><label><input type="checkbox" data-holiday-banner-id="1020"><span><strong>1020</strong> — Phụ nữ Việt Nam</span></label><label><input type="checkbox" data-holiday-banner-id="1119"><span><strong>1119</strong> — Quốc tế Nam giới</span></label><label><input type="checkbox" data-holiday-banner-id="1120"><span><strong>1120</strong> — Nhà giáo Việt Nam</span></label><label><input type="checkbox" data-holiday-banner-id="1124"><span><strong>1124</strong> — Văn hóa Việt Nam</span></label><label><input type="checkbox" data-holiday-banner-id="1222"><span><strong>1222</strong> — Quân đội Nhân dân</span></label><label><input type="checkbox" data-holiday-banner-id="1224"><span><strong>1224</strong> — Giáng Sinh</span></label></div>
+                        <div class="holiday-banner-checkboxes"><label><input type="checkbox" data-holiday-banner-id="0101"><span><strong>0101</strong> — Tết Dương lịch</span></label><label><input type="checkbox" data-holiday-banner-id="tet"><span><strong>tet</strong> — Tết Âm lịch</span></label><label><input type="checkbox" data-holiday-banner-id="0203"><span><strong>0203</strong> — Thành lập Đảng</span></label><label><input type="checkbox" data-holiday-banner-id="0227"><span><strong>0227</strong> — Thầy thuốc Việt Nam</span></label><label><input type="checkbox" data-holiday-banner-id="0308"><span><strong>0308</strong> — Quốc tế Phụ nữ</span></label><label><input type="checkbox" data-holiday-banner-id="0310"><span><strong>0310</strong> — Giỗ Tổ Hùng Vương</span></label><label><input type="checkbox" data-holiday-banner-id="0326"><span><strong>0326</strong> — Đoàn TNCS</span></label><label><input type="checkbox" data-holiday-banner-id="0430"><span><strong>0430</strong> — Giải phóng miền Nam 30/4</span></label><label><input type="checkbox" data-holiday-banner-id="0501"><span><strong>0501</strong> — Quốc tế Lao động 1/5</span></label><label class="holiday-banner-combined"><input type="checkbox" data-holiday-banner-id="43051"><span><strong>43051</strong> — Ảnh dùng chung 30/4 & 1/5</span></label><label><input type="checkbox" data-holiday-banner-id="0519"><span><strong>0519</strong> — Ngày sinh Bác Hồ</span></label><label><input type="checkbox" data-holiday-banner-id="0601"><span><strong>0601</strong> — Quốc tế Thiếu nhi</span></label><label><input type="checkbox" data-holiday-banner-id="0727"><span><strong>0727</strong> — Thương binh Liệt sĩ</span></label><label><input type="checkbox" data-holiday-banner-id="0815"><span><strong>0815</strong> — Trung Thu</span></label><label><input type="checkbox" data-holiday-banner-id="0902"><span><strong>0902</strong> — Quốc khánh 2/9</span></label><label><input type="checkbox" data-holiday-banner-id="1020"><span><strong>1020</strong> — Phụ nữ Việt Nam</span></label><label><input type="checkbox" data-holiday-banner-id="1119"><span><strong>1119</strong> — Quốc tế Nam giới</span></label><label><input type="checkbox" data-holiday-banner-id="1120"><span><strong>1120</strong> — Nhà giáo Việt Nam</span></label><label><input type="checkbox" data-holiday-banner-id="1124"><span><strong>1124</strong> — Văn hóa Việt Nam</span></label><label><input type="checkbox" data-holiday-banner-id="1222"><span><strong>1222</strong> — Quân đội Nhân dân</span></label><label><input type="checkbox" data-holiday-banner-id="1224"><span><strong>1224</strong> — Giáng Sinh</span></label></div>
                     </details>
                 </section>
 
@@ -144,22 +150,47 @@
                         <label><input id="homeHolidayOnce" type="checkbox"><span>Mỗi ngày chỉ hiện một lần</span></label>
                     </div>
                     <div class="holiday-preview-row">
-                        <label>Xem thử ảnh lễ
+                        <label>Chọn ngày lễ để kiểm tra
                             <select id="homeHolidayPreview">
-                                <option value="0101">Tết Dương lịch</option>
-                                <option value="tet">Tết Nguyên Đán</option>
-                                <option value="0308">Quốc tế Phụ nữ</option>
-                                <option value="0430">30/4 & 1/5</option>
-                                <option value="0601">Quốc tế Thiếu nhi</option>
-                                <option value="0815">Trung Thu</option>
-                                <option value="0902">Quốc khánh Việt Nam</option>
-                                <option value="1020">Phụ nữ Việt Nam</option>
-                                <option value="1120">Nhà giáo Việt Nam</option>
-                                <option value="1224">Giáng Sinh</option>
+                                <option value="0101">0101 — Tết Dương lịch</option>
+                                <option value="tet">tet — Tết Nguyên Đán</option>
+                                <option value="0203">0203 — Thành lập Đảng</option>
+                                <option value="0227">0227 — Thầy thuốc Việt Nam</option>
+                                <option value="0308">0308 — Quốc tế Phụ nữ</option>
+                                <option value="0310">0310 — Giỗ Tổ Hùng Vương</option>
+                                <option value="0326">0326 — Thành lập Đoàn TNCS</option>
+                                <option value="0430">0430 — Giải phóng miền Nam 30/4</option>
+                                <option value="0501">0501 — Quốc tế Lao động 1/5</option>
+                                <option value="43051">43051 — Banner dùng chung 30/4 & 1/5</option>
+                                <option value="0519">0519 — Ngày sinh Bác Hồ</option>
+                                <option value="0601">0601 — Quốc tế Thiếu nhi</option>
+                                <option value="0727">0727 — Thương binh Liệt sĩ</option>
+                                <option value="0815">0815 — Trung Thu</option>
+                                <option value="0902">0902 — Quốc khánh Việt Nam</option>
+                                <option value="1020">1020 — Phụ nữ Việt Nam</option>
+                                <option value="1119">1119 — Quốc tế Nam giới</option>
+                                <option value="1120">1120 — Nhà giáo Việt Nam</option>
+                                <option value="1124">1124 — Văn hóa Việt Nam</option>
+                                <option value="1222">1222 — Quân đội Nhân dân Việt Nam</option>
+                                <option value="1224">1224 — Giáng Sinh</option>
                             </select>
                         </label>
-                        <button id="previewHolidayBanner" type="button">Mở trang xem thử</button>
-                        <small>Chế độ xem thử chỉ hoạt động khi URL có <code>?holidayTest=...</code>. Khách truy cập bình thường thấy banner/popup theo khoảng ngày đã đặt; pháo hoa chỉ đúng ngày.</small>
+                        <div class="holiday-preview-actions">
+                            <button id="previewHolidayBanner" type="button">Xem ngày lễ</button>
+                            <button id="previewHolidayFireworks" type="button">Xem pháo hoa</button>
+                            <button id="copyHolidayPreviewLink" type="button">Sao chép link</button>
+                        </div>
+                        <label class="holiday-preview-link">Link thử nhanh trên điện thoại
+                            <input id="holidayPreviewLink" type="text" readonly value="">
+                        </label>
+                        <small>Thêm trực tiếp sau địa chỉ website: <code>?testholiday0101</code> để xem đầy đủ ngày lễ, hoặc <code>?testfireworks0101</code> để ép chạy pháo hoa. Hệ thống cũng chấp nhận cách viết <code>testholyday0101</code>.</small>
+                    </div>
+                    <div class="holiday-image-size-guide">
+                        <strong>Kích thước ảnh ngày lễ khuyên dùng</strong>
+                        <span><b>Banner lễ:</b> 1500 × 500 px cho tỷ lệ mặc định 3:1, đặt tại <code>/img/banners/</code>.</span>
+                        <span><b>Popup PC — hậu tố d:</b> 1200 × 780 px; vùng hiển thị tối đa khoảng 476 × 310 px.</span>
+                        <span><b>Popup mobile — hậu tố m:</b> 1000 × 820 px; trên iPhone 390 px hiển thị khoảng 320 × 260 px.</span>
+                        <small>Nên đặt chữ và nhân vật quan trọng ở giữa ảnh vì màn hình khác nhau có thể cắt nhẹ hai cạnh.</small>
                     </div>
                 </section>
 
@@ -1826,6 +1857,21 @@
         const loginBtn = document.getElementById('loginBtn');
         const loginError = document.getElementById('loginError');
         const logoutBtn = document.getElementById('logoutBtn');
+        const toggleAdminPassBtn = document.getElementById('toggleAdminPass');
+
+        if (toggleAdminPassBtn && adminPassInput) {
+            toggleAdminPassBtn.addEventListener('click', function() {
+                const visible = adminPassInput.type === 'text';
+                adminPassInput.type = visible ? 'password' : 'text';
+                toggleAdminPassBtn.classList.toggle('is-visible', !visible);
+                toggleAdminPassBtn.setAttribute('aria-pressed', String(!visible));
+                toggleAdminPassBtn.setAttribute('aria-label', visible ? 'Hiện mật khẩu' : 'Ẩn mật khẩu');
+                toggleAdminPassBtn.setAttribute('title', visible ? 'Hiện mật khẩu' : 'Ẩn mật khẩu');
+                adminPassInput.focus({ preventScroll: true });
+                const length = adminPassInput.value.length;
+                try { adminPassInput.setSelectionRange(length, length); } catch (_) {}
+            });
+        }
 
         // --- HÀM GIẢI MÃ ĐÚNG QUY LUẬT CỦA VINH ---
         // Lấy 2 ký tự (bỏ 3) -> Lấy 3 ký tự (bỏ 4) -> Lấy 4 ký tự (bỏ 5)...

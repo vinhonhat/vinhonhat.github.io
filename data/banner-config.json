@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "enabled": true,
   "settings": {
     "mode": "mixed",
@@ -23,6 +23,7 @@
       "0310",
       "0326",
       "0430",
+      "0501",
       "0519",
       "0601",
       "0727",
@@ -52,7 +53,7 @@
       "title": "Việt Nam",
       "description": "",
       "imageDesktop": "/img/ads/vietnam.png",
-      "imageMobile": "",
+      "imageMobile": "/img/ads/vietnam2.jpg",
       "actionUrl": "",
       "newTab": false
     },

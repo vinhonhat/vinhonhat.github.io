@@ -1,16 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-    <script src="/js/site-version.js"></script>
+  <script src="/js/site-version.js"></script>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Đang chuyển hướng...</title>
-  <meta http-equiv="refresh" content="0;url=/" />
   <script>
-    // Nếu trình duyệt không hỗ trợ meta refresh thì dùng JS
-    window.location.href = "/";
+    (function () {
+      var segment = decodeURIComponent(location.pathname.split('/').filter(Boolean).pop() || '').toLowerCase();
+      var test = segment.match(/^test(?:holiday|holyday)([a-z0-9_-]+)$/i);
+      var fireworks = segment.match(/^test(?:fireworks?|phaohoa)([a-z0-9_-]+)$/i);
+      var target = '/';
+      if (fireworks) target = '/?testfireworks' + fireworks[1];
+      else if (test) target = '/?testholiday' + test[1];
+      location.replace(target);
+    })();
   </script>
 </head>
 <body>
-  <p>Nếu bạn không được chuyển hướng, bấm <a href="/">vào đây</a>.</p>
+  <p>Đang chuyển về trang chủ…</p>
 </body>
 </html>

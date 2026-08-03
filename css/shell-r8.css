@@ -1314,3 +1314,32 @@
     --pwa-nav-bottom: max(4px, calc(env(safe-area-inset-bottom, 0px) - 24px));
   }
 }
+
+
+/* ========================= V26.8.3 BETA 12: menu neo trực tiếp vào thanh 4 nút ========================= */
+@media (max-width: 640px) {
+  :root {
+    /* JS cập nhật đúng theo mép trên thực tế của thanh điều hướng. */
+    --mobile-menu-anchor-bottom: 60px;
+  }
+
+  .mobile-menu-panel {
+    inset: 0 !important;
+    padding: 0 !important;
+    align-items: initial !important;
+  }
+  .mobile-menu-backdrop {
+    inset: 0 !important;
+  }
+
+  .mobile-menu-sheet {
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: calc(var(--mobile-menu-anchor-bottom) - 1px) !important;
+    width: min(560px, calc(100% - 20px)) !important;
+    max-height: calc(100dvh - var(--mobile-menu-anchor-bottom) - 12px) !important;
+    margin: 0 auto !important;
+    border-radius: 28px 28px 18px 18px !important;
+  }
+}

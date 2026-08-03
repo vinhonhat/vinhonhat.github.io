@@ -761,3 +761,45 @@ select,
 textarea,
 label,
 [role="button"] { touch-action: manipulation; }
+
+
+/* V26.8.3 Beta 14: mắt mật khẩu + lựa chọn banner 30/4–1/5 */
+.admin-password-field { position: relative; }
+.admin-password-field #adminPass { min-height: 42px; }
+.admin-password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    width: 34px;
+    height: 34px;
+    transform: translateY(-50%);
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: 9px;
+    color: #667085;
+    background: transparent;
+    cursor: pointer;
+}
+.admin-password-toggle:hover,
+.admin-password-toggle:focus-visible { color: #d86f00; background: #fff1df; outline: none; }
+.admin-password-toggle svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.admin-password-toggle .eye-closed { display: none; }
+.admin-password-toggle.is-visible .eye-open { display: none; }
+.admin-password-toggle.is-visible .eye-closed { display: block; }
+.holiday-banner-checkboxes label.holiday-banner-combined { border-color: #f2b875; background: #fff8ee; }
+.holiday-image-size-guide {
+    margin-top: 14px;
+    padding: 13px 15px;
+    display: grid;
+    gap: 6px;
+    border: 1px dashed #f0b36c;
+    border-radius: 13px;
+    background: #fffaf3;
+    color: #4b5563;
+    font-size: 12px;
+    line-height: 1.45;
+}
+.holiday-image-size-guide strong { color: #9a4f00; font-size: 13px; }
+.holiday-image-size-guide code { color: #9a4f00; font-weight: 750; }
+.holiday-image-size-guide small { color: #7a828d; }

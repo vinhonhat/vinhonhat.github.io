@@ -6,13 +6,46 @@
     const SITE_CONFIG_URL = `/data/site-config.json?v=${VERSION}`;
     const BANNER_CONFIG_URL = `/data/banner-config.json?v=${VERSION}`;
 
+    function normalizeHolidayTestId(value) {
+        const id = String(value || '').trim().toLowerCase().replace(/[^a-z0-9_-]/g, '');
+        return id === '1109' ? '1119' : id;
+    }
+
+    function parseHolidayTestRequest(source = window.location) {
+        const params = new URLSearchParams(String(source?.search || ''));
+        const directHoliday = params.get('holidayTest') || params.get('testholiday') || params.get('testholyday');
+        const directFireworks = params.get('testfireworks') || params.get('testfirework') || params.get('testphaohoa');
+        if (directFireworks) return { id: normalizeHolidayTestId(directFireworks), mode: 'fireworks' };
+        if (directHoliday) return { id: normalizeHolidayTestId(directHoliday), mode: 'holiday' };
+
+        const tokens = [];
+        for (const key of params.keys()) tokens.push(key);
+        const hash = decodeURIComponent(String(source?.hash || '').replace(/^#/, ''));
+        if (hash) tokens.push(hash);
+        const pathParts = decodeURIComponent(String(source?.pathname || '')).split('/').filter(Boolean);
+        if (pathParts.length) tokens.push(pathParts[pathParts.length - 1]);
+
+        for (const rawToken of tokens) {
+            const token = String(rawToken || '').trim().toLowerCase();
+            let match = token.match(/^test(?:fireworks?|phaohoa)([a-z0-9_-]+)$/i);
+            if (match) return { id: normalizeHolidayTestId(match[1]), mode: 'fireworks' };
+            match = token.match(/^test(?:holiday|holyday)([a-z0-9_-]+)$/i);
+            if (match) return { id: normalizeHolidayTestId(match[1]), mode: 'holiday' };
+        }
+        return null;
+    }
+
+    const HOLIDAY_TEST_REQUEST = parseHolidayTestRequest();
+    const isHolidayTestMode = () => Boolean(HOLIDAY_TEST_REQUEST?.id);
+    window.VinhHolidayTest = Object.freeze({ request: HOLIDAY_TEST_REQUEST, parse: parseHolidayTestRequest });
+
     const DEFAULT_IMAGE = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(
         '<svg xmlns="http://www.w3.org/2000/svg" width="900" height="560" viewBox="0 0 900 560"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff4e4"/><stop offset="1" stop-color="#e8f2ff"/></linearGradient></defs><rect width="900" height="560" fill="url(#g)"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#737b84" font-family="Arial" font-size="38">Vinh ở Nhật</text></svg>'
     );
 
     const DEFAULT_HOME_CONFIG = {
         sections: { banner: true, featured: true, topics: true, latestFeed: true, sidebar: true },
-        banner: { mode: 'mixed', aspectRatio: '3 / 1', autoplay: true, intervalMs: 5500, showArrows: true, showDots: true, dragEnabled: true, holidaySlideEnabled: true, holidayBeforeDays: 45, holidayAfterDays: 10, holidayPosition: 'after-ads', holidayMaxSlides: 2, holidayEnabledIds: ["0101", "tet", "0203", "0227", "0308", "0310", "0326", "0430", "0519", "0601", "0727", "0815", "0902", "1020", "1119", "1120", "1124", "1222", "1224"], pauseOnHover: true },
+        banner: { mode: 'mixed', aspectRatio: '3 / 1', autoplay: true, intervalMs: 5500, showArrows: true, showDots: true, dragEnabled: true, holidaySlideEnabled: true, holidayBeforeDays: 45, holidayAfterDays: 10, holidayPosition: 'after-ads', holidayMaxSlides: 2, holidayEnabledIds: ["0101", "tet", "0203", "0227", "0308", "0310", "0326", "0430", "0501", "0519", "0601", "0727", "0815", "0902", "1020", "1119", "1120", "1124", "1222", "1224"], pauseOnHover: true },
         feed: { source: 'new', initialCount: 6, batchSize: 4, maxItems: 20, autoLoad: true, showShare: true },
         holiday: { popupEnabled: true, popupBeforeDays: 0, popupAfterDays: 0, fireworksEnabled: true, showOncePerDay: true, popupDurationMs: 7500 },
         social: { facebook: 'https://fb.com/tqv2022', messenger: 'https://m.me/tqv2022', zalo: '', tiktok: 'https://www.tiktok.com/@tqv2020', email: '' },
@@ -533,10 +566,12 @@
 
     function openMobileMenu() {
         closeSearchPanel();
+        syncMobileMenuAnchor();
         setHiddenPanel(document.getElementById('mobile-menu-panel'), true);
         const button = document.getElementById('mobile-menu-open');
         button?.setAttribute('aria-expanded', 'true');
         button?.classList.add('active');
+        window.requestAnimationFrame(syncMobileMenuAnchor);
     }
 
     function closeMobileMenu() {
@@ -544,6 +579,44 @@
         const button = document.getElementById('mobile-menu-open');
         button?.setAttribute('aria-expanded', 'false');
         button?.classList.remove('active');
+    }
+
+    let mobileMenuAnchorFrame = 0;
+
+    function syncMobileMenuAnchor() {
+        window.cancelAnimationFrame(mobileMenuAnchorFrame);
+        mobileMenuAnchorFrame = window.requestAnimationFrame(() => {
+            const nav = document.querySelector('[data-mobile-nav], .mobile-bottom-nav');
+            if (!nav || window.innerWidth > 640) return;
+
+            const rect = nav.getBoundingClientRect();
+            const viewportHeight = document.documentElement.clientHeight || window.innerHeight || rect.bottom;
+            const navTop = Math.max(0, Math.min(viewportHeight, rect.top));
+            const anchorBottom = Math.max(0, viewportHeight - navTop);
+
+            document.documentElement.style.setProperty('--mobile-menu-anchor-bottom', `${Math.round(anchorBottom)}px`);
+        });
+    }
+
+    function initMobileMenuAnchor() {
+        const nav = document.querySelector('[data-mobile-nav], .mobile-bottom-nav');
+        if (!nav || nav.dataset.menuAnchorReady === 'true') return;
+        nav.dataset.menuAnchorReady = 'true';
+
+        const update = () => syncMobileMenuAnchor();
+        window.addEventListener('resize', update, { passive: true });
+        window.addEventListener('orientationchange', update, { passive: true });
+        window.addEventListener('scroll', update, { passive: true });
+        window.visualViewport?.addEventListener('resize', update, { passive: true });
+        window.visualViewport?.addEventListener('scroll', update, { passive: true });
+
+        if ('ResizeObserver' in window) {
+            const observer = new ResizeObserver(update);
+            observer.observe(nav);
+        }
+
+        syncMobileMenuAnchor();
+        window.setTimeout(syncMobileMenuAnchor, 120);
     }
 
     function initMobileMenuSwipeClose() {
@@ -733,6 +806,7 @@
             initLogoCacheReset();
             initLogoPresentation();
             initDownloadMenu();
+            initMobileMenuAnchor();
             initMobileMenuSwipeClose();
             await ensureLunarCalendar();
             initClock();
@@ -769,26 +843,44 @@
         ) || null;
     }
 
+    function combinedAprilMayHoliday() {
+        return {
+            day: 30,
+            month: 4,
+            isLunar: false,
+            name: '30/4 & 1/5',
+            imagePrefix: '43051',
+            message: 'Chào mừng ngày Giải phóng miền Nam 30/4 và Quốc tế Lao động 1/5. Chúc anh và gia đình một kỳ nghỉ vui vẻ, bình an.',
+            fireworks: false,
+            bannerOnly: true
+        };
+    }
+
     function exactTodayHoliday() {
-        const testId = new URLSearchParams(location.search).get('holidayTest');
+        const testId = HOLIDAY_TEST_REQUEST?.id || '';
         const list = Array.isArray(window.VINH_HOLIDAYS) ? window.VINH_HOLIDAYS : [];
+        if (testId === '43051') return combinedAprilMayHoliday();
         if (testId) return list.find(item => item.imagePrefix === testId) || null;
         return holidayForDate(new Date());
     }
 
     function resolveHolidayWindows(beforeDays = 0, afterDays = 0, options = {}) {
         const list = Array.isArray(window.VINH_HOLIDAYS) ? window.VINH_HOLIDAYS : [];
-        const testId = new URLSearchParams(location.search).get('holidayTest');
+        const testId = HOLIDAY_TEST_REQUEST?.id || '';
         if (testId) {
-            const holiday = list.find(item => item.imagePrefix === testId);
+            const holiday = testId === '43051' ? combinedAprilMayHoliday() : list.find(item => item.imagePrefix === testId);
             return holiday ? [{ holiday, offsetDays: 0, date: new Date(), test: true }] : [];
         }
 
         const before = clampNumber(beforeDays, 0, 120, 0);
         const after = clampNumber(afterDays, 0, 120, 0);
-        const maximum = clampNumber(options.maxItems, 1, 20, 1);
+        const maximum = clampNumber(options.maxItems, 1, 21, 1);
         const allowedInput = Array.isArray(options.allowedIds) ? options.allowedIds.map(value => String(value) === '1109' ? '1119' : String(value)) : null;
         const allowed = allowedInput ? new Set(allowedInput) : null;
+        if (allowed?.has('43051')) {
+            allowed.delete('0430');
+            allowed.delete('0501');
+        }
         if (allowed && allowed.size === 0) return [];
 
         const today = new Date();
@@ -798,9 +890,14 @@
         for (let offset = -after; offset <= before; offset += 1) {
             const date = new Date(today);
             date.setDate(today.getDate() + offset);
-            const holiday = holidayForDate(date);
-            const id = String(holiday?.imagePrefix || '');
-            if (!holiday || !id || seen.has(id) || (allowed && !allowed.has(id))) continue;
+            const sourceHoliday = holidayForDate(date);
+            const sourceId = String(sourceHoliday?.imagePrefix || '');
+            if (!sourceHoliday || !sourceId) continue;
+
+            const useCombinedAprilMay = Boolean(allowed?.has('43051')) && (sourceId === '0430' || sourceId === '0501');
+            const holiday = useCombinedAprilMay ? combinedAprilMayHoliday() : sourceHoliday;
+            const id = String(holiday.imagePrefix || '');
+            if (!id || seen.has(id) || (allowed && !allowed.has(id))) continue;
             seen.add(id);
             matches.push({ holiday, offsetDays: offset, date });
         }
@@ -988,25 +1085,36 @@
         const holidayConfig = config.holiday || {};
         activeHolidayToday = exactTodayHoliday();
         activeHolidayPopup = resolveHolidayWindow(holidayConfig.popupBeforeDays, holidayConfig.popupAfterDays);
+        const testRequest = HOLIDAY_TEST_REQUEST;
         if (!activeHolidayPopup && !activeHolidayToday) return;
-        if (!holidayConfig.popupEnabled && !holidayConfig.fireworksEnabled) return;
+        if (!testRequest && !holidayConfig.popupEnabled && !holidayConfig.fireworksEnabled) return;
         const selectedHoliday = activeHolidayPopup?.holiday || activeHolidayToday;
         const todayKey = new Date().toISOString().slice(0, 10);
         const storageKey = `vinh-holiday-${selectedHoliday.imagePrefix}-${todayKey}`;
-        if (holidayConfig.showOncePerDay && localStorage.getItem(storageKey) === 'shown' && !new URLSearchParams(location.search).has('holidayTest')) return;
-        localStorage.setItem(storageKey, 'shown');
+        if (!testRequest && holidayConfig.showOncePerDay && localStorage.getItem(storageKey) === 'shown') return;
+        if (!testRequest) localStorage.setItem(storageKey, 'shown');
 
-        // Pháo hoa luôn chỉ chạy đúng ngày lễ, không chạy trong cửa sổ trước/sau.
-        // Popup được mở trong finally để dù người xem bỏ qua hoặc hiệu ứng gặp lỗi, lời chúc cuối vẫn xuất hiện.
+        // Chế độ test:
+        // ?testholiday0101  -> xem đầy đủ ngày lễ; lễ lớn sẽ chạy cả pháo hoa.
+        // ?testfireworks0101 -> ép chạy pháo hoa để kiểm tra trên mọi thiết bị.
+        const shouldRunFireworks = Boolean(activeHolidayToday) && (
+            testRequest?.mode === 'fireworks'
+            || (testRequest?.mode === 'holiday' && activeHolidayToday.fireworks)
+            || (!testRequest && holidayConfig.fireworksEnabled && activeHolidayToday.fireworks)
+        );
+        const shouldShowPopup = Boolean(activeHolidayPopup) && (Boolean(testRequest) || holidayConfig.popupEnabled);
+
+        // Bình thường pháo hoa chỉ chạy đúng ngày; test URL giả lập ngày lễ đã chọn.
+        // Popup luôn mở trong finally để dù bỏ qua hiệu ứng, lời chúc cuối vẫn xuất hiện.
         try {
-            if (holidayConfig.fireworksEnabled && activeHolidayToday?.fireworks) {
+            if (shouldRunFireworks) {
                 await loadScriptOnce(`/js/fireworks.js?v=${VERSION}`, () => Boolean(window.VinhHolidayFireworks?.run));
                 await window.VinhHolidayFireworks?.run(activeHolidayToday, new Date().getFullYear());
             }
         } catch (error) {
             console.warn('Không thể chạy hiệu ứng pháo hoa:', error);
         } finally {
-            if (holidayConfig.popupEnabled && activeHolidayPopup) {
+            if (shouldShowPopup) {
                 await new Promise(resolve => window.setTimeout(resolve, 360));
                 showHolidayPopup(activeHolidayPopup, holidayConfig);
             }
@@ -1453,20 +1561,22 @@
         const section = document.getElementById('home-banner-section');
         const container = document.getElementById('home-banner');
         if (!section || !container) return;
-        section.hidden = !config.sections.banner;
-        if (!config.sections.banner) return;
+        const testMode = isHolidayTestMode();
+        section.hidden = !config.sections.banner && !testMode;
+        if (!config.sections.banner && !testMode) return;
         container.style.setProperty('--home-banner-ratio', String(config.banner.aspectRatio || '3 / 1'));
         const ads = config.banners.filter(item => item && item.enabled !== false && (item.kind || 'ad') === 'ad');
-        const holidayMatches = config.banner.holidaySlideEnabled
+        const holidayMatches = (config.banner.holidaySlideEnabled || testMode)
             ? resolveHolidayWindows(config.banner.holidayBeforeDays, config.banner.holidayAfterDays, {
-                allowedIds: Array.isArray(config.banner.holidayEnabledIds) ? config.banner.holidayEnabledIds : null,
-                maxItems: clampNumber(config.banner.holidayMaxSlides, 1, 19, 2)
+                allowedIds: testMode ? null : (Array.isArray(config.banner.holidayEnabledIds) ? config.banner.holidayEnabledIds : null),
+                maxItems: testMode ? 1 : clampNumber(config.banner.holidayMaxSlides, 1, 21, 2)
             })
             : [];
         activeHolidayBanner = holidayMatches[0] || null;
         const holidaySlides = (await Promise.all(holidayMatches.map(createHolidayBanner))).filter(Boolean);
         let banners = [];
-        if (config.banner.mode === 'ads-only') banners = ads;
+        if (testMode) banners = [...holidaySlides, ...ads];
+        else if (config.banner.mode === 'ads-only') banners = ads;
         else if (config.banner.mode === 'holiday-only') banners = holidaySlides.length ? holidaySlides : ads;
         else if (config.banner.holidayPosition === 'before-ads') banners = [...holidaySlides, ...ads];
         else banners = [...ads, ...holidaySlides];
