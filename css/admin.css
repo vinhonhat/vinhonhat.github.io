@@ -949,3 +949,16 @@ label,
   .sim-admin-hero .home-admin-hero-actions { gap: 7px; }
   .sim-admin-hero .home-admin-hero-actions > * { min-height: 39px; padding-inline: 8px; font-size: 10px; }
 }
+
+
+/* V26.8.3 Beta 17 - chọn ảnh SIM theo nhà mạng */
+.sim-admin-image-field > small { color:#7a8189; font-size:10px; line-height:1.45; font-weight:600; }
+.sim-admin-image-control { display:grid; grid-template-columns:118px minmax(0,1fr); gap:10px; align-items:center; }
+.sim-admin-image-control > img { width:118px; aspect-ratio:900/545; object-fit:contain; border:1px solid #e2e5e9; border-radius:10px; background:#fafafa; }
+.sim-admin-image-control > div { min-width:0; display:grid; gap:7px; }
+.sim-admin-image-control button { min-height:34px; padding:6px 10px; border:1px solid #d9b477; border-radius:9px; color:#925000; background:#fff8ec; font-size:11px; font-weight:850; cursor:pointer; }
+.sim-admin-image-control button:hover { background:#fff0d8; }
+@media(max-width:640px) {
+  .sim-admin-image-control { grid-template-columns:92px minmax(0,1fr); }
+  .sim-admin-image-control > img { width:92px; }
+}

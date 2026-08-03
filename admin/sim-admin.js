@@ -17,6 +17,37 @@
   };
   const PRODUCT_VIEWS = new Set(['monthly', 'yearly', 'voice']);
   const DEFAULT_APN_URL = '/pages/pages-baiviet/sim/cau-hinh-sim-data-sim-nghe-goi-20251109.html';
+  const DEFAULT_SIM_IMAGE = '/img/sim/sim-softbank.svg';
+  const LEGACY_SIM_IMAGES = new Set(['/img/sim/softbank-demo.png']);
+  const CARRIER_IMAGES = Object.freeze({
+    docomo: '/img/sim/sim-docomo.svg',
+    softbank: '/img/sim/sim-softbank.svg',
+    rakuten: '/img/sim/sim-rakuten.svg'
+  });
+
+  function carrierKey(value = '') {
+    const key = String(value).trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (key.includes('docomo')) return 'docomo';
+    if (key.includes('softbank')) return 'softbank';
+    if (key.includes('rakuten')) return 'rakuten';
+    return '';
+  }
+
+  function carrierImage(value = '') {
+    return CARRIER_IMAGES[carrierKey(value)] || '';
+  }
+
+  function isManagedCarrierImage(value = '') {
+    const image = String(value).trim();
+    return !image || LEGACY_SIM_IMAGES.has(image) || Object.values(CARRIER_IMAGES).includes(image);
+  }
+
+  function planImage(plan = {}) {
+    const image = String(plan.image || '').trim();
+    const mapped = carrierImage(plan.carrier);
+    if (!image || LEGACY_SIM_IMAGES.has(image)) return mapped || DEFAULT_SIM_IMAGE;
+    return image;
+  }
 
   let simData = { schemaVersion: 4, page: {}, plans: [], faqs: [] };
   let orderData = {};
@@ -37,6 +68,7 @@
     normalized.planKind = normalized.planKind === 'voice' ? 'voice' : 'data';
     normalized.period = normalized.period === 'yearly' ? 'yearly' : 'monthly';
     normalized.simType = ['both', 'physical', 'esim'].includes(normalized.simType) ? normalized.simType : 'physical';
+    normalized.image = planImage(normalized);
     normalized.features = Array.isArray(normalized.features) ? normalized.features : [];
     normalized.requirements = Array.isArray(normalized.requirements) ? normalized.requirements : [];
     return normalized;
@@ -135,8 +167,8 @@
         <label><span>Nhóm biến thể</span><input type="text" data-sim-field="familyId" value="${escapeHtml(plan.familyId || '')}" title="Hai gói eSIM và SIM vật lý cùng sản phẩm dùng chung mã này"></label>
         <label><span>Tên ngoài thẻ</span><input type="text" data-sim-field="cardName" value="${escapeHtml(plan.cardName || '')}"></label>
         <label><span>Tên chi tiết</span><input type="text" data-sim-field="name" value="${escapeHtml(plan.name || '')}"></label>
-        <label><span>Ảnh</span><input type="text" data-sim-field="image" value="${escapeHtml(plan.image || '')}"></label>
-        <label><span>Nhà mạng</span><input type="text" data-sim-field="carrier" value="${escapeHtml(plan.carrier || '')}"></label>
+        <label><span>Nhà mạng</span><input type="text" list="simCarrierOptions" data-sim-field="carrier" value="${escapeHtml(plan.carrier || '')}" placeholder="Docomo, SoftBank hoặc Rakuten"></label>
+        <label class="wide sim-admin-image-field"><span>Ảnh sản phẩm</span><div class="sim-admin-image-control"><img data-sim-image-preview src="${escapeHtml(planImage(plan))}" alt="Ảnh ${escapeHtml(plan.carrier || 'SIM')}"><div><input type="text" data-sim-field="image" value="${escapeHtml(planImage(plan))}"><button type="button" data-use-carrier-image>Dùng ảnh theo nhà mạng</button></div></div><small>eSIM và SIM vật lý dùng chung ảnh. Khi tách hai giá, cả hai biến thể vẫn giữ ảnh này.</small></label>
         <label><span>Dung lượng</span><input type="text" data-sim-field="dataLabel" value="${escapeHtml(plan.dataLabel || '')}"></label>
         <label><span>Thời hạn</span><input type="text" data-sim-field="durationLabel" value="${escapeHtml(plan.durationLabel || '')}"></label>
         <label class="wide"><span>Mô tả</span><textarea rows="2" data-sim-field="subtitle">${escapeHtml(plan.subtitle || '')}</textarea></label>
@@ -158,6 +190,27 @@
     list.innerHTML = items.length
       ? items.map(card).join('')
       : `<div class="sim-admin-empty"><strong>Chưa có ${escapeHtml(VIEW_META[activeView].title.toLowerCase())}</strong><p>Nhấn “+ Thêm gói” để tạo sản phẩm đầu tiên trong mục này.</p></div>`;
+  }
+
+  function updateCardImagePreview(cardNode) {
+    if (!cardNode) return;
+    const preview = cardNode.querySelector('[data-sim-image-preview]');
+    const imageInput = cardNode.querySelector('[data-sim-field="image"]');
+    const carrierInput = cardNode.querySelector('[data-sim-field="carrier"]');
+    if (!preview || !imageInput) return;
+    const image = String(imageInput.value || '').trim() || carrierImage(carrierInput?.value) || DEFAULT_SIM_IMAGE;
+    preview.src = image;
+    preview.alt = `Ảnh ${String(carrierInput?.value || 'SIM').trim() || 'SIM'}`;
+  }
+
+  function syncCarrierImage(cardNode, force = false) {
+    if (!cardNode) return;
+    const imageInput = cardNode.querySelector('[data-sim-field="image"]');
+    const carrierInput = cardNode.querySelector('[data-sim-field="carrier"]');
+    if (!imageInput || !carrierInput) return;
+    const mapped = carrierImage(carrierInput.value);
+    if (mapped && (force || isManagedCarrierImage(imageInput.value))) imageInput.value = mapped;
+    updateCardImagePreview(cardNode);
   }
 
   function collectCard(node) {
@@ -286,7 +339,7 @@
       price: 'Liên hệ',
       dataLabel: '',
       durationLabel: '',
-      image: '/img/sim/softbank-demo.png',
+      image: DEFAULT_SIM_IMAGE,
       features: [],
       requirements: [],
       recommendedFor: ''
@@ -379,11 +432,15 @@
 
   function bind() {
     document.addEventListener('input', event => {
-      if (event.target.closest('#simAdminPanel')) updateDownloads();
+      if (!event.target.closest('#simAdminPanel')) return;
+      const cardNode = event.target.closest('.sim-admin-card');
+      if (cardNode && event.target.dataset.simField === 'image') updateCardImagePreview(cardNode);
+      updateDownloads();
     });
     document.addEventListener('change', event => {
       if (event.target.closest('#simAdminPanel')) {
         const cardNode = event.target.closest('.sim-admin-card');
+        if (cardNode && event.target.dataset.simField === 'carrier') syncCarrierImage(cardNode);
         if (cardNode && ['planKind', 'period', 'simType'].includes(event.target.dataset.simField)) {
           collectCard(cardNode);
           render();
@@ -411,6 +468,12 @@
       }
 
       const cardNode = event.target.closest('.sim-admin-card');
+      if (cardNode && event.target.closest('[data-use-carrier-image]')) {
+        syncCarrierImage(cardNode, true);
+        collectCard(cardNode);
+        updateDownloads();
+        return;
+      }
       if (cardNode && event.target.closest('[data-duplicate-sim-plan]')) { duplicatePlan(cardNode); return; }
       if (cardNode && event.target.closest('[data-split-sim-plan]')) { splitPlan(cardNode); return; }
       if (cardNode && event.target.closest('[data-merge-sim-plan]')) { mergePlan(cardNode); return; }

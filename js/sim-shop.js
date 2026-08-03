@@ -8,6 +8,32 @@
   })[char]);
 
   const DEFAULT_APN_URL = '/pages/pages-baiviet/sim/cau-hinh-sim-data-sim-nghe-goi-20251109.html';
+  const DEFAULT_SIM_IMAGE = '/img/sim/sim-softbank.svg';
+  const LEGACY_SIM_IMAGES = new Set(['/img/sim/softbank-demo.png']);
+  const CARRIER_IMAGES = Object.freeze({
+    docomo: '/img/sim/sim-docomo.svg',
+    softbank: '/img/sim/sim-softbank.svg',
+    rakuten: '/img/sim/sim-rakuten.svg'
+  });
+
+  function carrierKey(value = '') {
+    const key = String(value).trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (key.includes('docomo')) return 'docomo';
+    if (key.includes('softbank')) return 'softbank';
+    if (key.includes('rakuten')) return 'rakuten';
+    return '';
+  }
+
+  function carrierImage(value = '') {
+    return CARRIER_IMAGES[carrierKey(value)] || '';
+  }
+
+  function planImage(plan = {}) {
+    const image = String(plan.image || '').trim();
+    const mapped = carrierImage(plan.carrier);
+    if (!image || LEGACY_SIM_IMAGES.has(image)) return mapped || DEFAULT_SIM_IMAGE;
+    return image;
+  }
 
   const DEFAULT_ORDER = {
     mode: 'messenger',
@@ -47,7 +73,8 @@
       ...plan,
       planKind: plan.planKind === 'voice' ? 'voice' : 'data',
       period: plan.period === 'yearly' ? 'yearly' : 'monthly',
-      simType: ['both', 'physical', 'esim'].includes(plan.simType) ? plan.simType : 'physical'
+      simType: ['both', 'physical', 'esim'].includes(plan.simType) ? plan.simType : 'physical',
+      image: planImage(plan)
     };
   }
 
@@ -103,7 +130,7 @@
   function productCard(plan) {
     return `<article class="sim-product-card" data-sim-id="${escapeHtml(plan.id)}" tabindex="0" role="button" aria-label="Xem ${escapeHtml(plan.name)}">
       <div class="sim-product-media">
-        <img src="${escapeHtml(plan.image || '/img/sim/softbank-demo.png')}" alt="${escapeHtml(plan.name)}" loading="lazy" decoding="async">
+        <img src="${escapeHtml(planImage(plan))}" alt="${escapeHtml(plan.name)}" loading="lazy" decoding="async">
         <span class="sim-product-type-badge">${escapeHtml(typeLabel(plan.simType))}</span>
       </div>
       <div class="sim-product-copy">
@@ -160,7 +187,7 @@
     const labels = orderConfig.labels || DEFAULT_ORDER.labels;
     const apn = apnSettings();
     return `<div class="sim-detail-grid">
-      <div class="sim-detail-image"><img src="${escapeHtml(plan.image || '/img/sim/softbank-demo.png')}" alt="${escapeHtml(plan.name)}"></div>
+      <div class="sim-detail-image"><img src="${escapeHtml(planImage(plan))}" alt="${escapeHtml(plan.name)}"></div>
       <div class="sim-detail-copy">
         <span class="sim-detail-badge">${escapeHtml(viewLabel(plan.planKind === 'voice' ? 'voice' : plan.period))} · ${escapeHtml(typeLabel(plan.simType))}</span>
         <h2 id="simDetailTitle">${escapeHtml(plan.name)}</h2>
