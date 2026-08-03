@@ -7,13 +7,13 @@
     const DEFAULT_CONFIG = {
         schemaVersion: 1,
         sections: { banner: true, featured: true, topics: true, latestFeed: true, sidebar: true },
-        banner: { mode: 'mixed', aspectRatio: '3 / 1', autoplay: true, intervalMs: 5500, showArrows: true, showDots: true, holidaySlideEnabled: true, holidayBeforeDays: 45, holidayAfterDays: 10, holidayPosition: 'after-ads', pauseOnHover: true },
+        banner: { mode: 'mixed', aspectRatio: '3 / 1', autoplay: true, intervalMs: 5500, showArrows: true, showDots: true, dragEnabled: true, holidaySlideEnabled: true, holidayBeforeDays: 45, holidayAfterDays: 10, holidayPosition: 'after-ads', holidayMaxSlides: 2, holidayEnabledIds: ["0101", "tet", "0203", "0227", "0308", "0310", "0326", "0430", "0519", "0601", "0727", "0815", "0902", "1020", "1109", "1120", "1124", "1222", "1224"], pauseOnHover: true },
         feed: { source: 'new', initialCount: 6, batchSize: 4, maxItems: 20, autoLoad: true, showShare: true },
         holiday: { popupEnabled: true, popupBeforeDays: 0, popupAfterDays: 0, fireworksEnabled: true, showOncePerDay: true, popupDurationMs: 7500 },
         social: { facebook: 'https://fb.com/tqv2022', messenger: 'https://m.me/tqv2022', zalo: '', tiktok: 'https://www.tiktok.com/@tqv2020', email: '' },
         footer: { text: 'Chia sẻ hướng dẫn thực tế, dễ hiểu dành cho người Việt đang sinh sống tại Nhật Bản.', contactLabel: '', showQuickLinks: true },
         mobileNav: { enabled: true, showLabels: false, labels: { home: 'Trang chủ', latest: 'Mới nhất', search: 'Tìm kiếm', menu: 'Menu' }, icons: { home: '', latest: '', search: '', menu: '' } },
-        mobileMenu: { showIntro: true, eyebrow: '', title: 'Vinh ở Nhật', text: 'Tin tức, hướng dẫn và tiện ích tại Nhật.', icons: { posts: 'B', study: '学', downloads: '↓', fun: '▶', rakuten: 'R', seven: '7', sim: 'S', life: '日' } },
+        mobileMenu: { showIntro: true, eyebrow: '', title: 'Vinh ở Nhật', text: '', icons: { posts: 'B', study: '学', downloads: '↓', fun: '▶', rakuten: 'R', seven: '7', sim: 'S', life: '日' } },
         mobileHome: { hideTopics: false, guideTitle: 'Gợi ý thêm' },
         lunar: { showMoon: true, showSolarDate: true, showLunarDate: true },
         banners: []
@@ -43,14 +43,16 @@
         bannerPanel.id = 'bannerAdminPanel';
         bannerPanel.className = 'cms-panel home-admin-panel';
         bannerPanel.hidden = true;
-        bannerPanel.innerHTML = `<div class="home-admin-hero"><div><span>Quảng cáo & ngày lễ</span><h2>Banner trượt</h2><p>Banner được lưu riêng trong <code>data/banner-config.json</code>, nên thay ảnh hoặc đường link không ảnh hưởng bài viết.</p></div><div class="home-admin-hero-actions"><button id="previewBannerConfig" type="button">Xem trước trang chủ</button><a id="downloadBannerConfigTab" download="banner-config.json">Tải banner-config.json</a></div></div><div class="home-admin-grid" id="bannerSettingsGrid"></div>`;
+        bannerPanel.innerHTML = `<div class="home-admin-hero"><div><span>Quảng cáo & ngày lễ</span><h2>Banner, popup và pháo hoa</h2><p>Toàn bộ cài đặt banner và ngày lễ được lưu trong <code>data/banner-config.json</code>.</p></div><div class="home-admin-hero-actions"><button id="previewBannerConfig" type="button">Xem trước trang chủ</button><label class="home-config-import">Nhập banner-config.json<input id="importBannerConfig" type="file" accept="application/json,.json"></label><a id="downloadBannerConfigTab" download="banner-config.json">Tải banner-config.json</a></div></div><div class="home-admin-grid" id="bannerSettingsGrid"></div>`;
         homePanel.insertAdjacentElement('afterend', bannerPanel);
 
         const bannerSettings = $('#homeBannerMode')?.closest('.home-settings-card');
+        const holidaySettings = $('#homeHolidayDuration')?.closest('.home-settings-card');
         const bannerManager = $('.banner-manager-card');
         if (bannerSettings) $('#bannerSettingsGrid')?.appendChild(bannerSettings);
+        if (holidaySettings) $('#bannerSettingsGrid')?.appendChild(holidaySettings);
         if (bannerManager) bannerPanel.appendChild(bannerManager);
-        bannerPanel.insertAdjacentHTML('beforeend', `<div class="home-admin-savebar"><span>Ảnh PC và mobile có thể dùng riêng.</span><button id="saveBannerConfigLocal" type="button">Lưu bản đang chỉnh</button><a id="downloadBannerConfigTabBottom" download="banner-config.json">Tải banner</a></div>`);
+        bannerPanel.insertAdjacentHTML('beforeend', `<div class="home-admin-savebar"><span>Banner, popup và pháo hoa được xuất chung trong banner-config.json.</span><button id="saveBannerConfigLocal" type="button">Lưu bản đang chỉnh</button><a id="downloadBannerConfigTabBottom" download="banner-config.json">Tải banner</a></div>`);
 
         const hero = homePanel.querySelector('.home-admin-hero > div:first-child');
         if (hero) hero.innerHTML = '<span>Giao diện & dữ liệu</span><h2>Trang chủ, luồng bài và liên hệ</h2><p>Cấu hình chung nằm trong <code>data/site-config.json</code>. Banner được quản lý ở tab riêng.</p>';
@@ -125,10 +127,14 @@
         setChecked('#homeBannerAutoplay', state.banner.autoplay);
         setChecked('#homeBannerArrows', state.banner.showArrows);
         setChecked('#homeBannerDots', state.banner.showDots);
+        setChecked('#homeBannerDrag', state.banner.dragEnabled !== false);
         setChecked('#homeHolidaySlide', state.banner.holidaySlideEnabled);
         setValue('#homeHolidayBannerPosition', state.banner.holidayPosition || 'after-ads');
         setValue('#homeHolidayBannerBefore', state.banner.holidayBeforeDays ?? 45);
         setValue('#homeHolidayBannerAfter', state.banner.holidayAfterDays ?? 10);
+        setValue('#homeHolidayBannerMax', state.banner.holidayMaxSlides ?? 2);
+        const enabledHolidayIds = new Set(Array.isArray(state.banner.holidayEnabledIds) ? state.banner.holidayEnabledIds.map(String) : ["0101", "tet", "0203", "0227", "0308", "0310", "0326", "0430", "0519", "0601", "0727", "0815", "0902", "1020", "1109", "1120", "1124", "1222", "1224"]);
+        $$('[data-holiday-banner-id]').forEach(input => { input.checked = enabledHolidayIds.has(input.dataset.holidayBannerId); });
         setValue('#homeFeedSource', state.feed.source);
         setValue('#homeFeedInitial', state.feed.initialCount);
         setValue('#homeFeedBatch', state.feed.batchSize);
@@ -194,10 +200,13 @@
             intervalMs: Math.round(numberValue('#homeBannerInterval', 5.5) * 1000),
             showArrows: $('#homeBannerArrows')?.checked ?? true,
             showDots: $('#homeBannerDots')?.checked ?? true,
+            dragEnabled: $('#homeBannerDrag')?.checked ?? true,
             holidaySlideEnabled: $('#homeHolidaySlide')?.checked ?? true,
             holidayBeforeDays: numberValue('#homeHolidayBannerBefore', 45),
             holidayAfterDays: numberValue('#homeHolidayBannerAfter', 10),
             holidayPosition: $('#homeHolidayBannerPosition')?.value || 'after-ads',
+            holidayMaxSlides: numberValue('#homeHolidayBannerMax', 2),
+            holidayEnabledIds: $$('[data-holiday-banner-id]:checked').map(input => input.dataset.holidayBannerId),
             pauseOnHover: true
         };
         state.feed = {
@@ -329,10 +338,9 @@
     function updateDownloadLinks() {
         collectAll();
         const siteConfig = {
-            schemaVersion: 1,
+            schemaVersion: 3,
             sections: state.sections,
             feed: state.feed,
-            holiday: state.holiday,
             social: state.social,
             footer: state.footer,
             mobileNav: state.mobileNav,
@@ -340,7 +348,7 @@
             mobileHome: state.mobileHome,
             lunar: state.lunar
         };
-        const bannerConfig = { schemaVersion: 1, enabled: state.sections.banner !== false, settings: state.banner, items: state.banners };
+        const bannerConfig = { schemaVersion: 4, enabled: state.sections.banner !== false, settings: state.banner, holiday: state.holiday, items: state.banners };
         const urls = { site: makeJsonUrl('site', siteConfig), banner: makeJsonUrl('banner', bannerConfig) };
         [['#downloadSiteConfig','site-config.json','site'],['#downloadSiteConfigBottom','site-config.json','site'],['#downloadBannerConfig','banner-config.json','banner'],['#downloadBannerConfigBottom','banner-config.json','banner'],['#downloadBannerConfigTab','banner-config.json','banner'],['#downloadBannerConfigTabBottom','banner-config.json','banner']].forEach(([selector, filename, key]) => {
             const link = $(selector); if (link) { link.href = urls[key]; link.download = filename; }
@@ -405,6 +413,13 @@
         document.addEventListener('click', event => {
             const tab = event.target.closest('[data-cms-tab]');
             if (tab) { switchTab(tab.dataset.cmsTab); return; }
+            const holidaySelect = event.target.closest('[data-holiday-select]');
+            if (holidaySelect) {
+                const checked = holidaySelect.dataset.holidaySelect === 'all';
+                $$('[data-holiday-banner-id]').forEach(input => { input.checked = checked; });
+                updateDownloadLinks();
+                return;
+            }
             if (event.target.closest('#addHomeBanner')) { addBanner(); return; }
             if (event.target.closest('#saveHomeConfigLocal, #saveBannerConfigLocal')) { saveDraft(); return; }
             if (event.target.closest('#previewHomeConfig, #previewBannerConfig')) {
@@ -437,7 +452,7 @@
             try {
                 const parsed = JSON.parse(await file.text());
                 if (parsed && (parsed.settings || parsed.items)) {
-                    state = mergeConfig({ ...state, banner: parsed.settings || state.banner, banners: parsed.items || state.banners, sections: { ...state.sections, banner: parsed.enabled !== false } });
+                    state = mergeConfig({ ...state, banner: parsed.settings || state.banner, holiday: parsed.holiday || state.holiday, banners: parsed.items || state.banners, sections: { ...state.sections, banner: parsed.enabled !== false } });
                 } else if (parsed && parsed.sections && !parsed.banners) {
                     state = mergeConfig({ ...state, ...parsed, banner: state.banner, banners: state.banners });
                 } else {
@@ -451,6 +466,31 @@
                 event.target.value = '';
             }
         });
+
+        $('#importBannerConfig')?.addEventListener('change', async event => {
+            const file = event.target.files?.[0];
+            if (!file) return;
+            try {
+                const parsed = JSON.parse(await file.text());
+                state = mergeConfig({
+                    ...state,
+                    banner: parsed.settings || parsed.banner || state.banner,
+                    holiday: parsed.holiday || state.holiday,
+                    banners: parsed.items || parsed.banners || state.banners,
+                    sections: { ...state.sections, banner: parsed.enabled !== false }
+                });
+                fillSettings();
+                renderBanners();
+                updateDownloadLinks();
+                const status = $('#homeConfigStatus');
+                if (status) status.textContent = `Đã nhập ${file.name}.`;
+            } catch (error) {
+                alert('File banner-config.json không hợp lệ.');
+            } finally {
+                event.target.value = '';
+            }
+        });
+
     }
 
 
@@ -479,7 +519,7 @@
             if (!siteResponse.ok || !bannerResponse.ok) throw new Error('Không tải được cấu hình tách');
             const site = await siteResponse.json();
             const banner = await bannerResponse.json();
-            state = mergeConfig({ ...site, banner: banner.settings || {}, banners: banner.items || [], sections: { ...(site.sections || {}), banner: banner.enabled !== false } });
+            state = mergeConfig({ ...site, banner: banner.settings || {}, holiday: banner.holiday || site.holiday || {}, banners: banner.items || [], sections: { ...(site.sections || {}), banner: banner.enabled !== false } });
         } catch (error) {
             console.warn('Không tải được site-config.json hoặc banner-config.json:', error);
             const draft = localStorage.getItem('vinh-home-admin-draft');

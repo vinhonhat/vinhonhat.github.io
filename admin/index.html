@@ -101,13 +101,20 @@
                         <label>Vị trí banner lễ<select id="homeHolidayBannerPosition"><option value="after-ads">Sau banner quảng cáo</option><option value="before-ads">Trước banner quảng cáo</option></select></label>
                         <label>Hiện trước lễ (ngày)<input id="homeHolidayBannerBefore" type="number" min="0" max="120" step="1"></label>
                         <label>Giữ sau lễ (ngày)<input id="homeHolidayBannerAfter" type="number" min="0" max="120" step="1"></label>
+                        <label>Giới hạn banner lễ<input id="homeHolidayBannerMax" type="number" min="1" max="10" step="1"></label>
                     </div>
                     <div class="toggle-grid compact">
                         <label><input id="homeBannerAutoplay" type="checkbox"><span>Tự động trượt</span></label>
                         <label><input id="homeBannerArrows" type="checkbox"><span>Hiện nút trái/phải</span></label>
                         <label><input id="homeBannerDots" type="checkbox"><span>Hiện dấu vị trí</span></label>
+                        <label><input id="homeBannerDrag" type="checkbox"><span>Cho phép kéo/vuốt bằng tay</span></label>
                         <label><input id="homeHolidaySlide" type="checkbox"><span>Cho phép banner lễ trong khoảng đã đặt</span></label>
                     </div>
+                    <details class="admin-details holiday-banner-details" open>
+                        <summary>Chọn những banner lễ được phép chạy</summary>
+                        <div class="holiday-banner-select-actions"><button type="button" data-holiday-select="all">Chọn tất cả</button><button type="button" data-holiday-select="none">Bỏ tất cả</button><small>Chỉ các ngày được tích và có ảnh trong <code>/img/banners/</code> mới xuất hiện.</small></div>
+                        <div class="holiday-banner-checkboxes"><label><input type="checkbox" data-holiday-banner-id="0101"><span>Tết Dương lịch</span></label><label><input type="checkbox" data-holiday-banner-id="tet"><span>Tết Âm lịch</span></label><label><input type="checkbox" data-holiday-banner-id="0203"><span>Thành lập Đảng</span></label><label><input type="checkbox" data-holiday-banner-id="0227"><span>Thầy thuốc Việt Nam</span></label><label><input type="checkbox" data-holiday-banner-id="0308"><span>Quốc tế Phụ nữ</span></label><label><input type="checkbox" data-holiday-banner-id="0310"><span>Giỗ Tổ Hùng Vương</span></label><label><input type="checkbox" data-holiday-banner-id="0326"><span>Đoàn TNCS</span></label><label><input type="checkbox" data-holiday-banner-id="0430"><span>30/4 & 1/5</span></label><label><input type="checkbox" data-holiday-banner-id="0519"><span>Ngày sinh Bác Hồ</span></label><label><input type="checkbox" data-holiday-banner-id="0601"><span>Quốc tế Thiếu nhi</span></label><label><input type="checkbox" data-holiday-banner-id="0727"><span>Thương binh Liệt sĩ</span></label><label><input type="checkbox" data-holiday-banner-id="0815"><span>Trung Thu</span></label><label><input type="checkbox" data-holiday-banner-id="0902"><span>Quốc khánh 2/9</span></label><label><input type="checkbox" data-holiday-banner-id="1020"><span>Phụ nữ Việt Nam</span></label><label><input type="checkbox" data-holiday-banner-id="1109"><span>Quốc tế Nam giới</span></label><label><input type="checkbox" data-holiday-banner-id="1120"><span>Nhà giáo Việt Nam</span></label><label><input type="checkbox" data-holiday-banner-id="1124"><span>Văn hóa Việt Nam</span></label><label><input type="checkbox" data-holiday-banner-id="1222"><span>Quân đội Nhân dân</span></label><label><input type="checkbox" data-holiday-banner-id="1224"><span>Giáng Sinh</span></label></div>
+                    </details>
                 </section>
 
                 <section class="home-settings-card">
@@ -124,7 +131,7 @@
                     </div>
                 </section>
 
-                <section class="home-settings-card">
+                <section class="home-settings-card holiday-popup-settings-card">
                     <div class="home-settings-heading"><span class="settings-number">4</span><div><h3>Popup và pháo hoa ngày lễ</h3><p>Popup có thể hiện trước/sau theo số ngày anh đặt; pháo hoa vẫn chỉ chạy đúng ngày.</p></div></div>
                     <div class="settings-form-grid three">
                         <label>Thời gian popup (giây)<input id="homeHolidayDuration" type="number" min="3" max="30" step="1"></label>
@@ -189,7 +196,7 @@
                         <div class="settings-form-grid four">
                             <label>Bài viết<input id="homeMenuIconPosts" type="text" maxlength="4"></label>
                             <label>Học tập<input id="homeMenuIconStudy" type="text" maxlength="4"></label>
-                            <label>Tải xuống<input id="homeMenuIconDownloads" type="text" maxlength="4"></label>
+                            <label>Tiện ích<input id="homeMenuIconDownloads" type="text" maxlength="4"></label>
                             <label>Giải trí<input id="homeMenuIconFun" type="text" maxlength="4"></label>
                             <label>Rakuten<input id="homeMenuIconRakuten" type="text" maxlength="4"></label>
                             <label>Seven Bank<input id="homeMenuIconSeven" type="text" maxlength="4"></label>
@@ -198,7 +205,7 @@
                         </div>
                     </details>
                     <div class="toggle-grid compact">
-                        <label><input id="homeFooterQuickLinks" type="checkbox"><span>Hiện các nút Bài viết/Học tập/Tải xuống</span></label>
+                        <label><input id="homeFooterQuickLinks" type="checkbox"><span>Hiện các nút Bài viết/Học tập/Tiện ích</span></label>
                         <label><input id="homeMobileNavEnabled" type="checkbox"><span>Hiện menu dưới mobile</span></label>
                         <label><input id="homeMobileNavLabels" type="checkbox"><span>Hiện chữ dưới icon menu</span></label>
                         <label><input id="homeMobileMenuIntro" type="checkbox"><span>Hiện phần giới thiệu trong bảng Menu</span></label>
@@ -282,7 +289,7 @@
                 <div>
                     <span>Chuyên mục dùng chung · phiên bản tự lấy từ hệ thống</span>
                     <h2>Quản lý toàn bộ menu nội dung</h2>
-                    <p>Rakuten, Seven Bank, SIM, Cuộc sống Nhật, Học tập, Tokutei, Giải trí và Tải xuống cùng dùng một bộ giao diện. Cấu hình nằm tại <code>/data/categories.json</code>.</p>
+                    <p>Rakuten, Seven Bank, SIM, Cuộc sống Nhật, Học tập, Tokutei, Giải trí và Tiện ích cùng dùng một bộ giao diện. Cấu hình nằm tại <code>/data/categories.json</code>.</p>
                 </div>
                 <div class="home-admin-hero-actions">
                     <button id="previewCategoryConfig" type="button">Xem trước chuyên mục</button>

@@ -2147,3 +2147,19 @@ body.article-page {
     .holiday-preview-row { grid-template-columns: 1fr; }
     .holiday-preview-row small { grid-column: auto; }
 }
+
+/* V26.8.3 Beta 1 — kéo/vuốt banner bằng chuột và cảm ứng */
+.home-banner-viewport {
+    touch-action: pan-y pinch-zoom;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+.home-banner-viewport.is-dragging { cursor: grabbing; }
+.home-banner-viewport.is-dragging .home-banner-link { pointer-events: none; }
+.home-banner-media img {
+    pointer-events: none;
+    -webkit-user-drag: none;
+    user-drag: none;
+}

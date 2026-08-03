@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 4,
   "enabled": true,
   "settings": {
     "mode": "mixed",
@@ -9,23 +9,35 @@
     "showArrows": true,
     "showDots": true,
     "holidaySlideEnabled": true,
+    "pauseOnHover": true,
     "holidayBeforeDays": 45,
     "holidayAfterDays": 10,
     "holidayPosition": "after-ads",
-    "pauseOnHover": true
+    "dragEnabled": true,
+    "holidayMaxSlides": 2,
+    "holidayEnabledIds": [
+      "0101",
+      "tet",
+      "0203",
+      "0227",
+      "0308",
+      "0310",
+      "0326",
+      "0430",
+      "0519",
+      "0601",
+      "0727",
+      "0815",
+      "0902",
+      "1020",
+      "1109",
+      "1120",
+      "1124",
+      "1222",
+      "1224"
+    ]
   },
   "items": [
-    {
-      "id": "banner-1785662555727-ju4i2",
-      "enabled": true,
-      "kind": "ad",
-      "title": "Việt Nam\t",
-      "description": "",
-      "imageDesktop": "/img/ads/vietnam.png",
-      "imageMobile": "",
-      "actionUrl": "",
-      "newTab": false
-    },
     {
       "id": "sim-data-demo",
       "enabled": true,
@@ -39,7 +51,7 @@
     },
     {
       "id": "nihongo-demo",
-      "enabled": false,
+      "enabled": true,
       "kind": "ad",
       "title": "Nihongo Quest",
       "description": "Banner mẫu tỷ lệ 3:1",
@@ -50,7 +62,7 @@
     },
     {
       "id": "tools-demo",
-      "enabled": false,
+      "enabled": true,
       "kind": "ad",
       "title": "Kho công cụ",
       "description": "Banner mẫu tỷ lệ 3:1",
@@ -59,5 +71,13 @@
       "actionUrl": "/pages/pages-app/tai-xuong.html",
       "newTab": false
     }
-  ]
+  ],
+  "holiday": {
+    "popupEnabled": true,
+    "fireworksEnabled": true,
+    "showOncePerDay": true,
+    "popupDurationMs": 7500,
+    "popupBeforeDays": 0,
+    "popupAfterDays": 0
+  }
 }

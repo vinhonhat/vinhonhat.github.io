@@ -12,13 +12,13 @@
 
     const DEFAULT_HOME_CONFIG = {
         sections: { banner: true, featured: true, topics: true, latestFeed: true, sidebar: true },
-        banner: { mode: 'mixed', aspectRatio: '3 / 1', autoplay: true, intervalMs: 5500, showArrows: true, showDots: true, holidaySlideEnabled: true, holidayBeforeDays: 45, holidayAfterDays: 10, holidayPosition: 'after-ads', pauseOnHover: true },
+        banner: { mode: 'mixed', aspectRatio: '3 / 1', autoplay: true, intervalMs: 5500, showArrows: true, showDots: true, dragEnabled: true, holidaySlideEnabled: true, holidayBeforeDays: 45, holidayAfterDays: 10, holidayPosition: 'after-ads', holidayMaxSlides: 2, holidayEnabledIds: ["0101", "tet", "0203", "0227", "0308", "0310", "0326", "0430", "0519", "0601", "0727", "0815", "0902", "1020", "1109", "1120", "1124", "1222", "1224"], pauseOnHover: true },
         feed: { source: 'new', initialCount: 6, batchSize: 4, maxItems: 20, autoLoad: true, showShare: true },
         holiday: { popupEnabled: true, popupBeforeDays: 0, popupAfterDays: 0, fireworksEnabled: true, showOncePerDay: true, popupDurationMs: 7500 },
         social: { facebook: 'https://fb.com/tqv2022', messenger: 'https://m.me/tqv2022', zalo: '', tiktok: 'https://www.tiktok.com/@tqv2020', email: '' },
         footer: { text: 'Chia sẻ hướng dẫn thực tế, dễ hiểu dành cho người Việt đang sinh sống tại Nhật Bản.', contactLabel: '', showQuickLinks: true },
         mobileNav: { enabled: true, showLabels: false, labels: { home: 'Trang chủ', latest: 'Mới nhất', search: 'Tìm kiếm', menu: 'Menu' }, icons: { home: '', latest: '', search: '', menu: '' } },
-        mobileMenu: { showIntro: true, eyebrow: '', title: 'Vinh ở Nhật', text: 'Tin tức, hướng dẫn và tiện ích tại Nhật.', icons: { posts: 'B', study: '学', downloads: '↓', fun: '▶', rakuten: 'R', seven: '7', sim: 'S', life: '日' } },
+        mobileMenu: { showIntro: true, eyebrow: '', title: 'Vinh ở Nhật', text: '', icons: { posts: 'B', study: '学', downloads: '↓', fun: '▶', rakuten: 'R', seven: '7', sim: 'S', life: '日' } },
         mobileHome: { hideTopics: false, guideTitle: 'Gợi ý thêm' },
         lunar: { showMoon: true, showSolarDate: true, showLunarDate: true },
         banners: []
@@ -172,6 +172,7 @@
             ]).then(([site, banner]) => mergeHomeConfig({
                 ...site,
                 banner: banner.settings || banner.banner || {},
+                holiday: banner.holiday || site.holiday || {},
                 banners: banner.items || banner.banners || [],
                 sections: { ...(site.sections || {}), banner: banner.enabled !== false }
             })).catch(error => {
@@ -539,6 +540,74 @@
         button?.classList.remove('active');
     }
 
+    function initMobileMenuSwipeClose() {
+        const panel = document.getElementById('mobile-menu-panel');
+        const sheet = panel?.querySelector('.mobile-menu-sheet');
+        const handle = panel?.querySelector('.sheet-handle');
+        const head = panel?.querySelector('.mobile-menu-head');
+        const backdrop = panel?.querySelector('.mobile-menu-backdrop');
+        if (!panel || !sheet || sheet.dataset.swipeReady === 'true') return;
+        sheet.dataset.swipeReady = 'true';
+
+        let startY = 0;
+        let dragging = false;
+        let deltaY = 0;
+        const dragThreshold = 92;
+
+        const setOffset = value => {
+            const offset = Math.max(0, Math.min(220, value || 0));
+            sheet.style.transform = offset ? `translateY(${offset}px)` : '';
+            sheet.style.transition = dragging ? 'none' : '';
+            if (backdrop) backdrop.style.opacity = offset ? String(Math.max(0.18, 1 - (offset / 220) * 0.65)) : '';
+        };
+        const reset = () => {
+            dragging = false;
+            deltaY = 0;
+            sheet.style.transition = 'transform .18s ease';
+            setOffset(0);
+            window.setTimeout(() => { sheet.style.transition = ''; }, 220);
+            if (backdrop) backdrop.style.opacity = '';
+        };
+
+        const begin = y => {
+            if (window.innerWidth > 640 || sheet.scrollTop > 2 || panel.hidden) return;
+            startY = y;
+            dragging = true;
+            deltaY = 0;
+            sheet.style.willChange = 'transform';
+        };
+
+        const move = y => {
+            if (!dragging) return;
+            deltaY = Math.max(0, y - startY);
+            if (deltaY > 0) setOffset(deltaY);
+        };
+
+        const end = () => {
+            if (!dragging) return;
+            dragging = false;
+            sheet.style.willChange = '';
+            if (deltaY > dragThreshold) {
+                closeMobileMenu();
+                window.setTimeout(() => { sheet.style.transform = ''; if (backdrop) backdrop.style.opacity = ''; }, 40);
+            } else {
+                reset();
+            }
+        };
+
+        [handle, head].forEach(node => {
+            if (!node) return;
+            node.addEventListener('touchstart', event => begin(event.touches[0].clientY), { passive: true });
+            node.addEventListener('touchmove', event => move(event.touches[0].clientY), { passive: true });
+            node.addEventListener('touchend', end);
+            node.addEventListener('touchcancel', reset);
+        });
+
+        panel.addEventListener('transitionend', () => {
+            if (panel.hidden) reset();
+        });
+    }
+
     function setDownloadMenu(open) {
         window.clearTimeout(downloadMenuCloseTimer);
         downloadMenuCloseTimer = 0;
@@ -622,6 +691,7 @@
             detectActiveNav();
             initLogoCacheReset();
             initDownloadMenu();
+            initMobileMenuSwipeClose();
             await ensureLunarCalendar();
             initClock();
             try {
@@ -664,35 +734,47 @@
         return holidayForDate(new Date());
     }
 
-    function resolveHolidayWindow(beforeDays = 0, afterDays = 0) {
+    function resolveHolidayWindows(beforeDays = 0, afterDays = 0, options = {}) {
         const list = Array.isArray(window.VINH_HOLIDAYS) ? window.VINH_HOLIDAYS : [];
         const testId = new URLSearchParams(location.search).get('holidayTest');
         if (testId) {
             const holiday = list.find(item => item.imagePrefix === testId);
-            return holiday ? { holiday, offsetDays: 0, date: new Date(), test: true } : null;
+            return holiday ? [{ holiday, offsetDays: 0, date: new Date(), test: true }] : [];
         }
+
         const before = clampNumber(beforeDays, 0, 120, 0);
         const after = clampNumber(afterDays, 0, 120, 0);
+        const maximum = clampNumber(options.maxItems, 1, 20, 1);
+        const allowedInput = Array.isArray(options.allowedIds) ? options.allowedIds.map(String) : null;
+        const allowed = allowedInput ? new Set(allowedInput) : null;
+        if (allowed && allowed.size === 0) return [];
+
         const today = new Date();
         today.setHours(12, 0, 0, 0);
         const matches = [];
+        const seen = new Set();
         for (let offset = -after; offset <= before; offset += 1) {
             const date = new Date(today);
             date.setDate(today.getDate() + offset);
             const holiday = holidayForDate(date);
-            if (holiday) matches.push({ holiday, offsetDays: offset, date });
+            const id = String(holiday?.imagePrefix || '');
+            if (!holiday || !id || seen.has(id) || (allowed && !allowed.has(id))) continue;
+            seen.add(id);
+            matches.push({ holiday, offsetDays: offset, date });
         }
         matches.sort((a, b) => {
-            // Nếu đồng thời còn trong khoảng sau một lễ cũ và trước một lễ mới,
-            // luôn ưu tiên lễ sắp tới. Ví dụ 02/08 sẽ chọn Quốc khánh 02/09,
-            // không giữ banner 27/07 chỉ vì ngày đó gần hơn.
+            // Ưu tiên lễ sắp tới; sau đó mới dùng lễ vừa qua nếu còn trong khoảng.
             const aUpcoming = a.offsetDays >= 0;
             const bUpcoming = b.offsetDays >= 0;
             if (aUpcoming !== bUpcoming) return aUpcoming ? -1 : 1;
             if (aUpcoming) return a.offsetDays - b.offsetDays;
             return Math.abs(a.offsetDays) - Math.abs(b.offsetDays);
         });
-        return matches[0] || null;
+        return matches.slice(0, maximum);
+    }
+
+    function resolveHolidayWindow(beforeDays = 0, afterDays = 0) {
+        return resolveHolidayWindows(beforeDays, afterDays, { maxItems: 1 })[0] || null;
     }
 
     function holidayTimingLabel(match) {
@@ -943,7 +1025,7 @@
         const eager = index === 0;
         const variantData = variants.length ? ` data-banner-variants="${escapeHtml(JSON.stringify(variants))}" data-banner-variant-key="${escapeHtml(variantKey)}"` : '';
         const imageAlt = banner.kind === 'holiday' ? '' : (banner.title || 'Banner');
-        const image = selected ? `<img src="${eager ? escapeHtml(versionedImagePath(selected)) : TRANSPARENT_PIXEL}" ${eager ? '' : `data-src="${escapeHtml(versionedImagePath(selected))}"`} data-banner-fallbacks="${escapeHtml(JSON.stringify(fallbacks.map(versionedImagePath)))}"${variantData} alt="${escapeHtml(imageAlt)}" loading="${eager ? 'eager' : 'lazy'}" fetchpriority="${eager ? 'high' : 'low'}" decoding="async" data-banner-image>` : '';
+        const image = selected ? `<img src="${eager ? escapeHtml(versionedImagePath(selected)) : TRANSPARENT_PIXEL}" ${eager ? '' : `data-src="${escapeHtml(versionedImagePath(selected))}"`} data-banner-fallbacks="${escapeHtml(JSON.stringify(fallbacks.map(versionedImagePath)))}"${variantData} alt="${escapeHtml(imageAlt)}" loading="${eager ? 'eager' : 'lazy'}" fetchpriority="${eager ? 'high' : 'low'}" decoding="async" draggable="false" data-banner-image>` : '';
         const media = url
             ? `<a class="home-banner-media home-banner-link" href="${escapeHtml(url)}"${target} aria-label="${escapeHtml(banner.title || 'Mở banner')}">${image}</a>`
             : `<div class="home-banner-media">${image}</div>`;
@@ -1013,7 +1095,15 @@
         let interval = 0;
         let moving = false;
         let transitionFallback = 0;
-        let startX = 0;
+        let dragPointerId = null;
+        let dragStartX = 0;
+        let dragStartY = 0;
+        let dragLastX = 0;
+        let dragStartAt = 0;
+        let dragMoved = false;
+        let dragHorizontal = false;
+        let suppressClick = false;
+        const viewport = $('.home-banner-viewport', container);
         const intervalMs = clampNumber(config.intervalMs, 2500, 20000, 5500);
 
         const logicalFromPhysical = value => count > 1
@@ -1125,15 +1215,75 @@
             else if (dot) { goDirect(Number(dot.dataset.bannerDot)); start(); }
         });
 
-        container.addEventListener('pointerdown', event => {
-            startX = event.clientX;
-            stop();
-        }, { passive: true });
-        container.addEventListener('pointerup', event => {
-            const distance = event.clientX - startX;
-            if (Math.abs(distance) > 45) step(distance < 0 ? 1 : -1);
+        const dragEnabled = config.dragEnabled !== false && count > 1;
+        const dragTransform = distance => {
+            const width = Math.max(1, viewport?.clientWidth || container.clientWidth || 1);
+            const resisted = distance * (Math.abs(distance) > width ? 0.45 : 1);
+            track.style.transition = 'none';
+            track.style.transform = `translate3d(calc(-${physicalIndex * 100}% + ${resisted}px),0,0)`;
+        };
+        const finishDrag = (event, cancelled = false) => {
+            if (dragPointerId === null) return;
+            const pointerId = dragPointerId;
+            const distance = dragLastX - dragStartX;
+            const elapsed = Math.max(1, performance.now() - dragStartAt);
+            const velocity = distance / elapsed;
+            const width = Math.max(1, viewport?.clientWidth || container.clientWidth || 1);
+            const shouldMove = !cancelled && dragHorizontal && (Math.abs(distance) > Math.min(72, width * 0.16) || Math.abs(velocity) > 0.48);
+            dragPointerId = null;
+            viewport?.classList.remove('is-dragging');
+            try { viewport?.releasePointerCapture(pointerId); } catch (_) {}
+            track.style.removeProperty('transition');
+            if (shouldMove) {
+                suppressClick = true;
+                physicalIndex += distance < 0 ? 1 : -1;
+                moving = true;
+                setTransform(true);
+                syncState();
+                scheduleMoveCompletion();
+            } else {
+                setTransform(true);
+            }
+            window.setTimeout(() => { suppressClick = false; }, 120);
             start();
-        }, { passive: true });
+        };
+
+        if (dragEnabled && viewport) {
+            viewport.addEventListener('dragstart', event => event.preventDefault());
+            viewport.addEventListener('pointerdown', event => {
+                if (!event.isPrimary || event.button !== 0 || moving || event.target.closest('.home-banner-arrow, .home-banner-dots')) return;
+                dragPointerId = event.pointerId;
+                dragStartX = dragLastX = event.clientX;
+                dragStartY = event.clientY;
+                dragStartAt = performance.now();
+                dragMoved = false;
+                dragHorizontal = false;
+                stop();
+                try { viewport.setPointerCapture(event.pointerId); } catch (_) {}
+            });
+            viewport.addEventListener('pointermove', event => {
+                if (event.pointerId !== dragPointerId) return;
+                const dx = event.clientX - dragStartX;
+                const dy = event.clientY - dragStartY;
+                dragLastX = event.clientX;
+                if (!dragMoved && Math.abs(dx) > 5) dragMoved = true;
+                if (!dragHorizontal && Math.abs(dx) > 9 && Math.abs(dx) > Math.abs(dy) * 1.15) dragHorizontal = true;
+                if (!dragHorizontal) return;
+                event.preventDefault();
+                viewport.classList.add('is-dragging');
+                dragTransform(dx);
+            }, { passive: false });
+            viewport.addEventListener('pointerup', event => finishDrag(event, false));
+            viewport.addEventListener('pointercancel', event => finishDrag(event, true));
+            viewport.addEventListener('lostpointercapture', event => {
+                if (event.pointerId === dragPointerId) finishDrag(event, true);
+            });
+            viewport.addEventListener('click', event => {
+                if (!suppressClick) return;
+                event.preventDefault();
+                event.stopPropagation();
+            }, true);
+        }
 
         if (config.pauseOnHover) {
             container.addEventListener('mouseenter', stop);
@@ -1170,6 +1320,8 @@
             destroy() {
                 stop();
                 window.clearTimeout(transitionFallback);
+                dragPointerId = null;
+                viewport?.classList.remove('is-dragging');
             }
         };
     }
@@ -1182,11 +1334,14 @@
         if (!config.sections.banner) return;
         container.style.setProperty('--home-banner-ratio', String(config.banner.aspectRatio || '3 / 1'));
         const ads = config.banners.filter(item => item && item.enabled !== false && (item.kind || 'ad') === 'ad');
-        activeHolidayBanner = config.banner.holidaySlideEnabled
-            ? resolveHolidayWindow(config.banner.holidayBeforeDays, config.banner.holidayAfterDays)
-            : null;
-        const holidayBanner = activeHolidayBanner ? await createHolidayBanner(activeHolidayBanner) : null;
-        const holidaySlides = holidayBanner ? [holidayBanner] : [];
+        const holidayMatches = config.banner.holidaySlideEnabled
+            ? resolveHolidayWindows(config.banner.holidayBeforeDays, config.banner.holidayAfterDays, {
+                allowedIds: Array.isArray(config.banner.holidayEnabledIds) ? config.banner.holidayEnabledIds : null,
+                maxItems: clampNumber(config.banner.holidayMaxSlides, 1, 10, 2)
+            })
+            : [];
+        activeHolidayBanner = holidayMatches[0] || null;
+        const holidaySlides = (await Promise.all(holidayMatches.map(createHolidayBanner))).filter(Boolean);
         let banners = [];
         if (config.banner.mode === 'ads-only') banners = ads;
         else if (config.banner.mode === 'holiday-only') banners = holidaySlides.length ? holidaySlides : ads;

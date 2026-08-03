@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "sections": {
     "banner": true,
     "featured": true,
@@ -14,14 +14,6 @@
     "maxItems": 20,
     "autoLoad": true,
     "showShare": true
-  },
-  "holiday": {
-    "popupEnabled": true,
-    "fireworksEnabled": true,
-    "showOncePerDay": true,
-    "popupDurationMs": 7500,
-    "popupBeforeDays": 0,
-    "popupAfterDays": 0
   },
   "social": {
     "facebook": "https://fb.com/tqv2022",
