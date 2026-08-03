@@ -1216,3 +1216,54 @@
     height: 36px !important;
   }
 }
+
+
+/* ========================= V26.8.3 BETA 10: thanh PWA ngắn, giữa, không trồi cao ========================= */
+@media (max-width: 640px) {
+  .mobile-bottom-nav {
+    left: 50% !important;
+    right: auto !important;
+    bottom: 6px !important;
+    width: min(360px, calc(100% - 32px)) !important;
+    max-width: calc(100% - 32px) !important;
+    min-height: 54px !important;
+    padding: 3px 4px !important;
+    box-sizing: border-box !important;
+    transform: translateX(-50%) !important;
+    border-radius: 27px !important;
+  }
+  .mobile-bottom-nav > a,
+  .mobile-bottom-nav > button,
+  .mobile-bottom-nav .mobile-search-button,
+  .mobile-bottom-nav .mobile-menu-button,
+  .mobile-bottom-nav.labels-hidden > a,
+  .mobile-bottom-nav.labels-hidden > button {
+    height: 46px !important;
+    min-height: 46px !important;
+    padding: 3px 2px !important;
+    border-radius: 23px !important;
+  }
+  .mobile-bottom-nav svg,
+  .mobile-bottom-nav.labels-hidden svg {
+    width: 25px !important;
+    height: 25px !important;
+  }
+  body,
+  .home-page,
+  body.home-page:not(.mobile-nav-disabled) {
+    padding-bottom: 70px !important;
+  }
+  .mobile-menu-panel {
+    padding-bottom: 70px !important;
+  }
+  .scroll-top {
+    bottom: 76px !important;
+  }
+}
+
+/* iPhone PWA đã có vùng an toàn riêng; trừ phần đó thay vì cộng thêm lần nữa. */
+@media (display-mode: standalone) and (max-width: 640px) {
+  .mobile-bottom-nav {
+    bottom: max(4px, calc(env(safe-area-inset-bottom, 0px) - 24px)) !important;
+  }
+}
