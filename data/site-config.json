@@ -3,8 +3,8 @@
   "sections": {
     "banner": true,
     "featured": true,
-    "topics": true,
     "latestFeed": true,
+    "topics": true,
     "sidebar": true
   },
   "feed": {
@@ -24,17 +24,11 @@
   },
   "footer": {
     "text": "Chia sẻ hướng dẫn thực tế, dễ hiểu dành cho người Việt đang sinh sống tại Nhật Bản.",
-    "showQuickLinks": true,
-    "contactLabel": ""
+    "contactLabel": "",
+    "showQuickLinks": true
   },
   "mobileNav": {
     "enabled": true,
-    "items": [
-      "home",
-      "latest",
-      "search",
-      "menu"
-    ],
     "showLabels": false,
     "labels": {
       "home": "Trang chủ",
@@ -49,16 +43,11 @@
       "menu": ""
     }
   },
-  "lunar": {
-    "showMoon": true,
-    "showSolarDate": true,
-    "showLunarDate": true
-  },
   "mobileMenu": {
     "showIntro": true,
-    "eyebrow": "",
+    "eyebrow": "Giới thiệu",
     "title": "Vinh ở Nhật",
-    "text": "Tin tức, hướng dẫn và tiện ích tại Nhật.",
+    "text": "Các bài viết hướng dẫn, video và tiện ích cho mọi người sinh sống tại Nhật.",
     "icons": {
       "posts": "B",
       "study": "学",
@@ -73,5 +62,10 @@
   "mobileHome": {
     "hideTopics": false,
     "guideTitle": "Gợi ý thêm"
+  },
+  "lunar": {
+    "showMoon": true,
+    "showSolarDate": true,
+    "showLunarDate": true
   }
 }

@@ -1124,21 +1124,27 @@
 }
 
 
-/* ========================= V26.8.3 BETA 2: PWA nav nổi + logo viền trắng ========================= */
+/* ========================= V26.8.3 BETA 3: PWA nav nổi + logo tự nhận dạng ========================= */
 .brand img,
 .mobile-menu-brand img {
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 0 !important;
   object-fit: contain !important;
-  background: #fff !important;
-  border: 2px solid rgba(255,255,255,.96) !important;
-  box-shadow: 0 5px 16px rgba(16,24,40,.14), inset 0 0 0 1px rgba(212,218,224,.9);
 }
-.brand img {
-  padding: 3px;
+.brand img.logo-transparent,
+.mobile-menu-brand img.logo-transparent {
+  border-radius: 0 !important;
+}
+.brand img.logo-framed,
+.mobile-menu-brand img.logo-framed {
   border-radius: 14px !important;
+  overflow: hidden;
 }
-.mobile-menu-brand img {
-  padding: 2px;
-  border-radius: 12px !important;
+.brand img.logo-plain,
+.mobile-menu-brand img.logo-plain {
+  border-radius: 0 !important;
 }
 .mobile-menu-brand p:empty,
 .mobile-menu-brand small:empty {

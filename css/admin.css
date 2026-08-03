@@ -687,3 +687,66 @@ body.admin-body { background: var(--admin-bg) !important; color: var(--admin-tex
 #bannerSettingsGrid .home-settings-card { align-self: start; }
 @media (max-width: 900px) { .holiday-banner-checkboxes { grid-template-columns: repeat(2, minmax(0,1fr)); } }
 @media (max-width: 520px) { .holiday-banner-checkboxes { grid-template-columns: 1fr; } }
+
+
+/* ========================= V26.8.3 BETA 3: banner admin compact + sort ========================= */
+.banner-manager-actions { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.banner-manager-actions button { min-height:40px; padding:8px 14px; border:1px solid #e2a45a; border-radius:10px; color:#b85f00; background:#fff8ef; font-weight:800; cursor:pointer; }
+.banner-manager-actions #addHomeBanner { color:#fff; background:#d87000; border-color:#d87000; }
+.home-banner-admin-card > header {
+  display:grid !important;
+  grid-template-columns:36px 42px minmax(180px,1fr) auto auto;
+  align-items:center;
+  gap:9px !important;
+}
+.banner-admin-number { width:34px; height:34px; display:grid; place-items:center; border-radius:10px; color:#b65a00; background:#fff0dc; font-size:12px; font-weight:900; }
+.banner-header-toggle { display:inline-flex; align-items:center; justify-content:center; cursor:pointer; }
+.banner-header-toggle input { position:absolute; opacity:0; pointer-events:none; }
+.banner-header-toggle span { width:38px; height:22px; border-radius:999px; background:#cfd5dc; position:relative; transition:.18s ease; }
+.banner-header-toggle span::after { content:''; position:absolute; width:16px; height:16px; left:3px; top:3px; border-radius:50%; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.2); transition:.18s ease; }
+.banner-header-toggle input:checked + span { background:#e67a00; }
+.banner-header-toggle input:checked + span::after { transform:translateX(16px); }
+.banner-header-title { min-width:0; }
+.banner-header-title input { width:100%; height:36px; padding:7px 10px; border:1px solid transparent; border-radius:9px; background:#f7f8fa; color:#222b34; font-size:13px; font-weight:800; }
+.banner-header-title input:focus { outline:none; border-color:#e1a75f; background:#fff; box-shadow:0 0 0 3px rgba(216,117,8,.08); }
+.banner-header-status { white-space:nowrap; color:#7d858e; font-size:9.5px; }
+.banner-admin-grid.three { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.banner-admin-compact-row { display:flex; align-items:center; gap:12px; justify-content:space-between; }
+.banner-admin-compact-row .banner-admin-note { margin:0; flex:1; }
+.home-banner-admin-card.is-reordered { animation:bannerReordered .9s ease; }
+@keyframes bannerReordered { 0%,100%{box-shadow:none} 30%{box-shadow:0 0 0 4px rgba(230,122,0,.22),0 12px 30px rgba(230,122,0,.15)} }
+
+.banner-sort-dialog { width:min(620px,calc(100% - 24px)); border:0; padding:0; border-radius:20px; background:transparent; }
+.banner-sort-dialog::backdrop { background:rgba(16,22,28,.52); backdrop-filter:blur(3px); }
+.banner-sort-card { max-height:min(82vh,760px); overflow:hidden; display:flex; flex-direction:column; border-radius:20px; background:#fff; box-shadow:0 28px 80px rgba(0,0,0,.25); }
+.banner-sort-head { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; padding:20px 20px 13px; border-bottom:1px solid #e8ebee; }
+.banner-sort-head span { color:#d66d00; font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:.7px; }
+.banner-sort-head h3 { margin:4px 0 0; font-size:21px; }
+.banner-sort-head p { margin:5px 0 0; color:#77808a; font-size:11px; }
+.banner-sort-head > button { width:38px; height:38px; border:1px solid #e1e5e9; border-radius:50%; background:#fff; font-size:23px; cursor:pointer; }
+.banner-sort-list { margin:0; padding:12px 16px; overflow:auto; list-style:none; display:grid; gap:8px; }
+.banner-sort-list li { display:grid; grid-template-columns:30px 34px minmax(0,1fr) auto auto; align-items:center; gap:9px; min-height:54px; padding:8px 10px; border:1px solid #e2e6ea; border-radius:12px; background:#fff; cursor:grab; }
+.banner-sort-list li.is-dragging { opacity:.45; }
+.banner-sort-list li.is-drop-target { border-color:#e67a00; background:#fff7ed; }
+.banner-sort-handle { color:#9aa1a9; font-size:18px; cursor:grab; }
+.banner-sort-number { width:30px; height:30px; display:grid; place-items:center; border-radius:9px; background:#fff0dc; color:#bd6100; font-size:11px; font-weight:900; }
+.banner-sort-list strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px; }
+.banner-sort-list small { color:#818992; font-size:9.5px; }
+.banner-sort-list li > div { display:flex; gap:5px; }
+.banner-sort-list button { width:31px; height:31px; border:1px solid #dfe4e8; border-radius:8px; background:#fff; cursor:pointer; }
+.banner-sort-footer { display:flex; justify-content:flex-end; padding:12px 18px 17px; border-top:1px solid #e8ebee; }
+.banner-sort-footer button { min-width:96px; min-height:40px; border:0; border-radius:10px; color:#fff; background:#d87000; font-weight:850; cursor:pointer; }
+.holiday-banner-select-actions #checkHolidayBannerFiles { color:#b85f00; border-color:#e3ad6b; background:#fff8ef; }
+#holidayBannerFileStatus { flex-basis:100%; line-height:1.5; }
+
+@media (max-width:760px) {
+  .home-banner-admin-card > header { grid-template-columns:34px 40px minmax(0,1fr) auto !important; }
+  .banner-header-status { display:none; }
+  .banner-admin-tools { grid-column:1 / -1; justify-content:flex-end; }
+  .banner-admin-grid.three { grid-template-columns:1fr; }
+  .banner-admin-compact-row { align-items:flex-start; flex-direction:column; }
+  .banner-sort-list li { grid-template-columns:26px 30px minmax(0,1fr) auto; }
+  .banner-sort-list small { display:none; }
+}
+
+.sr-only { position:absolute !important; width:1px !important; height:1px !important; padding:0 !important; margin:-1px !important; overflow:hidden !important; clip:rect(0,0,0,0) !important; white-space:nowrap !important; border:0 !important; }

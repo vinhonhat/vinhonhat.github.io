@@ -12,7 +12,7 @@
 
     const DEFAULT_HOME_CONFIG = {
         sections: { banner: true, featured: true, topics: true, latestFeed: true, sidebar: true },
-        banner: { mode: 'mixed', aspectRatio: '3 / 1', autoplay: true, intervalMs: 5500, showArrows: true, showDots: true, dragEnabled: true, holidaySlideEnabled: true, holidayBeforeDays: 45, holidayAfterDays: 10, holidayPosition: 'after-ads', holidayMaxSlides: 2, holidayEnabledIds: ["0101", "tet", "0203", "0227", "0308", "0310", "0326", "0430", "0519", "0601", "0727", "0815", "0902", "1020", "1109", "1120", "1124", "1222", "1224"], pauseOnHover: true },
+        banner: { mode: 'mixed', aspectRatio: '3 / 1', autoplay: true, intervalMs: 5500, showArrows: true, showDots: true, dragEnabled: true, holidaySlideEnabled: true, holidayBeforeDays: 45, holidayAfterDays: 10, holidayPosition: 'after-ads', holidayMaxSlides: 2, holidayEnabledIds: ["0101", "tet", "0203", "0227", "0308", "0310", "0326", "0430", "0519", "0601", "0727", "0815", "0902", "1020", "1119", "1120", "1124", "1222", "1224"], pauseOnHover: true },
         feed: { source: 'new', initialCount: 6, batchSize: 4, maxItems: 20, autoLoad: true, showShare: true },
         holiday: { popupEnabled: true, popupBeforeDays: 0, popupAfterDays: 0, fireworksEnabled: true, showOncePerDay: true, popupDurationMs: 7500 },
         social: { facebook: 'https://fb.com/tqv2022', messenger: 'https://m.me/tqv2022', zalo: '', tiktok: 'https://www.tiktok.com/@tqv2020', email: '' },
@@ -640,6 +640,41 @@
         });
     }
 
+
+    function applyLogoPresentation(image) {
+        if (!image || image.dataset.logoPresentationReady === 'true') return;
+        image.dataset.logoPresentationReady = 'true';
+        const analyze = () => {
+            image.classList.remove('logo-transparent', 'logo-framed', 'logo-plain');
+            const width = image.naturalWidth || Number(image.getAttribute('width')) || 1;
+            const height = image.naturalHeight || Number(image.getAttribute('height')) || 1;
+            let hasTransparency = false;
+            try {
+                const canvas = document.createElement('canvas');
+                canvas.width = 24; canvas.height = 24;
+                const context = canvas.getContext('2d', { willReadFrequently: true });
+                context.clearRect(0, 0, 24, 24);
+                context.drawImage(image, 0, 0, 24, 24);
+                const data = context.getImageData(0, 0, 24, 24).data;
+                let transparentPixels = 0;
+                for (let index = 3; index < data.length; index += 4) {
+                    if (data[index] < 245) transparentPixels += 1;
+                }
+                hasTransparency = transparentPixels > 8;
+            } catch (_) {
+                hasTransparency = /\.png(?:$|\?)/i.test(image.currentSrc || image.src || '');
+            }
+            const square = Math.abs(width - height) / Math.max(width, height) <= 0.12;
+            image.classList.add(hasTransparency ? 'logo-transparent' : (square ? 'logo-framed' : 'logo-plain'));
+        };
+        if (image.complete && image.naturalWidth) analyze();
+        else image.addEventListener('load', analyze, { once: true });
+    }
+
+    function initLogoPresentation() {
+        document.querySelectorAll('#site-logo-img, .mobile-menu-brand img').forEach(applyLogoPresentation);
+    }
+
     function initLogoCacheReset() {
         const logo = document.getElementById('site-logo');
         if (!logo || logo.dataset.cacheResetReady === 'true') return;
@@ -690,6 +725,7 @@
             if (!loaded) return false;
             detectActiveNav();
             initLogoCacheReset();
+            initLogoPresentation();
             initDownloadMenu();
             initMobileMenuSwipeClose();
             await ensureLunarCalendar();
@@ -745,7 +781,7 @@
         const before = clampNumber(beforeDays, 0, 120, 0);
         const after = clampNumber(afterDays, 0, 120, 0);
         const maximum = clampNumber(options.maxItems, 1, 20, 1);
-        const allowedInput = Array.isArray(options.allowedIds) ? options.allowedIds.map(String) : null;
+        const allowedInput = Array.isArray(options.allowedIds) ? options.allowedIds.map(value => String(value) === '1109' ? '1119' : String(value)) : null;
         const allowed = allowedInput ? new Set(allowedInput) : null;
         if (allowed && allowed.size === 0) return [];
 
@@ -762,13 +798,13 @@
             seen.add(id);
             matches.push({ holiday, offsetDays: offset, date });
         }
+        // Xếp đúng theo dòng thời gian thực tế trong cửa sổ hiển thị.
+        // Ví dụ hôm nay 03/08: banner 27/07 còn trong thời gian giữ sau lễ
+        // vẫn phải đứng trước banner Quốc khánh 02/09.
         matches.sort((a, b) => {
-            // Ưu tiên lễ sắp tới; sau đó mới dùng lễ vừa qua nếu còn trong khoảng.
-            const aUpcoming = a.offsetDays >= 0;
-            const bUpcoming = b.offsetDays >= 0;
-            if (aUpcoming !== bUpcoming) return aUpcoming ? -1 : 1;
-            if (aUpcoming) return a.offsetDays - b.offsetDays;
-            return Math.abs(a.offsetDays) - Math.abs(b.offsetDays);
+            const timeA = a.date instanceof Date ? a.date.getTime() : Number(a.offsetDays || 0);
+            const timeB = b.date instanceof Date ? b.date.getTime() : Number(b.offsetDays || 0);
+            return timeA - timeB;
         });
         return matches.slice(0, maximum);
     }
@@ -1337,7 +1373,7 @@
         const holidayMatches = config.banner.holidaySlideEnabled
             ? resolveHolidayWindows(config.banner.holidayBeforeDays, config.banner.holidayAfterDays, {
                 allowedIds: Array.isArray(config.banner.holidayEnabledIds) ? config.banner.holidayEnabledIds : null,
-                maxItems: clampNumber(config.banner.holidayMaxSlides, 1, 10, 2)
+                maxItems: clampNumber(config.banner.holidayMaxSlides, 1, 19, 2)
             })
             : [];
         activeHolidayBanner = holidayMatches[0] || null;

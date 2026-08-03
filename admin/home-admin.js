@@ -7,7 +7,7 @@
     const DEFAULT_CONFIG = {
         schemaVersion: 1,
         sections: { banner: true, featured: true, topics: true, latestFeed: true, sidebar: true },
-        banner: { mode: 'mixed', aspectRatio: '3 / 1', autoplay: true, intervalMs: 5500, showArrows: true, showDots: true, dragEnabled: true, holidaySlideEnabled: true, holidayBeforeDays: 45, holidayAfterDays: 10, holidayPosition: 'after-ads', holidayMaxSlides: 2, holidayEnabledIds: ["0101", "tet", "0203", "0227", "0308", "0310", "0326", "0430", "0519", "0601", "0727", "0815", "0902", "1020", "1109", "1120", "1124", "1222", "1224"], pauseOnHover: true },
+        banner: { mode: 'mixed', aspectRatio: '3 / 1', autoplay: true, intervalMs: 5500, showArrows: true, showDots: true, dragEnabled: true, holidaySlideEnabled: true, holidayBeforeDays: 45, holidayAfterDays: 10, holidayPosition: 'after-ads', holidayMaxSlides: 2, holidayEnabledIds: ["0101", "tet", "0203", "0227", "0308", "0310", "0326", "0430", "0519", "0601", "0727", "0815", "0902", "1020", "1119", "1120", "1124", "1222", "1224"], pauseOnHover: true },
         feed: { source: 'new', initialCount: 6, batchSize: 4, maxItems: 20, autoLoad: true, showShare: true },
         holiday: { popupEnabled: true, popupBeforeDays: 0, popupAfterDays: 0, fireworksEnabled: true, showOncePerDay: true, popupDurationMs: 7500 },
         social: { facebook: 'https://fb.com/tqv2022', messenger: 'https://m.me/tqv2022', zalo: '', tiktok: 'https://www.tiktok.com/@tqv2020', email: '' },
@@ -100,6 +100,72 @@
         return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
     }
 
+
+    const HOLIDAY_BANNER_CODES = ['0101','tet','0203','0227','0308','0310','0326','0430','0519','0601','0727','0815','0902','1020','1119','1120','1124','1222','1224'];
+    const HOLIDAY_BANNER_LABELS = Object.freeze({
+        '0101': 'Tết Dương lịch',
+        'tet': 'Tết Âm lịch',
+        '0203': 'Thành lập Đảng',
+        '0227': 'Thầy thuốc Việt Nam',
+        '0308': 'Quốc tế Phụ nữ',
+        '0310': 'Giỗ Tổ Hùng Vương',
+        '0326': 'Đoàn TNCS',
+        '0430': '30/4 & 1/5',
+        '0519': 'Ngày sinh Bác Hồ',
+        '0601': 'Quốc tế Thiếu nhi',
+        '0727': 'Thương binh Liệt sĩ',
+        '0815': 'Trung Thu',
+        '0902': 'Quốc khánh 2/9',
+        '1020': 'Phụ nữ Việt Nam',
+        '1119': 'Quốc tế Nam giới',
+        '1120': 'Nhà giáo Việt Nam',
+        '1124': 'Văn hóa Việt Nam',
+        '1222': 'Quân đội Nhân dân',
+        '1224': 'Giáng Sinh'
+    });
+    const normalizeHolidayBannerCode = value => String(value) === '1109' ? '1119' : String(value);
+    const holidayBannerLabel = code => `${code} — ${HOLIDAY_BANNER_LABELS[code] || 'Ngày lễ'}`;
+
+    function bannerImageExists(url) {
+        return new Promise(resolve => {
+            const image = new Image();
+            let done = false;
+            const finish = value => {
+                if (done) return;
+                done = true;
+                image.onload = null;
+                image.onerror = null;
+                resolve(value);
+            };
+            image.onload = () => finish(true);
+            image.onerror = () => finish(false);
+            image.src = `${url}${url.includes('?') ? '&' : '?'}_check=${Date.now()}`;
+            window.setTimeout(() => finish(false), 4500);
+        });
+    }
+
+    async function checkHolidayBannerFiles() {
+        const button = $('#checkHolidayBannerFiles');
+        const status = $('#holidayBannerFileStatus');
+        if (!button || !status) return;
+        button.disabled = true;
+        status.textContent = 'Đang kiểm tra ảnh trong /img/banners/...';
+        const selected = $$('[data-holiday-banner-id]:checked').map(input => normalizeHolidayBannerCode(input.dataset.holidayBannerId));
+        const codes = selected.length ? selected : HOLIDAY_BANNER_CODES;
+        const results = await Promise.all(codes.map(async code => {
+            const [png, jpg] = await Promise.all([
+                bannerImageExists(`/img/banners/${code}.png`),
+                bannerImageExists(`/img/banners/${code}.jpg`)
+            ]);
+            return { code, found: png || jpg };
+        }));
+        const found = results.filter(item => item.found).map(item => item.code);
+        const missing = results.filter(item => !item.found).map(item => item.code);
+        const missingText = missing.map(holidayBannerLabel).join(', ');
+        status.innerHTML = `Tìm thấy <strong>${found.length}/${codes.length}</strong> mã ảnh lễ. Giới hạn lễ không tính banner quảng cáo.${missing.length ? ` Thiếu: <code>${missingText}</code>.` : ''}`;
+        button.disabled = false;
+    }
+
     function numberValue(selector, fallback) {
         const value = Number($(selector)?.value);
         return Number.isFinite(value) ? value : fallback;
@@ -133,7 +199,7 @@
         setValue('#homeHolidayBannerBefore', state.banner.holidayBeforeDays ?? 45);
         setValue('#homeHolidayBannerAfter', state.banner.holidayAfterDays ?? 10);
         setValue('#homeHolidayBannerMax', state.banner.holidayMaxSlides ?? 2);
-        const enabledHolidayIds = new Set(Array.isArray(state.banner.holidayEnabledIds) ? state.banner.holidayEnabledIds.map(String) : ["0101", "tet", "0203", "0227", "0308", "0310", "0326", "0430", "0519", "0601", "0727", "0815", "0902", "1020", "1109", "1120", "1124", "1222", "1224"]);
+        const enabledHolidayIds = new Set(Array.isArray(state.banner.holidayEnabledIds) ? state.banner.holidayEnabledIds.map(normalizeHolidayBannerCode) : ["0101", "tet", "0203", "0227", "0308", "0310", "0326", "0430", "0519", "0601", "0727", "0815", "0902", "1020", "1119", "1120", "1124", "1222", "1224"]);
         $$('[data-holiday-banner-id]').forEach(input => { input.checked = enabledHolidayIds.has(input.dataset.holidayBannerId); });
         setValue('#homeFeedSource', state.feed.source);
         setValue('#homeFeedInitial', state.feed.initialCount);
@@ -206,7 +272,7 @@
             holidayAfterDays: numberValue('#homeHolidayBannerAfter', 10),
             holidayPosition: $('#homeHolidayBannerPosition')?.value || 'after-ads',
             holidayMaxSlides: numberValue('#homeHolidayBannerMax', 2),
-            holidayEnabledIds: $$('[data-holiday-banner-id]:checked').map(input => input.dataset.holidayBannerId),
+            holidayEnabledIds: $$('[data-holiday-banner-id]:checked').map(input => normalizeHolidayBannerCode(input.dataset.holidayBannerId)),
             pauseOnHover: true
         };
         state.feed = {
@@ -283,25 +349,26 @@
     function bannerCard(banner, index) {
         return `<article class="home-banner-admin-card" data-banner-id="${escapeHtml(banner.id)}">
             <header>
-                <div class="banner-admin-index"><span>${index + 1}</span><div><strong>${escapeHtml(banner.title || 'Banner chưa đặt tên')}</strong><small>${banner.enabled === false ? 'Đang tắt' : 'Đang hiển thị'}</small></div></div>
+                <span class="banner-admin-number">${index + 1}</span>
+                <label class="banner-header-toggle" title="Bật/tắt banner"><input type="checkbox" data-banner-field="enabled" ${banner.enabled === false ? '' : 'checked'}><span></span></label>
+                <label class="banner-header-title"><span class="sr-only">Tên banner</span><input type="text" data-banner-field="title" value="${escapeHtml(banner.title || '')}" placeholder="Tên banner"></label>
+                <small class="banner-header-status">${banner.enabled === false ? 'Đang tắt' : 'Đang bật'}</small>
                 <div class="banner-admin-tools">
-                    <button type="button" data-banner-move="up" title="Đưa lên">↑</button>
-                    <button type="button" data-banner-move="down" title="Đưa xuống">↓</button>
+                    <button type="button" data-banner-move="up" title="Đưa lên một vị trí">↑</button>
+                    <button type="button" data-banner-move="down" title="Đưa xuống một vị trí">↓</button>
                     <button type="button" data-banner-remove title="Xóa">×</button>
                 </div>
             </header>
             <div class="banner-admin-body">
-                <label class="banner-enabled"><input type="checkbox" data-banner-field="enabled" ${banner.enabled === false ? '' : 'checked'}><span>Bật banner này</span></label>
-                <label>Tên banner<input type="text" data-banner-field="title" value="${escapeHtml(banner.title || '')}" placeholder="SIM data Nhật Bản"></label>
-                <div class="banner-admin-grid two">
+                <div class="banner-admin-grid three">
                     <label>Ảnh PC<input type="text" data-banner-field="imageDesktop" value="${escapeHtml(banner.imageDesktop || '')}" placeholder="/img/ads/banner-pc.jpg"></label>
                     <label>Ảnh mobile<input type="text" data-banner-field="imageMobile" value="${escapeHtml(banner.imageMobile || '')}" placeholder="Để trống sẽ dùng ảnh PC"></label>
+                    <label>Link khi nhấn ảnh<input type="text" data-banner-field="actionUrl" value="${escapeHtml(banner.actionUrl || '')}" placeholder="/pages/... hoặc https://..."></label>
                 </div>
-                <div class="banner-admin-grid two">
-                    <label>Link mở khi nhấn vào ảnh<input type="text" data-banner-field="actionUrl" value="${escapeHtml(banner.actionUrl || '')}" placeholder="/pages/... hoặc https://..."></label>
+                <div class="banner-admin-compact-row">
                     <label class="banner-enabled"><input type="checkbox" data-banner-field="newTab" ${banner.newTab ? 'checked' : ''}><span>Mở link ở tab mới</span></label>
+                    <p class="banner-admin-note">Nhấn trực tiếp vào ảnh để mở đường link đã gắn.</p>
                 </div>
-                <p class="banner-admin-note">Không còn popup nhập thông tin. Banner chỉ mở đúng đường link anh gắn khi người xem nhấn vào ảnh.</p>
             </div>
         </article>`;
     }
@@ -314,6 +381,24 @@
             : '<div class="home-banner-admin-empty"><strong>Chưa có banner quảng cáo</strong><p>Nhấn “Thêm banner” để tạo quảng cáo SIM hoặc dịch vụ.</p></div>';
     }
 
+    function moveBannerById(idValue, direction, options = {}) {
+        const index = state.banners.findIndex(item => item.id === idValue);
+        const next = direction === 'up' ? index - 1 : index + 1;
+        if (index < 0 || next < 0 || next >= state.banners.length) return false;
+        [state.banners[index], state.banners[next]] = [state.banners[next], state.banners[index]];
+        renderBanners();
+        updateDownloadLinks();
+        if (options.follow !== false) {
+            requestAnimationFrame(() => {
+                const moved = document.querySelector(`.home-banner-admin-card[data-banner-id="${CSS.escape(idValue)}"]`);
+                moved?.classList.add('is-reordered');
+                moved?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                window.setTimeout(() => moved?.classList.remove('is-reordered'), 900);
+            });
+        }
+        return true;
+    }
+
     function collectBannerCard(card) {
         const banner = state.banners.find(item => item.id === card.dataset.bannerId);
         if (!banner) return;
@@ -321,6 +406,8 @@
             const key = input.dataset.bannerField;
             banner[key] = input.type === 'checkbox' ? input.checked : input.value;
         });
+        const status = card.querySelector('.banner-header-status');
+        if (status) status.textContent = banner.enabled === false ? 'Đang tắt' : 'Đang bật';
     }
 
     function collectAll() {
@@ -354,7 +441,7 @@
             const link = $(selector); if (link) { link.href = urls[key]; link.download = filename; }
         });
         const status = $('#homeConfigStatus');
-        if (status) status.textContent = `${state.banners.filter(item => item.enabled !== false).length} banner đang bật · giới hạn ${state.feed.maxItems} bài · dữ liệu đã tách 3 lớp`;
+        if (status) status.textContent = `${state.banners.filter(item => item.enabled !== false).length} banner quảng cáo đang bật · tối đa ${state.banner.holidayMaxSlides || 0} banner lễ (tính riêng) · giới hạn ${state.feed.maxItems} bài`;
     }
 
     function saveDraft() {
@@ -378,12 +465,7 @@
 
     function moveBanner(card, direction) {
         collectAll();
-        const index = state.banners.findIndex(item => item.id === card.dataset.bannerId);
-        const next = direction === 'up' ? index - 1 : index + 1;
-        if (index < 0 || next < 0 || next >= state.banners.length) return;
-        [state.banners[index], state.banners[next]] = [state.banners[next], state.banners[index]];
-        renderBanners();
-        updateDownloadLinks();
+        moveBannerById(card.dataset.bannerId, direction, { follow: true });
     }
 
     function removeBanner(card) {
@@ -421,6 +503,7 @@
                 return;
             }
             if (event.target.closest('#addHomeBanner')) { addBanner(); return; }
+            if (event.target.closest('#checkHolidayBannerFiles')) { checkHolidayBannerFiles(); return; }
             if (event.target.closest('#saveHomeConfigLocal, #saveBannerConfigLocal')) { saveDraft(); return; }
             if (event.target.closest('#previewHomeConfig, #previewBannerConfig')) {
                 collectAll();
