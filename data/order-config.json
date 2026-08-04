@@ -7,7 +7,7 @@
   "openInNewTab": false,
   "copyMessageBeforeOpen": true,
   "appendTextQuery": true,
-  "messageTemplate": "Xin chào, tôi muốn mua SIM:\n\n- Gói: {{name}}\n- Nhà mạng: {{carrier}}\n- Loại: {{simType}}\n- Chu kỳ: {{period}}\n- Dung lượng: {{data}}\n- Số lượng: {{quantity}}\n- Giá tham khảo: {{price}}\n\nMong shop xác nhận và tư vấn giúp tôi.",
+  "messageTemplate": "Xin chào, tôi muốn mua SIM:\n\n- Gói: {{name}}\n- Nhà mạng: {{carrier}} {{simType}}\n- Chu kỳ: {{period}}\n- Dung lượng: {{data}}\n- Số lượng: {{quantity}}\n- Giá tham khảo: {{price}}\n\nMong shop xác nhận và tư vấn giúp tôi.",
   "labels": {
     "buy": "Mua SIM",
     "friend": "Liên hệ",
