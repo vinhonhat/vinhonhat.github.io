@@ -1,241 +1,222 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 5,
   "page": {
     "eyebrow": "SIM NHẬT BẢN",
     "title": "Chọn SIM data phù hợp",
-    "description": "Chọn SIM tháng hoặc SIM năm, sau đó chọn eSIM hay SIM vật lý. Nhấn vào từng sản phẩm để xem chi tiết và đặt mua.",
-    "notice": "Giá và điều kiện trong các gói demo có thể thay đổi. Hãy chỉnh lại trong Admin hoặc data/sim-plans.json trước khi bán chính thức.",
+    "description": "Tuỳ vào nhu cầu sử dụng của bạn để chọn SIM tháng hoặc SIM năm.\nThiết bị của bạn có hỗ trợ loại sim nào để chọn eSIM hay SIM vật lý. Vui lòng nhấn vào từng sản phẩm để xem chi tiết và đặt mua.",
+    "notice": "Giá và điều kiện đăng ký có thể thay đổi. Hãy chỉnh liên lạc trao đổi với người bán trước khi đặt hàng. Cảm ơn!",
     "catalogTitle": "Các gói SIM đang giới thiệu",
-    "monthlyLabel": "SIM tháng",
-    "yearlyLabel": "SIM năm",
+    "monthlyLabel": "SIM cước tháng",
+    "yearlyLabel": "SIM mua đứt năm",
     "physicalLabel": "SIM vật lý",
     "esimLabel": "eSIM",
-    "emptyText": "Chưa có sản phẩm trong nhóm này."
+    "emptyText": "Chưa có sản phẩm trong nhóm này.",
+    "voiceLabel": "SIM nghe gọi",
+    "bothLabel": "eSIM + SIM vật lý",
+    "apnUrl": "/pages/pages-baiviet/sim/cau-hinh-sim-data-sim-nghe-goi-20251109.html",
+    "apnLabel": "Cài cấu hình / APN",
+    "apnEnabled": true
   },
   "plans": [
     {
-      "id": "monthly-50-physical",
+      "id": "monthly-50",
       "familyId": "monthly-50",
       "enabled": true,
       "period": "monthly",
-      "simType": "physical",
+      "simType": "both",
       "carrier": "SoftBank",
       "name": "SIM Data SoftBank 50GB",
       "cardName": "SIM Data 50GB",
-      "subtitle": "Thanh toán cước hằng tháng",
+      "subtitle": "Thanh toán cước trước ngày 25 hằng tháng",
       "price": "¥2,480",
       "dataLabel": "50GB/tháng",
       "durationLabel": "Gia hạn hằng tháng",
-      "image": "/img/sim/softbank-demo.png",
+      "image": "/img/sim/sim-softbank.svg",
       "features": [
         "50GB data mỗi tháng",
         "Không kèm số nghe gọi",
-        "Có thể phát điểm truy cập",
-        "Hỗ trợ hướng dẫn cài APN"
-      ],
-      "recommendedFor": "Người cần Internet ổn định trên điện thoại, máy tính bảng hoặc bộ phát Wi-Fi.",
-      "requirements": [
-        "Điện thoại đã mở khóa mạng",
-        "Thiết bị hỗ trợ băng tần SoftBank",
-        "Xác nhận lại khu vực sử dụng trước khi mua"
-      ],
-      "showCard": true
-    },
-    {
-      "id": "monthly-50-esim",
-      "familyId": "monthly-50",
-      "enabled": true,
-      "period": "monthly",
-      "simType": "esim",
-      "carrier": "SoftBank",
-      "name": "eSIM Data SoftBank 50GB",
-      "cardName": "eSIM Data 50GB",
-      "subtitle": "Thanh toán cước hằng tháng",
-      "price": "¥2,480",
-      "dataLabel": "50GB/tháng",
-      "durationLabel": "Gia hạn hằng tháng",
-      "image": "/img/sim/softbank-demo.png",
-      "features": [
-        "Nhận mã eSIM để cài đặt",
-        "50GB data mỗi tháng",
-        "Giữ nguyên SIM chính trong máy",
+        "Có thể Nhận được tin nhắn OTP (trừ pokemon)",
+        "Nhận mã eSIM để cài đặt nhanh chóng (nếu chọn Esim)",
+        "Hỗ trợ hướng dẫn cài APN",
         "Hỗ trợ cài đặt bằng tiếng Việt"
       ],
-      "recommendedFor": "iPhone hoặc điện thoại Android có hỗ trợ eSIM.",
+      "recommendedFor": "Người cần Internet ổn định trên điện thoại.",
       "requirements": [
-        "Máy có mục thêm eSIM",
         "Điện thoại đã mở khóa mạng",
+        "Thiết bị hỗ trợ băng tần SoftBank (không khoá mạng softbank)",
+        "Xác nhận lại khu vực sử dụng trước khi mua",
+        "Xác định máy có mục thêm eSIM (đối với esim)",
         "Có Wi-Fi khi quét mã kích hoạt"
       ],
-      "showCard": true
+      "showCard": true,
+      "planKind": "data",
+      "soldOut": false
     },
     {
-      "id": "monthly-100-physical",
+      "id": "monthly-100",
       "familyId": "monthly-100",
       "enabled": true,
       "period": "monthly",
-      "simType": "physical",
+      "simType": "both",
       "carrier": "SoftBank",
       "name": "SIM Data SoftBank 100GB",
       "cardName": "SIM Data 100GB",
-      "subtitle": "Thanh toán cước hằng tháng",
+      "subtitle": "Thanh toán cước trước ngày 25 hằng tháng",
       "price": "¥2,980",
       "dataLabel": "100GB/tháng",
       "durationLabel": "Gia hạn hằng tháng",
-      "image": "/img/sim/softbank-demo.png",
+      "image": "/img/sim/sim-softbank.svg",
       "features": [
         "100GB data mỗi tháng",
-        "Phù hợp dùng nhiều video",
-        "Có thể dùng với bộ phát Wi-Fi",
-        "Hỗ trợ hướng dẫn cài APN"
+        "Không kèm số nghe gọi",
+        "Có thể Nhận được tin nhắn OTP (trừ pokemon)",
+        "Nhận mã eSIM để cài đặt nhanh chóng (nếu chọn Esim)",
+        "Hỗ trợ hướng dẫn cài APN",
+        "Hỗ trợ cài đặt bằng tiếng Việt"
       ],
-      "recommendedFor": "Người dùng nhiều data, xem video hoặc chia sẻ mạng cho nhiều thiết bị.",
+      "recommendedFor": "Người dùng nhiều data, xem video hoặc chơi game, nhà không có wifi.",
       "requirements": [
         "Điện thoại đã mở khóa mạng",
-        "Thiết bị hỗ trợ băng tần SoftBank",
-        "Kiểm tra vùng phủ sóng trước khi đăng ký"
+        "Thiết bị hỗ trợ băng tần SoftBank (không khoá mạng softbank)",
+        "Xác nhận lại khu vực sử dụng trước khi mua",
+        "Xác định máy có mục thêm eSIM (đối với esim)",
+        "Có Wi-Fi khi quét mã kích hoạt"
       ],
-      "showCard": true
+      "showCard": true,
+      "planKind": "data",
+      "soldOut": false
     },
     {
-      "id": "monthly-100-esim",
-      "familyId": "monthly-100",
-      "enabled": true,
-      "period": "monthly",
-      "simType": "esim",
-      "carrier": "SoftBank",
-      "name": "eSIM Data SoftBank 100GB",
-      "cardName": "eSIM Data 100GB",
-      "subtitle": "Thanh toán cước hằng tháng",
-      "price": "¥2,980",
-      "dataLabel": "100GB/tháng",
-      "durationLabel": "Gia hạn hằng tháng",
-      "image": "/img/sim/softbank-demo.png",
-      "features": [
-        "100GB data mỗi tháng",
-        "Cài bằng mã eSIM",
-        "Không cần chờ giao SIM vật lý",
-        "Hỗ trợ kích hoạt bằng tiếng Việt"
-      ],
-      "recommendedFor": "Máy hỗ trợ eSIM và người cần dung lượng cao hằng tháng.",
-      "requirements": [
-        "Máy có hỗ trợ eSIM",
-        "Điện thoại đã mở khóa mạng",
-        "Có kết nối Wi-Fi khi kích hoạt"
-      ],
-      "showCard": true
-    },
-    {
-      "id": "yearly-5-physical",
+      "id": "yearly-5",
       "familyId": "yearly-5",
       "enabled": true,
       "period": "yearly",
-      "simType": "physical",
+      "simType": "both",
       "carrier": "SoftBank",
       "name": "SIM Data 5GB – 12 tháng",
       "cardName": "SIM năm 5GB",
-      "subtitle": "SIM vật lý dùng theo kỳ hạn năm",
-      "price": "Liên hệ",
+      "subtitle": "SIM dùng theo kỳ hạn năm tính từ tháng nhận sim, sim được kích hoạt khi mua.",
+      "price": "¥8,000",
       "dataLabel": "5GB/tháng",
       "durationLabel": "Kỳ hạn 12 tháng",
-      "image": "/img/sim/softbank-demo.png",
+      "image": "/img/sim/sim-softbank.svg",
       "features": [
         "5GB data mỗi tháng",
         "Kỳ hạn sử dụng 12 tháng",
         "SIM vật lý giao tận nơi",
+        "Esim thì nhận mã nhanh Không cần chờ giao SIM",
         "Hỗ trợ cài đặt APN"
       ],
-      "recommendedFor": "Người dùng nhẹ, cần gói ổn định trong một năm.",
+      "recommendedFor": "Người dùng cần gói ổn định để tra tàu xe khi di chuyển, nhắn tin qua các ứng dụng như messenger, zalo, line..... Với chu kỳ trong một năm.",
       "requirements": [
         "Điện thoại đã mở khóa mạng",
-        "Kiểm tra băng tần thiết bị",
-        "Xác nhận ngày bắt đầu sử dụng"
+        "Thiết bị hỗ trợ băng tần SoftBank (không khoá mạng softbank)",
+        "Xác nhận lại khu vực sử dụng trước khi mua",
+        "Xác định máy có mục thêm eSIM (đối với esim)",
+        "Có Wi-Fi khi quét mã kích hoạt"
       ],
-      "showCard": true
+      "showCard": true,
+      "planKind": "data",
+      "soldOut": false
     },
     {
-      "id": "yearly-5-esim",
-      "familyId": "yearly-5",
-      "enabled": true,
-      "period": "yearly",
-      "simType": "esim",
-      "carrier": "SoftBank",
-      "name": "eSIM Data 5GB – 12 tháng",
-      "cardName": "eSIM năm 5GB",
-      "subtitle": "eSIM dùng theo kỳ hạn năm",
-      "price": "Liên hệ",
-      "dataLabel": "5GB/tháng",
-      "durationLabel": "Kỳ hạn 12 tháng",
-      "image": "/img/sim/softbank-demo.png",
-      "features": [
-        "5GB data mỗi tháng",
-        "Kỳ hạn sử dụng 12 tháng",
-        "Nhận mã eSIM trực tuyến",
-        "Không cần chờ giao SIM"
-      ],
-      "recommendedFor": "Điện thoại hỗ trợ eSIM, nhu cầu data nhẹ và dùng lâu dài.",
-      "requirements": [
-        "Máy hỗ trợ eSIM",
-        "Điện thoại đã mở khóa mạng",
-        "Có Wi-Fi khi kích hoạt"
-      ],
-      "showCard": true
-    },
-    {
-      "id": "yearly-10-physical",
-      "familyId": "yearly-10",
+      "id": "yearly-5-copy-physical",
+      "familyId": "yearly-5-copy",
       "enabled": true,
       "period": "yearly",
       "simType": "physical",
+      "carrier": "Docomo",
+      "name": "SIM Data 5GB – 12 tháng",
+      "cardName": "SIM năm 5GB - bản sao",
+      "subtitle": "SIM dùng theo kỳ hạn năm tính từ tháng nhận sim, sim được kích hoạt khi mua.",
+      "price": "¥8,000",
+      "dataLabel": "5GB/tháng",
+      "durationLabel": "Kỳ hạn 12 tháng",
+      "image": "/img/sim/sim-docomo.svg",
+      "features": [
+        "5GB data mỗi tháng",
+        "Kỳ hạn sử dụng 12 tháng",
+        "SIM vật lý giao tận nơi",
+        "Esim thì nhận mã nhanh Không cần chờ giao SIM",
+        "Hỗ trợ cài đặt APN"
+      ],
+      "recommendedFor": "Người dùng cần gói ổn định để tra tàu xe khi di chuyển, nhắn tin qua các ứng dụng như messenger, zalo, line..... Với chu kỳ trong một năm.",
+      "requirements": [
+        "Điện thoại đã mở khóa mạng",
+        "Thiết bị hỗ trợ băng tần SoftBank (không khoá mạng softbank)",
+        "Xác nhận lại khu vực sử dụng trước khi mua",
+        "Xác định máy có mục thêm eSIM (đối với esim)",
+        "Có Wi-Fi khi quét mã kích hoạt"
+      ],
+      "showCard": true,
+      "planKind": "data",
+      "soldOut": false
+    },
+    {
+      "id": "yearly-10",
+      "familyId": "yearly-10",
+      "enabled": true,
+      "period": "yearly",
+      "simType": "both",
       "carrier": "SoftBank",
       "name": "SIM Data 10GB – 12 tháng",
       "cardName": "SIM năm 10GB",
       "subtitle": "SIM vật lý dùng theo kỳ hạn năm",
-      "price": "Liên hệ",
+      "price": "¥13,000",
       "dataLabel": "10GB/tháng",
       "durationLabel": "Kỳ hạn 12 tháng",
-      "image": "/img/sim/softbank-demo.png",
+      "image": "/img/sim/sim-softbank.svg",
       "features": [
         "10GB data mỗi tháng",
         "Kỳ hạn sử dụng 12 tháng",
         "SIM vật lý giao tận nơi",
+        "Esim thì nhận mã nhanh Không cần chờ giao SIM",
         "Hỗ trợ cài đặt APN"
       ],
-      "recommendedFor": "Người dùng mạng thường xuyên và muốn cố định gói trong một năm.",
+      "recommendedFor": "Người dùng cần gói ổn định để tra tàu xe khi di chuyển, nhắn tin, gọi điện qua các ứng dụng như messenger, zalo, line.... Lướt facebook. Với chu kỳ trong một năm.",
       "requirements": [
         "Điện thoại đã mở khóa mạng",
-        "Kiểm tra băng tần thiết bị",
-        "Xác nhận ngày bắt đầu sử dụng"
+        "Thiết bị hỗ trợ băng tần SoftBank (không khoá mạng softbank)",
+        "Xác nhận lại khu vực sử dụng trước khi mua",
+        "Xác định máy có mục thêm eSIM (đối với esim)",
+        "Có Wi-Fi khi quét mã kích hoạt"
       ],
-      "showCard": true
+      "showCard": true,
+      "planKind": "data",
+      "soldOut": false
     },
     {
-      "id": "yearly-10-esim",
-      "familyId": "yearly-10",
+      "id": "yearly-10-copy-physical",
+      "familyId": "yearly-10-copy",
       "enabled": true,
       "period": "yearly",
-      "simType": "esim",
-      "carrier": "SoftBank",
-      "name": "eSIM Data 10GB – 12 tháng",
-      "cardName": "eSIM năm 10GB",
-      "subtitle": "eSIM dùng theo kỳ hạn năm",
-      "price": "Liên hệ",
+      "simType": "physical",
+      "carrier": "Docomo",
+      "name": "SIM Data 10GB – 12 tháng",
+      "cardName": "SIM năm 10GB - bản sao",
+      "subtitle": "SIM vật lý dùng theo kỳ hạn năm",
+      "price": "¥13,000",
       "dataLabel": "10GB/tháng",
       "durationLabel": "Kỳ hạn 12 tháng",
-      "image": "/img/sim/softbank-demo.png",
+      "image": "/img/sim/sim-docomo.svg",
       "features": [
         "10GB data mỗi tháng",
         "Kỳ hạn sử dụng 12 tháng",
-        "Nhận mã eSIM trực tuyến",
-        "Hỗ trợ kích hoạt từ xa"
+        "SIM vật lý giao tận nơi",
+        "Esim thì nhận mã nhanh Không cần chờ giao SIM",
+        "Hỗ trợ cài đặt APN"
       ],
-      "recommendedFor": "Máy hỗ trợ eSIM, cần data vừa phải và sử dụng dài hạn.",
+      "recommendedFor": "Người dùng cần gói ổn định để tra tàu xe khi di chuyển, nhắn tin, gọi điện qua các ứng dụng như messenger, zalo, line.... Lướt facebook. Với chu kỳ trong một năm.",
       "requirements": [
-        "Máy hỗ trợ eSIM",
         "Điện thoại đã mở khóa mạng",
-        "Có Wi-Fi khi kích hoạt"
+        "Thiết bị hỗ trợ băng tần SoftBank (không khoá mạng softbank)",
+        "Xác nhận lại khu vực sử dụng trước khi mua",
+        "Xác định máy có mục thêm eSIM (đối với esim)",
+        "Có Wi-Fi khi quét mã kích hoạt"
       ],
-      "showCard": true
+      "showCard": true,
+      "planKind": "data",
+      "soldOut": false
     }
   ],
   "faqs": [

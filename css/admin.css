@@ -962,3 +962,393 @@ label,
   .sim-admin-image-control { grid-template-columns:92px minmax(0,1fr); }
   .sim-admin-image-control > img { width:92px; }
 }
+
+/* ========================================================================== */
+/* V26.8.3 BETA 18 - mỗi tab SIM chỉ thao tác đúng file cấu hình               */
+/* ========================================================================== */
+.sim-admin-file-safety {
+  min-width: min(100%, 330px);
+  padding: 13px 15px;
+  display: grid;
+  gap: 5px;
+  border: 1px solid rgba(255,255,255,.44);
+  border-radius: 14px;
+  color: #fff9ef;
+  background: rgba(82,43,0,.16);
+  font-size: 11.5px;
+  line-height: 1.45;
+}
+.sim-admin-file-safety strong { color: #fff; font-size: 13px; }
+.sim-admin-file-safety b { color: #fff; }
+.sim-admin-file-safety code {
+  padding: 2px 6px;
+  border-radius: 6px;
+  color: #784000;
+  background: #fff5e5;
+  font-weight: 850;
+}
+.sim-config-filebar {
+  margin: 14px 0 16px;
+  padding: 13px 14px;
+  display: grid;
+  grid-template-columns: minmax(210px, 1fr) auto;
+  gap: 10px 15px;
+  align-items: center;
+  border: 1px solid #e9c991;
+  border-radius: 14px;
+  background: linear-gradient(135deg,#fffaf2,#fff6e8);
+}
+.sim-config-filebar.order-filebar {
+  border-color: #bad1eb;
+  background: linear-gradient(135deg,#f8fbff,#edf6ff);
+}
+.sim-config-filebar.product-filebar {
+  margin: 0 14px 14px;
+}
+.sim-config-file-info {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+.sim-config-file-info > span {
+  color: #9b5b0d;
+  font-size: 9.5px;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+.order-filebar .sim-config-file-info > span { color: #315f99; }
+.sim-config-file-info strong {
+  color: #30363d;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.sim-config-file-info small {
+  color: #727b86;
+  font-size: 10.5px;
+  line-height: 1.45;
+}
+.sim-config-file-info code {
+  color: #8f5100;
+  font-weight: 800;
+}
+.order-filebar .sim-config-file-info code { color: #315f99; }
+.sim-config-file-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 7px;
+}
+.sim-config-file-actions > button,
+.sim-config-file-actions > a,
+.sim-config-file-actions > label {
+  min-height: 37px;
+  padding: 8px 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #dcc095;
+  border-radius: 10px;
+  color: #825000;
+  background: #fff;
+  font-size: 10.5px;
+  font-weight: 850;
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+  text-decoration: none;
+}
+.sim-config-file-actions > button:hover,
+.sim-config-file-actions > a:hover,
+.sim-config-file-actions > label:hover { border-color: #de861e; background: #fff1dc; }
+.sim-config-file-actions > a {
+  border-color: #cf7a13;
+  color: #fff;
+  background: #df7909;
+}
+.sim-config-file-actions > a:hover { color: #fff; background: #c96700; }
+.order-filebar .sim-config-file-actions > button,
+.order-filebar .sim-config-file-actions > label { border-color: #bfd0e3; color: #315f99; }
+.order-filebar .sim-config-file-actions > a { border-color: #315f99; background: #315f99; }
+.order-filebar .sim-config-file-actions > a:hover { background: #244c7e; }
+.sim-config-import input { display: none; }
+.sim-config-filebar [data-config-status] {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(133,93,45,.22);
+  color: #727b86;
+  font-size: 10.5px;
+  line-height: 1.4;
+}
+.order-filebar [data-config-status] { border-top-color: rgba(49,95,153,.2); }
+@media (max-width: 980px) {
+  .sim-config-filebar { grid-template-columns: 1fr; }
+  .sim-config-file-actions { justify-content: flex-start; }
+}
+@media (max-width: 640px) {
+  .sim-admin-file-safety { min-width: 0; width: 100%; padding: 10px 11px; }
+  .sim-config-filebar { margin: 11px 0 13px; padding: 10px; gap: 9px; border-radius: 12px; }
+  .sim-config-filebar.product-filebar { margin: 0 9px 11px; }
+  .sim-config-file-actions { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
+  .sim-config-file-actions > * { width: 100%; min-width: 0; padding-inline: 7px !important; font-size: 9.5px !important; }
+  .sim-config-file-actions > a { grid-column: 1 / -1; }
+}
+
+
+/* V26.8.4 Beta 1 - tối ưu bố cục tab Cài đặt trang SIM */
+.sim-settings-layout {
+  margin-top: 16px;
+  display: grid;
+  gap: 16px;
+}
+.sim-settings-panel {
+  padding: 16px;
+  border: 1px solid #e7d1b3;
+  border-radius: 16px;
+  background: #fffaf4;
+}
+.sim-settings-panel-head {
+  margin-bottom: 12px;
+  display: grid;
+  gap: 4px;
+}
+.sim-settings-panel-head h4 {
+  margin: 0;
+  color: #7c4b10;
+  font-size: 16px;
+  font-weight: 850;
+}
+.sim-settings-panel-head p {
+  margin: 0;
+  color: #776655;
+  font-size: 12px;
+  line-height: 1.55;
+}
+.sim-settings-grid {
+  display: grid;
+  gap: 12px;
+}
+.sim-settings-grid.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.sim-settings-grid.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.sim-settings-grid label {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+  color: #555e68;
+  font-size: 12px;
+  font-weight: 780;
+}
+.sim-settings-grid input,
+.sim-settings-grid textarea,
+.sim-settings-grid select {
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  margin-top: 0;
+  padding: 11px 12px;
+  border: 1px solid #d9dfe6;
+  border-radius: 12px;
+  color: #2f363e;
+  background: #fff;
+  outline: none;
+  font-size: 14px;
+}
+.sim-settings-grid textarea {
+  min-height: 140px;
+  resize: vertical;
+  line-height: 1.6;
+}
+.sim-settings-grid input:focus,
+.sim-settings-grid textarea:focus,
+.sim-settings-grid select:focus {
+  border-color: #e1a75f;
+  box-shadow: 0 0 0 3px rgba(216,117,8,.09);
+}
+.sim-settings-textareas {
+  margin-top: 12px;
+  align-items: start;
+}
+.sim-settings-span-two {
+  grid-column: 1 / -1;
+}
+.sim-settings-check-card {
+  min-height: 100%;
+  padding: 14px 16px;
+  align-content: center;
+  border: 1px solid #ead8c2;
+  border-radius: 12px;
+  background: #fff;
+}
+.sim-settings-check-card span {
+  font-size: 13px;
+}
+@media (max-width: 980px) {
+  .sim-settings-grid.three {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 700px) {
+  .sim-settings-panel {
+    padding: 14px;
+  }
+  .sim-settings-grid.two,
+  .sim-settings-grid.three {
+    grid-template-columns: 1fr;
+  }
+  .sim-settings-grid textarea {
+    min-height: 120px;
+  }
+}
+
+
+/* V26.8.4 Beta 2 - tối ưu tab Nhận đơn hàng */
+.sim-order-admin-grid {
+  margin-top: 15px;
+  display: grid;
+  gap: 14px;
+}
+.sim-order-admin-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(280px, .85fr);
+  gap: 14px;
+  align-items: start;
+}
+.sim-order-message-field {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+  color: #555e68;
+  font-size: 12px;
+  font-weight: 780;
+}
+.sim-order-message-field textarea {
+  width: 100%;
+  min-height: 260px;
+  padding: 12px;
+  border: 1px solid #d9dfe6;
+  border-radius: 12px;
+  color: #2f363e;
+  background: #fff;
+  font-size: 14px;
+  line-height: 1.6;
+  resize: vertical;
+  outline: none;
+}
+.sim-order-message-field textarea:focus {
+  border-color: #e1a75f;
+  box-shadow: 0 0 0 3px rgba(216,117,8,.09);
+}
+.sim-order-message-field small {
+  color: #7a8189;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.sim-order-options-card {
+  padding: 16px;
+  border: 1px solid #e7d1b3;
+  border-radius: 16px;
+  background: #fffaf4;
+}
+.sim-order-option-list {
+  margin-top: 10px;
+  grid-template-columns: 1fr;
+}
+.sim-order-option-list label {
+  min-height: 52px;
+  padding: 0 14px;
+}
+@media (max-width: 880px) {
+  .sim-order-admin-layout {
+    grid-template-columns: 1fr;
+  }
+  .sim-order-message-field textarea {
+    min-height: 220px;
+  }
+}
+
+
+/* V26.8.4 Beta 3 - trạng thái sản phẩm rõ nghĩa và chữ dễ đọc */
+.sim-admin-fields {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 13px;
+}
+.sim-admin-fields > label {
+  font-size: 13px;
+  line-height: 1.4;
+}
+.sim-admin-fields input,
+.sim-admin-fields select,
+.sim-admin-fields textarea {
+  min-height: 42px;
+  padding: 10px 11px;
+  font-size: 13.5px;
+}
+.sim-product-status-grid {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.sim-product-status-card {
+  min-width: 0;
+  min-height: 82px;
+  padding: 14px 15px;
+  border: 1px solid #dfe4e9;
+  border-radius: 14px;
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  background: #f8fafc;
+  cursor: pointer;
+}
+.sim-product-status-card.visibility:has(input:checked) {
+  border-color: #8bc9a6;
+  background: #effaf3;
+}
+.sim-product-status-card.soldout:has(input:checked) {
+  border-color: #e2a36a;
+  background: #fff3e8;
+}
+.sim-product-status-copy {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+.sim-product-status-copy strong {
+  color: #303841;
+  font-size: 14px;
+  line-height: 1.35;
+}
+.sim-product-status-copy small {
+  color: #68717b;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.5;
+}
+.sim-product-status-card input {
+  width: 23px !important;
+  height: 23px !important;
+  min-height: 0 !important;
+  flex: 0 0 auto;
+  padding: 0 !important;
+  accent-color: #d87508;
+}
+@media (max-width: 850px) {
+  .sim-product-status-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 640px) {
+  .sim-admin-fields > label { font-size: 13px; }
+  .sim-admin-fields input,
+  .sim-admin-fields select,
+  .sim-admin-fields textarea { font-size: 14px; }
+  .sim-product-status-card { min-height: 76px; padding: 12px; }
+  .sim-product-status-copy strong { font-size: 14px; }
+  .sim-product-status-copy small { font-size: 12px; }
+}

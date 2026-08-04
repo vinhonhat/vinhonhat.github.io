@@ -66,7 +66,7 @@
       "imageDesktop": "/img/ads/sim-data-demo-3x1.svg",
       "imageMobile": "/img/ads/sim-data-demo-3x1.svg",
       "actionUrl": "/pages/pages-app/sim-data.html",
-      "newTab": false
+      "newTab": true
     },
     {
       "id": "nihongo-demo",

@@ -60,6 +60,8 @@
 .sim-variant-picker button { min-height:44px; padding:7px 13px; display:grid; border:1px solid #dfe3e7; border-radius:11px; color:#454d56; background:#fff; text-align:left; font-weight:850; cursor:pointer; }
 .sim-variant-picker button small { color:#7a828b; font-weight:700; }
 .sim-variant-picker button.active { border-color:#eca94e; color:#a95300; background:#fff4e3; box-shadow:inset 0 0 0 1px #f4c480; }
+.sim-variant-picker button.is-sold-out { opacity:.65; background:#f1f2f3; }
+.sim-variant-picker button.is-sold-out small { color:#6c737b; font-weight:900; }
 .sim-detail-specs { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
 .sim-detail-specs div { padding:10px 12px; border-radius:11px; background:#f4f6f8; }
 .sim-detail-specs span { display:block; color:#7a828b; font-size:10px; }
@@ -204,4 +206,120 @@ body.sim-modal-open { overflow:hidden; }
   .sim-shop-visual.sim-shop-carrier-stack .sim-shop-carrier-card { width:68px; }
   .sim-shop-carrier-rakuten { top:14px; }
   .sim-shop-carrier-softbank { top:28px; }
+}
+
+
+/* V26.8.4 Beta 2 - hướng dẫn gửi tin nhắn khi mua SIM */
+.sim-order-guide[hidden] { display: none !important; }
+.sim-order-guide {
+  position: fixed;
+  right: 18px;
+  bottom: max(82px, calc(env(safe-area-inset-bottom) + 82px));
+  z-index: 7100;
+  width: min(390px, calc(100% - 24px));
+  padding: 16px 18px 15px;
+  border: 1px solid #efc27f;
+  border-radius: 18px;
+  color: #5f431e;
+  background: #fffaf2;
+  box-shadow: 0 18px 48px rgba(20, 24, 31, .18);
+}
+.sim-order-guide strong {
+  display: block;
+  padding-right: 28px;
+  color: #8e4f00;
+  font-size: 16px;
+}
+.sim-order-guide ol {
+  margin: 10px 0 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 7px;
+  font-size: 13px;
+  line-height: 1.55;
+}
+.sim-order-guide-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 50%;
+  color: #915104;
+  background: #ffeacc;
+  font-size: 22px;
+  cursor: pointer;
+}
+@media (max-width: 640px) {
+  .sim-order-guide {
+    left: 12px;
+    right: 12px;
+    bottom: max(78px, calc(env(safe-area-inset-bottom) + 78px));
+    width: auto;
+    padding: 14px 15px 14px;
+    border-radius: 16px;
+  }
+  .sim-order-guide strong { font-size: 15px; }
+  .sim-order-guide ol { font-size: 12.5px; }
+}
+
+
+/* V26.8.4 Beta 3 - sản phẩm hết hàng vẫn xem và liên hệ được */
+.sim-product-card.is-sold-out {
+  border-color: #d8dce1;
+  background: #f5f6f7;
+  opacity: .72;
+}
+.sim-product-card.is-sold-out:hover,
+.sim-product-card.is-sold-out:focus-visible {
+  opacity: .86;
+  transform: translateY(-2px);
+  border-color: #b8bec6;
+  background: #f7f8f9;
+}
+.sim-product-card.is-sold-out .sim-product-media img {
+  filter: grayscale(.58);
+}
+.sim-product-soldout-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 6px 9px;
+  border-radius: 999px;
+  color: #fff;
+  background: #656d77;
+  box-shadow: 0 5px 14px rgba(31,37,44,.18);
+  font-size: 10px;
+  font-weight: 950;
+}
+.sim-product-copy strong.sim-price-soldout,
+.sim-detail-price.is-sold-out {
+  color: #707780;
+}
+.sim-detail-soldout-note {
+  margin: -4px 0 16px;
+  padding: 12px 13px;
+  border: 1px solid #d5dae0;
+  border-radius: 12px;
+  display: grid;
+  gap: 4px;
+  color: #626a73;
+  background: #f4f5f6;
+  font-size: 12px;
+  line-height: 1.55;
+}
+.sim-detail-soldout-note strong {
+  color: #424a53;
+  font-size: 13px;
+}
+.sim-contact-button {
+  width: 100%;
+  min-height: 56px;
+  margin-top: 16px;
+  background: #59636f;
+  box-shadow: 0 10px 24px rgba(49,57,66,.2);
+}
+@media (max-width: 640px) {
+  .sim-product-soldout-badge { top: 5px; right: 5px; padding: 4px 7px; font-size: 8px; }
 }

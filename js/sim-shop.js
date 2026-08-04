@@ -47,7 +47,7 @@
     labels: {
       buy: 'Mua SIM',
       friend: 'Kết bạn Facebook',
-      copied: 'Đã soạn và sao chép tin nhắn. Hãy dán rồi nhấn gửi trong Messenger.',
+      copied: 'Đã sao chép nội dung đặt SIM. Hãy mở ô soạn tin nhắn trong Messenger, dán nội dung rồi nhấn gửi.',
       custom: 'Mở trang đặt SIM'
     }
   };
@@ -74,7 +74,8 @@
       planKind: plan.planKind === 'voice' ? 'voice' : 'data',
       period: plan.period === 'yearly' ? 'yearly' : 'monthly',
       simType: ['both', 'physical', 'esim'].includes(plan.simType) ? plan.simType : 'physical',
-      image: planImage(plan)
+      image: planImage(plan),
+      soldOut: plan.soldOut === true
     };
   }
 
@@ -120,6 +121,7 @@
 
   function familyPlans(plan) {
     return plans.filter(item => item.enabled !== false
+      && item.showCard !== false
       && item.familyId
       && item.familyId === plan.familyId
       && item.planKind === plan.planKind
@@ -128,14 +130,16 @@
   }
 
   function productCard(plan) {
-    return `<article class="sim-product-card" data-sim-id="${escapeHtml(plan.id)}" tabindex="0" role="button" aria-label="Xem ${escapeHtml(plan.name)}">
+    const soldOut = plan.soldOut === true;
+    return `<article class="sim-product-card${soldOut ? ' is-sold-out' : ''}" data-sim-id="${escapeHtml(plan.id)}" tabindex="0" role="button" aria-label="Xem ${escapeHtml(plan.name)}${soldOut ? ' - hiện đang hết hàng' : ''}">
       <div class="sim-product-media">
         <img src="${escapeHtml(planImage(plan))}" alt="${escapeHtml(plan.name)}" loading="lazy" decoding="async">
         <span class="sim-product-type-badge">${escapeHtml(typeLabel(plan.simType))}</span>
+        ${soldOut ? '<span class="sim-product-soldout-badge">Hết hàng</span>' : ''}
       </div>
       <div class="sim-product-copy">
         <h3>${escapeHtml(plan.cardName || plan.name)}</h3>
-        <strong>${escapeHtml(plan.price || 'Liên hệ')}</strong>
+        <strong class="${soldOut ? 'sim-price-soldout' : ''}">${soldOut ? 'Hết hàng' : escapeHtml(plan.price || 'Liên hệ')}</strong>
       </div>
     </article>`;
   }
@@ -177,7 +181,7 @@
     if (variants.length < 2) return '';
     return `<div class="sim-variant-picker" role="group" aria-label="Chọn loại SIM">
       <span>Loại SIM</span>
-      <div>${variants.map(item => `<button type="button" data-sim-variant="${escapeHtml(item.id)}" class="${item.id === plan.id ? 'active' : ''}">${escapeHtml(typeLabel(item.simType))}<small>${escapeHtml(item.price || '')}</small></button>`).join('')}</div>
+      <div>${variants.map(item => `<button type="button" data-sim-variant="${escapeHtml(item.id)}" class="${item.id === plan.id ? 'active' : ''}${item.soldOut === true ? ' is-sold-out' : ''}">${escapeHtml(typeLabel(item.simType))}<small>${item.soldOut === true ? 'Hết hàng' : escapeHtml(item.price || '')}</small></button>`).join('')}</div>
     </div>`;
   }
 
@@ -192,7 +196,8 @@
         <span class="sim-detail-badge">${escapeHtml(viewLabel(plan.planKind === 'voice' ? 'voice' : plan.period))} · ${escapeHtml(typeLabel(plan.simType))}</span>
         <h2 id="simDetailTitle">${escapeHtml(plan.name)}</h2>
         <p>${escapeHtml(plan.subtitle || '')}</p>
-        <div class="sim-detail-price">${escapeHtml(plan.price || 'Liên hệ')}</div>
+        <div class="sim-detail-price${plan.soldOut === true ? ' is-sold-out' : ''}">${plan.soldOut === true ? 'Hết hàng' : escapeHtml(plan.price || 'Liên hệ')}</div>
+        ${plan.soldOut === true ? '<div class="sim-detail-soldout-note"><strong>Sản phẩm đang tạm hết hàng.</strong><span>Anh/chị vẫn có thể bấm Liên hệ để hỏi thời gian có hàng hoặc sản phẩm thay thế.</span></div>' : ''}
         ${variantButtons(plan)}
         <div class="sim-detail-specs">
           <div><span>Nhà mạng</span><strong>${escapeHtml(plan.carrier || 'Đang cập nhật')}</strong></div>
@@ -205,13 +210,15 @@
           <section><h3>Cần kiểm tra trước</h3><ul>${requirements}</ul></section>
         </div>
         <div class="sim-detail-for"><strong>Phù hợp với:</strong> ${escapeHtml(plan.recommendedFor || '')}</div>
-        <div class="sim-order-row">
+        ${plan.soldOut === true
+          ? '<button class="sim-buy-button sim-contact-button" type="button" data-sim-buy>Liên hệ</button>'
+          : `<div class="sim-order-row">
           <div class="sim-quantity" aria-label="Chọn số lượng">
             <span>Số lượng</span>
             <div><button type="button" data-quantity-minus aria-label="Giảm số lượng">−</button><output id="simQuantity">${quantity}</output><button type="button" data-quantity-plus aria-label="Tăng số lượng">+</button></div>
           </div>
           <button class="sim-buy-button" type="button" data-sim-buy>${escapeHtml(orderConfig.mode === 'custom-page' ? labels.custom : labels.buy)}</button>
-        </div>
+        </div>`}
         ${orderConfig.facebookUrl ? `<a class="sim-facebook-button" href="${escapeHtml(orderConfig.facebookUrl)}" target="_blank" rel="noopener">${escapeHtml(labels.friend)}</a>` : ''}
         ${apn.enabled ? `<a class="sim-apn-detail-button" href="${escapeHtml(apn.url)}">${escapeHtml(apn.label)}</a>` : ''}
       </div>
@@ -291,6 +298,40 @@
     showToast.timer = setTimeout(() => { toast.hidden = true; }, 4500);
   }
 
+  function ensureOrderGuide() {
+    let guide = $('#simOrderGuide');
+    if (guide) return guide;
+    guide = document.createElement('section');
+    guide.id = 'simOrderGuide';
+    guide.className = 'sim-order-guide';
+    guide.hidden = true;
+    guide.innerHTML = `<button type="button" class="sim-order-guide-close" aria-label="Đóng hướng dẫn">×</button>
+      <strong>Đã sao chép nội dung đặt SIM</strong>
+      <ol>
+        <li>Mở cửa sổ hoặc tab Messenger vừa được mở.</li>
+        <li>Nhấn vào ô soạn tin nhắn.</li>
+        <li>Dán nội dung đã sao chép bằng <b>Ctrl + V</b> hoặc nhấn giữ rồi chọn <b>Dán</b>.</li>
+        <li>Kiểm tra lại và nhấn <b>Gửi</b>.</li>
+      </ol>`;
+    document.body.appendChild(guide);
+    return guide;
+  }
+
+  function showOrderGuide() {
+    const guide = ensureOrderGuide();
+    guide.hidden = false;
+    clearTimeout(showOrderGuide.timer);
+    showOrderGuide.timer = setTimeout(() => {
+      guide.hidden = true;
+    }, 9000);
+  }
+
+  function hideOrderGuide() {
+    const guide = $('#simOrderGuide');
+    if (!guide) return;
+    guide.hidden = true;
+  }
+
   function orderUrl(plan, message) {
     if (orderConfig.mode === 'custom-page') {
       try {
@@ -316,17 +357,27 @@
   async function buyCurrentPlan() {
     if (!activePlan) return;
     const message = interpolate(orderConfig.messageTemplate, activePlan);
+    const isMessenger = orderConfig.mode !== 'custom-page';
+    const willCopy = orderConfig.copyMessageBeforeOpen !== false;
     const openNew = orderConfig.openInNewTab !== false;
     const opened = openNew ? window.open('about:blank', '_blank', 'noopener') : null;
     try {
-      if (orderConfig.copyMessageBeforeOpen !== false) await copyText(message);
+      if (willCopy) await copyText(message);
     } catch (error) {
       console.warn('Không thể sao chép tin nhắn:', error);
     }
     const destination = orderUrl(activePlan, message);
+    if (isMessenger && willCopy && !openNew) {
+      window.alert(orderConfig.labels?.copied || DEFAULT_ORDER.labels.copied);
+    }
     if (opened) opened.location.replace(destination);
     else location.href = destination;
-    showToast(orderConfig.labels?.copied || DEFAULT_ORDER.labels.copied);
+    if (isMessenger && willCopy) {
+      showToast(orderConfig.labels?.copied || DEFAULT_ORDER.labels.copied);
+      if (openNew) showOrderGuide();
+    } else {
+      hideOrderGuide();
+    }
   }
 
   function faqTemplate(item, index) {
@@ -348,6 +399,7 @@
       if (event.target.closest('[data-quantity-plus]')) { setQuantity(quantity + 1); return; }
       if (event.target.closest('[data-sim-buy]')) { buyCurrentPlan(); return; }
       if (event.target.closest('[data-sim-close]')) { closeDetail(); return; }
+      if (event.target.closest('.sim-order-guide-close')) { hideOrderGuide(); return; }
 
       const faqButton = event.target.closest('.sim-faq-item button');
       if (faqButton) faqButton.closest('.sim-faq-item').classList.toggle('open');
