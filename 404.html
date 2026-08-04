@@ -1,16 +1,247 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-    <script src="/js/site-version.js"></script>
-  <meta charset="utf-8">
-  <title>Đang chuyển hướng...</title>
-  <meta http-equiv="refresh" content="0;url=/" />
-  <script>
-    // Nếu trình duyệt không hỗ trợ meta refresh thì dùng JS
-    window.location.href = "/";
-  </script>
+  <script src="/js/site-version.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex,follow">
+  <meta name="theme-color" content="#fff7eb">
+  <title>Không tìm thấy trang | Vinh ở Nhật</title>
+  <link rel="icon" href="/img/logoQV.png" type="image/png">
+  <style>
+    :root {
+      color-scheme: light;
+      --orange: #e87900;
+      --orange-dark: #a95300;
+      --ink: #1c2026;
+      --muted: #68717b;
+      --line: #efd2a9;
+      --cream: #fff8ef;
+      --panel: rgba(255,255,255,.91);
+    }
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      padding: max(18px, env(safe-area-inset-top)) 18px max(18px, env(safe-area-inset-bottom));
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(255,190,92,.26), transparent 30%),
+        radial-gradient(circle at 90% 90%, rgba(112,174,255,.17), transparent 32%),
+        linear-gradient(145deg, #fffdf9, #fff5e7 58%, #f4f8ff);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
+    .error-card {
+      width: min(960px, 100%);
+      min-height: min(630px, calc(100svh - 36px));
+      padding: clamp(24px, 5vw, 58px);
+      border: 1px solid var(--line);
+      border-radius: clamp(22px, 3vw, 34px);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(290px, .85fr);
+      align-items: center;
+      gap: clamp(26px, 5vw, 62px);
+      background: var(--panel);
+      box-shadow: 0 24px 70px rgba(71,55,34,.13);
+      backdrop-filter: blur(14px);
+    }
+    .error-copy { min-width: 0; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--orange-dark);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .9px;
+      text-transform: uppercase;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 3px;
+      border-radius: 99px;
+      background: var(--orange);
+    }
+    h1 {
+      margin: 14px 0 0;
+      font-size: clamp(34px, 5.3vw, 62px);
+      line-height: 1.06;
+      letter-spacing: -1.7px;
+    }
+    .description {
+      max-width: 590px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: clamp(15px, 1.8vw, 18px);
+      line-height: 1.7;
+    }
+    .redirect-note {
+      margin: 23px 0 0;
+      padding: 14px 16px;
+      border: 1px solid #f2d5ad;
+      border-radius: 14px;
+      color: #77501f;
+      background: #fff8ec;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .redirect-note strong { color: var(--orange-dark); }
+    .countdown-bar {
+      height: 6px;
+      margin-top: 11px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #f1dfc6;
+    }
+    .countdown-bar span {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #f29b38, #df7000);
+      transform-origin: left center;
+      animation: countdown 5s linear forwards;
+    }
+    .actions {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .home-button {
+      min-height: 50px;
+      padding: 0 22px;
+      border: 0;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      color: #fff;
+      background: linear-gradient(135deg, #ee8b16, #df7000);
+      box-shadow: 0 12px 26px rgba(223,112,0,.23);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 900;
+    }
+    .home-button:hover { transform: translateY(-1px); }
+    .home-button:focus-visible { outline: 3px solid rgba(232,121,0,.28); outline-offset: 3px; }
+    .home-button svg { width: 20px; height: 20px; fill: currentColor; }
+    .error-visual {
+      min-width: 0;
+      display: grid;
+      place-items: center;
+    }
+    .error-visual svg {
+      width: min(100%, 430px);
+      height: auto;
+      overflow: visible;
+      filter: drop-shadow(0 22px 30px rgba(50,43,34,.14));
+    }
+    .error-code {
+      font-size: 112px;
+      font-weight: 950;
+      letter-spacing: -10px;
+      fill: #242930;
+    }
+    .error-zero { fill: #f08a11; }
+    .sign-text {
+      fill: #694716;
+      font-size: 17px;
+      font-weight: 900;
+      letter-spacing: .8px;
+    }
+    @keyframes countdown { to { transform: scaleX(0); } }
+    @media (max-width: 760px) {
+      .error-card {
+        min-height: auto;
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      .error-visual { order: -1; }
+      .error-visual svg { width: min(82vw, 330px); }
+      .eyebrow, .actions { justify-content: center; }
+      .description { margin-inline: auto; }
+      .home-button { width: 100%; }
+    }
+    @media (max-width: 420px) {
+      body { padding-inline: 10px; }
+      .error-card { padding: 22px 16px; border-radius: 21px; }
+      .error-code { font-size: 96px; }
+      h1 { font-size: 34px; }
+      .description { font-size: 14px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .countdown-bar span { animation: none; }
+      .home-button:hover { transform: none; }
+    }
+  </style>
 </head>
 <body>
-  <p>Nếu bạn không được chuyển hướng, bấm <a href="/">vào đây</a>.</p>
+  <main class="error-card" aria-labelledby="errorTitle">
+    <section class="error-copy">
+      <span class="eyebrow">Không tìm thấy trang</span>
+      <h1 id="errorTitle">Trang này không tồn tại</h1>
+      <p class="description">Địa chỉ có thể đã được nhập sai, liên kết đã thay đổi hoặc nội dung đã được chuyển sang vị trí khác.</p>
+
+      <div class="redirect-note" role="status" aria-live="polite">
+        Tự động trở về trang chủ sau <strong><span id="countdown">5</span> giây</strong>.
+        <div class="countdown-bar" aria-hidden="true"><span></span></div>
+      </div>
+
+      <div class="actions">
+        <a class="home-button" href="/" id="homeButton">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2.5 11.1l1.3 1.5L5 11.5V21h5v-6h4v6h5v-9.5l1.2 1.1 1.3-1.5L12 3Z"/></svg>
+          Về trang chủ ngay
+        </a>
+      </div>
+    </section>
+
+    <div class="error-visual" aria-hidden="true">
+      <svg viewBox="0 0 520 420" role="img">
+        <defs>
+          <linearGradient id="zeroGradient" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#ffb24d"/>
+            <stop offset="1" stop-color="#df7000"/>
+          </linearGradient>
+        </defs>
+        <path d="M110 335h300" stroke="#d8c7af" stroke-width="18" stroke-linecap="round" opacity=".55"/>
+        <path d="M260 88v232" stroke="#6a7078" stroke-width="14" stroke-linecap="round"/>
+        <rect x="146" y="75" width="228" height="112" rx="22" fill="#fff8e9" stroke="#e9bc7b" stroke-width="5" transform="rotate(-3 260 131)"/>
+        <text x="260" y="120" text-anchor="middle" class="sign-text">ĐƯỜNG DẪN</text>
+        <text x="260" y="153" text-anchor="middle" class="sign-text">KHÔNG TỒN TẠI</text>
+        <text x="260" y="315" text-anchor="middle" class="error-code">4<tspan class="error-zero" fill="url(#zeroGradient)">0</tspan>4</text>
+        <circle cx="260" cy="248" r="46" fill="#fff5e5" opacity=".6"/>
+      </svg>
+    </div>
+  </main>
+
+  <script>
+    (() => {
+      'use strict';
+      const secondsTotal = 5;
+      const target = '/';
+      const countdown = document.getElementById('countdown');
+      let remaining = secondsTotal;
+
+      const timer = window.setInterval(() => {
+        remaining -= 1;
+        if (countdown) countdown.textContent = String(Math.max(remaining, 0));
+        if (remaining <= 0) {
+          window.clearInterval(timer);
+          window.location.replace(target);
+        }
+      }, 1000);
+
+      document.getElementById('homeButton')?.addEventListener('click', () => {
+        window.clearInterval(timer);
+      });
+    })();
+  </script>
 </body>
 </html>
