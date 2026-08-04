@@ -14,8 +14,13 @@
     "voiceLabel": "SIM nghe gọi",
     "bothLabel": "eSIM + SIM vật lý",
     "apnUrl": "/pages/pages-baiviet/sim/cau-hinh-sim-data-sim-nghe-goi-20251109.html",
-    "apnLabel": "Cài cấu hình / APN",
-    "apnEnabled": true
+    "apnLabel": "Cấu hình APN",
+    "apnEnabled": true,
+    "heroImageUrl": "/img/sim/sim-banner.jpg",
+    "heroImageEnabled": true,
+    "primaryButtonEnabled": true,
+    "primaryButtonLabel": "Xem gói SIM",
+    "primaryButtonUrl": "#simPlans"
   },
   "plans": [
     {
@@ -250,6 +255,10 @@
     }
   ],
   "faqs": [
+    {
+      "question": "SIM data có cần cài cấu hình APN để sử dụng không?",
+      "answer": "Cần cài cấu hình, tùy loại thiết bị Androi sẽ tự động có sẵn. còn IPhone Sau khi lắp SIM hoặc kích hoạt eSIM, hãy mở mục Tải cấu hình / APN để cài cấu hình cho iPhone hoặc nhập APN theo hướng dẫn trên Android."
+    },
     {
       "question": "SIM tháng và SIM năm khác nhau thế nào?",
       "answer": "SIM tháng gia hạn theo từng tháng. SIM năm có kỳ hạn 12 tháng và phù hợp người muốn dùng ổn định lâu dài."

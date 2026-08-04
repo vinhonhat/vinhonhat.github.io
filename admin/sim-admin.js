@@ -17,6 +17,10 @@
   };
   const PRODUCT_VIEWS = new Set(['monthly', 'yearly', 'voice']);
   const DEFAULT_APN_URL = '/pages/pages-baiviet/sim/cau-hinh-sim-data-sim-nghe-goi-20251109.html';
+  const DEFAULT_APN_FAQ = Object.freeze({
+    question: 'SIM data có cần cài cấu hình APN để sử dụng không?',
+    answer: 'Có thể cần, tùy loại SIM và thiết bị. Sau khi lắp SIM hoặc kích hoạt eSIM, hãy mở mục Tải cấu hình / APN để cài cấu hình cho iPhone hoặc nhập APN theo hướng dẫn trên Android.'
+  });
   const DEFAULT_SIM_IMAGE = '/img/sim/sim-softbank.svg';
   const LEGACY_SIM_IMAGES = new Set(['/img/sim/softbank-demo.png']);
   const CARRIER_IMAGES = Object.freeze({
@@ -149,6 +153,13 @@
     return output;
   }
 
+  function normalizeFaq(item = {}) {
+    return {
+      question: String(item.question || '').trim(),
+      answer: String(item.answer || '').trim()
+    };
+  }
+
   function normalizeSimData(input) {
     const data = input && typeof input === 'object' ? input : {};
     return {
@@ -156,7 +167,7 @@
       schemaVersion: 6,
       page: { ...(data.page || {}) },
       plans: consolidateLegacyPlans(data.plans),
-      faqs: Array.isArray(data.faqs) ? data.faqs : []
+      faqs: Array.isArray(data.faqs) ? data.faqs.map(normalizeFaq) : []
     };
   }
 
@@ -192,6 +203,69 @@
     return period === 'yearly' ? (simData.page?.yearlyLabel || 'SIM năm') : (simData.page?.monthlyLabel || 'SIM tháng');
   }
 
+  function faqAdminCard(item, index, total) {
+    return `<article class="sim-faq-admin-item" data-sim-faq-index="${index}">
+      <div class="sim-faq-admin-number" aria-label="Câu hỏi số ${index + 1}">${index + 1}</div>
+      <label class="sim-faq-question-field"><span>Câu hỏi</span><input type="text" data-faq-field="question" value="${escapeHtml(item.question || '')}" placeholder="Ví dụ: SIM data có cần cài APN không?"></label>
+      <label class="sim-faq-answer-field"><span>Câu trả lời</span><textarea rows="3" data-faq-field="answer" placeholder="Nhập câu trả lời ngắn gọn, dễ hiểu.">${escapeHtml(item.answer || '')}</textarea></label>
+      <div class="sim-faq-admin-tools" aria-label="Sắp xếp và xóa câu hỏi">
+        <button type="button" data-move-sim-faq="up" aria-label="Đưa câu hỏi lên" title="Đưa lên" ${index === 0 ? 'disabled' : ''}>↑</button>
+        <button type="button" data-move-sim-faq="down" aria-label="Đưa câu hỏi xuống" title="Đưa xuống" ${index === total - 1 ? 'disabled' : ''}>↓</button>
+        <button type="button" class="sim-faq-remove" data-remove-sim-faq aria-label="Xóa câu hỏi" title="Xóa câu hỏi">×</button>
+      </div>
+    </article>`;
+  }
+
+  function renderFaqs() {
+    const list = $('#simFaqAdminList');
+    if (!list) return;
+    const items = Array.isArray(simData.faqs) ? simData.faqs : [];
+    list.innerHTML = items.length
+      ? items.map((item, index) => faqAdminCard(item, index, items.length)).join('')
+      : '<div class="sim-faq-admin-empty">Chưa có câu hỏi thường gặp. Nhấn “+ Thêm câu hỏi” hoặc “+ Câu APN mẫu”.</div>';
+  }
+
+  function collectFaqs() {
+    const nodes = $$('.sim-faq-admin-item');
+    if (!nodes.length) {
+      if ($('#simFaqAdminList')) simData.faqs = [];
+      return;
+    }
+    simData.faqs = nodes.map(node => normalizeFaq({
+      question: node.querySelector('[data-faq-field="question"]')?.value,
+      answer: node.querySelector('[data-faq-field="answer"]')?.value
+    })).filter(item => item.question || item.answer);
+  }
+
+  function addFaq(preset = null) {
+    collectFaqs();
+    simData.faqs.push(normalizeFaq(preset || { question: '', answer: '' }));
+    renderFaqs();
+    updateDownloads('sim');
+    const last = document.querySelector('.sim-faq-admin-item:last-child');
+    last?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    last?.querySelector('[data-faq-field="question"]')?.focus({ preventScroll: true });
+  }
+
+  function removeFaq(index) {
+    collectFaqs();
+    if (!Number.isInteger(index) || index < 0 || index >= simData.faqs.length) return;
+    simData.faqs.splice(index, 1);
+    renderFaqs();
+    updateDownloads('sim');
+  }
+
+  function moveFaq(index, direction) {
+    collectFaqs();
+    if (!Number.isInteger(index) || index < 0 || index >= simData.faqs.length) return;
+    const nextIndex = direction === 'up' ? index - 1 : index + 1;
+    if (nextIndex < 0 || nextIndex >= simData.faqs.length) return;
+    [simData.faqs[index], simData.faqs[nextIndex]] = [simData.faqs[nextIndex], simData.faqs[index]];
+    renderFaqs();
+    updateDownloads('sim');
+    document.querySelector(`[data-sim-faq-index="${nextIndex}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
   function fillPage() {
     $('#simAdminTitle').value = simData.page?.title || '';
     $('#simAdminEyebrow').value = simData.page?.eyebrow || '';
@@ -203,6 +277,11 @@
     $('#simAdminPhysicalLabel').value = simData.page?.physicalLabel || 'SIM vật lý';
     $('#simAdminEsimLabel').value = simData.page?.esimLabel || 'eSIM';
     $('#simAdminBothLabel').value = simData.page?.bothLabel || 'eSIM + SIM vật lý';
+    $('#simAdminHeroImageUrl').value = simData.page?.heroImageUrl || '/img/sim/sim-softbank.svg';
+    $('#simAdminHeroImageEnabled').checked = simData.page?.heroImageEnabled !== false;
+    $('#simAdminPrimaryButtonEnabled').checked = simData.page?.primaryButtonEnabled !== false;
+    $('#simAdminPrimaryButtonLabel').value = simData.page?.primaryButtonLabel || 'Xem gói SIM';
+    $('#simAdminPrimaryButtonUrl').value = simData.page?.primaryButtonUrl || '#simPlans';
     $('#simAdminApnUrl').value = simData.page?.apnUrl || DEFAULT_APN_URL;
     $('#simAdminApnLabel').value = simData.page?.apnLabel || 'Tải cấu hình / APN';
     $('#simAdminApnEnabled').checked = simData.page?.apnEnabled !== false;
@@ -214,7 +293,8 @@
     $('#simMessageTemplate').value = orderData.messageTemplate || '';
     $('#simCopyMessage').checked = orderData.copyMessageBeforeOpen !== false;
     $('#simAppendText').checked = orderData.appendTextQuery !== false;
-    $('#simOpenNewTab').checked = orderData.openInNewTab !== false;
+    orderData.labels = { ...(orderData.labels || {}), friend: 'Liên hệ' };
+    renderFaqs();
   }
 
   function planMatchesView(plan, view = activeView) {
@@ -370,11 +450,17 @@
       physicalLabel: $('#simAdminPhysicalLabel').value.trim() || 'SIM vật lý',
       esimLabel: $('#simAdminEsimLabel').value.trim() || 'eSIM',
       bothLabel: $('#simAdminBothLabel').value.trim() || 'eSIM + SIM vật lý',
+      heroImageUrl: $('#simAdminHeroImageUrl').value.trim() || '/img/sim/sim-softbank.svg',
+      heroImageEnabled: $('#simAdminHeroImageEnabled').checked,
+      primaryButtonEnabled: $('#simAdminPrimaryButtonEnabled').checked,
+      primaryButtonLabel: $('#simAdminPrimaryButtonLabel').value.trim() || 'Xem gói SIM',
+      primaryButtonUrl: $('#simAdminPrimaryButtonUrl').value.trim() || '#simPlans',
       apnUrl: $('#simAdminApnUrl').value.trim() || DEFAULT_APN_URL,
       apnLabel: $('#simAdminApnLabel').value.trim() || 'Tải cấu hình / APN',
       apnEnabled: $('#simAdminApnEnabled').checked
     };
     $$('.sim-admin-card').forEach(collectCard);
+    collectFaqs();
     simData.schemaVersion = 6;
   }
 
@@ -389,7 +475,8 @@
       messageTemplate: $('#simMessageTemplate').value,
       copyMessageBeforeOpen: $('#simCopyMessage').checked,
       appendTextQuery: $('#simAppendText').checked,
-      openInNewTab: $('#simOpenNewTab').checked
+      openInNewTab: false,
+      labels: { ...(orderData.labels || {}), friend: 'Liên hệ' }
     };
   }
 
@@ -597,6 +684,22 @@
         return;
       }
       if (event.target.closest('#addSimPlan')) { addPlan(); return; }
+      if (event.target.closest('#addSimFaq')) { addFaq(); return; }
+      if (event.target.closest('#addSimApnFaq')) { addFaq(DEFAULT_APN_FAQ); return; }
+
+      const faqMove = event.target.closest('[data-move-sim-faq]');
+      if (faqMove) {
+        const node = faqMove.closest('.sim-faq-admin-item');
+        moveFaq(Number(node?.dataset.simFaqIndex), faqMove.dataset.moveSimFaq);
+        return;
+      }
+
+      const faqRemove = event.target.closest('[data-remove-sim-faq]');
+      if (faqRemove) {
+        const node = faqRemove.closest('.sim-faq-admin-item');
+        removeFaq(Number(node?.dataset.simFaqIndex));
+        return;
+      }
 
       const saveButton = event.target.closest('[data-save-config]');
       if (saveButton) {

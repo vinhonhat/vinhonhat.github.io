@@ -364,6 +364,20 @@
 
                             <section class="sim-settings-panel">
                                 <div class="sim-settings-panel-head">
+                                    <h4>Ảnh và nút đầu trang</h4>
+                                    <p>Thay ảnh đại diện bên phải và bật/tắt các nút đầu trang theo nhu cầu.</p>
+                                </div>
+                                <div class="sim-settings-grid two">
+                                    <label class="sim-settings-span-two">Ảnh đại diện đầu trang<input id="simAdminHeroImageUrl" type="text" placeholder="/img/sim/sim-softbank.svg"></label>
+                                    <label class="sim-admin-inline-check sim-settings-check-card"><span>Hiện ảnh đại diện đầu trang</span><input id="simAdminHeroImageEnabled" type="checkbox"></label>
+                                    <label class="sim-admin-inline-check sim-settings-check-card"><span>Hiện nút chính</span><input id="simAdminPrimaryButtonEnabled" type="checkbox"></label>
+                                    <label>Tên nút chính<input id="simAdminPrimaryButtonLabel" type="text" placeholder="Xem gói SIM"></label>
+                                    <label class="sim-settings-span-two">Link nút chính<input id="simAdminPrimaryButtonUrl" type="text" placeholder="#simPlans"></label>
+                                </div>
+                            </section>
+
+                            <section class="sim-settings-panel">
+                                <div class="sim-settings-panel-head">
                                     <h4>Cấu hình / APN</h4>
                                     <p>Đặt đường dẫn bài cấu hình, tên nút và tùy chọn hiển thị ngay ngoài trang SIM.</p>
                                 </div>
@@ -372,6 +386,20 @@
                                     <label>Tên nút cấu hình<input id="simAdminApnLabel" type="text" placeholder="Tải cấu hình / APN"></label>
                                     <label class="sim-admin-inline-check sim-settings-check-card"><span>Hiện nút cấu hình ngoài trang</span><input id="simAdminApnEnabled" type="checkbox"></label>
                                 </div>
+                            </section>
+
+                            <section class="sim-settings-panel sim-faq-admin-panel">
+                                <div class="sim-faq-admin-head">
+                                    <div class="sim-settings-panel-head">
+                                        <h4>Câu hỏi thường gặp</h4>
+                                        <p>Thêm, sửa hoặc xóa câu hỏi hiển thị ở cuối trang SIM.</p>
+                                    </div>
+                                    <div class="sim-faq-admin-actions">
+                                        <button id="addSimApnFaq" type="button">+ Câu APN mẫu</button>
+                                        <button id="addSimFaq" type="button">+ Thêm câu hỏi</button>
+                                    </div>
+                                </div>
+                                <div id="simFaqAdminList" class="sim-faq-admin-list"></div>
                             </section>
                         </div>
                         <div class="sim-admin-tip"><strong>Gộp hay tách eSIM?</strong><span>Khi eSIM và SIM vật lý cùng giá, chọn “eSIM + vật lý dùng chung giá”. Khi giá khác nhau, bấm “Tách 2 giá” trong sản phẩm để nhập riêng.</span></div>
@@ -405,12 +433,11 @@
                                 <section class="sim-order-options-card">
                                     <div class="sim-settings-panel-head">
                                         <h4>Tùy chọn khi khách bấm Mua SIM</h4>
-                                        <p>Khi bật sao chép tin nhắn, ngoài trang SIM sẽ hiện hướng dẫn để khách biết cần dán nội dung vào ô soạn và bấm gửi.</p>
+                                        <p>Khách sẽ thấy popup hướng dẫn, đếm ngược 5 giây rồi mở Messenger ngay trong tab hiện tại.</p>
                                     </div>
                                     <div class="toggle-grid compact sim-order-option-list">
                                         <label><input id="simCopyMessage" type="checkbox"><span>Sao chép tin nhắn trước khi mở</span></label>
                                         <label><input id="simAppendText" type="checkbox"><span>Thử gắn nội dung vào URL Messenger</span></label>
-                                        <label><input id="simOpenNewTab" type="checkbox"><span>Mở ở tab mới</span></label>
                                     </div>
                                 </section>
                             </div>

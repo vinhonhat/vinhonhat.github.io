@@ -9,6 +9,7 @@
 
   const DEFAULT_APN_URL = '/pages/pages-baiviet/sim/cau-hinh-sim-data-sim-nghe-goi-20251109.html';
   const DEFAULT_SIM_IMAGE = '/img/sim/sim-softbank.svg';
+  const DEFAULT_HERO_IMAGE = '/img/sim/sim-softbank.svg';
   const LEGACY_SIM_IMAGES = new Set(['/img/sim/softbank-demo.png']);
   const CARRIER_IMAGES = Object.freeze({
     docomo: '/img/sim/sim-docomo.svg',
@@ -40,13 +41,13 @@
     messengerUrl: 'https://m.me/tqv2022',
     facebookUrl: 'https://fb.com/tqv2022',
     customPageUrl: '/pages/pages-app/dat-sim.html',
-    openInNewTab: true,
+    openInNewTab: false,
     copyMessageBeforeOpen: true,
     appendTextQuery: true,
     messageTemplate: 'Xin chào, tôi muốn mua SIM:\n\n- Gói: {{name}}\n- Loại: {{simType}}\n- Chu kỳ: {{period}}\n- Dung lượng: {{data}}\n- Số lượng: {{quantity}}\n- Giá tham khảo: {{price}}\n\nMong shop xác nhận và tư vấn giúp tôi.',
     labels: {
       buy: 'Mua SIM',
-      friend: 'Kết bạn Facebook',
+      friend: 'Liên hệ',
       copied: 'Đã sao chép nội dung đặt SIM. Hãy mở ô soạn tin nhắn trong Messenger, dán nội dung rồi nhấn gửi.',
       custom: 'Mở trang đặt SIM'
     }
@@ -62,10 +63,11 @@
 
   function normalizeOrder(input) {
     const data = input && typeof input === 'object' ? input : {};
+    const labels = { ...DEFAULT_ORDER.labels, ...(data.labels || {}), friend: 'Liên hệ' };
     return {
       ...DEFAULT_ORDER,
       ...data,
-      labels: { ...DEFAULT_ORDER.labels, ...(data.labels || {}) }
+      labels
     };
   }
 
@@ -221,13 +223,40 @@
     };
   }
 
-  function configureApnHeroLink() {
+  function primaryHeroSettings() {
+    return {
+      enabled: pageConfig.primaryButtonEnabled !== false,
+      url: String(pageConfig.primaryButtonUrl || '#simPlans').trim() || '#simPlans',
+      label: String(pageConfig.primaryButtonLabel || 'Xem gói SIM').trim() || 'Xem gói SIM'
+    };
+  }
+
+  function configureHeroButtons() {
+    const primaryLink = $('#simPrimaryHeroLink');
+    if (primaryLink) {
+      const primary = primaryHeroSettings();
+      primaryLink.hidden = !primary.enabled;
+      primaryLink.href = primary.url;
+      primaryLink.textContent = primary.label;
+    }
     const link = $('#simApnHeroLink');
     if (!link) return;
     const apn = apnSettings();
     link.hidden = !apn.enabled;
     link.href = apn.url;
     link.textContent = apn.label;
+  }
+
+  function configureHeroVisual() {
+    const container = $('#simHeroVisual');
+    if (!container) return;
+    const enabled = pageConfig.heroImageEnabled !== false;
+    const heroImage = String(pageConfig.heroImageUrl || DEFAULT_HERO_IMAGE).trim() || DEFAULT_HERO_IMAGE;
+    container.hidden = !enabled;
+    if (!enabled) return;
+    container.classList.remove('sim-shop-carrier-stack');
+    container.classList.add('sim-shop-single-visual');
+    container.innerHTML = `<img src="${escapeHtml(heroImage)}" alt="Ảnh đại diện SIM" loading="eager" decoding="async">`;
   }
 
   function planMatchesView(plan, view) {
@@ -295,6 +324,7 @@
     const labels = orderConfig.labels || DEFAULT_ORDER.labels;
     const apn = apnSettings();
     const price = planPrice(plan, currentType);
+    const buyLabel = plan.soldOut === true ? 'Liên hệ' : escapeHtml(orderConfig.mode === 'custom-page' ? labels.custom : labels.buy);
     return `<div class="sim-detail-grid">
       <div class="sim-detail-image"><img src="${escapeHtml(planImage(plan))}" alt="${escapeHtml(plan.name)}"></div>
       <div class="sim-detail-copy">
@@ -310,20 +340,16 @@
           <div><span>Loại SIM</span><strong>${escapeHtml(typeLabel(currentType))}</strong></div>
           <div><span>Chu kỳ</span><strong>${escapeHtml(plan.durationLabel || viewLabel(plan.planKind === 'voice' ? 'voice' : plan.period))}</strong></div>
         </div>
+        <div class="sim-detail-order-box${plan.soldOut === true ? ' sold-out' : ''}">
+          ${plan.soldOut === true ? '' : `<div class="sim-quantity-block"><span class="sim-quantity-title">Số lượng</span><div class="sim-quantity" aria-label="Chọn số lượng"><div><button type="button" data-quantity-minus aria-label="Giảm số lượng">−</button><output id="simQuantity">${quantity}</output><button type="button" data-quantity-plus aria-label="Tăng số lượng">+</button></div></div></div>`}
+          <button class="sim-buy-button${plan.soldOut === true ? ' sim-contact-button' : ''}" type="button" data-sim-buy>${buyLabel}</button>
+          <button class="sim-cancel-button" type="button" data-sim-close>Hủy</button>
+        </div>
         <div class="sim-detail-columns">
           <section><h3>Thông tin chính</h3><ul>${features}</ul></section>
           <section><h3>Cần kiểm tra trước</h3><ul>${requirements}</ul></section>
         </div>
         <div class="sim-detail-for"><strong>Phù hợp với:</strong> ${escapeHtml(plan.recommendedFor || '')}</div>
-        ${plan.soldOut === true
-          ? '<button class="sim-buy-button sim-contact-button" type="button" data-sim-buy>Liên hệ</button>'
-          : `<div class="sim-order-row">
-          <div class="sim-quantity" aria-label="Chọn số lượng">
-            <span>Số lượng</span>
-            <div><button type="button" data-quantity-minus aria-label="Giảm số lượng">−</button><output id="simQuantity">${quantity}</output><button type="button" data-quantity-plus aria-label="Tăng số lượng">+</button></div>
-          </div>
-          <button class="sim-buy-button" type="button" data-sim-buy>${escapeHtml(orderConfig.mode === 'custom-page' ? labels.custom : labels.buy)}</button>
-        </div>`}
         ${orderConfig.facebookUrl ? `<a class="sim-facebook-button" href="${escapeHtml(orderConfig.facebookUrl)}" target="_blank" rel="noopener">${escapeHtml(labels.friend)}</a>` : ''}
         ${apn.enabled ? `<a class="sim-apn-detail-button" href="${escapeHtml(apn.url)}">${escapeHtml(apn.label)}</a>` : ''}
       </div>
@@ -404,6 +430,10 @@
     showToast.timer = setTimeout(() => { toast.hidden = true; }, 4500);
   }
 
+  let pendingOrderDestination = '';
+  let pendingOrderMessage = '';
+  let orderGuideSeconds = 5;
+
   function ensureOrderGuide() {
     let guide = $('#simOrderGuide');
     if (guide) return guide;
@@ -411,28 +441,88 @@
     guide.id = 'simOrderGuide';
     guide.className = 'sim-order-guide';
     guide.hidden = true;
-    guide.innerHTML = `<button type="button" class="sim-order-guide-close" aria-label="Đóng hướng dẫn">×</button>
-      <strong>Đã sao chép nội dung đặt SIM</strong>
-      <ol>
-        <li>Mở cửa sổ hoặc tab Messenger vừa được mở.</li>
-        <li>Nhấn vào ô soạn tin nhắn.</li>
-        <li>Dán nội dung đã sao chép bằng <b>Ctrl + V</b> hoặc nhấn giữ rồi chọn <b>Dán</b>.</li>
-        <li>Kiểm tra lại và nhấn <b>Gửi</b>.</li>
-      </ol>`;
+    guide.innerHTML = `<button type="button" class="sim-order-guide-backdrop" data-order-guide-cancel aria-label="Hủy mở Messenger"></button>
+      <div class="sim-order-guide-dialog" role="dialog" aria-modal="true" aria-labelledby="simOrderGuideTitle">
+        <button type="button" class="sim-order-guide-close" data-order-guide-cancel aria-label="Đóng">×</button>
+        <span class="sim-order-guide-icon" aria-hidden="true">✓</span>
+        <strong id="simOrderGuideTitle">Đã sao chép nội dung đặt SIM</strong>
+        <p class="sim-order-guide-summary">Messenger sẽ được mở ngay trong tab hiện tại. Khi ô soạn tin nhắn xuất hiện, hãy dán nội dung rồi nhấn gửi.</p>
+        <ol>
+          <li>Nhấn vào ô soạn tin nhắn trong Messenger.</li>
+          <li>Dán bằng <b>Ctrl + V</b> hoặc nhấn giữ rồi chọn <b>Dán</b>.</li>
+          <li>Kiểm tra lại nội dung và nhấn <b>Gửi</b>.</li>
+        </ol>
+        <div class="sim-order-guide-countdown">Tự động tiếp tục sau <strong data-order-countdown>5</strong> giây</div>
+        <div class="sim-order-guide-actions">
+          <button type="button" class="sim-order-guide-copy" data-order-guide-copy>Sao chép lại</button>
+          <button type="button" class="sim-order-guide-cancel" data-order-guide-cancel>Hủy</button>
+          <button type="button" class="sim-order-guide-continue" data-order-guide-continue>Tiếp tục ngay</button>
+        </div>
+      </div>`;
     document.body.appendChild(guide);
     return guide;
   }
 
-  function showOrderGuide() {
+  function updateOrderGuideCountdown() {
     const guide = ensureOrderGuide();
+    const output = $('[data-order-countdown]', guide);
+    if (output) output.textContent = String(Math.max(0, orderGuideSeconds));
+  }
+
+  function continueToOrderDestination() {
+    const destination = pendingOrderDestination;
+    hideOrderGuide();
+    if (destination) window.location.assign(destination);
+  }
+
+  function showOrderGuide(destination, message, copied = true) {
+    const guide = ensureOrderGuide();
+    pendingOrderDestination = destination;
+    pendingOrderMessage = message;
+    orderGuideSeconds = 5;
+    const title = $('#simOrderGuideTitle', guide);
+    const summary = $('.sim-order-guide-summary', guide);
+    if (title) title.textContent = copied ? 'Đã sao chép nội dung đặt SIM' : 'Hãy sao chép nội dung đặt SIM';
+    if (summary) summary.textContent = copied
+      ? 'Messenger sẽ được mở ngay trong tab hiện tại. Khi ô soạn tin nhắn xuất hiện, hãy dán nội dung rồi nhấn gửi.'
+      : 'Trình duyệt chưa tự sao chép được. Hãy nhấn “Sao chép lại”, sau đó tiếp tục sang Messenger.';
     guide.hidden = false;
-    clearTimeout(showOrderGuide.timer);
-    showOrderGuide.timer = setTimeout(() => { guide.hidden = true; }, 9000);
+    document.body.classList.add('sim-order-guide-open');
+    updateOrderGuideCountdown();
+    clearInterval(showOrderGuide.timer);
+    showOrderGuide.timer = setInterval(() => {
+      orderGuideSeconds -= 1;
+      updateOrderGuideCountdown();
+      if (orderGuideSeconds <= 0) {
+        clearInterval(showOrderGuide.timer);
+        continueToOrderDestination();
+      }
+    }, 1000);
+    $('[data-order-guide-continue]', guide)?.focus({ preventScroll: true });
   }
 
   function hideOrderGuide() {
+    clearInterval(showOrderGuide.timer);
     const guide = $('#simOrderGuide');
     if (guide) guide.hidden = true;
+    document.body.classList.remove('sim-order-guide-open');
+    pendingOrderDestination = '';
+    pendingOrderMessage = '';
+  }
+
+  async function copyPendingOrderMessage() {
+    if (!pendingOrderMessage) return;
+    try {
+      await copyText(pendingOrderMessage);
+      const guide = ensureOrderGuide();
+      const title = $('#simOrderGuideTitle', guide);
+      const summary = $('.sim-order-guide-summary', guide);
+      if (title) title.textContent = 'Đã sao chép nội dung đặt SIM';
+      if (summary) summary.textContent = 'Nội dung đã được sao chép lại. Anh/chị có thể tiếp tục sang Messenger và dán vào ô soạn tin nhắn.';
+    } catch (error) {
+      console.warn('Không thể sao chép lại tin nhắn:', error);
+      showToast('Không thể tự sao chép. Hãy kiểm tra quyền clipboard của trình duyệt.');
+    }
   }
 
   function orderUrl(plan, message) {
@@ -461,27 +551,22 @@
   async function buyCurrentPlan() {
     if (!activePlan) return;
     const message = interpolate(orderConfig.messageTemplate, activePlan);
-    const isMessenger = orderConfig.mode !== 'custom-page';
-    const willCopy = orderConfig.copyMessageBeforeOpen !== false;
-    const openNew = orderConfig.openInNewTab !== false;
-    const opened = openNew ? window.open('about:blank', '_blank', 'noopener') : null;
-    try {
-      if (willCopy) await copyText(message);
-    } catch (error) {
-      console.warn('Không thể sao chép tin nhắn:', error);
-    }
     const destination = orderUrl(activePlan, message);
-    if (isMessenger && willCopy && !openNew) {
-      window.alert(orderConfig.labels?.copied || DEFAULT_ORDER.labels.copied);
+    const isMessenger = orderConfig.mode !== 'custom-page';
+    if (!isMessenger) {
+      window.location.assign(destination);
+      return;
     }
-    if (opened) opened.location.replace(destination);
-    else location.href = destination;
-    if (isMessenger && willCopy) {
-      showToast(orderConfig.labels?.copied || DEFAULT_ORDER.labels.copied);
-      if (openNew) showOrderGuide();
-    } else {
-      hideOrderGuide();
+
+    let copied = false;
+    if (orderConfig.copyMessageBeforeOpen !== false) {
+      try {
+        copied = await copyText(message);
+      } catch (error) {
+        console.warn('Không thể sao chép tin nhắn:', error);
+      }
     }
+    showOrderGuide(destination, message, copied);
   }
 
   function faqTemplate(item, index) {
@@ -503,14 +588,19 @@
       if (event.target.closest('[data-quantity-plus]')) { setQuantity(quantity + 1); return; }
       if (event.target.closest('[data-sim-buy]')) { buyCurrentPlan(); return; }
       if (event.target.closest('[data-sim-close]')) { closeDetail(); return; }
-      if (event.target.closest('.sim-order-guide-close')) { hideOrderGuide(); return; }
+      if (event.target.closest('[data-order-guide-continue]')) { continueToOrderDestination(); return; }
+      if (event.target.closest('[data-order-guide-copy]')) { copyPendingOrderMessage(); return; }
+      if (event.target.closest('[data-order-guide-cancel]')) { hideOrderGuide(); return; }
 
       const faqButton = event.target.closest('.sim-faq-item button');
       if (faqButton) faqButton.closest('.sim-faq-item').classList.toggle('open');
     });
 
     document.addEventListener('keydown', event => {
-      if (event.key === 'Escape') closeDetail();
+      if (event.key === 'Escape') {
+        if (!$('#simOrderGuide')?.hidden) hideOrderGuide();
+        else closeDetail();
+      }
       const card = event.target.closest?.('.sim-product-card');
       if (card && (event.key === 'Enter' || event.key === ' ')) {
         event.preventDefault();
@@ -538,7 +628,8 @@
       $('#simDescription').textContent = pageConfig.description || '';
       $('#simPlansTitle').textContent = pageConfig.catalogTitle || 'Các gói SIM đang giới thiệu';
       $('#simCatalogDescription').textContent = pageConfig.catalogDescription || 'Chọn gói SIM, sau đó chọn eSIM hoặc SIM vật lý trong phần chi tiết nếu sản phẩm hỗ trợ cả hai.';
-      configureApnHeroLink();
+      configureHeroVisual();
+      configureHeroButtons();
       $('[data-sim-period="monthly"]').textContent = pageConfig.monthlyLabel || 'SIM tháng';
       $('[data-sim-period="yearly"]').textContent = pageConfig.yearlyLabel || 'SIM năm';
       const voiceButton = $('[data-sim-period="voice"]');
