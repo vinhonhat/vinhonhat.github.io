@@ -22,6 +22,13 @@
     answer: 'Có thể cần, tùy loại SIM và thiết bị. Sau khi lắp SIM hoặc kích hoạt eSIM, hãy mở mục Tải cấu hình / APN để cài cấu hình cho iPhone hoặc nhập APN theo hướng dẫn trên Android.'
   });
   const DEFAULT_SIM_IMAGE = '/img/sim/sim-softbank.svg';
+  const DEFAULT_HERO_MOBILE_IMAGE = '/img/sim/sim-softbank-mobile.svg';
+
+  function mobileHeroFromDesktop(value = '') {
+    const raw = String(value || '').trim();
+    const match = raw.match(/^(.*\/sim-(docomo|softbank|rakuten))\.svg(?:\?.*)?$/i);
+    return match ? `${match[1]}-mobile.svg` : (raw || DEFAULT_HERO_MOBILE_IMAGE);
+  }
   const LEGACY_SIM_IMAGES = new Set(['/img/sim/softbank-demo.png']);
   const CARRIER_IMAGES = Object.freeze({
     docomo: '/img/sim/sim-docomo.svg',
@@ -277,7 +284,9 @@
     $('#simAdminPhysicalLabel').value = simData.page?.physicalLabel || 'SIM vật lý';
     $('#simAdminEsimLabel').value = simData.page?.esimLabel || 'eSIM';
     $('#simAdminBothLabel').value = simData.page?.bothLabel || 'eSIM + SIM vật lý';
-    $('#simAdminHeroImageUrl').value = simData.page?.heroImageUrl || '/img/sim/sim-softbank.svg';
+    const desktopHeroImage = simData.page?.heroDesktopImageUrl || simData.page?.heroImageUrl || '/img/sim/sim-softbank.svg';
+    $('#simAdminHeroDesktopImageUrl').value = desktopHeroImage;
+    $('#simAdminHeroMobileImageUrl').value = simData.page?.heroMobileImageUrl || mobileHeroFromDesktop(desktopHeroImage);
     $('#simAdminHeroImageEnabled').checked = simData.page?.heroImageEnabled !== false;
     $('#simAdminPrimaryButtonEnabled').checked = simData.page?.primaryButtonEnabled !== false;
     $('#simAdminPrimaryButtonLabel').value = simData.page?.primaryButtonLabel || 'Xem gói SIM';
@@ -450,7 +459,9 @@
       physicalLabel: $('#simAdminPhysicalLabel').value.trim() || 'SIM vật lý',
       esimLabel: $('#simAdminEsimLabel').value.trim() || 'eSIM',
       bothLabel: $('#simAdminBothLabel').value.trim() || 'eSIM + SIM vật lý',
-      heroImageUrl: $('#simAdminHeroImageUrl').value.trim() || '/img/sim/sim-softbank.svg',
+      heroImageUrl: $('#simAdminHeroDesktopImageUrl').value.trim() || '/img/sim/sim-softbank.svg',
+      heroDesktopImageUrl: $('#simAdminHeroDesktopImageUrl').value.trim() || '/img/sim/sim-softbank.svg',
+      heroMobileImageUrl: $('#simAdminHeroMobileImageUrl').value.trim() || mobileHeroFromDesktop($('#simAdminHeroDesktopImageUrl').value),
       heroImageEnabled: $('#simAdminHeroImageEnabled').checked,
       primaryButtonEnabled: $('#simAdminPrimaryButtonEnabled').checked,
       primaryButtonLabel: $('#simAdminPrimaryButtonLabel').value.trim() || 'Xem gói SIM',

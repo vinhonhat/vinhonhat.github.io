@@ -548,3 +548,83 @@ body.sim-order-guide-open { overflow: hidden; }
   .sim-shop-single-visual img,
   .sim-shop-visual > img { width: 76px; }
 }
+
+
+/* V26.8.4 Beta 11 - ảnh SIM mobile nằm dọc trong 1/4 bên phải */
+@media (max-width: 640px) {
+  .sim-shop-hero {
+    grid-template-columns: minmax(0, 3fr) minmax(78px, 1fr);
+    grid-template-areas: "copy visual" "actions actions";
+    align-items: stretch;
+  }
+  .sim-shop-hero-copy {
+    align-self: center;
+  }
+  .sim-shop-visual.sim-shop-single-visual {
+    width: 100%;
+    min-width: 0;
+    min-height: 148px;
+    overflow: hidden;
+    align-self: stretch;
+    display: grid;
+    place-items: center;
+  }
+  .sim-shop-single-visual img,
+  .sim-shop-visual > img {
+    width: 132px;
+    max-width: none;
+    max-height: none;
+    transform: rotate(90deg);
+    transform-origin: center;
+    object-fit: contain;
+  }
+}
+@media (max-width: 380px) {
+  .sim-shop-hero {
+    grid-template-columns: minmax(0, 3fr) minmax(72px, 1fr);
+  }
+  .sim-shop-visual.sim-shop-single-visual { min-height: 132px; }
+  .sim-shop-single-visual img,
+  .sim-shop-visual > img { width: 118px; }
+}
+
+
+/* V26.8.4 Beta 12 - ảnh ngang PC và ảnh dọc mobile tách riêng */
+.sim-shop-single-visual picture {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+@media (min-width: 641px) {
+  .sim-shop-single-visual picture img {
+    width: min(340px, 100%);
+    height: auto;
+    max-height: 280px;
+    object-fit: contain;
+    transform: none;
+  }
+}
+@media (max-width: 640px) {
+  .sim-shop-visual.sim-shop-single-visual {
+    min-height: 148px;
+    overflow: hidden;
+  }
+  .sim-shop-single-visual picture img,
+  .sim-shop-single-visual > img,
+  .sim-shop-visual > img {
+    width: auto;
+    max-width: 100%;
+    height: 136px;
+    max-height: 100%;
+    object-fit: contain;
+    transform: none;
+  }
+}
+@media (max-width: 380px) {
+  .sim-shop-single-visual picture img,
+  .sim-shop-single-visual > img,
+  .sim-shop-visual > img {
+    height: 120px;
+  }
+}

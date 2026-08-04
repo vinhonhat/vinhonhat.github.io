@@ -10,6 +10,13 @@
   const DEFAULT_APN_URL = '/pages/pages-baiviet/sim/cau-hinh-sim-data-sim-nghe-goi-20251109.html';
   const DEFAULT_SIM_IMAGE = '/img/sim/sim-softbank.svg';
   const DEFAULT_HERO_IMAGE = '/img/sim/sim-softbank.svg';
+  const DEFAULT_HERO_MOBILE_IMAGE = '/img/sim/sim-softbank-mobile.svg';
+
+  function mobileHeroFromDesktop(value = '') {
+    const raw = String(value || '').trim();
+    const match = raw.match(/^(.*\/sim-(docomo|softbank|rakuten))\.svg(?:\?.*)?$/i);
+    return match ? `${match[1]}-mobile.svg` : (raw || DEFAULT_HERO_MOBILE_IMAGE);
+  }
   const LEGACY_SIM_IMAGES = new Set(['/img/sim/softbank-demo.png']);
   const CARRIER_IMAGES = Object.freeze({
     docomo: '/img/sim/sim-docomo.svg',
@@ -251,12 +258,16 @@
     const container = $('#simHeroVisual');
     if (!container) return;
     const enabled = pageConfig.heroImageEnabled !== false;
-    const heroImage = String(pageConfig.heroImageUrl || DEFAULT_HERO_IMAGE).trim() || DEFAULT_HERO_IMAGE;
+    const desktopImage = String(pageConfig.heroDesktopImageUrl || pageConfig.heroImageUrl || DEFAULT_HERO_IMAGE).trim() || DEFAULT_HERO_IMAGE;
+    const mobileImage = String(pageConfig.heroMobileImageUrl || mobileHeroFromDesktop(desktopImage)).trim() || mobileHeroFromDesktop(desktopImage);
     container.hidden = !enabled;
     if (!enabled) return;
     container.classList.remove('sim-shop-carrier-stack');
     container.classList.add('sim-shop-single-visual');
-    container.innerHTML = `<img src="${escapeHtml(heroImage)}" alt="Ảnh đại diện SIM" loading="eager" decoding="async">`;
+    container.innerHTML = `<picture>
+      <source media="(max-width: 640px)" srcset="${escapeHtml(mobileImage)}">
+      <img src="${escapeHtml(desktopImage)}" alt="Ảnh đại diện SIM" loading="eager" decoding="async">
+    </picture>`;
   }
 
   function planMatchesView(plan, view) {

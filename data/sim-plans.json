@@ -16,11 +16,13 @@
     "apnUrl": "/pages/pages-baiviet/sim/cau-hinh-sim-data-sim-nghe-goi-20251109.html",
     "apnLabel": "Cấu hình APN",
     "apnEnabled": true,
-    "heroImageUrl": "/img/sim/sim-banner.jpg",
+    "heroImageUrl": "/img/sim/sim-banner-pc.svg",
     "heroImageEnabled": true,
     "primaryButtonEnabled": true,
     "primaryButtonLabel": "Xem gói SIM",
-    "primaryButtonUrl": "#simPlans"
+    "primaryButtonUrl": "#simPlans",
+    "heroDesktopImageUrl": "/img/sim/sim-banner-pc.svg",
+    "heroMobileImageUrl": "/img/sim/sim-banner-m.svg"
   },
   "plans": [
     {
