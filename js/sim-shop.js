@@ -57,6 +57,7 @@
   let orderConfig = structuredClone(DEFAULT_ORDER);
   let currentView = 'monthly';
   let activePlan = null;
+  let selectedSimType = '';
   let quantity = 1;
 
   function normalizeOrder(input) {
@@ -68,15 +69,99 @@
     };
   }
 
+  function legacyAvailability(plan, type) {
+    if (typeof plan[type === 'physical' ? 'physicalEnabled' : 'esimEnabled'] === 'boolean') {
+      return plan[type === 'physical' ? 'physicalEnabled' : 'esimEnabled'];
+    }
+    const legacyType = ['both', 'physical', 'esim'].includes(plan.simType) ? plan.simType : 'physical';
+    return legacyType === 'both' || legacyType === type;
+  }
+
   function normalizePlan(plan = {}) {
-    return {
+    const legacyVariant = !Object.prototype.hasOwnProperty.call(plan, 'physicalEnabled')
+      && !Object.prototype.hasOwnProperty.call(plan, 'esimEnabled')
+      && ['physical', 'esim'].includes(plan.simType);
+    const physicalEnabled = legacyAvailability(plan, 'physical');
+    const esimEnabled = legacyAvailability(plan, 'esim');
+    const priceMode = plan.priceMode === 'separate' ? 'separate' : 'same';
+    const commonPrice = String(plan.price || '').trim();
+    const physicalPrice = String(plan.physicalPrice || commonPrice || '').trim();
+    const esimPrice = String(plan.esimPrice || commonPrice || '').trim();
+    const simType = physicalEnabled && esimEnabled ? 'both' : (esimEnabled ? 'esim' : 'physical');
+    const id = String(plan.id || `sim-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`);
+    const normalized = {
       ...plan,
+      id,
+      familyId: String(plan.familyId || id),
       planKind: plan.planKind === 'voice' ? 'voice' : 'data',
       period: plan.period === 'yearly' ? 'yearly' : 'monthly',
-      simType: ['both', 'physical', 'esim'].includes(plan.simType) ? plan.simType : 'physical',
+      simType,
+      physicalEnabled,
+      esimEnabled,
+      priceMode,
+      price: commonPrice || physicalPrice || esimPrice || 'Liên hệ',
+      physicalPrice: physicalPrice || commonPrice || 'Liên hệ',
+      esimPrice: esimPrice || commonPrice || 'Liên hệ',
       image: planImage(plan),
-      soldOut: plan.soldOut === true
+      soldOut: plan.soldOut === true,
+      features: Array.isArray(plan.features) ? plan.features : [],
+      requirements: Array.isArray(plan.requirements) ? plan.requirements : []
     };
+    Object.defineProperty(normalized, '_legacyVariant', { value: legacyVariant, enumerable: false, configurable: true });
+    return normalized;
+  }
+
+  function mergeLegacyPair(physical, esim) {
+    const samePrice = String(physical.price || '').trim() === String(esim.price || '').trim();
+    const base = structuredClone(physical);
+    const enabledPhysical = physical.enabled !== false && physical.showCard !== false;
+    const enabledEsim = esim.enabled !== false && esim.showCard !== false;
+    return normalizePlan({
+      ...base,
+      id: String(physical.familyId || physical.id || esim.id),
+      familyId: String(physical.familyId || esim.familyId || physical.id || esim.id),
+      enabled: enabledPhysical || enabledEsim,
+      showCard: enabledPhysical || enabledEsim,
+      physicalEnabled: enabledPhysical,
+      esimEnabled: enabledEsim,
+      simType: 'both',
+      priceMode: samePrice ? 'same' : 'separate',
+      price: samePrice ? physical.price : (physical.price || esim.price),
+      physicalPrice: physical.price || 'Liên hệ',
+      esimPrice: esim.price || 'Liên hệ',
+      soldOut: physical.soldOut === true && esim.soldOut === true,
+      features: Array.from(new Set([...(physical.features || []), ...(esim.features || [])])),
+      requirements: Array.from(new Set([...(physical.requirements || []), ...(esim.requirements || [])]))
+    });
+  }
+
+  function consolidatePlans(input) {
+    const normalized = (Array.isArray(input) ? input : []).map(normalizePlan);
+    const consumed = new Set();
+    const output = [];
+    normalized.forEach(plan => {
+      if (consumed.has(plan)) return;
+      const isLegacySingleType = plan._legacyVariant === true;
+      if (isLegacySingleType && plan.familyId) {
+        const pair = normalized.find(item => item !== plan
+          && !consumed.has(item)
+          && item.familyId === plan.familyId
+          && item.planKind === plan.planKind
+          && item.period === plan.period
+          && ((plan.simType === 'physical' && item.simType === 'esim') || (plan.simType === 'esim' && item.simType === 'physical')));
+        if (pair) {
+          const physical = plan.simType === 'physical' ? plan : pair;
+          const esim = plan.simType === 'esim' ? plan : pair;
+          consumed.add(plan);
+          consumed.add(pair);
+          output.push(mergeLegacyPair(physical, esim));
+          return;
+        }
+      }
+      consumed.add(plan);
+      output.push(plan);
+    });
+    return output;
   }
 
   function viewLabel(view) {
@@ -85,9 +170,47 @@
   }
 
   function typeLabel(type) {
-    if (type === 'both') return pageConfig.bothLabel || 'eSIM + SIM vật lý';
     if (type === 'esim') return pageConfig.esimLabel || 'eSIM';
     return pageConfig.physicalLabel || 'SIM vật lý';
+  }
+
+  function availableTypes(plan) {
+    const types = [];
+    if (plan.physicalEnabled !== false) types.push('physical');
+    if (plan.esimEnabled !== false) types.push('esim');
+    return types;
+  }
+
+  function defaultType(plan) {
+    const types = availableTypes(plan);
+    return types.includes('physical') ? 'physical' : (types[0] || 'physical');
+  }
+
+  function planPrice(plan, type = selectedSimType || defaultType(plan)) {
+    if (plan.priceMode === 'separate') {
+      if (type === 'esim') return String(plan.esimPrice || plan.price || 'Liên hệ').trim() || 'Liên hệ';
+      return String(plan.physicalPrice || plan.price || 'Liên hệ').trim() || 'Liên hệ';
+    }
+    return String(plan.price || plan.physicalPrice || plan.esimPrice || 'Liên hệ').trim() || 'Liên hệ';
+  }
+
+  function priceNumber(value) {
+    const digits = String(value || '').replace(/[^0-9]/g, '');
+    return digits ? Number(digits) : Number.NaN;
+  }
+
+  function catalogPrice(plan) {
+    if (plan.soldOut === true) return 'Hết hàng';
+    const types = availableTypes(plan);
+    if (types.length < 2 || plan.priceMode !== 'separate') return planPrice(plan, types[0] || defaultType(plan));
+    const values = types.map(type => planPrice(plan, type));
+    if (values[0] === values[1]) return values[0];
+    const priced = values.map(value => ({ value, number: priceNumber(value) })).filter(item => Number.isFinite(item.number));
+    if (priced.length) {
+      priced.sort((a, b) => a.number - b.number);
+      return `Từ ${priced[0].value}`;
+    }
+    return `${values[0]} / ${values[1]}`;
   }
 
   function apnSettings() {
@@ -112,21 +235,11 @@
     return plan.planKind !== 'voice' && plan.period === view;
   }
 
-  function enabledPlans(view, simType) {
+  function enabledPlans(view) {
     return plans.filter(plan => plan.enabled !== false
       && plan.showCard !== false
-      && planMatchesView(plan, view)
-      && (!simType || plan.simType === simType));
-  }
-
-  function familyPlans(plan) {
-    return plans.filter(item => item.enabled !== false
-      && item.showCard !== false
-      && item.familyId
-      && item.familyId === plan.familyId
-      && item.planKind === plan.planKind
-      && item.period === plan.period
-      && item.simType !== 'both');
+      && availableTypes(plan).length
+      && planMatchesView(plan, view));
   }
 
   function productCard(plan) {
@@ -134,33 +247,13 @@
     return `<article class="sim-product-card${soldOut ? ' is-sold-out' : ''}" data-sim-id="${escapeHtml(plan.id)}" tabindex="0" role="button" aria-label="Xem ${escapeHtml(plan.name)}${soldOut ? ' - hiện đang hết hàng' : ''}">
       <div class="sim-product-media">
         <img src="${escapeHtml(planImage(plan))}" alt="${escapeHtml(plan.name)}" loading="lazy" decoding="async">
-        <span class="sim-product-type-badge">${escapeHtml(typeLabel(plan.simType))}</span>
         ${soldOut ? '<span class="sim-product-soldout-badge">Hết hàng</span>' : ''}
       </div>
       <div class="sim-product-copy">
         <h3>${escapeHtml(plan.cardName || plan.name)}</h3>
-        <strong class="${soldOut ? 'sim-price-soldout' : ''}">${soldOut ? 'Hết hàng' : escapeHtml(plan.price || 'Liên hệ')}</strong>
+        <strong class="${soldOut ? 'sim-price-soldout' : ''}">${escapeHtml(catalogPrice(plan))}</strong>
       </div>
     </article>`;
-  }
-
-  function groupMeta(simType) {
-    if (simType === 'both') return { eyebrow: 'CHỌN LOẠI KHI ĐẶT', title: typeLabel('both') };
-    if (simType === 'esim') return { eyebrow: 'KÍCH HOẠT TRỰC TUYẾN', title: typeLabel('esim') };
-    return { eyebrow: 'GIAO SIM TẬN NƠI', title: typeLabel('physical') };
-  }
-
-  function groupTemplate(view, simType) {
-    const items = enabledPlans(view, simType);
-    if (!items.length) return '';
-    const meta = groupMeta(simType);
-    return `<section class="sim-product-group sim-product-group-${simType}" data-sim-group="${simType}">
-      <header class="sim-product-group-head">
-        <div><span>${escapeHtml(meta.eyebrow)}</span><h3>${escapeHtml(meta.title)}</h3></div>
-        <small>${items.length} sản phẩm</small>
-      </header>
-      <div class="sim-product-grid">${items.map(productCard).join('')}</div>
-    </section>`;
   }
 
   function renderCatalog(view = currentView) {
@@ -172,37 +265,49 @@
     });
     const container = $('#simPlanGrid');
     if (!container) return;
-    const content = ['both', 'physical', 'esim'].map(type => groupTemplate(view, type)).join('');
-    container.innerHTML = content || `<div class="sim-catalog-empty"><strong>Chưa có ${escapeHtml(viewLabel(view).toLowerCase())}</strong><p>Sản phẩm trong mục này đang được cập nhật.</p></div>`;
+    const items = enabledPlans(view);
+    container.innerHTML = items.length
+      ? `<section class="sim-product-group sim-product-group-all" data-sim-group="all">
+          <header class="sim-product-group-head">
+            <div><span>CHỌN GÓI TRƯỚC, CHỌN LOẠI KHI ĐẶT</span><h3>${escapeHtml(viewLabel(view))}</h3></div>
+            <small>${items.length} sản phẩm</small>
+          </header>
+          <div class="sim-product-grid">${items.map(productCard).join('')}</div>
+        </section>`
+      : `<div class="sim-catalog-empty"><strong>Chưa có ${escapeHtml(viewLabel(view).toLowerCase())}</strong><p>Sản phẩm trong mục này đang được cập nhật.</p></div>`;
   }
 
-  function variantButtons(plan) {
-    const variants = familyPlans(plan);
-    if (variants.length < 2) return '';
+  function typeButtons(plan) {
+    const types = availableTypes(plan);
+    if (types.length < 2) return '';
     return `<div class="sim-variant-picker" role="group" aria-label="Chọn loại SIM">
-      <span>Loại SIM</span>
-      <div>${variants.map(item => `<button type="button" data-sim-variant="${escapeHtml(item.id)}" class="${item.id === plan.id ? 'active' : ''}${item.soldOut === true ? ' is-sold-out' : ''}">${escapeHtml(typeLabel(item.simType))}<small>${item.soldOut === true ? 'Hết hàng' : escapeHtml(item.price || '')}</small></button>`).join('')}</div>
+      <span>Chọn loại SIM</span>
+      <div>${types.map(type => `<button type="button" data-sim-type="${type}" class="${selectedSimType === type ? 'active' : ''}">${escapeHtml(typeLabel(type))}${plan.priceMode === 'separate' ? `<small>${escapeHtml(planPrice(plan, type))}</small>` : ''}</button>`).join('')}</div>
     </div>`;
   }
 
   function detailTemplate(plan) {
+    const types = availableTypes(plan);
+    const currentType = types.includes(selectedSimType) ? selectedSimType : defaultType(plan);
+    selectedSimType = currentType;
     const features = (plan.features || []).map(item => `<li>${escapeHtml(item)}</li>`).join('');
     const requirements = (plan.requirements || []).map(item => `<li>${escapeHtml(item)}</li>`).join('');
     const labels = orderConfig.labels || DEFAULT_ORDER.labels;
     const apn = apnSettings();
+    const price = planPrice(plan, currentType);
     return `<div class="sim-detail-grid">
       <div class="sim-detail-image"><img src="${escapeHtml(planImage(plan))}" alt="${escapeHtml(plan.name)}"></div>
       <div class="sim-detail-copy">
-        <span class="sim-detail-badge">${escapeHtml(viewLabel(plan.planKind === 'voice' ? 'voice' : plan.period))} · ${escapeHtml(typeLabel(plan.simType))}</span>
+        <span class="sim-detail-badge">${escapeHtml(viewLabel(plan.planKind === 'voice' ? 'voice' : plan.period))} · ${escapeHtml(typeLabel(currentType))}</span>
         <h2 id="simDetailTitle">${escapeHtml(plan.name)}</h2>
         <p>${escapeHtml(plan.subtitle || '')}</p>
-        <div class="sim-detail-price${plan.soldOut === true ? ' is-sold-out' : ''}">${plan.soldOut === true ? 'Hết hàng' : escapeHtml(plan.price || 'Liên hệ')}</div>
+        <div class="sim-detail-price${plan.soldOut === true ? ' is-sold-out' : ''}">${plan.soldOut === true ? 'Hết hàng' : escapeHtml(price)}</div>
         ${plan.soldOut === true ? '<div class="sim-detail-soldout-note"><strong>Sản phẩm đang tạm hết hàng.</strong><span>Anh/chị vẫn có thể bấm Liên hệ để hỏi thời gian có hàng hoặc sản phẩm thay thế.</span></div>' : ''}
-        ${variantButtons(plan)}
+        ${typeButtons(plan)}
         <div class="sim-detail-specs">
           <div><span>Nhà mạng</span><strong>${escapeHtml(plan.carrier || 'Đang cập nhật')}</strong></div>
           <div><span>Dung lượng</span><strong>${escapeHtml(plan.dataLabel || 'Đang cập nhật')}</strong></div>
-          <div><span>Loại SIM</span><strong>${escapeHtml(typeLabel(plan.simType))}</strong></div>
+          <div><span>Loại SIM</span><strong>${escapeHtml(typeLabel(currentType))}</strong></div>
           <div><span>Chu kỳ</span><strong>${escapeHtml(plan.durationLabel || viewLabel(plan.planKind === 'voice' ? 'voice' : plan.period))}</strong></div>
         </div>
         <div class="sim-detail-columns">
@@ -226,10 +331,11 @@
   }
 
   function openDetail(id) {
-    const plan = plans.find(item => item.id === id && item.enabled !== false);
+    const plan = plans.find(item => item.id === id && item.enabled !== false && availableTypes(item).length);
     const modal = $('#simDetailModal');
     if (!plan || !modal) return;
     activePlan = plan;
+    selectedSimType = defaultType(plan);
     quantity = 1;
     $('#simDetailContent').innerHTML = detailTemplate(plan);
     modal.hidden = false;
@@ -237,12 +343,10 @@
     $('.sim-detail-close', modal)?.focus({ preventScroll: true });
   }
 
-  function refreshDetail(planId, preserveQuantity = true) {
-    const plan = plans.find(item => item.id === planId && item.enabled !== false);
-    if (!plan) return;
-    activePlan = plan;
-    if (!preserveQuantity) quantity = 1;
-    $('#simDetailContent').innerHTML = detailTemplate(plan);
+  function selectType(type) {
+    if (!activePlan || !availableTypes(activePlan).includes(type)) return;
+    selectedSimType = type;
+    $('#simDetailContent').innerHTML = detailTemplate(activePlan);
   }
 
   function closeDetail() {
@@ -250,6 +354,7 @@
     if (modal) modal.hidden = true;
     document.body.classList.remove('sim-modal-open');
     activePlan = null;
+    selectedSimType = '';
   }
 
   function setQuantity(next) {
@@ -259,14 +364,15 @@
   }
 
   function interpolate(template, plan) {
+    const type = availableTypes(plan).includes(selectedSimType) ? selectedSimType : defaultType(plan);
     const values = {
       id: plan.id,
       name: plan.name,
-      simType: typeLabel(plan.simType),
+      simType: typeLabel(type),
       period: viewLabel(plan.planKind === 'voice' ? 'voice' : plan.period),
       data: plan.dataLabel || '',
       quantity: String(quantity),
-      price: plan.price || 'Liên hệ',
+      price: plan.soldOut === true ? 'Hết hàng - cần liên hệ' : planPrice(plan, type),
       carrier: plan.carrier || ''
     };
     return String(template || DEFAULT_ORDER.messageTemplate).replace(/{{\s*([a-zA-Z]+)\s*}}/g, (_, key) => values[key] ?? '');
@@ -321,15 +427,12 @@
     const guide = ensureOrderGuide();
     guide.hidden = false;
     clearTimeout(showOrderGuide.timer);
-    showOrderGuide.timer = setTimeout(() => {
-      guide.hidden = true;
-    }, 9000);
+    showOrderGuide.timer = setTimeout(() => { guide.hidden = true; }, 9000);
   }
 
   function hideOrderGuide() {
     const guide = $('#simOrderGuide');
-    if (!guide) return;
-    guide.hidden = true;
+    if (guide) guide.hidden = true;
   }
 
   function orderUrl(plan, message) {
@@ -337,6 +440,7 @@
       try {
         const url = new URL(orderConfig.customPageUrl || DEFAULT_ORDER.customPageUrl, location.href);
         url.searchParams.set('plan', plan.id);
+        url.searchParams.set('simType', selectedSimType || defaultType(plan));
         url.searchParams.set('quantity', String(quantity));
         return url.href;
       } catch (_) {
@@ -392,8 +496,8 @@
       const card = event.target.closest('.sim-product-card');
       if (card && !event.target.closest('a,button')) { openDetail(card.dataset.simId); return; }
 
-      const variant = event.target.closest('[data-sim-variant]');
-      if (variant) { refreshDetail(variant.dataset.simVariant, true); return; }
+      const typeButton = event.target.closest('[data-sim-type]');
+      if (typeButton) { selectType(typeButton.dataset.simType); return; }
 
       if (event.target.closest('[data-quantity-minus]')) { setQuantity(quantity - 1); return; }
       if (event.target.closest('[data-quantity-plus]')) { setQuantity(quantity + 1); return; }
@@ -426,19 +530,19 @@
       const data = await dataResponse.json();
       const order = orderResponse.ok ? await orderResponse.json() : DEFAULT_ORDER;
       pageConfig = data.page || {};
-      plans = Array.isArray(data.plans) ? data.plans.map(normalizePlan).filter(item => item.enabled !== false) : [];
+      plans = consolidatePlans(data.plans).filter(item => item.enabled !== false);
       orderConfig = normalizeOrder(order);
 
       $('#simEyebrow').textContent = pageConfig.eyebrow || 'SIM NHẬT BẢN';
       $('#simTitle').textContent = pageConfig.title || 'Chọn SIM phù hợp';
       $('#simDescription').textContent = pageConfig.description || '';
       $('#simPlansTitle').textContent = pageConfig.catalogTitle || 'Các gói SIM đang giới thiệu';
-      $('#simCatalogDescription').textContent = pageConfig.catalogDescription || 'Chọn nhóm SIM, sau đó nhấn vào sản phẩm để xem chi tiết và đặt mua.';
+      $('#simCatalogDescription').textContent = pageConfig.catalogDescription || 'Chọn gói SIM, sau đó chọn eSIM hoặc SIM vật lý trong phần chi tiết nếu sản phẩm hỗ trợ cả hai.';
       configureApnHeroLink();
       $('[data-sim-period="monthly"]').textContent = pageConfig.monthlyLabel || 'SIM tháng';
       $('[data-sim-period="yearly"]').textContent = pageConfig.yearlyLabel || 'SIM năm';
       const voiceButton = $('[data-sim-period="voice"]');
-      const hasVoice = plans.some(plan => plan.planKind === 'voice' && plan.showCard !== false);
+      const hasVoice = plans.some(plan => plan.planKind === 'voice' && plan.showCard !== false && availableTypes(plan).length);
       if (voiceButton) {
         voiceButton.textContent = pageConfig.voiceLabel || 'SIM nghe gọi';
         voiceButton.hidden = !hasVoice;

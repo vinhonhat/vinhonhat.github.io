@@ -1352,3 +1352,202 @@ label,
   .sim-product-status-copy strong { font-size: 14px; }
   .sim-product-status-copy small { font-size: 12px; }
 }
+
+/* V26.8.4 Beta 4 - một sản phẩm, chọn loại SIM và giá trong cùng cấu hình */
+.sim-admin-fields > .wide-status {
+  grid-column: 1 / -1;
+}
+.sim-type-availability,
+.sim-price-settings {
+  padding: 15px;
+  border: 1px solid #e2e6eb;
+  border-radius: 15px;
+  background: #fafbfd;
+}
+.sim-field-section-head {
+  margin-bottom: 12px;
+  display: grid;
+  gap: 4px;
+}
+.sim-field-section-head strong {
+  color: #303841;
+  font-size: 15px;
+}
+.sim-field-section-head small {
+  color: #68717b;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+.sim-type-availability-grid,
+.sim-price-mode-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px;
+}
+.sim-type-option,
+.sim-price-mode-option {
+  min-width: 0;
+  min-height: 74px;
+  padding: 12px 14px;
+  border: 1px solid #dce2e8;
+  border-radius: 13px;
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  gap: 13px;
+  background: #fff;
+  cursor: pointer;
+}
+.sim-type-option:has(input:checked),
+.sim-price-mode-option:has(input:checked) {
+  border-color: #e2a85f;
+  background: #fff7eb;
+  box-shadow: inset 0 0 0 1px rgba(216,117,8,.08);
+}
+.sim-type-option > span,
+.sim-price-mode-option > span {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+.sim-type-option strong,
+.sim-price-mode-option strong {
+  color: #303841;
+  font-size: 14px;
+}
+.sim-type-option small,
+.sim-price-mode-option small {
+  color: #6d7580;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.45;
+}
+.sim-type-option input,
+.sim-price-mode-option input {
+  width: 22px !important;
+  height: 22px !important;
+  min-height: 0 !important;
+  flex: 0 0 auto;
+  padding: 0 !important;
+  accent-color: #d87508;
+}
+.sim-price-mode-grid {
+  margin-bottom: 12px;
+}
+.sim-price-input-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px;
+}
+.sim-price-input-grid > label {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+  color: #555e68;
+  font-size: 13px;
+  font-weight: 780;
+}
+.sim-price-input-grid > label[hidden] {
+  display: none !important;
+}
+.sim-price-input-grid input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 11px;
+  border: 1px solid #dfe3e7;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 14px;
+}
+@media (max-width: 760px) {
+  .sim-type-availability-grid,
+  .sim-price-mode-grid,
+  .sim-price-input-grid {
+    grid-template-columns: 1fr;
+  }
+  .sim-type-availability,
+  .sim-price-settings {
+    padding: 12px;
+  }
+}
+
+
+/* V26.8.4 Beta 5 - trạng thái/loại SIM/giá thu gọn 4 cột */
+.sim-compact-control-panel {
+  padding: 12px;
+  border: 1px solid #e2e6eb;
+  border-radius: 14px;
+  background: #fafbfd;
+}
+.sim-compact-control-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+}
+.sim-compact-option {
+  min-width: 0;
+  min-height: 48px;
+  padding: 9px 11px;
+  border: 1px solid #dce2e8;
+  border-radius: 11px;
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: #303841;
+  background: #fff;
+  cursor: pointer;
+  font-size: 13px !important;
+  font-weight: 820 !important;
+}
+.sim-compact-option:has(input:checked) {
+  border-color: #e2a85f;
+  background: #fff7eb;
+}
+.sim-compact-option.visibility:has(input:checked) {
+  border-color: #8bc9a6;
+  background: #effaf3;
+}
+.sim-compact-option.soldout:has(input:checked) {
+  border-color: #e2a36a;
+  background: #fff3e8;
+}
+.sim-compact-option input {
+  width: 19px !important;
+  height: 19px !important;
+  min-height: 0 !important;
+  flex: 0 0 auto;
+  padding: 0 !important;
+  accent-color: #d87508;
+}
+.sim-price-input-compact {
+  margin-top: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.sim-price-input-compact > .sim-price-same {
+  grid-column: 1 / -1;
+}
+@media (max-width: 900px) {
+  .sim-compact-control-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 520px) {
+  .sim-compact-control-panel {
+    padding: 9px;
+  }
+  .sim-compact-control-grid {
+    gap: 7px;
+  }
+  .sim-compact-option {
+    min-height: 44px;
+    padding: 8px 9px;
+    font-size: 12px !important;
+  }
+  .sim-price-input-compact {
+    grid-template-columns: 1fr;
+  }
+  .sim-price-input-compact > .sim-price-same {
+    grid-column: auto;
+  }
+}

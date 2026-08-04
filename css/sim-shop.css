@@ -323,3 +323,20 @@ body.sim-modal-open { overflow:hidden; }
 @media (max-width: 640px) {
   .sim-product-soldout-badge { top: 5px; right: 5px; padding: 4px 7px; font-size: 8px; }
 }
+
+/* V26.8.4 Beta 4 - các gói nằm chung một hàng, chọn loại SIM trong chi tiết */
+.sim-product-group-all {
+  border-color: #e2e5e9;
+  background: #fff;
+}
+.sim-product-group-all .sim-product-group-head > div > span {
+  color: #d96e00;
+}
+.sim-variant-picker button small {
+  margin-top: 2px;
+}
+@media (min-width: 981px) {
+  .sim-product-group-all .sim-product-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

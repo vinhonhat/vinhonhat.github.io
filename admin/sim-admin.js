@@ -54,7 +54,7 @@
     return image;
   }
 
-  let simData = { schemaVersion: 5, page: {}, plans: [], faqs: [] };
+  let simData = { schemaVersion: 6, page: {}, plans: [], faqs: [] };
   let orderData = {};
   let urls = { sim: '', order: '' };
   let activeView = localStorage.getItem('vinh-sim-admin-view') || 'settings';
@@ -66,27 +66,96 @@
     return urls[key];
   }
 
+  function legacyAvailability(plan, type) {
+    const field = type === 'physical' ? 'physicalEnabled' : 'esimEnabled';
+    if (typeof plan[field] === 'boolean') return plan[field];
+    const legacyType = ['both', 'physical', 'esim'].includes(plan.simType) ? plan.simType : 'physical';
+    return legacyType === 'both' || legacyType === type;
+  }
+
   function normalizePlan(plan = {}) {
+    const legacyVariant = !Object.prototype.hasOwnProperty.call(plan, 'physicalEnabled')
+      && !Object.prototype.hasOwnProperty.call(plan, 'esimEnabled')
+      && ['physical', 'esim'].includes(plan.simType);
     const normalized = { ...plan };
     normalized.id = String(normalized.id || `sim-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`);
     normalized.familyId = String(normalized.familyId || normalized.id);
     normalized.planKind = normalized.planKind === 'voice' ? 'voice' : 'data';
     normalized.period = normalized.period === 'yearly' ? 'yearly' : 'monthly';
-    normalized.simType = ['both', 'physical', 'esim'].includes(normalized.simType) ? normalized.simType : 'physical';
+    normalized.physicalEnabled = legacyAvailability(plan, 'physical');
+    normalized.esimEnabled = legacyAvailability(plan, 'esim');
+    normalized.simType = normalized.physicalEnabled && normalized.esimEnabled ? 'both' : (normalized.esimEnabled ? 'esim' : 'physical');
+    normalized.priceMode = normalized.priceMode === 'separate' ? 'separate' : 'same';
+    normalized.price = String(normalized.price || normalized.physicalPrice || normalized.esimPrice || 'Liên hệ').trim() || 'Liên hệ';
+    normalized.physicalPrice = String(normalized.physicalPrice || normalized.price || 'Liên hệ').trim() || 'Liên hệ';
+    normalized.esimPrice = String(normalized.esimPrice || normalized.price || 'Liên hệ').trim() || 'Liên hệ';
     normalized.image = planImage(normalized);
     normalized.soldOut = normalized.soldOut === true;
     normalized.features = Array.isArray(normalized.features) ? normalized.features : [];
     normalized.requirements = Array.isArray(normalized.requirements) ? normalized.requirements : [];
+    Object.defineProperty(normalized, '_legacyVariant', { value: legacyVariant, enumerable: false, configurable: true });
     return normalized;
+  }
+
+  function mergeLegacyPair(physical, esim) {
+    const samePrice = String(physical.price || '').trim() === String(esim.price || '').trim();
+    const physicalVisible = physical.enabled !== false && physical.showCard !== false;
+    const esimVisible = esim.enabled !== false && esim.showCard !== false;
+    return normalizePlan({
+      ...structuredClone(physical),
+      id: String(physical.familyId || physical.id || esim.id),
+      familyId: String(physical.familyId || esim.familyId || physical.id || esim.id),
+      enabled: physicalVisible || esimVisible,
+      showCard: physicalVisible || esimVisible,
+      physicalEnabled: physicalVisible,
+      esimEnabled: esimVisible,
+      simType: 'both',
+      priceMode: samePrice ? 'same' : 'separate',
+      price: samePrice ? physical.price : (physical.price || esim.price || 'Liên hệ'),
+      physicalPrice: physical.price || 'Liên hệ',
+      esimPrice: esim.price || 'Liên hệ',
+      soldOut: physical.soldOut === true && esim.soldOut === true,
+      features: Array.from(new Set([...(physical.features || []), ...(esim.features || [])])),
+      requirements: Array.from(new Set([...(physical.requirements || []), ...(esim.requirements || [])]))
+    });
+  }
+
+  function consolidateLegacyPlans(input) {
+    const normalized = (Array.isArray(input) ? input : []).map(normalizePlan);
+    const consumed = new Set();
+    const output = [];
+    normalized.forEach(plan => {
+      if (consumed.has(plan)) return;
+      if (plan._legacyVariant === true && plan.familyId) {
+        const pair = normalized.find(item => item !== plan
+          && !consumed.has(item)
+          && item._legacyVariant === true
+          && item.familyId === plan.familyId
+          && item.planKind === plan.planKind
+          && item.period === plan.period
+          && ((plan.simType === 'physical' && item.simType === 'esim') || (plan.simType === 'esim' && item.simType === 'physical')));
+        if (pair) {
+          const physical = plan.simType === 'physical' ? plan : pair;
+          const esim = plan.simType === 'esim' ? plan : pair;
+          consumed.add(plan);
+          consumed.add(pair);
+          output.push(mergeLegacyPair(physical, esim));
+          return;
+        }
+      }
+      consumed.add(plan);
+      output.push(plan);
+    });
+    return output;
   }
 
   function normalizeSimData(input) {
     const data = input && typeof input === 'object' ? input : {};
     return {
       ...data,
-      schemaVersion: 5,
+      schemaVersion: 6,
       page: { ...(data.page || {}) },
-      plans: Array.isArray(data.plans) ? data.plans.map(normalizePlan) : [],
+      plans: consolidateLegacyPlans(data.plans),
       faqs: Array.isArray(data.faqs) ? data.faqs : []
     };
   }
@@ -95,6 +164,24 @@
     if (type === 'both') return simData.page?.bothLabel || 'eSIM + SIM vật lý';
     if (type === 'esim') return simData.page?.esimLabel || 'eSIM';
     return simData.page?.physicalLabel || 'SIM vật lý';
+  }
+
+  function availableTypes(plan) {
+    const types = [];
+    if (plan.physicalEnabled !== false) types.push('physical');
+    if (plan.esimEnabled !== false) types.push('esim');
+    return types;
+  }
+
+  function availabilityLabel(plan) {
+    const types = availableTypes(plan);
+    if (types.length === 2) return typeLabel('both');
+    if (types.length === 1) return typeLabel(types[0]);
+    return 'Chưa chọn loại SIM';
+  }
+
+  function priceModeLabel(plan) {
+    return plan.priceMode === 'separate' ? '2 giá riêng' : 'Một giá';
   }
 
   function kindLabel(kind) {
@@ -136,55 +223,64 @@
     return false;
   }
 
-  function hasFamilyPair(plan) {
-    if (!plan.familyId || !['physical', 'esim'].includes(plan.simType)) return false;
-    const otherType = plan.simType === 'physical' ? 'esim' : 'physical';
-    return simData.plans.some(item => item.id !== plan.id
-      && item.familyId === plan.familyId
-      && item.planKind === plan.planKind
-      && item.period === plan.period
-      && item.simType === otherType);
-  }
-
   function card(plan) {
-    const canSplit = plan.simType === 'both';
-    const canMerge = hasFamilyPair(plan);
+    const radioName = `sim-price-mode-${String(plan.id || '').replace(/[^a-zA-Z0-9_-]/g, '-')}`;
+    const samePrice = plan.priceMode !== 'separate';
     return `<article class="sim-admin-card" data-sim-admin-id="${escapeHtml(plan.id)}">
       <header>
         <div class="sim-admin-card-title">
           <strong>${escapeHtml(plan.cardName || plan.name || 'Gói SIM')}</strong>
-          <small>${escapeHtml(kindLabel(plan.planKind))} · ${escapeHtml(periodLabel(plan.period))} · ${escapeHtml(typeLabel(plan.simType))}${plan.soldOut === true ? ' · Hết hàng' : ''}${(plan.enabled === false || plan.showCard === false) ? ' · Đang ẩn' : ''}</small>
+          <small>${escapeHtml(kindLabel(plan.planKind))} · ${escapeHtml(periodLabel(plan.period))} · ${escapeHtml(availabilityLabel(plan))} · ${escapeHtml(priceModeLabel(plan))}${plan.soldOut === true ? ' · Hết hàng' : ''}${(plan.enabled === false || plan.showCard === false) ? ' · Đang ẩn' : ''}</small>
         </div>
         <div class="sim-admin-card-actions">
-          ${canSplit ? '<button type="button" class="sim-card-action split" data-split-sim-plan title="Tách thành eSIM và SIM vật lý để nhập hai giá">Tách 2 giá</button>' : ''}
-          ${canMerge ? '<button type="button" class="sim-card-action merge" data-merge-sim-plan title="Gộp eSIM và SIM vật lý khi cùng giá">Gộp chung</button>' : ''}
           <button type="button" class="sim-card-action copy" data-duplicate-sim-plan title="Nhân bản gói SIM">Nhân bản</button>
           <button type="button" class="sim-card-action remove" data-remove-sim-plan aria-label="Xóa gói SIM" title="Xóa">×</button>
         </div>
       </header>
       <div class="sim-admin-fields">
-        <div class="sim-product-status-grid wide-status">
-          <label class="sim-product-status-card visibility">
-            <span class="sim-product-status-copy"><strong>Hiển thị sản phẩm trên website</strong><small>Tắt mục này để ẩn hoàn toàn sản phẩm khỏi trang bán SIM.</small></span>
-            <input type="checkbox" data-sim-visible ${(plan.enabled === false || plan.showCard === false) ? '' : 'checked'}>
-          </label>
-          <label class="sim-product-status-card soldout">
-            <span class="sim-product-status-copy"><strong>Hết hàng / tạm ngừng bán</strong><small>Sản phẩm vẫn hiện mờ, giá đổi thành “Hết hàng” và khách vẫn có thể bấm Liên hệ.</small></span>
-            <input type="checkbox" data-sim-field="soldOut" ${plan.soldOut === true ? 'checked' : ''}>
-          </label>
-        </div>
+        <section class="sim-compact-control-panel wide-status">
+          <div class="sim-compact-control-grid">
+            <label class="sim-compact-option visibility">
+              <span>Hiển thị</span>
+              <input type="checkbox" data-sim-visible ${(plan.enabled === false || plan.showCard === false) ? '' : 'checked'}>
+            </label>
+            <label class="sim-compact-option soldout">
+              <span>Hết hàng</span>
+              <input type="checkbox" data-sim-field="soldOut" ${plan.soldOut === true ? 'checked' : ''}>
+            </label>
+            <label class="sim-compact-option physical">
+              <span>SIM vật lý</span>
+              <input type="checkbox" data-sim-field="physicalEnabled" ${plan.physicalEnabled !== false ? 'checked' : ''}>
+            </label>
+            <label class="sim-compact-option esim">
+              <span>eSIM</span>
+              <input type="checkbox" data-sim-field="esimEnabled" ${plan.esimEnabled !== false ? 'checked' : ''}>
+            </label>
+            <label class="sim-compact-option price-mode">
+              <span>Một giá</span>
+              <input type="radio" name="${radioName}" value="same" data-sim-price-mode ${samePrice ? 'checked' : ''}>
+            </label>
+            <label class="sim-compact-option price-mode">
+              <span>Tách 2 giá</span>
+              <input type="radio" name="${radioName}" value="separate" data-sim-price-mode ${samePrice ? '' : 'checked'}>
+            </label>
+          </div>
+          <div class="sim-price-input-grid sim-price-input-compact">
+            <label class="sim-price-same" data-price-input="same" ${samePrice ? '' : 'hidden'}><span>Giá chung</span><input type="text" data-sim-field="price" value="${escapeHtml(plan.price || '')}" placeholder="¥2,480 hoặc Liên hệ"></label>
+            <label data-price-input="physical" ${!samePrice && plan.physicalEnabled !== false ? '' : 'hidden'}><span>Giá SIM vật lý</span><input type="text" data-sim-field="physicalPrice" value="${escapeHtml(plan.physicalPrice || plan.price || '')}" placeholder="¥2,480 hoặc Liên hệ"></label>
+            <label data-price-input="esim" ${!samePrice && plan.esimEnabled !== false ? '' : 'hidden'}><span>Giá eSIM</span><input type="text" data-sim-field="esimPrice" value="${escapeHtml(plan.esimPrice || plan.price || '')}" placeholder="¥2,280 hoặc Liên hệ"></label>
+          </div>
+        </section>
+
         <label><span>Nhóm sản phẩm</span><select data-sim-field="planKind"><option value="data" ${plan.planKind !== 'voice' ? 'selected' : ''}>SIM data</option><option value="voice" ${plan.planKind === 'voice' ? 'selected' : ''}>SIM nghe gọi</option></select></label>
         <label><span>Chu kỳ</span><select data-sim-field="period"><option value="monthly" ${plan.period === 'monthly' ? 'selected' : ''}>SIM tháng</option><option value="yearly" ${plan.period === 'yearly' ? 'selected' : ''}>SIM năm</option></select></label>
-        <label><span>Loại SIM / cách tính giá</span><select data-sim-field="simType"><option value="both" ${plan.simType === 'both' ? 'selected' : ''}>eSIM + vật lý dùng chung giá</option><option value="physical" ${plan.simType === 'physical' ? 'selected' : ''}>Chỉ SIM vật lý</option><option value="esim" ${plan.simType === 'esim' ? 'selected' : ''}>Chỉ eSIM</option></select></label>
-        <label><span>Giá</span><input type="text" data-sim-field="price" value="${escapeHtml(plan.price || '')}" placeholder="¥2,480 hoặc Liên hệ"></label>
         <label><span>ID</span><input type="text" data-sim-field="id" value="${escapeHtml(plan.id || '')}"></label>
-        <label><span>Nhóm biến thể</span><input type="text" data-sim-field="familyId" value="${escapeHtml(plan.familyId || '')}" title="Hai gói eSIM và SIM vật lý cùng sản phẩm dùng chung mã này"></label>
         <label><span>Tên ngoài thẻ</span><input type="text" data-sim-field="cardName" value="${escapeHtml(plan.cardName || '')}"></label>
-        <label><span>Tên chi tiết</span><input type="text" data-sim-field="name" value="${escapeHtml(plan.name || '')}"></label>
+        <label class="wide"><span>Tên chi tiết</span><input type="text" data-sim-field="name" value="${escapeHtml(plan.name || '')}"></label>
         <label><span>Nhà mạng</span><input type="text" list="simCarrierOptions" data-sim-field="carrier" value="${escapeHtml(plan.carrier || '')}" placeholder="Docomo, SoftBank hoặc Rakuten"></label>
-        <label class="wide sim-admin-image-field"><span>Ảnh sản phẩm</span><div class="sim-admin-image-control"><img data-sim-image-preview src="${escapeHtml(planImage(plan))}" alt="Ảnh ${escapeHtml(plan.carrier || 'SIM')}"><div><input type="text" data-sim-field="image" value="${escapeHtml(planImage(plan))}"><button type="button" data-use-carrier-image>Dùng ảnh theo nhà mạng</button></div></div><small>eSIM và SIM vật lý dùng chung ảnh. Khi tách hai giá, cả hai biến thể vẫn giữ ảnh này.</small></label>
         <label><span>Dung lượng</span><input type="text" data-sim-field="dataLabel" value="${escapeHtml(plan.dataLabel || '')}"></label>
         <label><span>Thời hạn</span><input type="text" data-sim-field="durationLabel" value="${escapeHtml(plan.durationLabel || '')}"></label>
+        <label class="wide sim-admin-image-field"><span>Ảnh sản phẩm</span><div class="sim-admin-image-control"><img data-sim-image-preview src="${escapeHtml(planImage(plan))}" alt="Ảnh ${escapeHtml(plan.carrier || 'SIM')}"><div><input type="text" data-sim-field="image" value="${escapeHtml(planImage(plan))}"><button type="button" data-use-carrier-image>Dùng ảnh theo nhà mạng</button></div></div><small>Một sản phẩm chỉ dùng một ảnh ngoài danh sách. Loại SIM và giá được chọn sau khi khách mở chi tiết.</small></label>
         <label class="wide"><span>Mô tả</span><textarea rows="2" data-sim-field="subtitle">${escapeHtml(plan.subtitle || '')}</textarea></label>
         <label class="wide"><span>Tính năng, mỗi dòng một ý</span><textarea rows="4" data-sim-lines="features">${escapeHtml((plan.features || []).join('\n'))}</textarea></label>
         <label class="wide"><span>Cần kiểm tra trước, mỗi dòng một ý</span><textarea rows="3" data-sim-lines="requirements">${escapeHtml((plan.requirements || []).join('\n'))}</textarea></label>
@@ -240,9 +336,24 @@
       const key = input.dataset.simField;
       plan[key] = input.type === 'checkbox' ? input.checked : input.value;
     });
+    const checkedMode = node.querySelector('[data-sim-price-mode]:checked');
+    plan.priceMode = checkedMode?.value === 'separate' ? 'separate' : 'same';
     node.querySelectorAll('[data-sim-lines]').forEach(input => {
       plan[input.dataset.simLines] = input.value.split(/\r?\n/).map(value => value.trim()).filter(Boolean);
     });
+    plan.physicalEnabled = plan.physicalEnabled !== false;
+    plan.esimEnabled = plan.esimEnabled !== false;
+    plan.simType = plan.physicalEnabled && plan.esimEnabled ? 'both' : (plan.esimEnabled ? 'esim' : 'physical');
+    plan.familyId = plan.id;
+    if (plan.priceMode === 'same') {
+      plan.price = String(plan.price || 'Liên hệ').trim() || 'Liên hệ';
+      plan.physicalPrice = plan.price;
+      plan.esimPrice = plan.price;
+    } else {
+      plan.physicalPrice = String(plan.physicalPrice || plan.price || 'Liên hệ').trim() || 'Liên hệ';
+      plan.esimPrice = String(plan.esimPrice || plan.price || 'Liên hệ').trim() || 'Liên hệ';
+      plan.price = plan.physicalEnabled ? plan.physicalPrice : plan.esimPrice;
+    }
     node.dataset.simAdminId = plan.id;
   }
 
@@ -264,7 +375,7 @@
       apnEnabled: $('#simAdminApnEnabled').checked
     };
     $$('.sim-admin-card').forEach(collectCard);
-    simData.schemaVersion = 5;
+    simData.schemaVersion = 6;
   }
 
   function collectOrderData() {
@@ -299,8 +410,8 @@
     if (kind === 'order') {
       return `Đang nhận đơn qua ${orderData.mode === 'custom-page' ? 'trang riêng' : 'Messenger'} · file order-config.json`;
     }
-    const visible = simData.plans.filter(item => item.enabled !== false && item.showCard !== false).length;
-    const soldOut = simData.plans.filter(item => item.enabled !== false && item.showCard !== false && item.soldOut === true).length;
+    const visible = simData.plans.filter(item => item.enabled !== false && item.showCard !== false && availableTypes(item).length).length;
+    const soldOut = simData.plans.filter(item => item.enabled !== false && item.showCard !== false && availableTypes(item).length && item.soldOut === true).length;
     const stockText = soldOut ? ` · ${soldOut} gói hết hàng` : '';
     if (PRODUCT_VIEWS.has(activeView)) {
       return `${visiblePlans().length} gói trong mục này · ${visible} gói đang hiện${stockText} · file sim-plans.json`;
@@ -379,6 +490,11 @@
       planKind: meta.kind || 'data',
       period: meta.period || 'monthly',
       simType: 'both',
+      physicalEnabled: true,
+      esimEnabled: true,
+      priceMode: 'same',
+      physicalPrice: 'Liên hệ',
+      esimPrice: 'Liên hệ',
       carrier: 'SoftBank',
       name: activeView === 'voice' ? 'SIM nghe gọi mới' : 'Gói SIM data mới',
       cardName: activeView === 'voice' ? 'SIM nghe gọi mới' : 'Gói SIM mới',
@@ -411,62 +527,7 @@
     updateDownloads('sim');
   }
 
-  function splitPlan(cardNode) {
-    collectCard(cardNode);
-    const plan = simData.plans.find(item => item.id === cardNode.dataset.simAdminId);
-    if (!plan || plan.simType !== 'both') return;
-    const familyId = plan.familyId || plan.id;
-    const baseId = plan.id.replace(/-(both|physical|esim)$/, '');
-    const excluded = [plan.id];
-    const physical = structuredClone(plan);
-    const esim = structuredClone(plan);
-    physical.id = uniqueId(`${baseId}-physical`, excluded);
-    physical.familyId = familyId;
-    physical.simType = 'physical';
-    esim.id = uniqueId(`${baseId}-esim`, excluded.concat(physical.id));
-    esim.familyId = familyId;
-    esim.simType = 'esim';
-    const index = simData.plans.indexOf(plan);
-    simData.plans.splice(index, 1, physical, esim);
-    render();
-    updateDownloads('sim', false);
-    setConfigStatus('sim', 'Đã tách thành SIM vật lý và eSIM. Hãy tải đúng file sim-plans.json sau khi chỉnh giá.');
-  }
 
-  function mergePlan(cardNode) {
-    collectCard(cardNode);
-    const current = simData.plans.find(item => item.id === cardNode.dataset.simAdminId);
-    if (!current || !current.familyId) return;
-    const family = simData.plans.filter(item => item.familyId === current.familyId
-      && item.planKind === current.planKind
-      && item.period === current.period
-      && ['physical', 'esim'].includes(item.simType));
-    const physical = family.find(item => item.simType === 'physical');
-    const esim = family.find(item => item.simType === 'esim');
-    if (!physical || !esim) return;
-    if (String(physical.price || '').trim() !== String(esim.price || '').trim()) {
-      alert('Hai loại đang có giá khác nhau nên chưa thể gộp. Hãy chỉnh cùng giá rồi bấm “Gộp chung”.');
-      return;
-    }
-    if (Boolean(physical.soldOut) !== Boolean(esim.soldOut)) {
-      alert('Hai loại đang có trạng thái hàng khác nhau. Hãy chọn cùng trạng thái “Hết hàng” rồi mới gộp.');
-      return;
-    }
-    const merged = structuredClone(physical);
-    const excluded = [physical.id, esim.id];
-    merged.id = uniqueId(current.familyId || physical.id.replace(/-physical$/, ''), excluded);
-    merged.familyId = current.familyId;
-    merged.simType = 'both';
-    merged.subtitle = merged.subtitle || 'Có thể chọn eSIM hoặc SIM vật lý khi đặt hàng.';
-    merged.features = Array.from(new Set([...(physical.features || []), ...(esim.features || [])]));
-    merged.requirements = Array.from(new Set([...(physical.requirements || []), ...(esim.requirements || [])]));
-    const firstIndex = Math.min(simData.plans.indexOf(physical), simData.plans.indexOf(esim));
-    simData.plans = simData.plans.filter(item => item !== physical && item !== esim);
-    simData.plans.splice(firstIndex, 0, merged);
-    render();
-    updateDownloads('sim', false);
-    setConfigStatus('sim', 'Đã gộp eSIM và SIM vật lý. Hãy tải đúng file sim-plans.json để cập nhật máy chủ.');
-  }
 
   function isExpectedConfig(parsed, kind) {
     if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return false;
@@ -509,7 +570,16 @@
       if (!event.target.closest('#simAdminPanel') || event.target.matches('[data-import-config]')) return;
       const cardNode = event.target.closest('.sim-admin-card');
       if (cardNode && event.target.dataset.simField === 'carrier') syncCarrierImage(cardNode);
-      if (cardNode && (['planKind', 'period', 'simType', 'soldOut'].includes(event.target.dataset.simField) || event.target.matches('[data-sim-visible]'))) {
+      if (cardNode && ['physicalEnabled', 'esimEnabled'].includes(event.target.dataset.simField)) {
+        const physical = cardNode.querySelector('[data-sim-field="physicalEnabled"]');
+        const esim = cardNode.querySelector('[data-sim-field="esimEnabled"]');
+        if (!physical?.checked && !esim?.checked) {
+          event.target.checked = true;
+          alert('Mỗi sản phẩm phải bật ít nhất một loại: eSIM hoặc SIM vật lý. Muốn ẩn cả sản phẩm, hãy tắt “Hiển thị sản phẩm trên website”.');
+        }
+      }
+      if (cardNode && (['planKind', 'period', 'physicalEnabled', 'esimEnabled', 'soldOut'].includes(event.target.dataset.simField)
+        || event.target.matches('[data-sim-visible], [data-sim-price-mode]'))) {
         collectCard(cardNode);
         render();
       }
@@ -548,8 +618,6 @@
         return;
       }
       if (cardNode && event.target.closest('[data-duplicate-sim-plan]')) { duplicatePlan(cardNode); return; }
-      if (cardNode && event.target.closest('[data-split-sim-plan]')) { splitPlan(cardNode); return; }
-      if (cardNode && event.target.closest('[data-merge-sim-plan]')) { mergePlan(cardNode); return; }
 
       const remove = event.target.closest('[data-remove-sim-plan]');
       if (remove) {

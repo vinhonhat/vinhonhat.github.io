@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 5,
+  "schemaVersion": 6,
   "page": {
     "eyebrow": "SIM NHẬT BẢN",
     "title": "Chọn SIM data phù hợp",
@@ -26,7 +26,7 @@
       "simType": "both",
       "carrier": "SoftBank",
       "name": "SIM Data SoftBank 50GB",
-      "cardName": "SIM Data 50GB",
+      "cardName": "SIM Data 50GB - Softbank",
       "subtitle": "Thanh toán cước trước ngày 25 hằng tháng",
       "price": "¥2,480",
       "dataLabel": "50GB/tháng",
@@ -50,7 +50,12 @@
       ],
       "showCard": true,
       "planKind": "data",
-      "soldOut": false
+      "soldOut": false,
+      "physicalEnabled": true,
+      "esimEnabled": true,
+      "priceMode": "same",
+      "physicalPrice": "¥2,480",
+      "esimPrice": "¥2,480"
     },
     {
       "id": "monthly-100",
@@ -60,7 +65,7 @@
       "simType": "both",
       "carrier": "SoftBank",
       "name": "SIM Data SoftBank 100GB",
-      "cardName": "SIM Data 100GB",
+      "cardName": "SIM Data 100GB  - Softbank",
       "subtitle": "Thanh toán cước trước ngày 25 hằng tháng",
       "price": "¥2,980",
       "dataLabel": "100GB/tháng",
@@ -84,7 +89,12 @@
       ],
       "showCard": true,
       "planKind": "data",
-      "soldOut": false
+      "soldOut": false,
+      "physicalEnabled": true,
+      "esimEnabled": true,
+      "priceMode": "same",
+      "physicalPrice": "¥2,980",
+      "esimPrice": "¥2,980"
     },
     {
       "id": "yearly-5",
@@ -94,7 +104,7 @@
       "simType": "both",
       "carrier": "SoftBank",
       "name": "SIM Data 5GB – 12 tháng",
-      "cardName": "SIM năm 5GB",
+      "cardName": "SIM năm 5GB - Softbank",
       "subtitle": "SIM dùng theo kỳ hạn năm tính từ tháng nhận sim, sim được kích hoạt khi mua.",
       "price": "¥8,000",
       "dataLabel": "5GB/tháng",
@@ -117,17 +127,22 @@
       ],
       "showCard": true,
       "planKind": "data",
-      "soldOut": false
+      "soldOut": false,
+      "physicalEnabled": true,
+      "esimEnabled": true,
+      "priceMode": "same",
+      "physicalPrice": "¥8,000",
+      "esimPrice": "¥8,000"
     },
     {
       "id": "yearly-5-copy-physical",
-      "familyId": "yearly-5-copy",
+      "familyId": "yearly-5-copy-physical",
       "enabled": true,
       "period": "yearly",
       "simType": "physical",
       "carrier": "Docomo",
       "name": "SIM Data 5GB – 12 tháng",
-      "cardName": "SIM năm 5GB - bản sao",
+      "cardName": "SIM năm 5GB - Docomo",
       "subtitle": "SIM dùng theo kỳ hạn năm tính từ tháng nhận sim, sim được kích hoạt khi mua.",
       "price": "¥8,000",
       "dataLabel": "5GB/tháng",
@@ -150,7 +165,12 @@
       ],
       "showCard": true,
       "planKind": "data",
-      "soldOut": false
+      "soldOut": false,
+      "physicalEnabled": true,
+      "esimEnabled": false,
+      "priceMode": "same",
+      "physicalPrice": "¥8,000",
+      "esimPrice": "¥8,000"
     },
     {
       "id": "yearly-10",
@@ -160,7 +180,7 @@
       "simType": "both",
       "carrier": "SoftBank",
       "name": "SIM Data 10GB – 12 tháng",
-      "cardName": "SIM năm 10GB",
+      "cardName": "SIM năm 10GB - Softbank",
       "subtitle": "SIM vật lý dùng theo kỳ hạn năm",
       "price": "¥13,000",
       "dataLabel": "10GB/tháng",
@@ -183,17 +203,22 @@
       ],
       "showCard": true,
       "planKind": "data",
-      "soldOut": false
+      "soldOut": false,
+      "physicalEnabled": true,
+      "esimEnabled": true,
+      "priceMode": "same",
+      "physicalPrice": "¥13,000",
+      "esimPrice": "¥13,000"
     },
     {
       "id": "yearly-10-copy-physical",
-      "familyId": "yearly-10-copy",
+      "familyId": "yearly-10-copy-physical",
       "enabled": true,
       "period": "yearly",
       "simType": "physical",
       "carrier": "Docomo",
       "name": "SIM Data 10GB – 12 tháng",
-      "cardName": "SIM năm 10GB - bản sao",
+      "cardName": "SIM năm 10GB - Docomo",
       "subtitle": "SIM vật lý dùng theo kỳ hạn năm",
       "price": "¥13,000",
       "dataLabel": "10GB/tháng",
@@ -216,7 +241,12 @@
       ],
       "showCard": true,
       "planKind": "data",
-      "soldOut": false
+      "soldOut": false,
+      "physicalEnabled": true,
+      "esimEnabled": false,
+      "priceMode": "same",
+      "physicalPrice": "¥13,000",
+      "esimPrice": "¥13,000"
     }
   ],
   "faqs": [
