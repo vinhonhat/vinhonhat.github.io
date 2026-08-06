@@ -696,3 +696,93 @@ body.sim-order-guide-open { overflow: hidden; }
   .travel-sim-filters small { grid-column: auto; }
   .sim-travel-flag { top: 5px; left: 5px; min-width: 30px; min-height: 28px; padding: 3px 6px; font-size: 17px; }
 }
+
+/* V26.8.4 Beta 16 - chọn ngày sử dụng và gói dung lượng cho SIM du lịch */
+.sim-travel-choice-panel {
+  margin-top: 16px;
+  padding: 15px;
+  border: 1px solid #dbe5ef;
+  border-radius: 15px;
+  background: #fbfdff;
+}
+.sim-travel-choice-heading { display: grid; gap: 4px; }
+.sim-travel-choice-heading h3 { margin: 0; font-size: 16px; }
+.sim-travel-choice-heading p { margin: 0; color: #667482; font-size: 11.5px; line-height: 1.5; }
+.sim-travel-choice-group { margin-top: 14px; display: grid; gap: 8px; }
+.sim-travel-choice-group > strong { color: #2f3943; font-size: 13px; }
+.sim-travel-choice-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+.sim-travel-choice-buttons button {
+  min-height: 38px;
+  padding: 0 13px;
+  border: 1px solid #d7dee6;
+  border-radius: 9px;
+  color: #3f4954;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 780;
+  cursor: pointer;
+  transition: border-color .16s ease, background .16s ease, color .16s ease, box-shadow .16s ease;
+}
+.sim-travel-choice-buttons button:hover,
+.sim-travel-choice-buttons button:focus-visible {
+  border-color: #e0a253;
+  outline: none;
+}
+.sim-travel-choice-buttons button.active {
+  border-color: #d87508;
+  color: #9c5200;
+  background: #fff1dd;
+  box-shadow: inset 0 0 0 1px #efb96f;
+}
+.sim-travel-choice-buttons.package-options button { min-width: 132px; }
+@media(max-width:640px){
+  .sim-travel-choice-panel { padding: 13px; }
+  .sim-travel-choice-buttons { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 7px; }
+  .sim-travel-choice-buttons.package-options { grid-template-columns: 1fr 1fr; }
+  .sim-travel-choice-buttons button,
+  .sim-travel-choice-buttons.package-options button { min-width: 0; padding: 0 8px; font-size: 11px; }
+}
+@media(max-width:380px){
+  .sim-travel-choice-buttons { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .sim-travel-choice-buttons.package-options { grid-template-columns: 1fr; }
+}
+
+
+/* V26.8.6 Beta 4 - chọn đơn vị thanh toán cho SIM du lịch */
+.travel-payment-currency {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: grid;
+  gap: 7px;
+}
+.travel-payment-currency legend { padding: 0; color: #4e5965; font-size: 12px; font-weight: 900; }
+.travel-payment-currency > div { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; }
+.travel-payment-currency label {
+  min-height: 48px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #dce2e8;
+  border-radius: 12px;
+  background: #f8fafc;
+  cursor: pointer;
+}
+.travel-payment-currency label:has(input:checked) {
+  border-color: #e2a052;
+  color: #9a5200;
+  background: #fff5e7;
+  box-shadow: inset 0 0 0 1px rgba(226,160,82,.22);
+}
+.travel-payment-currency input { width: 19px; min-height: 19px; margin: 0; padding: 0; accent-color: #d87508; flex: 0 0 auto; }
+.travel-payment-currency span { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; font-size: 13px; }
+.travel-payment-currency b { font-size: 12px; white-space: nowrap; }
+@media(max-width:640px) {
+  .travel-payment-currency { grid-column: auto; }
+  .travel-payment-currency > div { grid-template-columns: 1fr 1fr; }
+  .travel-payment-currency label { min-height: 46px; padding: 7px 9px; }
+  .travel-payment-currency span { display: grid; gap: 1px; font-size: 12px; }
+  .travel-payment-currency b { font-size: 10px; }
+}

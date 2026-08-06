@@ -435,7 +435,10 @@
                                 <label>Trang đặt hàng riêng<input id="simCustomOrderUrl" type="text" placeholder="/pages/pages-app/dat-sim.html"></label>
                             </div>
                             <div class="sim-order-admin-layout">
-                                <label class="sim-order-message-field">Mẫu tin nhắn<textarea id="simMessageTemplate" rows="12"></textarea><small>Các biến dùng được: {{name}}, {{simType}}, {{period}}, {{data}}, {{quantity}}, {{price}}, {{carrier}}</small></label>
+                                <div class="sim-order-message-stack">
+                                    <label class="sim-order-message-field">Mẫu tin nhắn SIM data / nghe gọi<textarea id="simMessageTemplate" rows="11"></textarea><small>Biến dùng được: {{name}}, {{carrier}}, {{simType}}, {{period}}, {{data}}, {{quantity}}, {{price}}</small></label>
+                                    <label class="sim-order-message-field sim-order-travel-message">Mẫu tin nhắn SIM du lịch<textarea id="simTravelMessageTemplate" rows="11"></textarea><small>Biến dùng được: {{name}}, {{destination}}, {{travelPackage}}, {{travelDays}}, {{paymentCurrency}}, {{quantity}}, {{price}}</small></label>
+                                </div>
                                 <section class="sim-order-options-card">
                                     <div class="sim-settings-panel-head">
                                         <h4>Tùy chọn khi khách bấm Mua SIM</h4>
@@ -483,14 +486,31 @@
                         </div>
                         <section id="travelPricingSettings" class="travel-pricing-settings" data-config-kind="travel" hidden>
                             <div class="travel-pricing-settings-head">
-                                <div><strong>Tỷ giá và giá bán mặc định</strong><small>Dùng để tính nhanh giá bán. Anh vẫn có thể sửa riêng từng gói.</small></div>
+                                <div><strong>Tỷ giá, tiền bán và lợi nhuận mặc định</strong><small>Gói nào để trống phần giá riêng sẽ tự dùng các giá trị này.</small></div>
                             </div>
                             <div class="travel-pricing-settings-grid">
                                 <label>USD → JPY<input id="travelUsdToJpy" type="number" min="0" step="0.01" placeholder="150"></label>
                                 <label>USD → VND<input id="travelUsdToVnd" type="number" min="0" step="1" placeholder="26000"></label>
                                 <label>JPY → VND<input id="travelJpyToVnd" type="number" min="0" step="0.01" placeholder="175"></label>
                                 <label>Tiền bán mặc định<select id="travelDefaultSellCurrency"><option value="JPY">Yên Nhật (JPY)</option><option value="VND">Việt Nam đồng (VND)</option><option value="USD">Đô la Mỹ (USD)</option></select></label>
-                                <label>Cộng thêm mặc định<input id="travelDefaultMarkup" type="number" step="1" placeholder="0"></label>
+                                <label>Lợi nhuận mặc định<input id="travelDefaultMarkup" type="number" step="1" placeholder="0"></label>
+                            </div>
+                        </section>
+                        <section id="travelSelectionSettings" class="travel-selection-settings" data-config-kind="travel" hidden>
+                            <div class="travel-selection-settings-head">
+                                <div><strong>Ngày sử dụng và gói dung lượng dùng chung</strong><small>Các lựa chọn này áp dụng cho toàn bộ SIM du lịch. Có thể bật, tắt, sửa hoặc thêm lựa chọn.</small></div>
+                                <label class="travel-selection-master"><input id="travelSelectionEnabled" type="checkbox"><span>Hiện phần lựa chọn ngoài trang</span></label>
+                            </div>
+                            <label class="travel-validity-note">Ghi chú thời hạn kích hoạt<input id="travelValidityNote" type="text" placeholder="Có hiệu lực trong vòng 60 ngày kể từ khi đặt"></label>
+                            <div class="travel-selection-columns">
+                                <section class="travel-selection-card">
+                                    <header><div><strong>Ngày sử dụng</strong><small>Khách chọn số ngày cần dùng.</small></div><button id="addTravelDayOption" type="button">+ Thêm ngày</button></header>
+                                    <div id="travelDayOptions" class="travel-shared-option-list"></div>
+                                </section>
+                                <section class="travel-selection-card">
+                                    <header><div><strong>Gói dung lượng</strong><small>Khách chọn gói hàng ngày hoặc tổng dung lượng.</small></div><button id="addTravelPackageOption" type="button">+ Thêm gói</button></header>
+                                    <div id="travelPackageOptions" class="travel-shared-option-list"></div>
+                                </section>
                             </div>
                         </section>
                         <div id="simAdminList" class="sim-admin-list"></div>

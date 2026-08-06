@@ -1893,3 +1893,172 @@ label,
   .travel-status-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .travel-price-actions output { width:100%; margin-left:0; }
 }
+
+/* V26.8.4 Beta 16 - lựa chọn ngày và gói dùng chung cho SIM du lịch */
+.travel-selection-settings {
+  margin: 13px 0;
+  padding: 14px;
+  border: 1px solid #f0c88f;
+  border-radius: 15px;
+  background: #fffaf2;
+}
+.travel-selection-settings[hidden] { display: none !important; }
+.travel-selection-settings-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+.travel-selection-settings-head > div { display: grid; gap: 3px; }
+.travel-selection-settings-head strong { color: #8b520b; font-size: 15px; }
+.travel-selection-settings-head small { color: #766654; font-size: 12px; }
+.travel-selection-master {
+  min-height: 42px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #e1bd86;
+  border-radius: 11px;
+  background: #fff;
+  color: #6f4a17;
+  font-size: 12px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+.travel-selection-master input { width: 18px; height: 18px; accent-color: #d87508; }
+.travel-validity-note {
+  margin-top: 12px;
+  display: grid;
+  gap: 5px;
+  color: #5d554b;
+  font-size: 12px;
+  font-weight: 800;
+}
+.travel-validity-note input {
+  width: 100%;
+  min-height: 42px;
+  padding: 8px 10px;
+  border: 1px solid #ddcfbd;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 13px;
+}
+.travel-selection-columns {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: minmax(0,.8fr) minmax(0,1.2fr);
+  gap: 12px;
+  align-items: start;
+}
+.travel-selection-card {
+  padding: 12px;
+  border: 1px solid #e5d5c0;
+  border-radius: 13px;
+  background: #fff;
+}
+.travel-selection-card > header {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.travel-selection-card > header > div { display: grid; gap: 2px; }
+.travel-selection-card > header strong { color: #4b4136; font-size: 13px; }
+.travel-selection-card > header small { color: #817466; font-size: 10.5px; }
+.travel-selection-card > header button {
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1px solid #dfb77f;
+  border-radius: 9px;
+  color: #8d5000;
+  background: #fff7eb;
+  font-size: 11px;
+  font-weight: 850;
+  cursor: pointer;
+}
+.travel-shared-option-list { display: grid; gap: 7px; }
+.travel-shared-option-row {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 20px minmax(0,1fr) 32px;
+  gap: 8px;
+  align-items: center;
+}
+.travel-shared-option-row > input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #d87508;
+}
+.travel-shared-option-row > input[type="text"] {
+  width: 100%;
+  min-width: 0;
+  min-height: 38px;
+  padding: 7px 9px;
+  border: 1px solid #dde1e6;
+  border-radius: 9px;
+  background: #fff;
+  font-size: 12px;
+}
+.travel-shared-option-row > button {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #efc9c3;
+  border-radius: 9px;
+  color: #b53325;
+  background: #fff;
+  font-size: 18px;
+  cursor: pointer;
+}
+@media(max-width:900px){
+  .travel-selection-columns { grid-template-columns: 1fr; }
+}
+@media(max-width:700px){
+  .travel-selection-settings-head { align-items: stretch; flex-direction: column; }
+  .travel-selection-master { width: 100%; justify-content: space-between; }
+}
+
+
+/* V26.8.6 Beta 1 - giá SIM du lịch kế thừa mặc định, giữ giao diện lựa chọn của Beta 16 */
+.travel-price-editor { padding:11px 12px; }
+.travel-price-editor-head { margin-bottom:8px; }
+.travel-price-editor-grid {
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:7px;
+}
+.travel-price-editor-grid label { font-size:11px; }
+.travel-price-editor-grid input,
+.travel-price-editor-grid select {
+  min-height:38px;
+  padding:7px 8px;
+  font-size:12px;
+}
+.travel-price-actions { margin-top:8px; gap:6px; }
+.travel-price-actions button { min-height:34px; padding:0 10px; font-size:11px; }
+@media(max-width:900px){
+  .travel-price-editor-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+}
+@media(max-width:700px){
+  .travel-price-editor-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+
+
+/* V26.8.6 Beta 2 - tách mẫu tin nhắn SIM thường và SIM du lịch */
+.sim-order-message-stack {
+  min-width: 0;
+  display: grid;
+  gap: 16px;
+}
+.sim-order-travel-message {
+  padding-top: 16px;
+  border-top: 1px dashed #e2bd89;
+}
+.sim-order-message-stack .sim-order-message-field textarea {
+  min-height: 220px;
+}
+@media (max-width: 880px) {
+  .sim-order-message-stack .sim-order-message-field textarea {
+    min-height: 190px;
+  }
+}

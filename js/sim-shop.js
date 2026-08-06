@@ -11,6 +11,13 @@
   const DEFAULT_SIM_IMAGE = '/img/sim/sim-softbank.svg';
   const DEFAULT_HERO_IMAGE = '/img/sim/sim-softbank.svg';
   const DEFAULT_HERO_MOBILE_IMAGE = '/img/sim/sim-softbank-mobile.svg';
+  const DEFAULT_TRAVEL_DAY_OPTIONS = Object.freeze([
+    '1 ngày','2 ngày','3 ngày','4 ngày','5 ngày','6 ngày','7 ngày','8 ngày','9 ngày','10 ngày','12 ngày','15 ngày','20 ngày','25 ngày','30 ngày'
+  ]);
+  const DEFAULT_TRAVEL_PACKAGE_OPTIONS = Object.freeze([
+    'Hàng ngày - 0,5GB','Hàng ngày - 1GB','Hàng ngày - 2GB','Hàng ngày - 3GB','Hàng ngày - 100GB','Mạng 5G - Hàng ngày - 100GB-plus',
+    'Tổng cộng - 1GB','Tổng cộng - 3GB','Tổng cộng - 5GB','Tổng cộng - 10GB','Tổng cộng - 20GB','Tổng cộng - 30GB','Tổng cộng - 50GB'
+  ]);
 
   function mobileHeroFromDesktop(value = '') {
     const raw = String(value || '').trim();
@@ -51,7 +58,8 @@
     openInNewTab: false,
     copyMessageBeforeOpen: true,
     appendTextQuery: true,
-    messageTemplate: 'Xin chào, tôi muốn mua SIM:\n\n- Gói: {{name}}\n- Loại: {{simType}}\n- Chu kỳ: {{period}}\n- Dung lượng: {{data}}\n- Số lượng: {{quantity}}\n- Giá tham khảo: {{price}}\n\nMong shop xác nhận và tư vấn giúp tôi.',
+    messageTemplate: "Xin chào, tôi muốn mua SIM:\n\n- Gói: {{name}}\n- Nhà mạng: {{carrier}}\n- Loại: {{simType}}\n- Chu kỳ: {{period}}\n- Dung lượng: {{data}}\n- Số lượng: {{quantity}}\n- Giá tham khảo: {{price}}\n\nMong shop xác nhận và tư vấn giúp tôi.",
+    travelMessageTemplate: "Xin chào, tôi muốn mua SIM:\n\nLựa chọn SIM du lịch:\n- Gói: {{name}}\n- Gói dung lượng: {{travelPackage}}\n- Ngày sử dụng: {{travelDays}}\n- Thanh toán: {{paymentCurrency}}\n- Số lượng: {{quantity}}\n- Giá tham khảo: {{price}}\n\nMong shop xác nhận và tư vấn giúp tôi.",
     labels: {
       buy: 'Mua SIM',
       friend: 'Liên hệ',
@@ -62,21 +70,56 @@
 
   let pageConfig = {};
   let plans = [];
-  let travelData = { source: {}, plans: [] };
+  let travelData = { source: {}, selectionOptions: {}, plans: [] };
   let travelSearch = '';
   let travelRegion = '';
+  let travelPaymentCurrency = '';
   let orderConfig = structuredClone(DEFAULT_ORDER);
   let currentView = 'monthly';
   let activePlan = null;
   let selectedSimType = '';
+  let selectedTravelDay = '';
+  let selectedTravelPackage = '';
   let quantity = 1;
+
+
+  function normalizeTravelChoice(item, index, prefix) {
+    const raw = typeof item === 'string' ? { label: item } : (item && typeof item === 'object' ? item : {});
+    return {
+      id: String(raw.id || `${prefix}-${index + 1}`),
+      label: String(raw.label || '').trim(),
+      enabled: raw.enabled !== false
+    };
+  }
+
+  function normalizeTravelSelectionOptions(input) {
+    const data = input && typeof input === 'object' ? input : {};
+    const days = Array.isArray(data.days) && data.days.length ? data.days : DEFAULT_TRAVEL_DAY_OPTIONS;
+    const packages = Array.isArray(data.packages) && data.packages.length ? data.packages : DEFAULT_TRAVEL_PACKAGE_OPTIONS;
+    return {
+      enabled: data.enabled !== false,
+      validityNote: String(data.validityNote || 'Có hiệu lực trong vòng 60 ngày kể từ khi đặt').trim(),
+      days: days.map((item, index) => normalizeTravelChoice(item, index, 'day')).filter(item => item.label),
+      packages: packages.map((item, index) => normalizeTravelChoice(item, index, 'package')).filter(item => item.label)
+    };
+  }
+
+  function enabledTravelChoices(type) {
+    const selection = normalizeTravelSelectionOptions(travelData.selectionOptions);
+    return (type === 'day' ? selection.days : selection.packages).filter(item => item.enabled !== false);
+  }
 
   function normalizeOrder(input) {
     const data = input && typeof input === 'object' ? input : {};
     const labels = { ...DEFAULT_ORDER.labels, ...(data.labels || {}), friend: 'Liên hệ' };
+    const legacyTravelTemplate = 'Xin chào, tôi muốn mua SIM:\n\nLựa chọn SIM du lịch:\n- Gói: {{name}}\n- Gói dung lượng: {{travelPackage}}\n- Ngày sử dụng: {{travelDays}}\n- Số lượng: {{quantity}}\n- Giá tham khảo: {{price}}\n\nMong shop xác nhận và tư vấn giúp tôi.';
+    const travelMessageTemplate = !data.travelMessageTemplate || data.travelMessageTemplate === legacyTravelTemplate
+      ? DEFAULT_ORDER.travelMessageTemplate
+      : data.travelMessageTemplate;
     return {
       ...DEFAULT_ORDER,
       ...data,
+      travelMessageTemplate,
       labels
     };
   }
@@ -221,6 +264,62 @@
   }
 
 
+  function optionalTravelNumber(value) {
+    if (value === '' || value === null || typeof value === 'undefined') return null;
+    const number = Number(String(value).replace(/,/g, '').replace(/[^0-9.-]/g, ''));
+    return Number.isFinite(number) ? number : null;
+  }
+
+  function travelRateFromPricing(pricing, from, to) {
+    if (from === to) return 1;
+    const usdToJpy = Number(pricing?.usdToJpy || 0);
+    const usdToVnd = Number(pricing?.usdToVnd || 0);
+    const jpyToVnd = Number(pricing?.jpyToVnd || 0);
+    if (from === 'USD' && to === 'JPY') return usdToJpy;
+    if (from === 'USD' && to === 'VND') return usdToVnd;
+    if (from === 'JPY' && to === 'VND') return jpyToVnd;
+    if (from === 'JPY' && to === 'USD') return usdToJpy ? 1 / usdToJpy : 0;
+    if (from === 'VND' && to === 'USD') return usdToVnd ? 1 / usdToVnd : 0;
+    if (from === 'VND' && to === 'JPY') return jpyToVnd ? 1 / jpyToVnd : 0;
+    return 0;
+  }
+
+  function activeTravelPaymentCurrency() {
+    if (travelPaymentCurrency === 'VND' || travelPaymentCurrency === 'JPY') return travelPaymentCurrency;
+    return travelData.pricing?.defaultSellCurrency === 'VND' ? 'VND' : 'JPY';
+  }
+
+  function travelPaymentCurrencyLabel(currency = activeTravelPaymentCurrency()) {
+    return currency === 'VND' ? 'Việt Nam đồng (VND)' : 'Yên Nhật (JPY)';
+  }
+
+  function convertTravelMoney(value, fromCurrency, toCurrency) {
+    const number = Number(value || 0);
+    if (!Number.isFinite(number) || number <= 0 || fromCurrency === toCurrency) return number;
+    const rate = travelRateFromPricing(travelData.pricing || {}, fromCurrency, toCurrency);
+    return rate > 0 ? number * rate : number;
+  }
+
+  function travelPlanPricing(plan, targetCurrency = activeTravelPaymentCurrency()) {
+    const pricing = travelData.pricing || {};
+    const sourceCurrency = ['USD','JPY','VND'].includes(plan.sourceCurrency) ? plan.sourceCurrency : 'USD';
+    const sellCurrencyOverride = ['USD','JPY','VND'].includes(plan.sellCurrencyOverride) ? plan.sellCurrencyOverride : '';
+    const configuredSellCurrency = sellCurrencyOverride || (['USD','JPY','VND'].includes(pricing.defaultSellCurrency) ? pricing.defaultSellCurrency : 'JPY');
+    const sourceValue = Number(plan.sourcePriceValue || 0);
+    const rateOverride = optionalTravelNumber(plan.exchangeRateOverride);
+    const rate = rateOverride ?? travelRateFromPricing(pricing, sourceCurrency, configuredSellCurrency);
+    const markupOverride = optionalTravelNumber(plan.markupValueOverride);
+    const markup = markupOverride ?? Number(pricing.defaultMarkup || 0);
+    const sellOverride = optionalTravelNumber(plan.sellPriceOverride);
+    const calculated = Math.max(0, sourceValue * rate + markup);
+    const configuredValue = sellOverride ?? calculated;
+    const outputCurrency = targetCurrency === 'VND' ? 'VND' : 'JPY';
+    return {
+      sellCurrency: outputCurrency,
+      sellValue: convertTravelMoney(configuredValue, configuredSellCurrency, outputCurrency)
+    };
+  }
+
   const TRAVEL_FLAG_MAP = {
     japan: '🇯🇵', 'nhật bản': '🇯🇵', jp: '🇯🇵',
     korea: '🇰🇷', 'south korea': '🇰🇷', 'hàn quốc': '🇰🇷', kr: '🇰🇷',
@@ -284,7 +383,8 @@
   function planPrice(plan, type = selectedSimType || defaultType(plan)) {
     if (plan.planKind === 'travel') {
       if (plan.showPrice === false) return 'Liên hệ báo giá';
-      if (Number(plan.sellPriceValue || 0) > 0) return formatTravelMoney(plan.sellPriceValue, plan.sellCurrency);
+      const travelPrice = travelPlanPricing(plan);
+      if (travelPrice.sellValue > 0) return formatTravelMoney(travelPrice.sellValue, travelPrice.sellCurrency);
     }
     if (plan.priceMode === 'separate') {
       if (type === 'esim') return String(plan.esimPrice || plan.price || 'Liên hệ').trim() || 'Liên hệ';
@@ -374,12 +474,34 @@
     return regionOk && searchOk;
   }
 
+  const TRAVEL_SALES_PRIORITY = [
+    'travel-vietnam',
+    'travel-japan',
+    'travel-taiwan',
+    'travel-south-korea',
+    'travel-china'
+  ];
+
+  function sortTravelCatalog(items) {
+    return items
+      .map((plan, originalIndex) => ({ plan, originalIndex }))
+      .sort((a, b) => {
+        const aPriority = TRAVEL_SALES_PRIORITY.indexOf(String(a.plan.id || ''));
+        const bPriority = TRAVEL_SALES_PRIORITY.indexOf(String(b.plan.id || ''));
+        const aRank = aPriority >= 0 ? aPriority : TRAVEL_SALES_PRIORITY.length;
+        const bRank = bPriority >= 0 ? bPriority : TRAVEL_SALES_PRIORITY.length;
+        return aRank - bRank || a.originalIndex - b.originalIndex;
+      })
+      .map(item => item.plan);
+  }
+
   function enabledPlans(view) {
-    return plans.filter(plan => plan.enabled !== false
+    const items = plans.filter(plan => plan.enabled !== false
       && plan.showCard !== false
       && availableTypes(plan).length
       && planMatchesView(plan, view)
       && travelMatchesFilter(plan));
+    return view === 'travel' ? sortTravelCatalog(items) : items;
   }
 
   function productCard(plan) {
@@ -433,6 +555,24 @@
     </div>`;
   }
 
+
+  function travelSelectionTemplate(plan) {
+    if (plan.planKind !== 'travel') return '';
+    const selection = normalizeTravelSelectionOptions(travelData.selectionOptions);
+    if (selection.enabled === false) return '';
+    const days = selection.days.filter(item => item.enabled !== false);
+    const packages = selection.packages.filter(item => item.enabled !== false);
+    if (!days.length && !packages.length) return '';
+    return `<section class="sim-travel-choice-panel" aria-label="Chọn ngày và gói SIM du lịch">
+      <div class="sim-travel-choice-heading">
+        <h3>Ngày sử dụng</h3>
+        ${selection.validityNote ? `<p>${escapeHtml(selection.validityNote)}</p>` : ''}
+      </div>
+      ${days.length ? `<div class="sim-travel-choice-group"><strong>Chọn ngày</strong><div class="sim-travel-choice-buttons">${days.map(item => `<button type="button" data-travel-day="${escapeHtml(item.label)}" class="${selectedTravelDay === item.label ? 'active' : ''}">${escapeHtml(item.label)}</button>`).join('')}</div></div>` : ''}
+      ${packages.length ? `<div class="sim-travel-choice-group"><strong>Chọn gói</strong><div class="sim-travel-choice-buttons package-options">${packages.map(item => `<button type="button" data-travel-package="${escapeHtml(item.label)}" class="${selectedTravelPackage === item.label ? 'active' : ''}">${escapeHtml(item.label)}</button>`).join('')}</div></div>` : ''}
+    </section>`;
+  }
+
   function detailTemplate(plan) {
     const types = availableTypes(plan);
     const currentType = types.includes(selectedSimType) ? selectedSimType : defaultType(plan);
@@ -458,6 +598,7 @@
           <div><span>Loại SIM</span><strong>${escapeHtml(typeLabel(currentType))}</strong></div>
           <div><span>${plan.planKind === 'travel' ? 'Thời hạn' : 'Chu kỳ'}</span><strong>${escapeHtml(plan.durationLabel || viewLabel(planView(plan)))}</strong></div>
         </div>
+        ${travelSelectionTemplate(plan)}
         <div class="sim-detail-order-box${plan.soldOut === true ? ' sold-out' : ''}">
           ${plan.soldOut === true ? '' : `<div class="sim-quantity-block"><span class="sim-quantity-title">Số lượng</span><div class="sim-quantity" aria-label="Chọn số lượng"><div><button type="button" data-quantity-minus aria-label="Giảm số lượng">−</button><output id="simQuantity">${quantity}</output><button type="button" data-quantity-plus aria-label="Tăng số lượng">+</button></div></div></div>`}
           <button class="sim-buy-button${plan.soldOut === true ? ' sim-contact-button' : ''}" type="button" data-sim-buy>${buyLabel}</button>
@@ -481,6 +622,8 @@
     if (!plan || !modal) return;
     activePlan = plan;
     selectedSimType = defaultType(plan);
+    selectedTravelDay = '';
+    selectedTravelPackage = '';
     quantity = 1;
     $('#simDetailContent').innerHTML = detailTemplate(plan);
     modal.hidden = false;
@@ -494,12 +637,48 @@
     $('#simDetailContent').innerHTML = detailTemplate(activePlan);
   }
 
+
+  function selectTravelChoice(type, value) {
+    if (!activePlan || activePlan.planKind !== 'travel') return;
+    if (type === 'day') selectedTravelDay = value;
+    else selectedTravelPackage = value;
+    const selector = type === 'day' ? '[data-travel-day]' : '[data-travel-package]';
+    document.querySelectorAll(selector).forEach(button => {
+      const current = type === 'day' ? button.dataset.travelDay : button.dataset.travelPackage;
+      button.classList.toggle('active', current === value);
+      button.setAttribute('aria-pressed', String(current === value));
+    });
+  }
+
+  function validateTravelChoices() {
+    if (!activePlan || activePlan.planKind !== 'travel') return true;
+    const selection = normalizeTravelSelectionOptions(travelData.selectionOptions);
+    if (selection.enabled === false) return true;
+    const days = enabledTravelChoices('day');
+    const packages = enabledTravelChoices('package');
+    if (days.length && !selectedTravelDay) {
+      showToast('Vui lòng chọn ngày sử dụng.');
+      document.querySelector('.sim-travel-choice-panel')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      document.querySelector('[data-travel-day]')?.focus({ preventScroll: true });
+      return false;
+    }
+    if (packages.length && !selectedTravelPackage) {
+      showToast('Vui lòng chọn gói dung lượng.');
+      document.querySelector('.sim-travel-choice-panel')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      document.querySelector('[data-travel-package]')?.focus({ preventScroll: true });
+      return false;
+    }
+    return true;
+  }
+
   function closeDetail() {
     const modal = $('#simDetailModal');
     if (modal) modal.hidden = true;
     document.body.classList.remove('sim-modal-open');
     activePlan = null;
     selectedSimType = '';
+    selectedTravelDay = '';
+    selectedTravelPackage = '';
   }
 
   function setQuantity(next) {
@@ -508,8 +687,12 @@
     if (output) output.textContent = String(quantity);
   }
 
-  function interpolate(template, plan) {
+  function interpolate(plan) {
     const type = availableTypes(plan).includes(selectedSimType) ? selectedSimType : defaultType(plan);
+    const isTravel = plan.planKind === 'travel';
+    const sourceTemplate = String(isTravel
+      ? (orderConfig.travelMessageTemplate || DEFAULT_ORDER.travelMessageTemplate)
+      : (orderConfig.messageTemplate || DEFAULT_ORDER.messageTemplate));
     const values = {
       id: plan.id,
       name: plan.name,
@@ -519,9 +702,12 @@
       quantity: String(quantity),
       price: plan.soldOut === true ? 'Hết hàng - cần liên hệ' : planPrice(plan, type),
       carrier: plan.carrier || '',
-      destination: plan.country || plan.carrier || ''
+      destination: plan.country || plan.carrier || '',
+      travelDays: selectedTravelDay || '',
+      travelPackage: selectedTravelPackage || '',
+      paymentCurrency: travelPaymentCurrencyLabel()
     };
-    return String(template || DEFAULT_ORDER.messageTemplate).replace(/{{\s*([a-zA-Z]+)\s*}}/g, (_, key) => values[key] ?? '');
+    return sourceTemplate.replace(/{{\s*([a-zA-Z]+)\s*}}/g, (_, key) => values[key] ?? '');
   }
 
   async function copyText(text) {
@@ -652,6 +838,11 @@
         url.searchParams.set('plan', plan.id);
         url.searchParams.set('simType', selectedSimType || defaultType(plan));
         url.searchParams.set('quantity', String(quantity));
+        if (plan.planKind === 'travel') {
+          if (selectedTravelDay) url.searchParams.set('travelDays', selectedTravelDay);
+          if (selectedTravelPackage) url.searchParams.set('travelPackage', selectedTravelPackage);
+          url.searchParams.set('paymentCurrency', activeTravelPaymentCurrency());
+        }
         return url.href;
       } catch (_) {
         return orderConfig.customPageUrl || DEFAULT_ORDER.customPageUrl;
@@ -670,7 +861,8 @@
 
   async function buyCurrentPlan() {
     if (!activePlan) return;
-    const message = interpolate(orderConfig.messageTemplate, activePlan);
+    if (!validateTravelChoices()) return;
+    const message = interpolate(activePlan);
     const destination = orderUrl(activePlan, message);
     const isMessenger = orderConfig.mode !== 'custom-page';
     if (!isMessenger) {
@@ -702,6 +894,16 @@
       travelRegion = String(event.target.value || '').trim();
       if (currentView === 'travel') renderCatalog('travel');
     });
+    document.querySelectorAll('[data-travel-payment-currency]').forEach(input => {
+      input.addEventListener('change', event => {
+        travelPaymentCurrency = event.target.value === 'VND' ? 'VND' : 'JPY';
+        document.querySelectorAll('[data-travel-payment-currency]').forEach(item => {
+          item.checked = item.value === travelPaymentCurrency;
+        });
+        if (currentView === 'travel') renderCatalog('travel');
+        if (activePlan?.planKind === 'travel') $('#simDetailContent').innerHTML = detailTemplate(activePlan);
+      });
+    });
     document.addEventListener('click', event => {
       const period = event.target.closest('[data-sim-period]');
       if (period) { renderCatalog(period.dataset.simPeriod); return; }
@@ -711,6 +913,10 @@
 
       const typeButton = event.target.closest('[data-sim-type]');
       if (typeButton) { selectType(typeButton.dataset.simType); return; }
+      const travelDayButton = event.target.closest('[data-travel-day]');
+      if (travelDayButton) { selectTravelChoice('day', travelDayButton.dataset.travelDay); return; }
+      const travelPackageButton = event.target.closest('[data-travel-package]');
+      if (travelPackageButton) { selectTravelChoice('package', travelPackageButton.dataset.travelPackage); return; }
 
       if (event.target.closest('[data-quantity-minus]')) { setQuantity(quantity - 1); return; }
       if (event.target.closest('[data-quantity-plus]')) { setQuantity(quantity + 1); return; }
@@ -747,7 +953,12 @@
       ]);
       if (!dataResponse.ok) throw new Error('Không tải được sim-plans.json');
       const data = await dataResponse.json();
-      travelData = travelResponse.ok ? await travelResponse.json() : { source: {}, plans: [] };
+      travelData = travelResponse.ok ? await travelResponse.json() : { source: {}, selectionOptions: {}, plans: [] };
+      travelData.selectionOptions = normalizeTravelSelectionOptions(travelData.selectionOptions);
+      travelPaymentCurrency = travelData.pricing?.defaultSellCurrency === 'VND' ? 'VND' : 'JPY';
+      document.querySelectorAll('[data-travel-payment-currency]').forEach(input => {
+        input.checked = input.value === travelPaymentCurrency;
+      });
       const order = orderResponse.ok ? await orderResponse.json() : DEFAULT_ORDER;
       pageConfig = data.page || {};
       const localPlans = consolidatePlans(data.plans).filter(item => item.enabled !== false);

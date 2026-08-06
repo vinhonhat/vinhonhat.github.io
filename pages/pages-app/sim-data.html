@@ -49,6 +49,13 @@
       </div>
 
       <div id="travelSimFilters" class="travel-sim-filters" hidden>
+        <fieldset class="travel-payment-currency" aria-label="Chọn tiền thanh toán">
+          <legend>Thanh toán bằng</legend>
+          <div>
+            <label><input type="radio" name="travelPaymentCurrency" value="JPY" data-travel-payment-currency><span>Yên Nhật <b>¥ JPY</b></span></label>
+            <label><input type="radio" name="travelPaymentCurrency" value="VND" data-travel-payment-currency><span>Việt Nam đồng <b>₫ VND</b></span></label>
+          </div>
+        </fieldset>
         <label><span>Tìm quốc gia</span><input id="travelSimSearch" type="search" placeholder="Nhật Bản, Hàn Quốc, châu Âu..."></label>
         <label><span>Khu vực</span><select id="travelSimRegion"><option value="">Tất cả khu vực</option></select></label>
         <small id="travelSimSourceNote"></small>

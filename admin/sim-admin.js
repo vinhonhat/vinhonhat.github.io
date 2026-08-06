@@ -43,6 +43,52 @@
     legacy: 'vinh-sim-admin-draft'
   });
 
+  const DEFAULT_TRAVEL_DAY_OPTIONS = Object.freeze([
+    '1 ngày','2 ngày','3 ngày','4 ngày','5 ngày','6 ngày','7 ngày','8 ngày','9 ngày','10 ngày','12 ngày','15 ngày','20 ngày','25 ngày','30 ngày'
+  ]);
+  const DEFAULT_TRAVEL_PACKAGE_OPTIONS = Object.freeze([
+    'Hàng ngày - 0,5GB','Hàng ngày - 1GB','Hàng ngày - 2GB','Hàng ngày - 3GB','Hàng ngày - 100GB','Mạng 5G - Hàng ngày - 100GB-plus',
+    'Tổng cộng - 1GB','Tổng cộng - 3GB','Tổng cộng - 5GB','Tổng cộng - 10GB','Tổng cộng - 20GB','Tổng cộng - 30GB','Tổng cộng - 50GB'
+  ]);
+
+  function slugifyTravelOption(value = '', fallback = 'option') {
+    const slug = String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    return slug || fallback;
+  }
+
+  function normalizeTravelSharedOption(item, index, prefix) {
+    const raw = typeof item === 'string' ? { label: item } : (item && typeof item === 'object' ? item : {});
+    const label = String(raw.label || '').trim();
+    return {
+      id: String(raw.id || `${prefix}-${slugifyTravelOption(label, String(index + 1))}`),
+      label,
+      enabled: raw.enabled !== false
+    };
+  }
+
+  function defaultTravelSelectionOptions() {
+    return {
+      enabled: true,
+      validityNote: 'Có hiệu lực trong vòng 60 ngày kể từ khi đặt',
+      days: DEFAULT_TRAVEL_DAY_OPTIONS.map((label, index) => normalizeTravelSharedOption({ label }, index, 'day')),
+      packages: DEFAULT_TRAVEL_PACKAGE_OPTIONS.map((label, index) => normalizeTravelSharedOption({ label }, index, 'package'))
+    };
+  }
+
+  function normalizeTravelSelectionOptions(input) {
+    const defaults = defaultTravelSelectionOptions();
+    const data = input && typeof input === 'object' ? input : {};
+    const days = Array.isArray(data.days) && data.days.length ? data.days : defaults.days;
+    const packages = Array.isArray(data.packages) && data.packages.length ? data.packages : defaults.packages;
+    return {
+      enabled: data.enabled !== false,
+      validityNote: String(data.validityNote || defaults.validityNote).trim() || defaults.validityNote,
+      days: days.map((item, index) => normalizeTravelSharedOption(item, index, 'day')),
+      packages: packages.map((item, index) => normalizeTravelSharedOption(item, index, 'package'))
+    };
+  }
+
   function carrierKey(value = '') {
     const key = String(value).trim().toLowerCase().replace(/[^a-z0-9]/g, '');
     if (key.includes('docomo')) return 'docomo';
@@ -68,7 +114,7 @@
   }
 
   let simData = { schemaVersion: 6, page: {}, plans: [], faqs: [] };
-  let travelData = { schemaVersion: 1, title: 'SIM du lịch quốc tế', description: '', source: {}, plans: [] };
+  let travelData = { schemaVersion: 4, title: 'SIM du lịch quốc tế', description: '', source: {}, pricing: {}, selectionOptions: defaultTravelSelectionOptions(), plans: [] };
   let orderData = {};
   let urls = { sim: '', travel: '', order: '' };
   let activeView = localStorage.getItem('vinh-sim-admin-view') || 'settings';
@@ -188,6 +234,26 @@
     };
   }
 
+  function travelRateFromPricing(pricing, from, to) {
+    if (from === to) return 1;
+    const usdToJpy = Number(pricing?.usdToJpy || 0);
+    const usdToVnd = Number(pricing?.usdToVnd || 0);
+    const jpyToVnd = Number(pricing?.jpyToVnd || 0);
+    if (from === 'USD' && to === 'JPY') return usdToJpy;
+    if (from === 'USD' && to === 'VND') return usdToVnd;
+    if (from === 'JPY' && to === 'VND') return jpyToVnd;
+    if (from === 'JPY' && to === 'USD') return usdToJpy ? 1 / usdToJpy : 0;
+    if (from === 'VND' && to === 'USD') return usdToVnd ? 1 / usdToVnd : 0;
+    if (from === 'VND' && to === 'JPY') return jpyToVnd ? 1 / jpyToVnd : 0;
+    return 0;
+  }
+
+  function optionalTravelNumber(value) {
+    if (value === '' || value === null || typeof value === 'undefined') return null;
+    const number = Number(String(value).replace(/,/g, '').replace(/[^0-9.-]/g, ''));
+    return Number.isFinite(number) ? number : null;
+  }
+
   function normalizeTravelData(input) {
     const data = input && typeof input === 'object' ? input : {};
     const pricing = {
@@ -197,17 +263,39 @@
       defaultSellCurrency: ['USD','JPY','VND'].includes(data.pricing?.defaultSellCurrency) ? data.pricing.defaultSellCurrency : 'JPY',
       defaultMarkup: Number(data.pricing?.defaultMarkup || 0)
     };
+    const sourceSchema = Number(data.schemaVersion || 0);
     return {
       ...data,
-      schemaVersion: 2,
+      schemaVersion: 4,
       title: String(data.title || 'SIM du lịch quốc tế'),
       description: String(data.description || ''),
       source: { ...(data.source || {}) },
       pricing,
+      selectionOptions: normalizeTravelSelectionOptions(data.selectionOptions),
       plans: (Array.isArray(data.plans) ? data.plans : []).map(item => {
         const sourcePriceValue = Number.isFinite(Number(item.sourcePriceValue)) ? Number(item.sourcePriceValue) : parseTravelNumber(item.price);
-        const sellCurrency = ['USD','JPY','VND'].includes(item.sellCurrency) ? item.sellCurrency : pricing.defaultSellCurrency;
-        const exchangeRate = Number(item.exchangeRate || (item.sourceCurrency === sellCurrency ? 1 : (sellCurrency === 'JPY' ? pricing.usdToJpy : sellCurrency === 'VND' ? pricing.usdToVnd : 1)));
+        const sourceCurrency = ['USD','JPY','VND'].includes(item.sourceCurrency) ? item.sourceCurrency : 'USD';
+        const legacySellCurrency = ['USD','JPY','VND'].includes(item.sellCurrency) ? item.sellCurrency : pricing.defaultSellCurrency;
+        const explicitSellCurrency = ['USD','JPY','VND'].includes(item.sellCurrencyOverride) ? item.sellCurrencyOverride : '';
+        const sellCurrencyOverride = sourceSchema >= 4 ? explicitSellCurrency : (legacySellCurrency !== pricing.defaultSellCurrency ? legacySellCurrency : '');
+        const sellCurrency = sellCurrencyOverride || pricing.defaultSellCurrency;
+        const defaultRate = travelRateFromPricing(pricing, sourceCurrency, sellCurrency);
+        const legacyRate = Number(item.exchangeRate || 0);
+        const exchangeRateOverride = sourceSchema >= 4
+          ? optionalTravelNumber(item.exchangeRateOverride)
+          : (legacyRate > 0 && Math.abs(legacyRate - defaultRate) > 0.0001 ? legacyRate : null);
+        const effectiveRate = exchangeRateOverride ?? defaultRate;
+        const legacyMarkup = Number(item.markupValue ?? pricing.defaultMarkup ?? 0);
+        const markupValueOverride = sourceSchema >= 4
+          ? optionalTravelNumber(item.markupValueOverride)
+          : (Math.abs(legacyMarkup - pricing.defaultMarkup) > 0.0001 ? legacyMarkup : null);
+        const effectiveMarkup = markupValueOverride ?? pricing.defaultMarkup;
+        const calculatedSell = Math.max(0, sourcePriceValue * effectiveRate + effectiveMarkup);
+        const legacySell = Number(item.sellPriceValue || 0);
+        const sellPriceOverride = sourceSchema >= 4
+          ? optionalTravelNumber(item.sellPriceOverride)
+          : (legacySell > 0 && Math.abs(legacySell - calculatedSell) > (sellCurrency === 'USD' ? 0.01 : 0.5) ? legacySell : null);
+        const effectiveSell = sellPriceOverride ?? calculatedSell;
         return normalizePlan({
           ...item,
           planKind: 'travel',
@@ -217,14 +305,18 @@
           simType: 'esim',
           showPrice: item.showPrice === true,
           sourcePriceValue,
-          sourceCurrency: ['USD','JPY','VND'].includes(item.sourceCurrency) ? item.sourceCurrency : 'USD',
+          sourceCurrency,
+          sellCurrencyOverride,
+          exchangeRateOverride,
+          markupValueOverride,
+          sellPriceOverride,
           sellCurrency,
-          exchangeRate,
-          markupValue: Number(item.markupValue ?? pricing.defaultMarkup ?? 0),
-          sellPriceValue: Number(item.sellPriceValue || (sourcePriceValue * exchangeRate + Number(item.markupValue ?? pricing.defaultMarkup ?? 0))),
-          price: item.showPrice === true ? item.price : 'Liên hệ báo giá',
-          physicalPrice: item.showPrice === true ? item.physicalPrice : 'Liên hệ báo giá',
-          esimPrice: item.showPrice === true ? item.esimPrice : 'Liên hệ báo giá'
+          exchangeRate: effectiveRate,
+          markupValue: effectiveMarkup,
+          sellPriceValue: effectiveSell,
+          price: item.showPrice === true ? formatTravelMoney(effectiveSell, sellCurrency) : 'Liên hệ báo giá',
+          physicalPrice: item.showPrice === true ? formatTravelMoney(effectiveSell, sellCurrency) : 'Liên hệ báo giá',
+          esimPrice: item.showPrice === true ? formatTravelMoney(effectiveSell, sellCurrency) : 'Liên hệ báo giá'
         });
       })
     };
@@ -335,6 +427,70 @@
     document.querySelector(`[data-sim-faq-index="${nextIndex}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
+
+  function travelSharedOptionRow(item, index, type) {
+    const typeLabel = type === 'day' ? 'ngày' : 'gói';
+    return `<label class="travel-shared-option-row" data-travel-shared-option="${type}" data-option-index="${index}" data-option-id="${escapeHtml(item.id || `${type}-${index + 1}`)}">
+      <input type="checkbox" data-travel-option-enabled ${item.enabled !== false ? 'checked' : ''} aria-label="Bật ${escapeHtml(item.label || typeLabel)}">
+      <input type="text" data-travel-option-label value="${escapeHtml(item.label || '')}" placeholder="Nhập ${typeLabel}">
+      <button type="button" data-remove-travel-option="${type}" aria-label="Xóa ${typeLabel}" title="Xóa">×</button>
+    </label>`;
+  }
+
+  function renderTravelSharedOptions() {
+    travelData.selectionOptions = normalizeTravelSelectionOptions(travelData.selectionOptions);
+    const selection = travelData.selectionOptions;
+    if ($('#travelSelectionEnabled')) $('#travelSelectionEnabled').checked = selection.enabled !== false;
+    if ($('#travelValidityNote')) $('#travelValidityNote').value = selection.validityNote || '';
+    const dayList = $('#travelDayOptions');
+    if (dayList) dayList.innerHTML = selection.days.map((item, index) => travelSharedOptionRow(item, index, 'day')).join('');
+    const packageList = $('#travelPackageOptions');
+    if (packageList) packageList.innerHTML = selection.packages.map((item, index) => travelSharedOptionRow(item, index, 'package')).join('');
+  }
+
+  function collectTravelSharedOptionList(selector, prefix) {
+    return $$(selector).map((node, index) => normalizeTravelSharedOption({
+      id: node.dataset.optionId || `${prefix}-${index + 1}`,
+      label: node.querySelector('[data-travel-option-label]')?.value,
+      enabled: node.querySelector('[data-travel-option-enabled]')?.checked !== false
+    }, index, prefix)).filter(item => item.label);
+  }
+
+  function collectTravelSharedOptions() {
+    const previous = normalizeTravelSelectionOptions(travelData.selectionOptions);
+    const days = collectTravelSharedOptionList('#travelDayOptions [data-travel-shared-option="day"]', 'day');
+    const packages = collectTravelSharedOptionList('#travelPackageOptions [data-travel-shared-option="package"]', 'package');
+    travelData.selectionOptions = {
+      enabled: $('#travelSelectionEnabled')?.checked !== false,
+      validityNote: String($('#travelValidityNote')?.value || previous.validityNote).trim() || previous.validityNote,
+      days: days.length ? days : previous.days,
+      packages: packages.length ? packages : previous.packages
+    };
+  }
+
+  function addTravelSharedOption(type) {
+    collectTravelSharedOptions();
+    const selection = normalizeTravelSelectionOptions(travelData.selectionOptions);
+    const list = type === 'day' ? selection.days : selection.packages;
+    list.push(normalizeTravelSharedOption({ label: type === 'day' ? 'Ngày mới' : 'Gói mới', enabled: true }, list.length, type));
+    travelData.selectionOptions = selection;
+    renderTravelSharedOptions();
+    updateDownloads('travel');
+    const target = type === 'day' ? '#travelDayOptions' : '#travelPackageOptions';
+    document.querySelector(`${target} [data-travel-shared-option]:last-child`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function removeTravelSharedOption(type, index) {
+    collectTravelSharedOptions();
+    const selection = normalizeTravelSelectionOptions(travelData.selectionOptions);
+    const list = type === 'day' ? selection.days : selection.packages;
+    if (!Number.isInteger(index) || index < 0 || index >= list.length) return;
+    list.splice(index, 1);
+    travelData.selectionOptions = selection;
+    renderTravelSharedOptions();
+    updateDownloads('travel');
+  }
+
   function fillPage() {
     $('#simAdminTitle').value = simData.page?.title || '';
     $('#simAdminEyebrow').value = simData.page?.eyebrow || '';
@@ -362,12 +518,18 @@
     if ($('#travelJpyToVnd')) $('#travelJpyToVnd').value = travelData.pricing?.jpyToVnd || 175;
     if ($('#travelDefaultSellCurrency')) $('#travelDefaultSellCurrency').value = travelData.pricing?.defaultSellCurrency || 'JPY';
     if ($('#travelDefaultMarkup')) $('#travelDefaultMarkup').value = travelData.pricing?.defaultMarkup || 0;
+    renderTravelSharedOptions();
 
     $('#simOrderMode').value = orderData.mode || 'messenger';
     $('#simMessengerUrl').value = orderData.messengerUrl || '';
     $('#simFacebookUrl').value = orderData.facebookUrl || '';
     $('#simCustomOrderUrl').value = orderData.customPageUrl || '';
-    $('#simMessageTemplate').value = orderData.messageTemplate || '';
+    $('#simMessageTemplate').value = orderData.messageTemplate || "Xin chào, tôi muốn mua SIM:\n\n- Gói: {{name}}\n- Nhà mạng: {{carrier}}\n- Loại: {{simType}}\n- Chu kỳ: {{period}}\n- Dung lượng: {{data}}\n- Số lượng: {{quantity}}\n- Giá tham khảo: {{price}}\n\nMong shop xác nhận và tư vấn giúp tôi.";
+    const legacyTravelMessageTemplate = 'Xin chào, tôi muốn mua SIM:\n\nLựa chọn SIM du lịch:\n- Gói: {{name}}\n- Gói dung lượng: {{travelPackage}}\n- Ngày sử dụng: {{travelDays}}\n- Số lượng: {{quantity}}\n- Giá tham khảo: {{price}}\n\nMong shop xác nhận và tư vấn giúp tôi.';
+    const defaultTravelMessageTemplate = 'Xin chào, tôi muốn mua SIM:\n\nLựa chọn SIM du lịch:\n- Gói: {{name}}\n- Gói dung lượng: {{travelPackage}}\n- Ngày sử dụng: {{travelDays}}\n- Thanh toán: {{paymentCurrency}}\n- Số lượng: {{quantity}}\n- Giá tham khảo: {{price}}\n\nMong shop xác nhận và tư vấn giúp tôi.';
+    $('#simTravelMessageTemplate').value = !orderData.travelMessageTemplate || orderData.travelMessageTemplate === legacyTravelMessageTemplate
+      ? defaultTravelMessageTemplate
+      : orderData.travelMessageTemplate;
     $('#simCopyMessage').checked = orderData.copyMessageBeforeOpen !== false;
     $('#simAppendText').checked = orderData.appendTextQuery !== false;
     orderData.labels = { ...(orderData.labels || {}), friend: 'Liên hệ' };
@@ -387,19 +549,56 @@
     return Number.isFinite(number) ? number : 0;
   }
 
-  function travelRate(from, to) {
-    if (from === to) return 1;
-    const pricing = travelData.pricing || {};
-    const usdToJpy = Number(pricing.usdToJpy || 0);
-    const usdToVnd = Number(pricing.usdToVnd || 0);
-    const jpyToVnd = Number(pricing.jpyToVnd || 0);
-    if (from === 'USD' && to === 'JPY') return usdToJpy;
-    if (from === 'USD' && to === 'VND') return usdToVnd;
-    if (from === 'JPY' && to === 'VND') return jpyToVnd;
-    if (from === 'JPY' && to === 'USD') return usdToJpy ? 1 / usdToJpy : 0;
-    if (from === 'VND' && to === 'USD') return usdToVnd ? 1 / usdToVnd : 0;
-    if (from === 'VND' && to === 'JPY') return jpyToVnd ? 1 / jpyToVnd : 0;
-    return 0;
+  function currentTravelPricingSettings() {
+    return {
+      usdToJpy: parseTravelNumber($('#travelUsdToJpy')?.value) || Number(travelData.pricing?.usdToJpy || 150),
+      usdToVnd: parseTravelNumber($('#travelUsdToVnd')?.value) || Number(travelData.pricing?.usdToVnd || 26000),
+      jpyToVnd: parseTravelNumber($('#travelJpyToVnd')?.value) || Number(travelData.pricing?.jpyToVnd || 175),
+      defaultSellCurrency: $('#travelDefaultSellCurrency')?.value || travelData.pricing?.defaultSellCurrency || 'JPY',
+      defaultMarkup: optionalTravelNumber($('#travelDefaultMarkup')?.value) ?? Number(travelData.pricing?.defaultMarkup || 0)
+    };
+  }
+
+  function travelRate(from, to, pricing = currentTravelPricingSettings()) {
+    return travelRateFromPricing(pricing, from, to);
+  }
+
+  function travelCardPricing(cardNode) {
+    const pricing = currentTravelPricingSettings();
+    const sourceValue = parseTravelNumber(cardNode?.querySelector('[data-sim-field="sourcePriceValue"]')?.value);
+    const sourceCurrency = cardNode?.querySelector('[data-sim-field="sourceCurrency"]')?.value || 'USD';
+    const sellCurrencyOverride = cardNode?.querySelector('[data-sim-field="sellCurrencyOverride"]')?.value || '';
+    const sellCurrency = sellCurrencyOverride || pricing.defaultSellCurrency;
+    const rateOverride = optionalTravelNumber(cardNode?.querySelector('[data-sim-field="exchangeRateOverride"]')?.value);
+    const rate = rateOverride ?? travelRateFromPricing(pricing, sourceCurrency, sellCurrency);
+    const markupOverride = optionalTravelNumber(cardNode?.querySelector('[data-sim-field="markupValueOverride"]')?.value);
+    const markup = markupOverride ?? pricing.defaultMarkup;
+    const sellOverride = optionalTravelNumber(cardNode?.querySelector('[data-sim-field="sellPriceOverride"]')?.value);
+    const calculated = Math.max(0, sourceValue * rate + markup);
+    const sellValue = sellOverride ?? calculated;
+    return { sourceValue, sourceCurrency, sellCurrencyOverride, sellCurrency, rateOverride, rate, markupOverride, markup, sellOverride, calculated, sellValue };
+  }
+
+  function updateTravelPricePreview(cardNode) {
+    if (!cardNode) return;
+    const values = travelCardPricing(cardNode);
+    const preview = cardNode.querySelector('[data-travel-price-preview]');
+    const showPrice = cardNode.querySelector('[data-sim-field="showPrice"]')?.checked !== false;
+    if (preview) preview.textContent = showPrice
+      ? `${values.sellOverride === null ? 'Tự tính' : 'Giá riêng'}: ${formatTravelMoney(values.sellValue, values.sellCurrency)}`
+      : 'Ngoài trang: Liên hệ báo giá';
+    const rateInput = cardNode.querySelector('[data-sim-field="exchangeRateOverride"]');
+    if (rateInput) rateInput.placeholder = `Mặc định: ${values.rate || 0}`;
+    const markupInput = cardNode.querySelector('[data-sim-field="markupValueOverride"]');
+    if (markupInput) markupInput.placeholder = `Mặc định: ${pricingNumber(values.markup)}`;
+    const sellInput = cardNode.querySelector('[data-sim-field="sellPriceOverride"]');
+    if (sellInput) sellInput.placeholder = `Tự tính: ${pricingNumber(values.calculated, values.sellCurrency)}`;
+  }
+
+  function pricingNumber(value, currency = '') {
+    const number = Number(value || 0);
+    if (currency === 'USD') return number.toFixed(number % 1 === 0 ? 0 : 2);
+    return String(Math.round(number));
   }
 
   function formatTravelMoney(value, currency) {
@@ -411,13 +610,18 @@
   }
 
   function travelCard(plan) {
-    const sellCurrency = ['USD','JPY','VND'].includes(plan.sellCurrency) ? plan.sellCurrency : (travelData.pricing?.defaultSellCurrency || 'JPY');
+    const defaultCurrency = travelData.pricing?.defaultSellCurrency || 'JPY';
     const sourceCurrency = ['USD','JPY','VND'].includes(plan.sourceCurrency) ? plan.sourceCurrency : 'USD';
+    const sellCurrencyOverride = ['USD','JPY','VND'].includes(plan.sellCurrencyOverride) ? plan.sellCurrencyOverride : '';
+    const sellCurrency = sellCurrencyOverride || defaultCurrency;
     const sourceValue = Number(plan.sourcePriceValue || 0);
-    const defaultRate = travelRate(sourceCurrency, sellCurrency);
-    const exchangeRate = Number(plan.exchangeRate || defaultRate || 0);
-    const markup = Number(plan.markupValue ?? travelData.pricing?.defaultMarkup ?? 0);
-    const sellValue = Number(plan.sellPriceValue || 0);
+    const rateOverride = optionalTravelNumber(plan.exchangeRateOverride);
+    const effectiveRate = rateOverride ?? travelRate(sourceCurrency, sellCurrency);
+    const markupOverride = optionalTravelNumber(plan.markupValueOverride);
+    const effectiveMarkup = markupOverride ?? Number(travelData.pricing?.defaultMarkup || 0);
+    const sellOverride = optionalTravelNumber(plan.sellPriceOverride);
+    const calculatedSell = Math.max(0, sourceValue * effectiveRate + effectiveMarkup);
+    const effectiveSell = sellOverride ?? calculatedSell;
     return `<article class="sim-admin-card travel-admin-card" data-sim-admin-id="${escapeHtml(plan.id)}">
       <header>
         <div class="sim-admin-card-title">
@@ -439,20 +643,20 @@
           </div>
         </section>
         <section class="travel-price-editor wide-status">
-          <div class="travel-price-editor-head"><strong>Giá nguồn và giá bán</strong><small>Giá bán = Giá nguồn × Tỷ giá + Cộng thêm.</small></div>
+          <div class="travel-price-editor-head"><strong>Giá nguồn và giá bán</strong><small>Để trống ô riêng sẽ tự dùng tỷ giá, tiền bán và lợi nhuận mặc định ở phía trên.</small></div>
           <div class="travel-price-editor-grid">
             <label><span>Giá nguồn</span><input type="number" min="0" step="0.01" data-sim-field="sourcePriceValue" value="${escapeHtml(sourceValue || '')}" placeholder="0.22"></label>
             <label><span>Tiền nguồn</span><select data-sim-field="sourceCurrency"><option value="USD" ${sourceCurrency==='USD'?'selected':''}>USD</option><option value="JPY" ${sourceCurrency==='JPY'?'selected':''}>JPY</option><option value="VND" ${sourceCurrency==='VND'?'selected':''}>VND</option></select></label>
-            <label><span>Tiền bán</span><select data-sim-field="sellCurrency"><option value="JPY" ${sellCurrency==='JPY'?'selected':''}>JPY</option><option value="VND" ${sellCurrency==='VND'?'selected':''}>VND</option><option value="USD" ${sellCurrency==='USD'?'selected':''}>USD</option></select></label>
-            <label><span>Tỷ giá áp dụng</span><input type="number" min="0" step="0.0001" data-sim-field="exchangeRate" value="${escapeHtml(exchangeRate || '')}"></label>
-            <label><span>Cộng thêm / lợi nhuận</span><input type="number" step="1" data-sim-field="markupValue" value="${escapeHtml(markup || '')}" placeholder="0"></label>
-            <label><span>Giá bán</span><input type="number" min="0" step="1" data-sim-field="sellPriceValue" value="${escapeHtml(sellValue || '')}" placeholder="Tự tính hoặc nhập tay"></label>
+            <label><span>Tiền bán</span><select data-sim-field="sellCurrencyOverride"><option value="">Mặc định (${escapeHtml(defaultCurrency)})</option><option value="JPY" ${sellCurrencyOverride==='JPY'?'selected':''}>JPY</option><option value="VND" ${sellCurrencyOverride==='VND'?'selected':''}>VND</option><option value="USD" ${sellCurrencyOverride==='USD'?'selected':''}>USD</option></select></label>
+            <label><span>Tỷ giá riêng</span><input type="number" min="0" step="0.0001" data-sim-field="exchangeRateOverride" value="${escapeHtml(rateOverride ?? '')}" placeholder="Mặc định: ${escapeHtml(effectiveRate || 0)}"></label>
+            <label><span>Lãi riêng</span><input type="number" step="1" data-sim-field="markupValueOverride" value="${escapeHtml(markupOverride ?? '')}" placeholder="Mặc định: ${escapeHtml(effectiveMarkup)}"></label>
+            <label><span>Giá bán riêng</span><input type="number" min="0" step="1" data-sim-field="sellPriceOverride" value="${escapeHtml(sellOverride ?? '')}" placeholder="Tự tính: ${escapeHtml(pricingNumber(calculatedSell, sellCurrency))}"></label>
           </div>
           <div class="travel-price-actions">
-            <button type="button" data-travel-use-rate>Lấy tỷ giá mặc định</button>
-            <button type="button" class="primary" data-travel-calculate-price>Tính giá bán</button>
+            <button type="button" data-travel-use-default-pricing>Dùng mặc định</button>
+            <button type="button" class="primary" data-travel-calculate-price>Điền giá bán riêng</button>
             <button type="button" data-travel-open-source>Mở giá tham khảo</button>
-            <output data-travel-price-preview>${escapeHtml(plan.showPrice === false ? 'Ngoài trang: Liên hệ báo giá' : `Ngoài trang: ${formatTravelMoney(sellValue, sellCurrency)}`)}</output>
+            <output data-travel-price-preview>${escapeHtml(plan.showPrice === false ? 'Ngoài trang: Liên hệ báo giá' : `${sellOverride === null ? 'Tự tính' : 'Giá riêng'}: ${formatTravelMoney(effectiveSell, sellCurrency)}`)}</output>
           </div>
         </section>
         <label><span>ID</span><input type="text" data-sim-field="id" value="${escapeHtml(plan.id || '')}"></label>
@@ -535,8 +739,37 @@
     </article>`;
   }
 
+  const TRAVEL_SALES_PRIORITY = [
+    'travel-vietnam',
+    'travel-japan',
+    'travel-taiwan',
+    'travel-south-korea',
+    'travel-china'
+  ];
+
+  function travelDisplayRank(plan) {
+    const visible = plan.enabled !== false && plan.showCard !== false;
+    const priorityIndex = TRAVEL_SALES_PRIORITY.indexOf(String(plan.id || ''));
+    return {
+      visibleRank: visible ? 0 : 1,
+      priorityRank: priorityIndex >= 0 ? priorityIndex : TRAVEL_SALES_PRIORITY.length,
+      name: String(plan.country || plan.cardName || plan.name || '').trim().toLocaleLowerCase('vi')
+    };
+  }
+
+  function sortTravelPlans(items) {
+    return items
+      .map((plan, originalIndex) => ({ plan, originalIndex, rank: travelDisplayRank(plan) }))
+      .sort((a, b) => a.rank.visibleRank - b.rank.visibleRank
+        || a.rank.priorityRank - b.rank.priorityRank
+        || (a.rank.visibleRank === 0 ? a.originalIndex - b.originalIndex : a.rank.name.localeCompare(b.rank.name, 'vi'))
+        || a.originalIndex - b.originalIndex)
+      .map(item => item.plan);
+  }
+
   function visiblePlans() {
-    return activePlans().filter(plan => planMatchesView(plan));
+    const items = activePlans().filter(plan => planMatchesView(plan));
+    return activeView === 'travel' ? sortTravelPlans(items) : items;
   }
 
   function render() {
@@ -598,9 +831,17 @@
       plan.carrier = String(plan.carrier || plan.country || '').trim();
       plan.sourceName = String(plan.sourceName || travelData.source?.name || 'Nguồn tham khảo').trim();
       plan.sourcePriceValue = parseTravelNumber(plan.sourcePriceValue);
-      plan.exchangeRate = parseTravelNumber(plan.exchangeRate) || travelRate(plan.sourceCurrency, plan.sellCurrency);
-      plan.markupValue = parseTravelNumber(plan.markupValue);
-      plan.sellPriceValue = parseTravelNumber(plan.sellPriceValue);
+      plan.sourceCurrency = ['USD','JPY','VND'].includes(plan.sourceCurrency) ? plan.sourceCurrency : 'USD';
+      plan.sellCurrencyOverride = ['USD','JPY','VND'].includes(plan.sellCurrencyOverride) ? plan.sellCurrencyOverride : '';
+      plan.exchangeRateOverride = optionalTravelNumber(plan.exchangeRateOverride);
+      plan.markupValueOverride = optionalTravelNumber(plan.markupValueOverride);
+      plan.sellPriceOverride = optionalTravelNumber(plan.sellPriceOverride);
+      const pricing = currentTravelPricingSettings();
+      plan.sellCurrency = plan.sellCurrencyOverride || pricing.defaultSellCurrency;
+      plan.exchangeRate = plan.exchangeRateOverride ?? travelRateFromPricing(pricing, plan.sourceCurrency, plan.sellCurrency);
+      plan.markupValue = plan.markupValueOverride ?? pricing.defaultMarkup;
+      const calculated = Math.max(0, plan.sourcePriceValue * plan.exchangeRate + plan.markupValue);
+      plan.sellPriceValue = plan.sellPriceOverride ?? calculated;
       plan.showPrice = plan.showPrice !== false;
       plan.price = plan.showPrice ? formatTravelMoney(plan.sellPriceValue, plan.sellCurrency) : 'Liên hệ báo giá';
       plan.physicalPrice = plan.price;
@@ -653,17 +894,12 @@
   }
 
   function collectTravelData() {
+    travelData.pricing = currentTravelPricingSettings();
     if (activeView === 'travel') $$('.sim-admin-card').forEach(collectCard);
-    travelData.schemaVersion = 2;
+    collectTravelSharedOptions();
+    travelData.schemaVersion = 4;
     travelData.title = travelData.title || 'SIM du lịch quốc tế';
     travelData.description = travelData.description || 'Danh sách eSIM du lịch theo quốc gia và khu vực.';
-    travelData.pricing = {
-      usdToJpy: parseTravelNumber($('#travelUsdToJpy')?.value) || 150,
-      usdToVnd: parseTravelNumber($('#travelUsdToVnd')?.value) || 26000,
-      jpyToVnd: parseTravelNumber($('#travelJpyToVnd')?.value) || 175,
-      defaultSellCurrency: $('#travelDefaultSellCurrency')?.value || 'JPY',
-      defaultMarkup: parseTravelNumber($('#travelDefaultMarkup')?.value)
-    };
     travelData.source = {
       ...(travelData.source || {}),
       name: travelData.source?.name || 'Nguồn tham khảo',
@@ -674,12 +910,13 @@
   function collectOrderData() {
     orderData = {
       ...orderData,
-      schemaVersion: 1,
+      schemaVersion: 2,
       mode: $('#simOrderMode').value,
       messengerUrl: $('#simMessengerUrl').value.trim(),
       facebookUrl: $('#simFacebookUrl').value.trim(),
       customPageUrl: $('#simCustomOrderUrl').value.trim(),
       messageTemplate: $('#simMessageTemplate').value,
+      travelMessageTemplate: $('#simTravelMessageTemplate').value,
       copyMessageBeforeOpen: $('#simCopyMessage').checked,
       appendTextQuery: $('#simAppendText').checked,
       openInNewTab: false,
@@ -766,6 +1003,8 @@
     if (productSection) productSection.dataset.configKind = configKind;
     const travelPricingSettings = $('#travelPricingSettings');
     if (travelPricingSettings) travelPricingSettings.hidden = activeView !== 'travel';
+    const travelSelectionSettings = $('#travelSelectionSettings');
+    if (travelSelectionSettings) travelSelectionSettings.hidden = activeView !== 'travel';
     if (PRODUCT_VIEWS.has(activeView)) {
       const meta = VIEW_META[activeView];
       $('#simProductManagerTitle').textContent = meta.title;
@@ -824,6 +1063,10 @@
       sourcePriceValue: 0,
       sourceCurrency: 'USD',
       sellCurrency: isTravel ? (travelData.pricing?.defaultSellCurrency || 'JPY') : 'JPY',
+      sellCurrencyOverride: isTravel ? '' : undefined,
+      exchangeRateOverride: isTravel ? null : undefined,
+      markupValueOverride: isTravel ? null : undefined,
+      sellPriceOverride: isTravel ? null : undefined,
       exchangeRate: isTravel ? travelRate('USD', travelData.pricing?.defaultSellCurrency || 'JPY') : 1,
       markupValue: isTravel ? Number(travelData.pricing?.defaultMarkup || 0) : 0,
       sellPriceValue: 0,
@@ -865,7 +1108,7 @@
     if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return false;
     if (kind === 'sim') return Array.isArray(parsed.plans) || Boolean(parsed.page) || Array.isArray(parsed.faqs);
     if (kind === 'travel') return Array.isArray(parsed.plans) && !Boolean(parsed.page);
-    const orderKeys = ['mode', 'messengerUrl', 'facebookUrl', 'customPageUrl', 'messageTemplate', 'copyMessageBeforeOpen', 'appendTextQuery', 'openInNewTab'];
+    const orderKeys = ['mode', 'messengerUrl', 'facebookUrl', 'customPageUrl', 'messageTemplate', 'travelMessageTemplate', 'copyMessageBeforeOpen', 'appendTextQuery', 'openInNewTab'];
     return !Array.isArray(parsed.plans) && orderKeys.some(key => Object.prototype.hasOwnProperty.call(parsed, key));
   }
 
@@ -897,6 +1140,12 @@
       if (!event.target.closest('#simAdminPanel') || event.target.matches('[data-import-config]')) return;
       const cardNode = event.target.closest('.sim-admin-card');
       if (cardNode && event.target.dataset.simField === 'image') updateCardImagePreview(cardNode);
+      if (cardNode && ['sourcePriceValue','sourceCurrency','sellCurrencyOverride','exchangeRateOverride','markupValueOverride','sellPriceOverride'].includes(event.target.dataset.simField)) {
+        updateTravelPricePreview(cardNode);
+      }
+      if (event.target.closest('#travelPricingSettings')) {
+        $$('.travel-admin-card').forEach(updateTravelPricePreview);
+      }
       const kind = event.target.closest('[data-config-kind]')?.dataset.configKind || configKindForView();
       updateDownloads(kind);
     });
@@ -904,6 +1153,12 @@
       if (!event.target.closest('#simAdminPanel') || event.target.matches('[data-import-config]')) return;
       const cardNode = event.target.closest('.sim-admin-card');
       if (cardNode && event.target.dataset.simField === 'carrier' && activeView !== 'travel') syncCarrierImage(cardNode);
+      if (cardNode && ['sourcePriceValue','sourceCurrency','sellCurrencyOverride','exchangeRateOverride','markupValueOverride','sellPriceOverride','showPrice'].includes(event.target.dataset.simField)) {
+        updateTravelPricePreview(cardNode);
+      }
+      if (event.target.closest('#travelPricingSettings')) {
+        $$('.travel-admin-card').forEach(updateTravelPricePreview);
+      }
       if (cardNode && ['physicalEnabled', 'esimEnabled'].includes(event.target.dataset.simField)) {
         const physical = cardNode.querySelector('[data-sim-field="physicalEnabled"]');
         const esim = cardNode.querySelector('[data-sim-field="esimEnabled"]');
@@ -933,6 +1188,14 @@
       if (event.target.closest('#addSimPlan')) { addPlan(); return; }
       if (event.target.closest('#addSimFaq')) { addFaq(); return; }
       if (event.target.closest('#addSimApnFaq')) { addFaq(DEFAULT_APN_FAQ); return; }
+      if (event.target.closest('#addTravelDayOption')) { addTravelSharedOption('day'); return; }
+      if (event.target.closest('#addTravelPackageOption')) { addTravelSharedOption('package'); return; }
+      const removeTravelOption = event.target.closest('[data-remove-travel-option]');
+      if (removeTravelOption) {
+        const row = removeTravelOption.closest('[data-travel-shared-option]');
+        removeTravelSharedOption(removeTravelOption.dataset.removeTravelOption, Number(row?.dataset.optionIndex));
+        return;
+      }
 
       const faqMove = event.target.closest('[data-move-sim-faq]');
       if (faqMove) {
@@ -961,25 +1224,21 @@
       }
 
       const cardNode = event.target.closest('.sim-admin-card');
-      if (cardNode && event.target.closest('[data-travel-use-rate]')) {
-        const from = cardNode.querySelector('[data-sim-field="sourceCurrency"]')?.value || 'USD';
-        const to = cardNode.querySelector('[data-sim-field="sellCurrency"]')?.value || 'JPY';
-        const rateInput = cardNode.querySelector('[data-sim-field="exchangeRate"]');
-        const rate = travelRate(from, to);
-        if (rateInput) rateInput.value = rate || '';
+      if (cardNode && event.target.closest('[data-travel-use-default-pricing]')) {
+        ['sellCurrencyOverride','exchangeRateOverride','markupValueOverride','sellPriceOverride'].forEach(field => {
+          const input = cardNode.querySelector(`[data-sim-field="${field}"]`);
+          if (input) input.value = '';
+        });
+        updateTravelPricePreview(cardNode);
+        collectCard(cardNode);
         updateDownloads('travel');
         return;
       }
       if (cardNode && event.target.closest('[data-travel-calculate-price]')) {
-        const source = parseTravelNumber(cardNode.querySelector('[data-sim-field="sourcePriceValue"]')?.value);
-        const rate = parseTravelNumber(cardNode.querySelector('[data-sim-field="exchangeRate"]')?.value);
-        const markup = parseTravelNumber(cardNode.querySelector('[data-sim-field="markupValue"]')?.value);
-        const currency = cardNode.querySelector('[data-sim-field="sellCurrency"]')?.value || 'JPY';
-        const result = Math.max(0, source * rate + markup);
-        const priceInput = cardNode.querySelector('[data-sim-field="sellPriceValue"]');
-        if (priceInput) priceInput.value = currency === 'USD' ? result.toFixed(2) : String(Math.round(result));
-        const preview = cardNode.querySelector('[data-travel-price-preview]');
-        if (preview) preview.textContent = `Ngoài trang: ${formatTravelMoney(result, currency)}`;
+        const values = travelCardPricing(cardNode);
+        const priceInput = cardNode.querySelector('[data-sim-field="sellPriceOverride"]');
+        if (priceInput) priceInput.value = pricingNumber(values.calculated, values.sellCurrency);
+        updateTravelPricePreview(cardNode);
         collectCard(cardNode);
         updateDownloads('travel');
         return;
