@@ -63,7 +63,8 @@
     return {
       id: String(raw.id || `${prefix}-${slugifyTravelOption(label, String(index + 1))}`),
       label,
-      enabled: raw.enabled !== false
+      enabled: raw.enabled !== false,
+      priceAdjustment: Number.isFinite(Number(raw.priceAdjustment)) ? Number(raw.priceAdjustment) : 0
     };
   }
 
@@ -114,7 +115,7 @@
   }
 
   let simData = { schemaVersion: 6, page: {}, plans: [], faqs: [] };
-  let travelData = { schemaVersion: 5, title: 'SIM du lịch quốc tế', description: '', source: {}, pricing: {}, selectionOptions: defaultTravelSelectionOptions(), plans: [] };
+  let travelData = { schemaVersion: 6, title: 'SIM du lịch quốc tế', description: '', source: {}, pricing: {}, selectionOptions: defaultTravelSelectionOptions(), plans: [] };
   let orderData = {};
   let urls = { sim: '', travel: '', order: '' };
   let activeView = localStorage.getItem('vinh-sim-admin-view') || 'settings';
@@ -272,7 +273,7 @@
     const sourceSchema = Number(data.schemaVersion || 0);
     return {
       ...data,
-      schemaVersion: 5,
+      schemaVersion: 6,
       title: String(data.title || 'SIM du lịch quốc tế'),
       description: String(data.description || ''),
       source: { ...(data.source || {}) },
@@ -436,9 +437,11 @@
 
   function travelSharedOptionRow(item, index, type) {
     const typeLabel = type === 'day' ? 'ngày' : 'gói';
+    const priceCurrency = travelData.pricing?.defaultSellCurrency || 'JPY';
     return `<label class="travel-shared-option-row" data-travel-shared-option="${type}" data-option-index="${index}" data-option-id="${escapeHtml(item.id || `${type}-${index + 1}`)}">
       <input type="checkbox" data-travel-option-enabled ${item.enabled !== false ? 'checked' : ''} aria-label="Bật ${escapeHtml(item.label || typeLabel)}">
       <input type="text" data-travel-option-label value="${escapeHtml(item.label || '')}" placeholder="Nhập ${typeLabel}">
+      <input type="number" step="1" data-travel-option-price value="${escapeHtml(String(item.priceAdjustment || 0))}" placeholder="+ ${priceCurrency}" aria-label="Giá cộng thêm theo ${priceCurrency}" title="Cộng thêm theo ${priceCurrency}">
       <button type="button" data-remove-travel-option="${type}" aria-label="Xóa ${typeLabel}" title="Xóa">×</button>
     </label>`;
   }
@@ -458,7 +461,8 @@
     return $$(selector).map((node, index) => normalizeTravelSharedOption({
       id: node.dataset.optionId || `${prefix}-${index + 1}`,
       label: node.querySelector('[data-travel-option-label]')?.value,
-      enabled: node.querySelector('[data-travel-option-enabled]')?.checked !== false
+      enabled: node.querySelector('[data-travel-option-enabled]')?.checked !== false,
+      priceAdjustment: Number(node.querySelector('[data-travel-option-price]')?.value || 0)
     }, index, prefix)).filter(item => item.label);
   }
 
@@ -478,7 +482,7 @@
     collectTravelSharedOptions();
     const selection = normalizeTravelSelectionOptions(travelData.selectionOptions);
     const list = type === 'day' ? selection.days : selection.packages;
-    list.push(normalizeTravelSharedOption({ label: type === 'day' ? 'Ngày mới' : 'Gói mới', enabled: true }, list.length, type));
+    list.push(normalizeTravelSharedOption({ label: type === 'day' ? 'Ngày mới' : 'Gói mới', enabled: true, priceAdjustment: 0 }, list.length, type));
     travelData.selectionOptions = selection;
     renderTravelSharedOptions();
     updateDownloads('travel');

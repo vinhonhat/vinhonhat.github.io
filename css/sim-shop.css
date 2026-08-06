@@ -795,3 +795,7 @@ body.sim-order-guide-open { overflow: hidden; }
   .travel-currency-picker { min-width:48px; min-height:42px; }
   .travel-currency-picker > span { font-size:20px; }
 }
+
+
+/* V26.8.6 Beta 6 - nút tiền chỉ hiện biểu tượng */
+.travel-currency-picker > b { display:none !important; }

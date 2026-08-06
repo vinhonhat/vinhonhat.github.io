@@ -2101,3 +2101,26 @@ label,
   .travel-online-rate-row { grid-template-columns:1fr 1fr; }
   #travelRateStatus { grid-column:1/-1; }
 }
+
+
+/* V26.8.6 Beta 6 - giá cộng theo ngày và gói SIM du lịch */
+.travel-shared-option-row {
+  grid-template-columns: 22px minmax(0,1fr) 76px 32px;
+}
+.travel-shared-option-row [data-travel-option-price] {
+  width:100%;
+  min-width:0;
+  min-height:38px;
+  padding:7px 8px;
+  border:1px solid #dde1e6;
+  border-radius:9px;
+  background:#fff;
+  text-align:right;
+  font-size:11px;
+}
+.travel-selection-card header small::after {
+  content: " · Giá cộng dùng đơn vị tiền bán mặc định";
+}
+@media(max-width:640px) {
+  .travel-shared-option-row { grid-template-columns: 22px minmax(0,1fr) 68px 32px; }
+}

@@ -90,7 +90,8 @@
     return {
       id: String(raw.id || `${prefix}-${index + 1}`),
       label: String(raw.label || '').trim(),
-      enabled: raw.enabled !== false
+      enabled: raw.enabled !== false,
+      priceAdjustment: Number.isFinite(Number(raw.priceAdjustment)) ? Number(raw.priceAdjustment) : 0
     };
   }
 
@@ -363,6 +364,17 @@
     return rate > 0 ? number * rate : number;
   }
 
+  function selectedTravelOptionAdjustment(targetCurrency = activeTravelPaymentCurrency()) {
+    const selection = normalizeTravelSelectionOptions(travelData.selectionOptions);
+    const day = selection.days.find(item => item.label === selectedTravelDay);
+    const packageItem = selection.packages.find(item => item.label === selectedTravelPackage);
+    const total = Number(day?.priceAdjustment || 0) + Number(packageItem?.priceAdjustment || 0);
+    const sourceCurrency = ['USD','JPY','VND'].includes(travelData.pricing?.defaultSellCurrency)
+      ? travelData.pricing.defaultSellCurrency
+      : 'JPY';
+    return convertTravelMoney(total, sourceCurrency, targetCurrency);
+  }
+
   function travelPlanPricing(plan, targetCurrency = activeTravelPaymentCurrency()) {
     const pricing = travelData.pricing || {};
     const sourceCurrency = ['USD','JPY','VND'].includes(plan.sourceCurrency) ? plan.sourceCurrency : 'USD';
@@ -377,9 +389,13 @@
     const calculated = Math.max(0, sourceValue * rate + markup);
     const configuredValue = sellOverride ?? calculated;
     const outputCurrency = targetCurrency === 'VND' ? 'VND' : 'JPY';
+    const baseValue = convertTravelMoney(configuredValue, configuredSellCurrency, outputCurrency);
+    const optionAdjustment = selectedTravelOptionAdjustment(outputCurrency);
     return {
       sellCurrency: outputCurrency,
-      sellValue: convertTravelMoney(configuredValue, configuredSellCurrency, outputCurrency)
+      sellValue: Math.max(0, baseValue + optionAdjustment),
+      baseValue,
+      optionAdjustment
     };
   }
 
@@ -652,7 +668,7 @@
         <span class="sim-detail-badge">${escapeHtml(viewLabel(planView(plan)))} · ${escapeHtml(typeLabel(currentType))}</span>
         <h2 id="simDetailTitle">${escapeHtml(plan.name)}</h2>
         <p>${escapeHtml(plan.subtitle || '')}</p>
-        <div class="sim-detail-price${plan.soldOut === true ? ' is-sold-out' : ''}">${plan.soldOut === true ? 'Hết hàng' : escapeHtml(price)}</div>
+        <div id="simDetailPrice" class="sim-detail-price${plan.soldOut === true ? ' is-sold-out' : ''}">${plan.soldOut === true ? 'Hết hàng' : escapeHtml(price)}</div>
         ${plan.soldOut === true ? '<div class="sim-detail-soldout-note"><strong>Sản phẩm đang tạm hết hàng.</strong><span>Anh/chị vẫn có thể bấm Liên hệ để hỏi thời gian có hàng hoặc sản phẩm thay thế.</span></div>' : ''}
         ${typeButtons(plan)}
         <div class="sim-detail-specs">
@@ -711,6 +727,8 @@
       button.classList.toggle('active', current === value);
       button.setAttribute('aria-pressed', String(current === value));
     });
+    const priceNode = $('#simDetailPrice');
+    if (priceNode && activePlan.soldOut !== true) priceNode.textContent = planPrice(activePlan, selectedSimType || defaultType(activePlan));
   }
 
   function validateTravelChoices() {
