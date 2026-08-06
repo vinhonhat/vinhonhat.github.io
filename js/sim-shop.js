@@ -62,6 +62,9 @@
 
   let pageConfig = {};
   let plans = [];
+  let travelData = { source: {}, plans: [] };
+  let travelSearch = '';
+  let travelRegion = '';
   let orderConfig = structuredClone(DEFAULT_ORDER);
   let currentView = 'monthly';
   let activePlan = null;
@@ -102,8 +105,8 @@
       ...plan,
       id,
       familyId: String(plan.familyId || id),
-      planKind: plan.planKind === 'voice' ? 'voice' : 'data',
-      period: plan.period === 'yearly' ? 'yearly' : 'monthly',
+      planKind: plan.planKind === 'travel' ? 'travel' : (plan.planKind === 'voice' ? 'voice' : 'data'),
+      period: plan.planKind === 'travel' ? 'travel' : (plan.period === 'yearly' ? 'yearly' : 'monthly'),
       simType,
       physicalEnabled,
       esimEnabled,
@@ -113,6 +116,13 @@
       esimPrice: esimPrice || commonPrice || 'Liên hệ',
       image: planImage(plan),
       soldOut: plan.soldOut === true,
+      showPrice: plan.showPrice !== false,
+      sourceCurrency: ['USD','JPY','VND'].includes(plan.sourceCurrency) ? plan.sourceCurrency : 'USD',
+      sellCurrency: ['USD','JPY','VND'].includes(plan.sellCurrency) ? plan.sellCurrency : 'JPY',
+      sourcePriceValue: Number.isFinite(Number(plan.sourcePriceValue)) ? Number(plan.sourcePriceValue) : 0,
+      exchangeRate: Number.isFinite(Number(plan.exchangeRate)) ? Number(plan.exchangeRate) : 0,
+      markupValue: Number.isFinite(Number(plan.markupValue)) ? Number(plan.markupValue) : 0,
+      sellPriceValue: Number.isFinite(Number(plan.sellPriceValue)) ? Number(plan.sellPriceValue) : 0,
       features: Array.isArray(plan.features) ? plan.features : [],
       requirements: Array.isArray(plan.requirements) ? plan.requirements : []
     };
@@ -174,8 +184,15 @@
   }
 
   function viewLabel(view) {
+    if (view === 'travel') return pageConfig.travelLabel || 'SIM du lịch';
     if (view === 'voice') return pageConfig.voiceLabel || 'SIM nghe gọi';
     return view === 'yearly' ? (pageConfig.yearlyLabel || 'SIM năm') : (pageConfig.monthlyLabel || 'SIM tháng');
+  }
+
+  function planView(plan) {
+    if (plan.planKind === 'travel') return 'travel';
+    if (plan.planKind === 'voice') return 'voice';
+    return plan.period === 'yearly' ? 'yearly' : 'monthly';
   }
 
   function typeLabel(type) {
@@ -195,7 +212,80 @@
     return types.includes('physical') ? 'physical' : (types[0] || 'physical');
   }
 
+  function formatTravelMoney(value, currency = 'JPY') {
+    const number = Number(value || 0);
+    if (!Number.isFinite(number) || number <= 0) return 'Liên hệ báo giá';
+    if (currency === 'VND') return `${Math.round(number).toLocaleString('vi-VN')}₫`;
+    if (currency === 'USD') return `US$${number.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+    return `¥${Math.round(number).toLocaleString('ja-JP')}`;
+  }
+
+
+  const TRAVEL_FLAG_MAP = {
+    japan: '🇯🇵', 'nhật bản': '🇯🇵', jp: '🇯🇵',
+    korea: '🇰🇷', 'south korea': '🇰🇷', 'hàn quốc': '🇰🇷', kr: '🇰🇷',
+    taiwan: '🇹🇼', 'đài loan': '🇹🇼', tw: '🇹🇼',
+    china: '🇨🇳', 'trung quốc': '🇨🇳', cn: '🇨🇳',
+    vietnam: '🇻🇳', 'việt nam': '🇻🇳', vn: '🇻🇳',
+    thailand: '🇹🇭', 'thái lan': '🇹🇭', th: '🇹🇭',
+    singapore: '🇸🇬', sg: '🇸🇬',
+    malaysia: '🇲🇾', my: '🇲🇾',
+    indonesia: '🇮🇩', id: '🇮🇩',
+    india: '🇮🇳', 'ấn độ': '🇮🇳', in: '🇮🇳',
+    usa: '🇺🇸', 'united states': '🇺🇸', 'hoa kỳ': '🇺🇸', us: '🇺🇸',
+    canada: '🇨🇦', ca: '🇨🇦',
+    uk: '🇬🇧', 'united kingdom': '🇬🇧', 'anh': '🇬🇧', gb: '🇬🇧',
+    germany: '🇩🇪', 'đức': '🇩🇪', de: '🇩🇪',
+    italy: '🇮🇹', 'ý': '🇮🇹', it: '🇮🇹',
+    portugal: '🇵🇹', pt: '🇵🇹',
+    switzerland: '🇨🇭', ch: '🇨🇭',
+    greece: '🇬🇷', gr: '🇬🇷',
+    egypt: '🇪🇬', eg: '🇪🇬',
+    morocco: '🇲🇦', ma: '🇲🇦',
+    'saudi arabia': '🇸🇦', sa: '🇸🇦',
+    israel: '🇮🇱', il: '🇮🇱',
+    mexico: '🇲🇽', mx: '🇲🇽',
+    australia: '🇦🇺', au: '🇦🇺',
+    'new zealand': '🇳🇿', nz: '🇳🇿',
+    europe: '🇪🇺', 'châu âu': '🇪🇺',
+    asia: '🌏', 'châu á': '🌏',
+    'đông nam á': '🌴', 'southeast asia': '🌴',
+    global: '🌍', 'toàn cầu': '🌍'
+  };
+
+  function codeToFlagEmoji(code) {
+    const value = String(code || '').trim().toUpperCase();
+    if (!/^[A-Z]{2}$/.test(value)) return '';
+    return [...value].map(char => String.fromCodePoint(127397 + char.charCodeAt(0))).join('');
+  }
+
+  function travelFlagBadge(plan) {
+    const raw = String(plan.flag || '').trim();
+    if (raw) {
+      if (/^[A-Za-z]{2}$/.test(raw)) return codeToFlagEmoji(raw) || raw.toUpperCase();
+      if (/^[\p{Regional_Indicator}\p{Emoji_Presentation}\p{Extended_Pictographic}]+$/u.test(raw)) return raw;
+    }
+    const candidates = [plan.country, plan.destination, plan.cardName, plan.name, plan.id]
+      .map(value => String(value || '').trim().toLowerCase())
+      .filter(Boolean);
+    for (const candidate of candidates) {
+      for (const [key, icon] of Object.entries(TRAVEL_FLAG_MAP)) {
+        if (candidate.includes(key)) return icon;
+      }
+      const codeMatch = candidate.match(/\b([a-z]{2})\b/);
+      if (codeMatch) {
+        const emoji = codeToFlagEmoji(codeMatch[1]);
+        if (emoji) return emoji;
+      }
+    }
+    return '🌍';
+  }
+
   function planPrice(plan, type = selectedSimType || defaultType(plan)) {
+    if (plan.planKind === 'travel') {
+      if (plan.showPrice === false) return 'Liên hệ báo giá';
+      if (Number(plan.sellPriceValue || 0) > 0) return formatTravelMoney(plan.sellPriceValue, plan.sellCurrency);
+    }
     if (plan.priceMode === 'separate') {
       if (type === 'esim') return String(plan.esimPrice || plan.price || 'Liên hệ').trim() || 'Liên hệ';
       return String(plan.physicalPrice || plan.price || 'Liên hệ').trim() || 'Liên hệ';
@@ -271,27 +361,41 @@
   }
 
   function planMatchesView(plan, view) {
+    if (view === 'travel') return plan.planKind === 'travel';
     if (view === 'voice') return plan.planKind === 'voice';
-    return plan.planKind !== 'voice' && plan.period === view;
+    return plan.planKind === 'data' && plan.period === view;
+  }
+
+  function travelMatchesFilter(plan) {
+    if (plan.planKind !== 'travel') return true;
+    const regionOk = !travelRegion || String(plan.travelRegion || '').trim() === travelRegion;
+    const haystack = [plan.cardName, plan.name, plan.country, plan.carrier, plan.travelRegion].join(' ').toLowerCase();
+    const searchOk = !travelSearch || haystack.includes(travelSearch.toLowerCase());
+    return regionOk && searchOk;
   }
 
   function enabledPlans(view) {
     return plans.filter(plan => plan.enabled !== false
       && plan.showCard !== false
       && availableTypes(plan).length
-      && planMatchesView(plan, view));
+      && planMatchesView(plan, view)
+      && travelMatchesFilter(plan));
   }
 
   function productCard(plan) {
     const soldOut = plan.soldOut === true;
-    return `<article class="sim-product-card${soldOut ? ' is-sold-out' : ''}" data-sim-id="${escapeHtml(plan.id)}" tabindex="0" role="button" aria-label="Xem ${escapeHtml(plan.name)}${soldOut ? ' - hiện đang hết hàng' : ''}">
+    const travel = plan.planKind === 'travel';
+    return `<article class="sim-product-card${soldOut ? ' is-sold-out' : ''}${travel ? ' is-travel' : ''}" data-sim-id="${escapeHtml(plan.id)}" tabindex="0" role="button" aria-label="Xem ${escapeHtml(plan.name)}${soldOut ? ' - hiện đang hết hàng' : ''}">
       <div class="sim-product-media">
         <img src="${escapeHtml(planImage(plan))}" alt="${escapeHtml(plan.name)}" loading="lazy" decoding="async">
+        ${travel ? `<span class="sim-travel-flag" aria-hidden="true">${escapeHtml(travelFlagBadge(plan))}</span>` : ''}
         ${soldOut ? '<span class="sim-product-soldout-badge">Hết hàng</span>' : ''}
       </div>
       <div class="sim-product-copy">
+        ${travel && plan.travelRegion ? `<small class="sim-travel-region">${escapeHtml(plan.travelRegion)}</small>` : ''}
         <h3>${escapeHtml(plan.cardName || plan.name)}</h3>
         <strong class="${soldOut ? 'sim-price-soldout' : ''}">${escapeHtml(catalogPrice(plan))}</strong>
+        ${travel ? '<em>Giá tham khảo · vui lòng liên hệ</em>' : ''}
       </div>
     </article>`;
   }
@@ -303,18 +407,21 @@
       button.classList.toggle('active', active);
       button.setAttribute('aria-selected', String(active));
     });
+    const filters = $('#travelSimFilters');
+    if (filters) filters.hidden = view !== 'travel';
     const container = $('#simPlanGrid');
     if (!container) return;
     const items = enabledPlans(view);
+    const eyebrow = view === 'travel' ? 'CHỌN QUỐC GIA HOẶC KHU VỰC' : 'CHỌN GÓI TRƯỚC, CHỌN LOẠI KHI ĐẶT';
     container.innerHTML = items.length
-      ? `<section class="sim-product-group sim-product-group-all" data-sim-group="all">
+      ? `<section class="sim-product-group sim-product-group-all${view === 'travel' ? ' sim-product-group-travel' : ''}" data-sim-group="all">
           <header class="sim-product-group-head">
-            <div><span>CHỌN GÓI TRƯỚC, CHỌN LOẠI KHI ĐẶT</span><h3>${escapeHtml(viewLabel(view))}</h3></div>
+            <div><span>${eyebrow}</span><h3>${escapeHtml(viewLabel(view))}</h3></div>
             <small>${items.length} sản phẩm</small>
           </header>
           <div class="sim-product-grid">${items.map(productCard).join('')}</div>
         </section>`
-      : `<div class="sim-catalog-empty"><strong>Chưa có ${escapeHtml(viewLabel(view).toLowerCase())}</strong><p>Sản phẩm trong mục này đang được cập nhật.</p></div>`;
+      : `<div class="sim-catalog-empty"><strong>Không tìm thấy ${escapeHtml(viewLabel(view).toLowerCase())}</strong><p>Thử đổi từ khóa hoặc khu vực.</p></div>`;
   }
 
   function typeButtons(plan) {
@@ -335,21 +442,21 @@
     const labels = orderConfig.labels || DEFAULT_ORDER.labels;
     const apn = apnSettings();
     const price = planPrice(plan, currentType);
-    const buyLabel = plan.soldOut === true ? 'Liên hệ' : escapeHtml(orderConfig.mode === 'custom-page' ? labels.custom : labels.buy);
+    const buyLabel = plan.soldOut === true ? 'Liên hệ' : (plan.planKind === 'travel' && plan.showPrice === false ? 'Liên hệ báo giá' : escapeHtml(orderConfig.mode === 'custom-page' ? labels.custom : labels.buy));
     return `<div class="sim-detail-grid">
       <div class="sim-detail-image"><img src="${escapeHtml(planImage(plan))}" alt="${escapeHtml(plan.name)}"></div>
       <div class="sim-detail-copy">
-        <span class="sim-detail-badge">${escapeHtml(viewLabel(plan.planKind === 'voice' ? 'voice' : plan.period))} · ${escapeHtml(typeLabel(currentType))}</span>
+        <span class="sim-detail-badge">${escapeHtml(viewLabel(planView(plan)))} · ${escapeHtml(typeLabel(currentType))}</span>
         <h2 id="simDetailTitle">${escapeHtml(plan.name)}</h2>
         <p>${escapeHtml(plan.subtitle || '')}</p>
         <div class="sim-detail-price${plan.soldOut === true ? ' is-sold-out' : ''}">${plan.soldOut === true ? 'Hết hàng' : escapeHtml(price)}</div>
         ${plan.soldOut === true ? '<div class="sim-detail-soldout-note"><strong>Sản phẩm đang tạm hết hàng.</strong><span>Anh/chị vẫn có thể bấm Liên hệ để hỏi thời gian có hàng hoặc sản phẩm thay thế.</span></div>' : ''}
         ${typeButtons(plan)}
         <div class="sim-detail-specs">
-          <div><span>Nhà mạng</span><strong>${escapeHtml(plan.carrier || 'Đang cập nhật')}</strong></div>
+          <div><span>${plan.planKind === 'travel' ? 'Điểm đến' : 'Nhà mạng'}</span><strong>${escapeHtml(plan.carrier || 'Đang cập nhật')}</strong></div>
           <div><span>Dung lượng</span><strong>${escapeHtml(plan.dataLabel || 'Đang cập nhật')}</strong></div>
           <div><span>Loại SIM</span><strong>${escapeHtml(typeLabel(currentType))}</strong></div>
-          <div><span>Chu kỳ</span><strong>${escapeHtml(plan.durationLabel || viewLabel(plan.planKind === 'voice' ? 'voice' : plan.period))}</strong></div>
+          <div><span>${plan.planKind === 'travel' ? 'Thời hạn' : 'Chu kỳ'}</span><strong>${escapeHtml(plan.durationLabel || viewLabel(planView(plan)))}</strong></div>
         </div>
         <div class="sim-detail-order-box${plan.soldOut === true ? ' sold-out' : ''}">
           ${plan.soldOut === true ? '' : `<div class="sim-quantity-block"><span class="sim-quantity-title">Số lượng</span><div class="sim-quantity" aria-label="Chọn số lượng"><div><button type="button" data-quantity-minus aria-label="Giảm số lượng">−</button><output id="simQuantity">${quantity}</output><button type="button" data-quantity-plus aria-label="Tăng số lượng">+</button></div></div></div>`}
@@ -361,6 +468,7 @@
           <section><h3>Cần kiểm tra trước</h3><ul>${requirements}</ul></section>
         </div>
         <div class="sim-detail-for"><strong>Phù hợp với:</strong> ${escapeHtml(plan.recommendedFor || '')}</div>
+        ${plan.planKind === 'travel' ? '<div class="sim-travel-reference"><strong>Giá tham khảo:</strong> có thể thay đổi theo thời điểm, dung lượng và khuyến mãi. Vui lòng liên hệ để được báo giá chính xác.</div>' : ''}
         ${orderConfig.facebookUrl ? `<a class="sim-facebook-button" href="${escapeHtml(orderConfig.facebookUrl)}" target="_blank" rel="noopener">${escapeHtml(labels.friend)}</a>` : ''}
         ${apn.enabled ? `<a class="sim-apn-detail-button" href="${escapeHtml(apn.url)}">${escapeHtml(apn.label)}</a>` : ''}
       </div>
@@ -406,11 +514,12 @@
       id: plan.id,
       name: plan.name,
       simType: typeLabel(type),
-      period: viewLabel(plan.planKind === 'voice' ? 'voice' : plan.period),
+      period: viewLabel(planView(plan)),
       data: plan.dataLabel || '',
       quantity: String(quantity),
       price: plan.soldOut === true ? 'Hết hàng - cần liên hệ' : planPrice(plan, type),
-      carrier: plan.carrier || ''
+      carrier: plan.carrier || '',
+      destination: plan.country || plan.carrier || ''
     };
     return String(template || DEFAULT_ORDER.messageTemplate).replace(/{{\s*([a-zA-Z]+)\s*}}/g, (_, key) => values[key] ?? '');
   }
@@ -585,6 +694,14 @@
   }
 
   function bindEvents() {
+    $('#travelSimSearch')?.addEventListener('input', event => {
+      travelSearch = String(event.target.value || '').trim();
+      if (currentView === 'travel') renderCatalog('travel');
+    });
+    $('#travelSimRegion')?.addEventListener('change', event => {
+      travelRegion = String(event.target.value || '').trim();
+      if (currentView === 'travel') renderCatalog('travel');
+    });
     document.addEventListener('click', event => {
       const period = event.target.closest('[data-sim-period]');
       if (period) { renderCatalog(period.dataset.simPeriod); return; }
@@ -623,15 +740,19 @@
   async function init() {
     bindEvents();
     try {
-      const [dataResponse, orderResponse] = await Promise.all([
+      const [dataResponse, travelResponse, orderResponse] = await Promise.all([
         fetch(`/data/sim-plans.json?v=${VERSION}`, { cache: 'no-cache' }),
+        fetch(`/data/travel-sim-plans.json?v=${VERSION}`, { cache: 'no-cache' }),
         fetch(`/data/order-config.json?v=${VERSION}`, { cache: 'no-cache' })
       ]);
       if (!dataResponse.ok) throw new Error('Không tải được sim-plans.json');
       const data = await dataResponse.json();
+      travelData = travelResponse.ok ? await travelResponse.json() : { source: {}, plans: [] };
       const order = orderResponse.ok ? await orderResponse.json() : DEFAULT_ORDER;
       pageConfig = data.page || {};
-      plans = consolidatePlans(data.plans).filter(item => item.enabled !== false);
+      const localPlans = consolidatePlans(data.plans).filter(item => item.enabled !== false);
+      const travelPlans = consolidatePlans((travelData.plans || []).map(item => ({ ...item, planKind: 'travel', period: 'travel' }))).filter(item => item.enabled !== false);
+      plans = [...localPlans, ...travelPlans];
       orderConfig = normalizeOrder(order);
 
       $('#simEyebrow').textContent = pageConfig.eyebrow || 'SIM NHẬT BẢN';
@@ -649,14 +770,27 @@
         voiceButton.textContent = pageConfig.voiceLabel || 'SIM nghe gọi';
         voiceButton.hidden = !hasVoice;
       }
+      const travelButton = $('[data-sim-period="travel"]');
+      const hasTravel = plans.some(plan => plan.planKind === 'travel' && plan.showCard !== false && availableTypes(plan).length);
+      if (travelButton) {
+        travelButton.textContent = pageConfig.travelLabel || 'SIM du lịch';
+        travelButton.hidden = !hasTravel;
+      }
+      const regionSelect = $('#travelSimRegion');
+      if (regionSelect) {
+        const regions = Array.from(new Set(plans.filter(plan => plan.planKind === 'travel').map(plan => String(plan.travelRegion || '').trim()).filter(Boolean))).sort((a,b) => a.localeCompare(b, 'vi'));
+        regionSelect.innerHTML = '<option value="">Tất cả khu vực</option>' + regions.map(region => `<option value="${escapeHtml(region)}">${escapeHtml(region)}</option>`).join('');
+      }
+      const sourceNote = $('#travelSimSourceNote');
+      if (sourceNote) sourceNote.textContent = travelData.source?.notice || 'Giá tham khảo, có thể thay đổi theo thời điểm, dung lượng và khuyến mãi. Vui lòng liên hệ.';
       $('#simFaqList').innerHTML = (data.faqs || []).map(faqTemplate).join('');
       $('#simNotice').textContent = pageConfig.notice || '';
 
-      const firstView = ['monthly', 'yearly', 'voice'].find(view => enabledPlans(view).length) || 'monthly';
+      const firstView = ['monthly', 'yearly', 'voice', 'travel'].find(view => enabledPlans(view).length) || 'monthly';
       renderCatalog(firstView);
     } catch (error) {
       console.error(error);
-      $('#simPlanGrid').innerHTML = '<div class="home-empty-state"><strong>Chưa tải được thông tin SIM</strong><p>Kiểm tra data/sim-plans.json và data/order-config.json rồi tải lại trang.</p></div>';
+      $('#simPlanGrid').innerHTML = '<div class="home-empty-state"><strong>Chưa tải được thông tin SIM</strong><p>Kiểm tra data/sim-plans.json, data/travel-sim-plans.json và data/order-config.json rồi tải lại trang.</p></div>';
     }
   }
 

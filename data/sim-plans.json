@@ -6,8 +6,8 @@
     "description": "Tuỳ vào nhu cầu sử dụng của bạn để chọn SIM tháng hoặc SIM năm.\nThiết bị của bạn có hỗ trợ loại sim nào để chọn eSIM hay SIM vật lý. Vui lòng nhấn vào từng sản phẩm để xem chi tiết và đặt mua.",
     "notice": "Giá và điều kiện đăng ký có thể thay đổi. Hãy chỉnh liên lạc trao đổi với người bán trước khi đặt hàng. Cảm ơn!",
     "catalogTitle": "Các gói SIM đang giới thiệu",
-    "monthlyLabel": "SIM cước tháng",
-    "yearlyLabel": "SIM mua đứt năm",
+    "monthlyLabel": "SIM tháng",
+    "yearlyLabel": "SIM năm",
     "physicalLabel": "SIM vật lý",
     "esimLabel": "eSIM",
     "emptyText": "Chưa có sản phẩm trong nhóm này.",
@@ -22,7 +22,8 @@
     "primaryButtonLabel": "Xem gói SIM",
     "primaryButtonUrl": "#simPlans",
     "heroDesktopImageUrl": "/img/sim/sim-banner-pc.svg",
-    "heroMobileImageUrl": "/img/sim/sim-banner-m.svg"
+    "heroMobileImageUrl": "/img/sim/sim-banner-m.svg",
+    "travelLabel": "SIM du lịch"
   },
   "plans": [
     {

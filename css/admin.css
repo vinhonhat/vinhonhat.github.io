@@ -1830,3 +1830,66 @@ label,
   .sim-faq-question-field input,
   .sim-faq-answer-field textarea { font-size: 13px; }
 }
+
+/* V26.8.4 Beta 13 - tab SIM du lịch */
+.travel-filebar { border-color: #a9c9ec; background: #f3f8ff; }
+.travel-filebar .sim-config-file-info > span { color: #2468a9; }
+.sim-admin-subnav button[data-sim-admin-view="travel"] .sim-menu-icon { font-size: 16px; }
+
+
+/* V26.8.4 Beta 14 - SIM du lịch thu gọn và tính giá bán */
+.travel-pricing-settings {
+  margin: 13px 0;
+  padding: 14px;
+  border: 1px solid #b9d2ed;
+  border-radius: 15px;
+  background: #f6faff;
+}
+.travel-pricing-settings[hidden] { display:none!important; }
+.travel-pricing-settings-head { margin-bottom: 10px; }
+.travel-pricing-settings-head div { display:grid; gap:3px; }
+.travel-pricing-settings-head strong { color:#285f98; font-size:15px; }
+.travel-pricing-settings-head small { color:#667789; font-size:12px; }
+.travel-pricing-settings-grid {
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:9px;
+}
+.travel-pricing-settings-grid label,
+.travel-price-editor-grid label { display:grid; gap:5px; color:#525e6b; font-size:12px; font-weight:800; }
+.travel-pricing-settings-grid input,
+.travel-pricing-settings-grid select,
+.travel-price-editor-grid input,
+.travel-price-editor-grid select {
+  width:100%; min-width:0; min-height:42px; padding:8px 10px;
+  border:1px solid #d7dfe8; border-radius:10px; background:#fff; font-size:13px;
+}
+.travel-status-panel { padding:9px; }
+.travel-status-grid { grid-template-columns:repeat(4,minmax(0,1fr)); }
+.travel-price-editor {
+  padding:13px;
+  border:1px solid #d6e1ec;
+  border-radius:14px;
+  background:#f9fbfd;
+}
+.travel-price-editor-head { margin-bottom:10px; display:grid; gap:3px; }
+.travel-price-editor-head strong { color:#33414f; font-size:14px; }
+.travel-price-editor-head small { color:#708090; font-size:11.5px; }
+.travel-price-editor-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:9px; }
+.travel-price-actions { margin-top:10px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+.travel-price-actions button {
+  min-height:38px; padding:0 12px; border:1px solid #b9cce0; border-radius:9px;
+  color:#315d88; background:#fff; font-size:12px; font-weight:850; cursor:pointer;
+}
+.travel-price-actions button.primary { border-color:#d87508; color:#fff; background:#d87508; }
+.travel-price-actions output { margin-left:auto; color:#28713f; font-size:12px; font-weight:850; }
+@media(max-width:1000px){
+  .travel-pricing-settings-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .travel-price-editor-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+}
+@media(max-width:700px){
+  .travel-pricing-settings-grid,
+  .travel-price-editor-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .travel-status-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .travel-price-actions output { width:100%; margin-left:0; }
+}

@@ -45,6 +45,13 @@
         <button type="button" class="active" data-sim-period="monthly" role="tab" aria-selected="true">SIM tháng</button>
         <button type="button" data-sim-period="yearly" role="tab" aria-selected="false">SIM năm</button>
         <button type="button" data-sim-period="voice" role="tab" aria-selected="false" hidden>SIM nghe gọi</button>
+        <button type="button" data-sim-period="travel" role="tab" aria-selected="false" hidden>SIM du lịch</button>
+      </div>
+
+      <div id="travelSimFilters" class="travel-sim-filters" hidden>
+        <label><span>Tìm quốc gia</span><input id="travelSimSearch" type="search" placeholder="Nhật Bản, Hàn Quốc, châu Âu..."></label>
+        <label><span>Khu vực</span><select id="travelSimRegion"><option value="">Tất cả khu vực</option></select></label>
+        <small id="travelSimSourceNote"></small>
       </div>
 
       <div id="simPlanGrid" class="sim-catalog" aria-live="polite"></div>

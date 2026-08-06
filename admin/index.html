@@ -277,7 +277,8 @@
                 <div><span>Cửa hàng SIM</span><h2>Sản phẩm và cách nhận đơn</h2><p>Quản lý theo từng mục. Mỗi tab chỉ hiện nút nhập, lưu và tải đúng file cấu hình của tab đó.</p></div>
                 <div class="sim-admin-file-safety" aria-label="Quy tắc file cấu hình">
                     <strong>Không còn tải nhầm file</strong>
-                    <span><b>Cài đặt và các mục SIM:</b> <code>sim-plans.json</code></span>
+                    <span><b>Cài đặt và SIM Nhật:</b> <code>sim-plans.json</code></span>
+                    <span><b>SIM du lịch:</b> <code>travel-sim-plans.json</code></span>
                     <span><b>Đơn hàng:</b> <code>order-config.json</code></span>
                 </div>
             </div>
@@ -302,6 +303,9 @@
                         </button>
                         <button type="button" data-sim-admin-view="voice" title="SIM nghe gọi">
                             <span class="sim-menu-icon">☎</span><span class="sim-menu-text">SIM nghe gọi</span>
+                        </button>
+                        <button type="button" data-sim-admin-view="travel" title="SIM du lịch">
+                            <span class="sim-menu-icon">✈</span><span class="sim-menu-text">SIM du lịch</span>
                         </button>
                     </nav>
                 </aside>
@@ -347,6 +351,7 @@
                                     <label>Tên mục SIM tháng<input id="simAdminMonthlyLabel" type="text"></label>
                                     <label>Tên mục SIM năm<input id="simAdminYearlyLabel" type="text"></label>
                                     <label>Tên mục SIM nghe gọi<input id="simAdminVoiceLabel" type="text"></label>
+                                    <label>Tên mục SIM du lịch<input id="simAdminTravelLabel" type="text"></label>
                                 </div>
                             </section>
 
@@ -454,7 +459,7 @@
                             <div class="sim-config-file-info">
                                 <span>FILE SẢN PHẨM</span>
                                 <strong>sim-plans.json</strong>
-                                <small>Mọi gói trong SIM tháng, SIM năm và SIM nghe gọi cùng nằm trong <code>/data/sim-plans.json</code>.</small>
+                                <small>SIM tháng, SIM năm và SIM nghe gọi nằm trong <code>/data/sim-plans.json</code>.</small>
                             </div>
                             <div class="sim-config-file-actions">
                                 <label class="sim-config-import">Nhập sim-plans.json<input type="file" accept="application/json,.json" data-import-config="sim"></label>
@@ -463,6 +468,31 @@
                             </div>
                             <p data-config-status="sim">Đang tải dữ liệu sản phẩm…</p>
                         </div>
+                        <div class="sim-config-filebar product-filebar travel-filebar" data-config-toolbar="travel" hidden>
+                            <div class="sim-config-file-info">
+                                <span>FILE SIM DU LỊCH</span>
+                                <strong>travel-sim-plans.json</strong>
+                                <small>Chỉ chứa các gói quốc tế trong <code>/data/travel-sim-plans.json</code>. Giá “Từ” là giá tham khảo, cần kiểm tra lại trước khi bán.</small>
+                            </div>
+                            <div class="sim-config-file-actions">
+                                <label class="sim-config-import">Nhập travel-sim-plans.json<input type="file" accept="application/json,.json" data-import-config="travel"></label>
+                                <button type="button" data-save-config="travel">Lưu tạm file này</button>
+                                <a download="travel-sim-plans.json" data-download-config="travel">Tải travel-sim-plans.json</a>
+                            </div>
+                            <p data-config-status="travel">Đang tải dữ liệu SIM du lịch…</p>
+                        </div>
+                        <section id="travelPricingSettings" class="travel-pricing-settings" data-config-kind="travel" hidden>
+                            <div class="travel-pricing-settings-head">
+                                <div><strong>Tỷ giá và giá bán mặc định</strong><small>Dùng để tính nhanh giá bán. Anh vẫn có thể sửa riêng từng gói.</small></div>
+                            </div>
+                            <div class="travel-pricing-settings-grid">
+                                <label>USD → JPY<input id="travelUsdToJpy" type="number" min="0" step="0.01" placeholder="150"></label>
+                                <label>USD → VND<input id="travelUsdToVnd" type="number" min="0" step="1" placeholder="26000"></label>
+                                <label>JPY → VND<input id="travelJpyToVnd" type="number" min="0" step="0.01" placeholder="175"></label>
+                                <label>Tiền bán mặc định<select id="travelDefaultSellCurrency"><option value="JPY">Yên Nhật (JPY)</option><option value="VND">Việt Nam đồng (VND)</option><option value="USD">Đô la Mỹ (USD)</option></select></label>
+                                <label>Cộng thêm mặc định<input id="travelDefaultMarkup" type="number" step="1" placeholder="0"></label>
+                            </div>
+                        </section>
                         <div id="simAdminList" class="sim-admin-list"></div>
                     </section>
                 </div>
