@@ -2062,3 +2062,42 @@ label,
     min-height: 190px;
   }
 }
+
+
+/* V26.8.6 Beta 5 - tỷ giá online và điều chỉnh */
+.travel-online-rate-row {
+  margin: 12px 0;
+  display: grid;
+  grid-template-columns: auto auto minmax(180px,1fr);
+  gap: 10px;
+  align-items: center;
+}
+.travel-online-rate-toggle {
+  min-height: 40px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #dce2e8;
+  border-radius: 11px;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 800;
+}
+.travel-online-rate-toggle input { width:18px; height:18px; accent-color:#d87508; }
+#fetchTravelRatesNow {
+  min-height: 40px;
+  padding: 0 13px;
+  border: 1px solid #e2a052;
+  border-radius: 11px;
+  color: #8d4b00;
+  background: #fff5e7;
+  font-weight: 850;
+  cursor: pointer;
+}
+#fetchTravelRatesNow:disabled { opacity:.6; cursor:wait; }
+#travelRateStatus { color:#6d7680; font-size:11px; line-height:1.5; }
+@media(max-width:760px){
+  .travel-online-rate-row { grid-template-columns:1fr 1fr; }
+  #travelRateStatus { grid-column:1/-1; }
+}

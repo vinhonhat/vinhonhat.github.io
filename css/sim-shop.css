@@ -748,41 +748,50 @@ body.sim-order-guide-open { overflow: hidden; }
 }
 
 
-/* V26.8.6 Beta 4 - chọn đơn vị thanh toán cho SIM du lịch */
-.travel-payment-currency {
-  grid-column: 1 / -1;
-  margin: 0;
+/* V26.8.6 Beta 5 - bộ lọc một hàng và nút tiền dạng icon */
+.travel-sim-filters {
+  grid-template-columns: 1fr;
+}
+.travel-filter-controls {
+  display: grid;
+  grid-template-columns: minmax(180px,1.25fr) minmax(150px,.75fr) 54px;
+  gap: 10px;
+  align-items: end;
+}
+.travel-currency-picker {
+  position: relative;
+  min-width: 54px;
+  min-height: 44px;
+  display: grid !important;
+  place-items: center;
+  gap: 0 !important;
+  border: 1px solid #dce2e8;
+  border-radius: 11px;
+  color: #9a5200 !important;
+  background: #fff7eb;
+  cursor: pointer;
+  overflow: hidden;
+}
+.travel-currency-picker:hover,
+.travel-currency-picker:focus-within { border-color:#e3a557; box-shadow:0 0 0 3px rgba(216,117,8,.09); }
+.travel-currency-picker > span { font-size: 21px; line-height: 1; font-weight: 950; pointer-events: none; }
+.travel-currency-picker > b { position:absolute; right:5px; bottom:2px; font-size:10px; pointer-events:none; }
+.travel-currency-picker select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
   padding: 0;
   border: 0;
-  display: grid;
-  gap: 7px;
-}
-.travel-payment-currency legend { padding: 0; color: #4e5965; font-size: 12px; font-weight: 900; }
-.travel-payment-currency > div { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; }
-.travel-payment-currency label {
-  min-height: 48px;
-  padding: 8px 12px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border: 1px solid #dce2e8;
-  border-radius: 12px;
-  background: #f8fafc;
+  opacity: 0;
   cursor: pointer;
 }
-.travel-payment-currency label:has(input:checked) {
-  border-color: #e2a052;
-  color: #9a5200;
-  background: #fff5e7;
-  box-shadow: inset 0 0 0 1px rgba(226,160,82,.22);
-}
-.travel-payment-currency input { width: 19px; min-height: 19px; margin: 0; padding: 0; accent-color: #d87508; flex: 0 0 auto; }
-.travel-payment-currency span { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; font-size: 13px; }
-.travel-payment-currency b { font-size: 12px; white-space: nowrap; }
 @media(max-width:640px) {
-  .travel-payment-currency { grid-column: auto; }
-  .travel-payment-currency > div { grid-template-columns: 1fr 1fr; }
-  .travel-payment-currency label { min-height: 46px; padding: 7px 9px; }
-  .travel-payment-currency span { display: grid; gap: 1px; font-size: 12px; }
-  .travel-payment-currency b { font-size: 10px; }
+  .travel-filter-controls { grid-template-columns: minmax(0,1fr) minmax(105px,.58fr) 48px; gap:7px; }
+  .travel-filter-controls label > span:not(#travelPaymentCurrencyIcon) { font-size:9px; }
+  .travel-sim-filters input,
+  .travel-sim-filters select { min-height:42px; padding-inline:9px; font-size:11px; }
+  .travel-currency-picker { min-width:48px; min-height:42px; }
+  .travel-currency-picker > span { font-size:20px; }
 }

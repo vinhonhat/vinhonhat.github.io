@@ -114,7 +114,7 @@
   }
 
   let simData = { schemaVersion: 6, page: {}, plans: [], faqs: [] };
-  let travelData = { schemaVersion: 4, title: 'SIM du lịch quốc tế', description: '', source: {}, pricing: {}, selectionOptions: defaultTravelSelectionOptions(), plans: [] };
+  let travelData = { schemaVersion: 5, title: 'SIM du lịch quốc tế', description: '', source: {}, pricing: {}, selectionOptions: defaultTravelSelectionOptions(), plans: [] };
   let orderData = {};
   let urls = { sim: '', travel: '', order: '' };
   let activeView = localStorage.getItem('vinh-sim-admin-view') || 'settings';
@@ -236,9 +236,9 @@
 
   function travelRateFromPricing(pricing, from, to) {
     if (from === to) return 1;
-    const usdToJpy = Number(pricing?.usdToJpy || 0);
-    const usdToVnd = Number(pricing?.usdToVnd || 0);
-    const jpyToVnd = Number(pricing?.jpyToVnd || 0);
+    const usdToJpy = Number(pricing?.usdToJpy || 0) + Number(pricing?.usdToJpyAdjustment || 0);
+    const usdToVnd = Number(pricing?.usdToVnd || 0) + Number(pricing?.usdToVndAdjustment || 0);
+    const jpyToVnd = Number(pricing?.jpyToVnd || 0) + Number(pricing?.jpyToVndAdjustment || 0);
     if (from === 'USD' && to === 'JPY') return usdToJpy;
     if (from === 'USD' && to === 'VND') return usdToVnd;
     if (from === 'JPY' && to === 'VND') return jpyToVnd;
@@ -260,13 +260,19 @@
       usdToJpy: Number(data.pricing?.usdToJpy || 150),
       usdToVnd: Number(data.pricing?.usdToVnd || 26000),
       jpyToVnd: Number(data.pricing?.jpyToVnd || 175),
+      usdToJpyAdjustment: Number(data.pricing?.usdToJpyAdjustment || 0),
+      usdToVndAdjustment: Number(data.pricing?.usdToVndAdjustment || 0),
+      jpyToVndAdjustment: Number(data.pricing?.jpyToVndAdjustment || 0),
+      autoRateEnabled: data.pricing?.autoRateEnabled !== false,
+      liveRateDate: String(data.pricing?.liveRateDate || ''),
+      liveRateFetchedAt: String(data.pricing?.liveRateFetchedAt || ''),
       defaultSellCurrency: ['USD','JPY','VND'].includes(data.pricing?.defaultSellCurrency) ? data.pricing.defaultSellCurrency : 'JPY',
       defaultMarkup: Number(data.pricing?.defaultMarkup || 0)
     };
     const sourceSchema = Number(data.schemaVersion || 0);
     return {
       ...data,
-      schemaVersion: 4,
+      schemaVersion: 5,
       title: String(data.title || 'SIM du lịch quốc tế'),
       description: String(data.description || ''),
       source: { ...(data.source || {}) },
@@ -516,6 +522,13 @@
     if ($('#travelUsdToJpy')) $('#travelUsdToJpy').value = travelData.pricing?.usdToJpy || 150;
     if ($('#travelUsdToVnd')) $('#travelUsdToVnd').value = travelData.pricing?.usdToVnd || 26000;
     if ($('#travelJpyToVnd')) $('#travelJpyToVnd').value = travelData.pricing?.jpyToVnd || 175;
+    if ($('#travelUsdToJpyAdjustment')) $('#travelUsdToJpyAdjustment').value = travelData.pricing?.usdToJpyAdjustment || 0;
+    if ($('#travelUsdToVndAdjustment')) $('#travelUsdToVndAdjustment').value = travelData.pricing?.usdToVndAdjustment || 0;
+    if ($('#travelJpyToVndAdjustment')) $('#travelJpyToVndAdjustment').value = travelData.pricing?.jpyToVndAdjustment || 0;
+    if ($('#travelAutoRateEnabled')) $('#travelAutoRateEnabled').checked = travelData.pricing?.autoRateEnabled !== false;
+    if ($('#travelRateStatus')) $('#travelRateStatus').textContent = travelData.pricing?.liveRateDate
+      ? `Tỷ giá gần nhất: ${travelData.pricing.liveRateDate}. Có thể cộng/trừ thêm ở các ô bên dưới.`
+      : 'Dùng tỷ giá lưu trong file khi không có mạng.';
     if ($('#travelDefaultSellCurrency')) $('#travelDefaultSellCurrency').value = travelData.pricing?.defaultSellCurrency || 'JPY';
     if ($('#travelDefaultMarkup')) $('#travelDefaultMarkup').value = travelData.pricing?.defaultMarkup || 0;
     renderTravelSharedOptions();
@@ -554,9 +567,48 @@
       usdToJpy: parseTravelNumber($('#travelUsdToJpy')?.value) || Number(travelData.pricing?.usdToJpy || 150),
       usdToVnd: parseTravelNumber($('#travelUsdToVnd')?.value) || Number(travelData.pricing?.usdToVnd || 26000),
       jpyToVnd: parseTravelNumber($('#travelJpyToVnd')?.value) || Number(travelData.pricing?.jpyToVnd || 175),
+      usdToJpyAdjustment: optionalTravelNumber($('#travelUsdToJpyAdjustment')?.value) ?? 0,
+      usdToVndAdjustment: optionalTravelNumber($('#travelUsdToVndAdjustment')?.value) ?? 0,
+      jpyToVndAdjustment: optionalTravelNumber($('#travelJpyToVndAdjustment')?.value) ?? 0,
+      autoRateEnabled: $('#travelAutoRateEnabled')?.checked !== false,
+      liveRateDate: String(travelData.pricing?.liveRateDate || ''),
+      liveRateFetchedAt: String(travelData.pricing?.liveRateFetchedAt || ''),
       defaultSellCurrency: $('#travelDefaultSellCurrency')?.value || travelData.pricing?.defaultSellCurrency || 'JPY',
       defaultMarkup: optionalTravelNumber($('#travelDefaultMarkup')?.value) ?? Number(travelData.pricing?.defaultMarkup || 0)
     };
+  }
+
+  async function fetchLatestTravelRates() {
+    const button = $('#fetchTravelRatesNow');
+    const status = $('#travelRateStatus');
+    if (button) button.disabled = true;
+    if (status) status.textContent = 'Đang lấy tỷ giá mới…';
+    try {
+      const response = await fetch('https://api.frankfurter.dev/v1/latest?base=USD&symbols=JPY,VND', { cache: 'no-store' });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      const usdToJpy = Number(data?.rates?.JPY || 0);
+      const usdToVnd = Number(data?.rates?.VND || 0);
+      if (!(usdToJpy > 0 && usdToVnd > 0)) throw new Error('Dữ liệu tỷ giá không hợp lệ');
+      const jpyToVnd = usdToVnd / usdToJpy;
+      $('#travelUsdToJpy').value = String(Number(usdToJpy.toFixed(4)));
+      $('#travelUsdToVnd').value = String(Math.round(usdToVnd));
+      $('#travelJpyToVnd').value = String(Number(jpyToVnd.toFixed(4)));
+      travelData.pricing = {
+        ...currentTravelPricingSettings(),
+        liveRateDate: String(data?.date || ''),
+        liveRateFetchedAt: new Date().toISOString()
+      };
+      if (status) status.textContent = `Đã lấy tỷ giá ngày ${data?.date || 'mới nhất'}. Các ô cộng/trừ vẫn được áp dụng.`;
+      $$('.travel-admin-card').forEach(updateTravelPricePreview);
+      updateDownloads('travel');
+    } catch (error) {
+      console.error(error);
+      if (status) status.textContent = 'Không lấy được tỷ giá online. Vẫn dùng tỷ giá đang lưu trong file.';
+      alert('Không lấy được tỷ giá mới. Hãy kiểm tra mạng rồi thử lại.');
+    } finally {
+      if (button) button.disabled = false;
+    }
   }
 
   function travelRate(from, to, pricing = currentTravelPricingSettings()) {
@@ -897,7 +949,7 @@
     travelData.pricing = currentTravelPricingSettings();
     if (activeView === 'travel') $$('.sim-admin-card').forEach(collectCard);
     collectTravelSharedOptions();
-    travelData.schemaVersion = 4;
+    travelData.schemaVersion = 5;
     travelData.title = travelData.title || 'SIM du lịch quốc tế';
     travelData.description = travelData.description || 'Danh sách eSIM du lịch theo quốc gia và khu vực.';
     travelData.source = {
@@ -1190,6 +1242,7 @@
       if (event.target.closest('#addSimApnFaq')) { addFaq(DEFAULT_APN_FAQ); return; }
       if (event.target.closest('#addTravelDayOption')) { addTravelSharedOption('day'); return; }
       if (event.target.closest('#addTravelPackageOption')) { addTravelSharedOption('package'); return; }
+      if (event.target.closest('#fetchTravelRatesNow')) { fetchLatestTravelRates(); return; }
       const removeTravelOption = event.target.closest('[data-remove-travel-option]');
       if (removeTravelOption) {
         const row = removeTravelOption.closest('[data-travel-shared-option]');

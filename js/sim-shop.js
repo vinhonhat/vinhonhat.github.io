@@ -74,6 +74,8 @@
   let travelSearch = '';
   let travelRegion = '';
   let travelPaymentCurrency = '';
+  const TRAVEL_RATE_CACHE_KEY = 'vinh-travel-live-rates-v1';
+  const TRAVEL_RATE_CACHE_MS = 12 * 60 * 60 * 1000;
   let orderConfig = structuredClone(DEFAULT_ORDER);
   let currentView = 'monthly';
   let activePlan = null;
@@ -272,9 +274,9 @@
 
   function travelRateFromPricing(pricing, from, to) {
     if (from === to) return 1;
-    const usdToJpy = Number(pricing?.usdToJpy || 0);
-    const usdToVnd = Number(pricing?.usdToVnd || 0);
-    const jpyToVnd = Number(pricing?.jpyToVnd || 0);
+    const usdToJpy = Number(pricing?.usdToJpy || 0) + Number(pricing?.usdToJpyAdjustment || 0);
+    const usdToVnd = Number(pricing?.usdToVnd || 0) + Number(pricing?.usdToVndAdjustment || 0);
+    const jpyToVnd = Number(pricing?.jpyToVnd || 0) + Number(pricing?.jpyToVndAdjustment || 0);
     if (from === 'USD' && to === 'JPY') return usdToJpy;
     if (from === 'USD' && to === 'VND') return usdToVnd;
     if (from === 'JPY' && to === 'VND') return jpyToVnd;
@@ -282,6 +284,67 @@
     if (from === 'VND' && to === 'USD') return usdToVnd ? 1 / usdToVnd : 0;
     if (from === 'VND' && to === 'JPY') return jpyToVnd ? 1 / jpyToVnd : 0;
     return 0;
+  }
+
+  function validTravelRatePayload(payload) {
+    return payload && Number(payload.usdToJpy) > 0 && Number(payload.usdToVnd) > 0 && Number(payload.jpyToVnd) > 0;
+  }
+
+  function applyLiveTravelRates(payload) {
+    if (!validTravelRatePayload(payload)) return false;
+    travelData.pricing = {
+      ...(travelData.pricing || {}),
+      usdToJpy: Number(payload.usdToJpy),
+      usdToVnd: Number(payload.usdToVnd),
+      jpyToVnd: Number(payload.jpyToVnd),
+      liveRateDate: payload.date || '',
+      liveRateFetchedAt: payload.fetchedAt || new Date().toISOString()
+    };
+    return true;
+  }
+
+  async function refreshTravelRatesOnline() {
+    const pricing = travelData.pricing || {};
+    if (pricing.autoRateEnabled === false) return;
+    try {
+      const cached = JSON.parse(localStorage.getItem(TRAVEL_RATE_CACHE_KEY) || 'null');
+      if (cached && Date.now() - Number(cached.cachedAt || 0) < TRAVEL_RATE_CACHE_MS && applyLiveTravelRates(cached)) return;
+    } catch (_) {}
+    try {
+      const response = await fetch('https://api.frankfurter.dev/v1/latest?base=USD&symbols=JPY,VND', { cache: 'no-store' });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      const usdToJpy = Number(data?.rates?.JPY || 0);
+      const usdToVnd = Number(data?.rates?.VND || 0);
+      const payload = {
+        usdToJpy,
+        usdToVnd,
+        jpyToVnd: usdToJpy > 0 ? usdToVnd / usdToJpy : 0,
+        date: String(data?.date || ''),
+        fetchedAt: new Date().toISOString(),
+        cachedAt: Date.now()
+      };
+      if (applyLiveTravelRates(payload)) localStorage.setItem(TRAVEL_RATE_CACHE_KEY, JSON.stringify(payload));
+    } catch (error) {
+      console.warn('Không lấy được tỷ giá online, tiếp tục dùng tỷ giá trong travel-sim-plans.json:', error);
+    }
+  }
+
+  function updateTravelCurrencyControl() {
+    const select = $('#travelPaymentCurrencySelect');
+    const icon = $('#travelPaymentCurrencyIcon');
+    const currency = activeTravelPaymentCurrency();
+    if (select) select.value = currency;
+    if (icon) icon.textContent = currency === 'VND' ? '₫' : '¥';
+  }
+
+  function refreshTravelCurrencyView() {
+    updateTravelCurrencyControl();
+    if (currentView === 'travel') renderCatalog('travel');
+    if (activePlan?.planKind === 'travel') {
+      const detail = $('#simDetailContent');
+      if (detail) detail.innerHTML = detailTemplate(activePlan);
+    }
   }
 
   function activeTravelPaymentCurrency() {
@@ -894,15 +957,10 @@
       travelRegion = String(event.target.value || '').trim();
       if (currentView === 'travel') renderCatalog('travel');
     });
-    document.querySelectorAll('[data-travel-payment-currency]').forEach(input => {
-      input.addEventListener('change', event => {
-        travelPaymentCurrency = event.target.value === 'VND' ? 'VND' : 'JPY';
-        document.querySelectorAll('[data-travel-payment-currency]').forEach(item => {
-          item.checked = item.value === travelPaymentCurrency;
-        });
-        if (currentView === 'travel') renderCatalog('travel');
-        if (activePlan?.planKind === 'travel') $('#simDetailContent').innerHTML = detailTemplate(activePlan);
-      });
+    $('#travelPaymentCurrencySelect')?.addEventListener('change', event => {
+      travelPaymentCurrency = event.target.value === 'VND' ? 'VND' : 'JPY';
+      try { localStorage.setItem('vinh-travel-payment-currency', travelPaymentCurrency); } catch (_) {}
+      refreshTravelCurrencyView();
     });
     document.addEventListener('click', event => {
       const period = event.target.closest('[data-sim-period]');
@@ -953,12 +1011,18 @@
       ]);
       if (!dataResponse.ok) throw new Error('Không tải được sim-plans.json');
       const data = await dataResponse.json();
-      travelData = travelResponse.ok ? await travelResponse.json() : { source: {}, selectionOptions: {}, plans: [] };
+      travelData = travelResponse.ok ? await travelResponse.json() : { source: {}, pricing: {}, selectionOptions: {}, plans: [] };
       travelData.selectionOptions = normalizeTravelSelectionOptions(travelData.selectionOptions);
-      travelPaymentCurrency = travelData.pricing?.defaultSellCurrency === 'VND' ? 'VND' : 'JPY';
-      document.querySelectorAll('[data-travel-payment-currency]').forEach(input => {
-        input.checked = input.value === travelPaymentCurrency;
-      });
+      await refreshTravelRatesOnline();
+      try {
+        const savedCurrency = localStorage.getItem('vinh-travel-payment-currency');
+        travelPaymentCurrency = savedCurrency === 'VND' || savedCurrency === 'JPY'
+          ? savedCurrency
+          : (travelData.pricing?.defaultSellCurrency === 'VND' ? 'VND' : 'JPY');
+      } catch (_) {
+        travelPaymentCurrency = travelData.pricing?.defaultSellCurrency === 'VND' ? 'VND' : 'JPY';
+      }
+      updateTravelCurrencyControl();
       const order = orderResponse.ok ? await orderResponse.json() : DEFAULT_ORDER;
       pageConfig = data.page || {};
       const localPlans = consolidatePlans(data.plans).filter(item => item.enabled !== false);
