@@ -2124,3 +2124,51 @@ label,
 @media(max-width:640px) {
   .travel-shared-option-row { grid-template-columns: 22px minmax(0,1fr) 68px 32px; }
 }
+
+
+/* V26.8.6 Beta 7 - bật/tắt APN riêng theo từng nhóm và vị trí */
+.sim-apn-visibility-grid {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+.sim-apn-visibility-card {
+  min-width: 0;
+  padding: 12px;
+  display: grid;
+  gap: 9px;
+  border: 1px solid #e3d4c1;
+  border-radius: 13px;
+  background: #fff;
+}
+.sim-apn-visibility-card > strong {
+  color: #67400e;
+  font-size: 13px;
+}
+.sim-apn-visibility-card label {
+  min-height: 36px;
+  padding: 0 9px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border: 1px solid #e5e8ec;
+  border-radius: 10px;
+  background: #f8fafc;
+  color: #4c5661;
+  font-size: 12px;
+  font-weight: 760;
+}
+.sim-apn-visibility-card input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #df7500;
+}
+@media (max-width: 900px) {
+  .sim-apn-visibility-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 520px) {
+  .sim-apn-visibility-grid { grid-template-columns: 1fr; }
+}

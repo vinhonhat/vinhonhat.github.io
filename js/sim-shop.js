@@ -491,9 +491,37 @@
     return `${values[0]} / ${values[1]}`;
   }
 
-  function apnSettings() {
+  function normalizedApnVisibility() {
+    const legacyEnabled = pageConfig.apnEnabled !== false;
+    const source = pageConfig.apnVisibility && typeof pageConfig.apnVisibility === 'object' ? pageConfig.apnVisibility : {};
+    const defaults = legacyEnabled
+      ? {
+          monthly: { hero: true, detail: true },
+          yearly: { hero: true, detail: true },
+          voice: { hero: false, detail: false },
+          travel: { hero: false, detail: false }
+        }
+      : {
+          monthly: { hero: false, detail: false },
+          yearly: { hero: false, detail: false },
+          voice: { hero: false, detail: false },
+          travel: { hero: false, detail: false }
+        };
+    return ['monthly', 'yearly', 'voice', 'travel'].reduce((result, view) => {
+      const item = source[view] && typeof source[view] === 'object' ? source[view] : {};
+      result[view] = {
+        hero: typeof item.hero === 'boolean' ? item.hero : defaults[view].hero,
+        detail: typeof item.detail === 'boolean' ? item.detail : defaults[view].detail
+      };
+      return result;
+    }, {});
+  }
+
+  function apnSettings(view = currentView, place = 'detail') {
+    const normalizedView = ['monthly', 'yearly', 'voice', 'travel'].includes(view) ? view : 'monthly';
+    const visibility = normalizedApnVisibility();
     return {
-      enabled: pageConfig.apnEnabled !== false,
+      enabled: visibility[normalizedView]?.[place] === true,
       url: String(pageConfig.apnUrl || DEFAULT_APN_URL).trim() || DEFAULT_APN_URL,
       label: String(pageConfig.apnLabel || 'Tải cấu hình / APN').trim() || 'Tải cấu hình / APN'
     };
@@ -517,7 +545,7 @@
     }
     const link = $('#simApnHeroLink');
     if (!link) return;
-    const apn = apnSettings();
+    const apn = apnSettings(currentView, 'hero');
     link.hidden = !apn.enabled;
     link.href = apn.url;
     link.textContent = apn.label;
@@ -603,6 +631,7 @@
 
   function renderCatalog(view = currentView) {
     currentView = view;
+    configureHeroButtons();
     document.querySelectorAll('[data-sim-period]').forEach(button => {
       const active = button.dataset.simPeriod === view;
       button.classList.toggle('active', active);
@@ -659,7 +688,7 @@
     const features = (plan.features || []).map(item => `<li>${escapeHtml(item)}</li>`).join('');
     const requirements = (plan.requirements || []).map(item => `<li>${escapeHtml(item)}</li>`).join('');
     const labels = orderConfig.labels || DEFAULT_ORDER.labels;
-    const apn = apnSettings();
+    const apn = apnSettings(planView(plan), 'detail');
     const price = planPrice(plan, currentType);
     const buyLabel = plan.soldOut === true ? 'Liên hệ' : (plan.planKind === 'travel' && plan.showPrice === false ? 'Liên hệ báo giá' : escapeHtml(orderConfig.mode === 'custom-page' ? labels.custom : labels.buy));
     return `<div class="sim-detail-grid">

@@ -501,6 +501,32 @@
     updateDownloads('travel');
   }
 
+  function normalizedApnVisibility(page = {}) {
+    const legacyEnabled = page.apnEnabled !== false;
+    const source = page.apnVisibility && typeof page.apnVisibility === 'object' ? page.apnVisibility : {};
+    const defaults = legacyEnabled
+      ? {
+          monthly: { hero: true, detail: true },
+          yearly: { hero: true, detail: true },
+          voice: { hero: false, detail: false },
+          travel: { hero: false, detail: false }
+        }
+      : {
+          monthly: { hero: false, detail: false },
+          yearly: { hero: false, detail: false },
+          voice: { hero: false, detail: false },
+          travel: { hero: false, detail: false }
+        };
+    return ['monthly', 'yearly', 'voice', 'travel'].reduce((result, view) => {
+      const item = source[view] && typeof source[view] === 'object' ? source[view] : {};
+      result[view] = {
+        hero: typeof item.hero === 'boolean' ? item.hero : defaults[view].hero,
+        detail: typeof item.detail === 'boolean' ? item.detail : defaults[view].detail
+      };
+      return result;
+    }, {});
+  }
+
   function fillPage() {
     $('#simAdminTitle').value = simData.page?.title || '';
     $('#simAdminEyebrow').value = simData.page?.eyebrow || '';
@@ -522,7 +548,15 @@
     $('#simAdminPrimaryButtonUrl').value = simData.page?.primaryButtonUrl || '#simPlans';
     $('#simAdminApnUrl').value = simData.page?.apnUrl || DEFAULT_APN_URL;
     $('#simAdminApnLabel').value = simData.page?.apnLabel || 'Tải cấu hình / APN';
-    $('#simAdminApnEnabled').checked = simData.page?.apnEnabled !== false;
+    const apnVisibility = normalizedApnVisibility(simData.page || {});
+    $('#simAdminApnMonthlyHero').checked = apnVisibility.monthly.hero;
+    $('#simAdminApnMonthlyDetail').checked = apnVisibility.monthly.detail;
+    $('#simAdminApnYearlyHero').checked = apnVisibility.yearly.hero;
+    $('#simAdminApnYearlyDetail').checked = apnVisibility.yearly.detail;
+    $('#simAdminApnVoiceHero').checked = apnVisibility.voice.hero;
+    $('#simAdminApnVoiceDetail').checked = apnVisibility.voice.detail;
+    $('#simAdminApnTravelHero').checked = apnVisibility.travel.hero;
+    $('#simAdminApnTravelDetail').checked = apnVisibility.travel.detail;
     if ($('#travelUsdToJpy')) $('#travelUsdToJpy').value = travelData.pricing?.usdToJpy || 150;
     if ($('#travelUsdToVnd')) $('#travelUsdToVnd').value = travelData.pricing?.usdToVnd || 26000;
     if ($('#travelJpyToVnd')) $('#travelJpyToVnd').value = travelData.pricing?.jpyToVnd || 175;
@@ -942,7 +976,22 @@
       primaryButtonUrl: $('#simAdminPrimaryButtonUrl').value.trim() || '#simPlans',
       apnUrl: $('#simAdminApnUrl').value.trim() || DEFAULT_APN_URL,
       apnLabel: $('#simAdminApnLabel').value.trim() || 'Tải cấu hình / APN',
-      apnEnabled: $('#simAdminApnEnabled').checked
+      apnEnabled: [
+        $('#simAdminApnMonthlyHero').checked,
+        $('#simAdminApnMonthlyDetail').checked,
+        $('#simAdminApnYearlyHero').checked,
+        $('#simAdminApnYearlyDetail').checked,
+        $('#simAdminApnVoiceHero').checked,
+        $('#simAdminApnVoiceDetail').checked,
+        $('#simAdminApnTravelHero').checked,
+        $('#simAdminApnTravelDetail').checked
+      ].some(Boolean),
+      apnVisibility: {
+        monthly: { hero: $('#simAdminApnMonthlyHero').checked, detail: $('#simAdminApnMonthlyDetail').checked },
+        yearly: { hero: $('#simAdminApnYearlyHero').checked, detail: $('#simAdminApnYearlyDetail').checked },
+        voice: { hero: $('#simAdminApnVoiceHero').checked, detail: $('#simAdminApnVoiceDetail').checked },
+        travel: { hero: $('#simAdminApnTravelHero').checked, detail: $('#simAdminApnTravelDetail').checked }
+      }
     };
     if (activeView !== 'travel') $$('.sim-admin-card').forEach(collectCard);
     collectFaqs();

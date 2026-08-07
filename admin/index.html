@@ -385,12 +385,33 @@
                             <section class="sim-settings-panel">
                                 <div class="sim-settings-panel-head">
                                     <h4>Cấu hình / APN</h4>
-                                    <p>Đặt đường dẫn bài cấu hình, tên nút và tùy chọn hiển thị ngay ngoài trang SIM.</p>
+                                    <p>Chọn riêng nhóm nào được hiện nút ở đầu trang và trong chi tiết sản phẩm.</p>
                                 </div>
                                 <div class="sim-settings-grid two">
                                     <label class="sim-settings-span-two">Link trang tải cấu hình / APN<input id="simAdminApnUrl" type="text" placeholder="/pages/pages-baiviet/sim/cau-hinh-sim-data-sim-nghe-goi-20251109.html"></label>
-                                    <label>Tên nút cấu hình<input id="simAdminApnLabel" type="text" placeholder="Tải cấu hình / APN"></label>
-                                    <label class="sim-admin-inline-check sim-settings-check-card"><span>Hiện nút cấu hình ngoài trang</span><input id="simAdminApnEnabled" type="checkbox"></label>
+                                    <label class="sim-settings-span-two">Tên nút cấu hình<input id="simAdminApnLabel" type="text" placeholder="Tải cấu hình / APN"></label>
+                                </div>
+                                <div class="sim-apn-visibility-grid" aria-label="Vị trí hiển thị nút cấu hình APN">
+                                    <section class="sim-apn-visibility-card">
+                                        <strong>SIM tháng</strong>
+                                        <label><span>Đầu trang</span><input id="simAdminApnMonthlyHero" type="checkbox"></label>
+                                        <label><span>Chi tiết</span><input id="simAdminApnMonthlyDetail" type="checkbox"></label>
+                                    </section>
+                                    <section class="sim-apn-visibility-card">
+                                        <strong>SIM năm</strong>
+                                        <label><span>Đầu trang</span><input id="simAdminApnYearlyHero" type="checkbox"></label>
+                                        <label><span>Chi tiết</span><input id="simAdminApnYearlyDetail" type="checkbox"></label>
+                                    </section>
+                                    <section class="sim-apn-visibility-card">
+                                        <strong>SIM nghe gọi</strong>
+                                        <label><span>Đầu trang</span><input id="simAdminApnVoiceHero" type="checkbox"></label>
+                                        <label><span>Chi tiết</span><input id="simAdminApnVoiceDetail" type="checkbox"></label>
+                                    </section>
+                                    <section class="sim-apn-visibility-card">
+                                        <strong>SIM du lịch</strong>
+                                        <label><span>Đầu trang</span><input id="simAdminApnTravelHero" type="checkbox"></label>
+                                        <label><span>Chi tiết</span><input id="simAdminApnTravelDetail" type="checkbox"></label>
+                                    </section>
                                 </div>
                             </section>
 
