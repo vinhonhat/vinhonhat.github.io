@@ -1,3 +1,4 @@
+// V26.8.3 Beta 18 - cập nhật breakpoint tablet/mobile và cache giao diện trang chủ.
 importScripts('/js/site-version.js');
 const CACHE_NAME = self.VinhSiteVersion?.cacheName || 'vinhonhat-runtime';
 const CORE_ASSETS = [
