@@ -587,7 +587,7 @@
         window.cancelAnimationFrame(mobileMenuAnchorFrame);
         mobileMenuAnchorFrame = window.requestAnimationFrame(() => {
             const nav = document.querySelector('[data-mobile-nav], .mobile-bottom-nav');
-            if (!nav || window.innerWidth > 640) return;
+            if (!nav || window.innerWidth > 850) return;
 
             const rect = nav.getBoundingClientRect();
             const viewportHeight = document.documentElement.clientHeight || window.innerHeight || rect.bottom;
@@ -649,7 +649,7 @@
         };
 
         const begin = y => {
-            if (window.innerWidth > 640 || sheet.scrollTop > 2 || panel.hidden) return;
+            if (window.innerWidth > 850 || sheet.scrollTop > 2 || panel.hidden) return;
             startY = y;
             dragging = true;
             deltaY = 0;
@@ -1774,7 +1774,18 @@
             contactLabel.hidden = !label;
         }
         const links = document.querySelector('.footer-links');
-        if (links) links.hidden = footer.showQuickLinks === false;
+        if (links) {
+            // V26.8.11 Beta 4: giữ chắc liên kết SIM Data của footer nền V26.8.6 Beta 7.
+            // Nếu fragment footer trên máy chủ bị thiếu link này, tự phục hồi thay vì để giao diện mất mục.
+            if (!links.querySelector('a[href="/pages/pages-app/sim-data.html"]')) {
+                const simDataLink = document.createElement('a');
+                simDataLink.href = '/pages/pages-app/sim-data.html';
+                simDataLink.textContent = 'SIM Data';
+                simDataLink.dataset.footerLink = 'sim-data';
+                links.appendChild(simDataLink);
+            }
+            links.hidden = footer.showQuickLinks === false;
+        }
         applySiteOptions(config);
     }
 

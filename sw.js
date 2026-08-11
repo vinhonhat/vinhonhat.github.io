@@ -1,3 +1,4 @@
+// V26.8.11 Beta 4 - nền V26.8.6 Beta 7; tablet nav + summary mobile + footer SIM Data self-heal.
 importScripts('/js/site-version.js');
 const CACHE_NAME = self.VinhSiteVersion?.cacheName || 'vinhonhat-runtime';
 const CORE_ASSETS = [
