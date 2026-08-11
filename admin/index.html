@@ -817,16 +817,15 @@
                     </div>
 
                     <!-- 4. NÚT BẤM -->
+                    <div class="admin-note" style="margin-top:16px"><strong>Cách lưu đơn giản:</strong> Xem trước nếu cần → bấm <strong>Lưu bài &amp; chuẩn bị file cập nhật</strong> một lần → tải 1 file HTML và 3 file JSON bắt buộc ở phía dưới.</div>
                     <div class="admin-actions flex flex-wrap justify-end gap-4 pt-4">
                         <button type="button" id="previewButton" class="bg-blue-600 text-white font-semibold py-2 px-6 rounded-full transition-all duration-300 hover:bg-blue-700 shadow-md">
-                            1. Xem trước
+                            Xem trước (không bắt buộc)
                         </button>
-                        <button type="button" id="saveButton" class="bg-yellow-600 text-white font-semibold py-2 px-6 rounded-full transition-all duration-300 hover:bg-yellow-700 shadow-md">
-                            2. Tạo metadata
+                        <button type="button" id="saveButton" class="bg-green-600 text-white font-semibold py-2 px-6 rounded-full transition-all duration-300 hover:bg-green-700 shadow-md">
+                            Lưu bài &amp; chuẩn bị file cập nhật
                         </button>
-                        <button type="button" id="generateHtmlButton" class="bg-green-600 text-white font-semibold py-2 px-6 rounded-full transition-all duration-300 hover:bg-green-700 shadow-md">
-                            3. Tải HTML mới
-                        </button>
+                        <button type="button" id="generateHtmlButton" hidden aria-hidden="true">Tạo lại HTML</button>
                     </div>
 
                 </form>
@@ -841,7 +840,7 @@
                         <div>
                             <dt class="font-semibold">Q: Bây giờ nội dung được lưu ở đâu?</dt>
                             <dd class="text-sm pl-2 border-l-2 border-gray-200 ml-2 mt-1">
-                                A: Nội dung chính nằm trong <strong>file HTML của bài</strong>. <code>posts.json</code> chỉ giữ metadata; nội dung tìm kiếm nằm trong <code>posts-search.json</code>. Khi chọn bài, Admin tự đọc HTML mới nhất. Sau khi sửa, tải HTML mới và ba file JSON rồi chép đúng vị trí trong repository.
+                                A: Anh chỉ cần sửa nội dung rồi bấm <strong>“Lưu bài &amp; chuẩn bị file cập nhật”</strong> một lần. Admin sẽ chuẩn bị đồng thời file HTML của bài và 3 file dữ liệu bắt buộc. Sau đó tải các file ở khung <strong>“File cần đưa lên GitHub”</strong> phía dưới.
                             </dd>
                         </div>
                         <div>
@@ -861,16 +860,16 @@
 
                 <!-- Nơi hiển thị link tải file HTML -->
                 <div id="htmlOutputContainer" class="bg-white p-6 rounded-lg shadow-md" style="display: none;">
-                    <h2 class="text-xl font-bold text-gray-800 border-l-4 border-green-600 pl-4 mb-4">File HTML đã sẵn sàng</h2>
-                    <p class="text-gray-700 mb-3">Nhấn vào link bên dưới để tải file về:</p>
+                    <h2 class="text-xl font-bold text-gray-800 border-l-4 border-green-600 pl-4 mb-4">File cần đưa lên GitHub</h2>
+                    <p class="text-gray-700 mb-3"><strong>1/4 — File HTML của bài:</strong> tải file này và chép đúng thư mục bài viết đã chọn.</p>
                     <a id="downloadHtmlLink" class="text-lg font-bold text-green-700 underline hover:text-green-800"></a>
                     <p class="text-xs text-gray-500 mt-2">Hãy lưu file này vào đúng đường dẫn bạn đã khai báo (ví dụ: <code>pages/bai-viet/</code>).</p>
                 </div>
                 
                 <!-- Nơi hiển thị JSON -->
                 <div id="jsonOutputContainer" class="bg-white p-6 rounded-lg shadow-md" style="display: none;">
-                    <h2 class="text-xl font-bold text-gray-800 border-l-4 border-red-600 pl-4 mb-4">Dữ liệu JSON để lưu</h2>
-                    <p class="admin-note">Sau mỗi lần sửa bài, tải ba file dữ liệu chính bên dưới. <strong>posts.json</strong> chỉ giữ metadata, không chứa nội dung hoặc searchText; <strong>posts-index.json</strong> là file nhẹ cho trang hiển thị; <strong>posts-search.json</strong> chỉ tải khi tìm kiếm; <strong>legacy-content.json</strong> chỉ là bản dự phòng cho bài cũ chưa chuyển.</p>
+                    <h2 class="text-xl font-bold text-gray-800 border-l-4 border-red-600 pl-4 mb-4">2/4 → 4/4 — Ba file dữ liệu bắt buộc</h2>
+                    <p class="admin-note">Sau mỗi lần sửa bài, anh chỉ cần tải <strong>3 file JSON chính</strong> bên dưới: <strong>posts.json</strong>, <strong>posts-index.json</strong> và <strong>posts-search.json</strong>. Đây là 3 file cần cập nhật cùng với <strong>1 file HTML</strong> của bài viết. <strong>legacy-content.json</strong> chỉ là file dự phòng cho bài cũ, không bắt buộc tải mỗi lần.</p>
                     <div class="data-downloads">
                         <a id="downloadPostsJson" download="posts.json">Tải posts.json metadata</a>
                         <a id="downloadPostsIndexJson" download="posts-index.json">Tải posts-index.json nhẹ</a>
@@ -1941,26 +1940,24 @@
         // (Sử dụng code ghi đè ở cuối file)
 
         
-        // --- XỬ LÝ NÚT "TẠO & TẢI FILE HTML" ---
+        // --- CHUẨN BỊ FILE HTML CÙNG LÚC VỚI DỮ LIỆU BÀI ---
+        function prepareHtmlDownload(post) {
+            const finalHtml = generateFullHtml(post);
+            if (!finalHtml) return false;
+            const blob = new Blob([finalHtml], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const fileName = postFilename.value.trim() || 'bai-viet.html';
+            downloadHtmlLink.href = url;
+            downloadHtmlLink.download = fileName;
+            downloadHtmlLink.textContent = `Tải HTML: ${fileName}`;
+            htmlOutputContainer.style.display = 'block';
+            return true;
+        }
+
         generateHtmlButton.addEventListener('click', () => {
             const post = getPostObjectFromForm();
             if (!post) return;
-
-            const finalHtml = generateFullHtml(post);
-            if (!finalHtml) return;
-            
-            const blob = new Blob([finalHtml], { type: 'text/html' });
-            const url = URL.createObjectURL(blob);
-            
-            // *** CẬP NHẬT: Dùng postFilename làm tên file ***
-            const fileName = postFilename.value.trim() || 'bai-viet.html';
-            
-            downloadHtmlLink.href = url;
-            downloadHtmlLink.download = fileName; 
-            downloadHtmlLink.textContent = `Tải về: ${fileName}`;
-            htmlOutputContainer.style.display = 'block';
-            
-            alert('Đã tạo file HTML! Nhấn vào link vừa xuất hiện để tải về.');
+            prepareHtmlDownload(post);
         });
 
         // --- *** SỬA LỖI: XỬ LÝ XEM TRƯỚC (Preview) *** ---
@@ -2077,11 +2074,11 @@
             legacyContentObjectUrl = createDataDownload(downloadLegacyContentJson, 'legacy-content.json', legacyJson);
 
             jsonOutputContainer.style.display = 'block';
-            htmlOutputContainer.style.display = 'none';
+            prepareHtmlDownload(savedPost);
             populateSelector();
             postSelector.value = savedPost.id;
 
-            alert('✅ Đã tạo dữ liệu theo cấu trúc hiện tại. Nếu có sửa nội dung, hãy tải cả file HTML rồi thay đúng đường dẫn; sau đó thay posts.json, posts-index.json và posts-search.json. legacy-content.json chỉ cần thay khi anh muốn giữ bản dự phòng mới nhất.');
+            alert('✅ Đã lưu bài và chuẩn bị đủ file. Kéo xuống khung File cần đưa lên GitHub: tải HTML của bài + posts.json + posts-index.json + posts-search.json. legacy-content.json là tùy chọn.');
         });
 
     </script>

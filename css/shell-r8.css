@@ -104,12 +104,15 @@
 .mobile-menu-head button {
   width: 38px;
   height: 38px;
-  border: 1px solid #e2e5e9;
-  border-radius: 50%;
-  background: #fff;
+  border: 0;
+  border-radius: 12px;
+  background: #f5f6f8;
+  color: #3f4852;
   font-size: 24px;
+  line-height: 1;
   cursor: pointer;
 }
+.mobile-menu-head button:hover { background: #eceff3; }
 .mobile-menu-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
