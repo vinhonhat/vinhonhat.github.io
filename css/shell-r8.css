@@ -1345,10 +1345,10 @@
 }
 
 
-/* ========================= V26.8.3 BETA 18: responsive nav liền mạch + summary mobile ========================= */
+/* ========================= V26.8.11 BETA 1: responsive nav liền mạch + summary mobile ========================= */
 /*
- * Desktop menu biến mất ở 850px, vì vậy tablet dọc 641-850px phải có thanh 4 nút
- * thay thế. Trước đây mobile nav chỉ bật tới 640px nên tạo ra vùng "không có menu".
+ * Menu desktop ẩn từ 850px trở xuống, vì vậy tablet dọc 641-850px phải có thanh 4 nút
+ * thay thế. Trước đây mobile nav chỉ bật tới 640px nên tạo ra vùng không có menu.
  */
 @media (min-width: 641px) and (max-width: 850px) {
   .mobile-bottom-nav:not([hidden]) {
@@ -1410,7 +1410,6 @@
     padding-bottom: 78px !important;
   }
 
-  /* Cho nút Menu trên thanh tablet mở cùng bottom-sheet như mobile. */
   .mobile-menu-panel[hidden] { display: none !important; }
   .mobile-menu-panel:not([hidden]) {
     display: flex !important;
@@ -1427,7 +1426,7 @@
   }
 }
 
-/* Bài mới trên điện thoại: hiện lại mô tả ngắn (summary/excerpt), tối đa 2 dòng. */
+/* Bài mới trên điện thoại: hiện mô tả ngắn (summary/excerpt), tối đa 2 dòng. */
 @media (max-width: 640px) {
   .home-page #latest-posts .news-feed-copy {
     padding: 7px 38px 7px 0 !important;

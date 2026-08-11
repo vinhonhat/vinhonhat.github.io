@@ -1,4 +1,4 @@
-// V26.8.3 Beta 18 - cập nhật breakpoint tablet/mobile và cache giao diện trang chủ.
+// V26.8.11 Beta 1 - cập nhật responsive iPad/mobile trang chủ; dữ liệu giữ nguyên từ V26.8.6 Beta 7.
 importScripts('/js/site-version.js');
 const CACHE_NAME = self.VinhSiteVersion?.cacheName || 'vinhonhat-runtime';
 const CORE_ASSETS = [

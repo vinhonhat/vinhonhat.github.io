@@ -1367,9 +1367,25 @@
             const prev = event.target.closest('[data-banner-prev]');
             const next = event.target.closest('[data-banner-next]');
             const dot = event.target.closest('[data-banner-dot]');
-            if (prev) { step(-1); start(); }
-            else if (next) { step(1); start(); }
-            else if (dot) { goDirect(Number(dot.dataset.bannerDot)); start(); }
+            const bannerLink = event.target.closest('.home-banner-link');
+            if (prev) { step(-1); start(); return; }
+            if (next) { step(1); start(); return; }
+            if (dot) { goDirect(Number(dot.dataset.bannerDot)); start(); return; }
+            if (!bannerLink) return;
+            if (suppressClick || viewport?.classList.contains('is-dragging')) {
+                event.preventDefault();
+                event.stopPropagation();
+                return;
+            }
+            const href = bannerLink.href;
+            if (!href) return;
+            event.preventDefault();
+            if (bannerLink.target === '_blank') {
+                const opened = window.open(href, '_blank', 'noopener');
+                if (opened) opened.opener = null;
+            } else {
+                window.location.assign(href);
+            }
         });
 
         const dragEnabled = config.dragEnabled !== false && count > 1;
@@ -1445,7 +1461,9 @@
                 dragMoved = false;
                 dragHorizontal = false;
                 stop();
-                try { viewport.setPointerCapture(event.pointerId); } catch (_) {}
+                // Không giữ con trỏ ngay khi vừa nhấn. Chỉ giữ sau khi xác định
+                // người dùng thực sự kéo ngang, để click bình thường vào banner
+                // trên máy tính vẫn mở đúng liên kết.
             });
             viewport.addEventListener('pointermove', event => {
                 if (event.pointerId !== dragPointerId) return;
@@ -1453,7 +1471,10 @@
                 const dy = event.clientY - dragStartY;
                 dragLastX = event.clientX;
                 if (!dragMoved && Math.abs(dx) > 5) dragMoved = true;
-                if (!dragHorizontal && Math.abs(dx) > 7 && Math.abs(dx) > Math.abs(dy) * 1.08) dragHorizontal = true;
+                if (!dragHorizontal && Math.abs(dx) > 7 && Math.abs(dx) > Math.abs(dy) * 1.08) {
+                    dragHorizontal = true;
+                    try { viewport.setPointerCapture(event.pointerId); } catch (_) {}
+                }
                 if (!dragHorizontal) return;
                 event.preventDefault();
                 viewport.classList.add('is-dragging');
