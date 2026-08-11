@@ -1344,11 +1344,10 @@
   }
 }
 
-
-/* ========================= V26.8.11 BETA 1: responsive nav liền mạch + summary mobile ========================= */
+/* ========================= V26.8.11 BETA 2: phục hồi nền B7 + responsive nav/summary ========================= */
 /*
- * Menu desktop ẩn từ 850px trở xuống, vì vậy tablet dọc 641-850px phải có thanh 4 nút
- * thay thế. Trước đây mobile nav chỉ bật tới 640px nên tạo ra vùng không có menu.
+ * Nền file này là V26.8.6 Beta 7. Chỉ bổ sung phần cần thiết cho tablet dọc
+ * và mô tả ngắn của Bài viết mới nhất trên mobile.
  */
 @media (min-width: 641px) and (max-width: 850px) {
   .mobile-bottom-nav:not([hidden]) {
@@ -1447,3 +1446,4 @@
     font-size: 9px !important;
   }
 }
+

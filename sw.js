@@ -1,4 +1,4 @@
-// V26.8.11 Beta 1 - cập nhật responsive iPad/mobile trang chủ; dữ liệu giữ nguyên từ V26.8.6 Beta 7.
+// V26.8.11 Beta 2 - phục hồi các file bị nhánh 26.8.3 Beta 18 ghi đè; nền V26.8.6 Beta 7.
 importScripts('/js/site-version.js');
 const CACHE_NAME = self.VinhSiteVersion?.cacheName || 'vinhonhat-runtime';
 const CORE_ASSETS = [
