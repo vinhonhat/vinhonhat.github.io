@@ -654,20 +654,17 @@
                 <!-- 1. CHỌN BÀI VIẾT -->
                 <div class="post-picker-panel">
                     <div class="post-picker-title">
-                        <div><strong>Tìm hoặc tạo bài viết</strong><small>Gõ để lọc · bấm vào ô để xem danh sách bài cũ</small></div>
+                        <div><strong>Chọn hoặc tạo bài viết</strong><small>Bấm vào ô để cuộn bài cũ · gõ từ khóa để lọc ngay</small></div>
                     </div>
-                    <div class="post-picker-main">
-                        <button id="createNewPostQuick" class="post-create-button" type="button"><span aria-hidden="true">＋</span> Tạo bài mới</button>
+                    <div class="post-picker-row">
                         <div id="postSearchCombo" class="post-search-combo">
                             <div class="post-search-field">
                                 <span class="post-search-icon" aria-hidden="true">⌕</span>
-                                <input id="postFilterInput" type="search" placeholder="Tìm bài viết theo tiêu đề, tag hoặc danh mục..." aria-label="Tìm và chọn bài viết" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="postPickerResults" autocomplete="off">
-                                <button id="postPickerToggle" class="post-picker-toggle" type="button" aria-label="Mở danh sách bài viết" title="Mở danh sách bài viết">⌄</button>
+                                <input id="postFilterInput" type="search" placeholder="Tìm bài viết..." aria-label="Tìm và chọn bài viết" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="postPickerResults" autocomplete="off">
+                                <button id="createNewPostQuick" class="post-create-inline" type="button" aria-label="Tạo bài viết mới" title="Tạo bài viết mới"><span aria-hidden="true">＋</span></button>
                             </div>
                             <div id="postPickerResults" class="post-picker-results" role="listbox" hidden></div>
                         </div>
-                    </div>
-                    <div class="post-picker-filters">
                         <select id="postFilterStatus" aria-label="Lọc trạng thái"><option value="all">Tất cả trạng thái</option><option value="visible">Đang hiển thị</option><option value="hidden">Đang ẩn</option><option value="featured">Nổi bật</option><option value="new">Bài mới</option><option value="search-only">Chỉ hiện khi tìm kiếm</option></select>
                         <select id="postFilterCategory" aria-label="Lọc danh mục"><option value="all">Tất cả danh mục</option></select>
                         <span id="postFilterCount" class="post-filter-count" aria-live="polite"></span>
@@ -838,7 +835,7 @@
                     </div>
 
                     <!-- 4. NÚT BẤM -->
-                    <div class="admin-note" style="margin-top:16px"><strong>Cách cập nhật:</strong> Xem trước nếu cần → bấm <strong>Lưu bài &amp; chuẩn bị file cập nhật</strong> → tải HTML + <strong>posts.json, posts-index.json, posts-search.json</strong>. Beta 7 chưa thay đổi luồng 3 JSON.</div>
+                    <div class="admin-note" style="margin-top:16px"><strong>Cách cập nhật:</strong> Xem trước nếu cần → bấm <strong>Lưu bài &amp; chuẩn bị file cập nhật</strong> → tải HTML + <strong>posts.json, posts-index.json, posts-search.json</strong>. Beta 9 vẫn giữ nguyên luồng 3 JSON.</div>
                     <div class="admin-actions flex flex-wrap justify-end gap-4 pt-4">
                         <button type="button" id="previewButton" class="bg-blue-600 text-white font-semibold py-2 px-6 rounded-full transition-all duration-300 hover:bg-blue-700 shadow-md">
                             Xem trước (không bắt buộc)
@@ -891,12 +888,15 @@
                 <div id="jsonOutputContainer" class="bg-white p-6 rounded-lg shadow-md" style="display: none;">
                     <h2 class="text-xl font-bold text-gray-800 border-l-4 border-red-600 pl-4 mb-4">2/4 → 4/4 — Ba file dữ liệu bắt buộc</h2>
                     <p class="admin-note">Sau mỗi lần sửa bài, anh chỉ cần tải <strong>3 file JSON chính</strong> bên dưới: <strong>posts.json</strong>, <strong>posts-index.json</strong> và <strong>posts-search.json</strong>. Đây là 3 file cần cập nhật cùng với <strong>1 file HTML</strong> của bài viết. <strong>legacy-content.json</strong> chỉ là file dự phòng cho bài cũ, không bắt buộc tải mỗi lần.</p>
-                    <div class="data-downloads">
-                        <a id="downloadPostsJson" download="posts.json">Tải posts.json metadata</a>
-                        <a id="downloadPostsIndexJson" download="posts-index.json">Tải posts-index.json nhẹ</a>
-                        <a id="downloadPostsSearchJson" download="posts-search.json">Tải posts-search.json tìm kiếm</a>
-                        <a id="downloadLegacyContentJson" download="legacy-content.json">Tải legacy-content.json dự phòng</a>
+                    <div class="data-downloads data-downloads-required" aria-label="Ba file dữ liệu bắt buộc">
+                        <a id="downloadPostsJson" download="posts.json"><strong>2/4</strong><span>posts.json</span><small>Metadata</small></a>
+                        <a id="downloadPostsIndexJson" download="posts-index.json"><strong>3/4</strong><span>posts-index.json</span><small>Danh sách nhẹ</small></a>
+                        <a id="downloadPostsSearchJson" download="posts-search.json"><strong>4/4</strong><span>posts-search.json</span><small>Tìm kiếm</small></a>
                     </div>
+                    <details class="legacy-download-details">
+                        <summary>File dự phòng — không bắt buộc</summary>
+                        <a id="downloadLegacyContentJson" download="legacy-content.json">Tải legacy-content.json</a>
+                    </details>
                     <p class="text-sm text-gray-600 mb-2">JSON riêng của bài hiện tại để kiểm tra hoặc sao chép:</p>
                     <textarea id="jsonOutput" rows="15" class="w-full p-2 border border-gray-300 rounded-md bg-gray-50 font-mono text-sm" readonly></textarea>
                 </div>
@@ -1713,14 +1713,6 @@
             const filteredPosts = getFilteredPosts();
             postPickerResults.innerHTML = '';
 
-            const createRow = document.createElement('button');
-            createRow.type = 'button';
-            createRow.className = 'post-picker-result post-picker-result-create';
-            createRow.dataset.postPickerId = '__NEW__';
-            createRow.setAttribute('role', 'option');
-            createRow.innerHTML = '<span class="post-result-plus">＋</span><span><strong>Tạo bài viết mới</strong><small>Bắt đầu một bài mới</small></span>';
-            postPickerResults.appendChild(createRow);
-
             filteredPosts.forEach(post => {
                 const row = document.createElement('button');
                 row.type = 'button';
@@ -1833,7 +1825,7 @@
                     setPickerActiveIndex(postPickerActiveIndex <= 0 ? 0 : postPickerActiveIndex - 1);
                 } else if (event.key === 'Enter' && !postPickerResults.hidden) {
                     const rows = Array.from(postPickerResults.querySelectorAll('[data-post-picker-id]'));
-                    const row = postPickerActiveIndex >= 0 ? rows[postPickerActiveIndex] : rows.find(item => item.dataset.postPickerId !== '__NEW__');
+                    const row = postPickerActiveIndex >= 0 ? rows[postPickerActiveIndex] : rows[0];
                     if (row) {
                         event.preventDefault();
                         choosePostFromPicker(row.dataset.postPickerId);
@@ -2156,25 +2148,67 @@
             prepareHtmlDownload(post);
         });
 
-        // --- *** SỬA LỖI: XỬ LÝ XEM TRƯỚC (Preview) *** ---
-        // Sử dụng lại file template đã tải, không inject script
+        // --- XEM TRƯỚC BÀI V3: dựng tài liệu preview riêng, không chạy shell/header/footer của website ---
+        function buildPostPreviewHtml(finalHtml) {
+            const parsed = new DOMParser().parseFromString(finalHtml, 'text/html');
+            const base = parsed.createElement('base');
+            base.href = `${window.location.origin}/`;
+            parsed.head.prepend(base);
+
+            // Preview chỉ cần nội dung bài. Loại các script shell có thể can thiệp iframe.
+            parsed.querySelectorAll('script[src]').forEach(node => node.remove());
+            parsed.querySelector('#header-placeholder')?.remove();
+            parsed.querySelector('#footer-placeholder')?.remove();
+            parsed.querySelector('.article-sidebar')?.remove();
+            parsed.querySelector('#scrollToTopBtn')?.remove();
+
+            const style = parsed.createElement('style');
+            style.textContent = `
+                html,body{min-height:100%;background:#f5f6f8!important}
+                body{margin:0!important;padding:0 0 32px!important}
+                .article-v3-main{width:min(980px,calc(100% - 24px))!important;margin:18px auto 0!important}
+                .article-v3-layout{display:block!important}
+                .article-v3-paper{width:100%!important}
+                @media(max-width:640px){
+                    body{background:#fff!important}
+                    .article-v3-main{width:100%!important;margin:0!important}
+                }
+            `;
+            parsed.head.appendChild(style);
+            return '<!DOCTYPE html>\n' + parsed.documentElement.outerHTML;
+        }
+
         previewButton.addEventListener('click', () => {
             const post = getPostObjectFromForm();
             if (!post) return;
-            
-            // 1. Tạo HTML từ template
-            let finalHtml = generateFullHtml(post);
+            const finalHtml = generateFullHtml(post);
             if (!finalHtml) return;
 
-            // 2. Tải nội dung vào iframe
-            // Không cần chèn script nữa vì post-template.html đã có sẵn
-            previewIframe.srcdoc = finalHtml;
+            const previewHtml = buildPostPreviewHtml(finalHtml);
             previewModal.style.display = 'flex';
+            previewIframe.src = 'about:blank';
+            requestAnimationFrame(() => {
+                const frameDoc = previewIframe.contentDocument || previewIframe.contentWindow?.document;
+                if (!frameDoc) {
+                    previewIframe.srcdoc = previewHtml;
+                    return;
+                }
+                frameDoc.open();
+                frameDoc.write(previewHtml);
+                frameDoc.close();
+            });
         });
 
         closePreview.addEventListener('click', () => {
             previewModal.style.display = 'none';
-            previewIframe.srcdoc = '';
+            try {
+                const frameDoc = previewIframe.contentDocument || previewIframe.contentWindow?.document;
+                frameDoc?.open();
+                frameDoc?.write('<!doctype html><html><body></body></html>');
+                frameDoc?.close();
+            } catch (_) {}
+            previewIframe.removeAttribute('srcdoc');
+            previewIframe.src = 'about:blank';
         });
 
         // --- MỚI: LẮNG NGHE SỰ KIỆN NHẬP TIÊU ĐỀ VÀ TÊN FILE ---

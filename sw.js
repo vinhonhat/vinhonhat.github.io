@@ -1,4 +1,4 @@
-// V26.8.11 Beta 8 - ADMIN gộp tìm kiếm và danh sách bài viết thành một bộ chọn.
+// V26.8.11 Beta 9 - ADMIN sửa preview, picker một hàng và đủ 3 file JSON.
 importScripts('/js/site-version.js');
 const CACHE_NAME = self.VinhSiteVersion?.cacheName || 'vinhonhat-runtime';
 const CORE_ASSETS = [
