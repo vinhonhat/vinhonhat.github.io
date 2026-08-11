@@ -2172,3 +2172,44 @@ label,
 @media (max-width: 520px) {
   .sim-apn-visibility-grid { grid-template-columns: 1fr; }
 }
+
+
+.save-guide-panel { margin: 0 0 18px; padding: 16px 18px; border: 1px solid #f0d2aa; border-radius: 14px; background: #fff8ef; }
+.save-guide-panel h3 { margin: 0 0 10px; font-size: 15px; font-weight: 800; color: #8e4b00; }
+.save-guide-list { margin: 0; padding-left: 18px; color: #4f5863; }
+.save-guide-list li { margin: 7px 0; line-height: 1.55; }
+.save-guide-list code { padding: 1px 5px; border-radius: 6px; background: #fff; color: #934d00; }
+
+/* ========================================================================== */
+/* V26.8.11 Beta 7 - ADMIN BÀI VIẾT / HTML V3                                */
+/* ========================================================================== */
+.article-v3-admin-card {
+    margin: 2px 0 16px;
+    padding: 14px 15px;
+    display: grid;
+    grid-template-columns: auto minmax(0,1fr) auto;
+    align-items: center;
+    gap: 13px;
+    border: 1px solid #dfe8f3;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #f8fbff 0%, #fffaf3 100%);
+}
+.article-v3-admin-icon {
+    width: 42px; height: 42px; display: grid; place-items: center;
+    border-radius: 12px; color: #fff; background: #202a35;
+    font-size: 13px; font-weight: 900; letter-spacing: .4px;
+}
+.article-v3-admin-copy strong, .article-v3-admin-copy span { display:block; }
+.article-v3-admin-copy strong { color:#202832; font-size:14px; }
+.article-v3-admin-copy span { margin-top:4px; color:#65707d; font-size:11.5px; line-height:1.5; }
+.article-v3-admin-badges { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:6px; }
+.article-v3-admin-badges span { padding:5px 8px; border:1px solid #e1e6eb; border-radius:999px; color:#4c5865; background:#fff; font-size:10px; font-weight:750; white-space:nowrap; }
+@media (max-width: 760px) {
+    .article-v3-admin-card { grid-template-columns:auto minmax(0,1fr); align-items:start; }
+    .article-v3-admin-badges { grid-column:1 / -1; justify-content:flex-start; padding-left:55px; }
+}
+@media (max-width: 460px) {
+    .article-v3-admin-card { padding:12px; gap:10px; }
+    .article-v3-admin-icon { width:38px; height:38px; border-radius:10px; }
+    .article-v3-admin-badges { padding-left:48px; }
+}

@@ -1,5 +1,5 @@
 export const POSTS_SCHEMA_VERSION = 3;
-export const POST_HTML_VERSION = 2;
+export const POST_HTML_VERSION = 3;
 
 const todayIso = () => new Date().toISOString().slice(0, 10);
 
@@ -158,6 +158,10 @@ export function parseArticleHtml(html, fallbackPost = {}) {
   const publishedAt = explicitPublished || textPublished || (!explicitUpdated ? genericTime : null) || fallback.publishedAt || todayIso();
   const updatedAt = explicitUpdated || textUpdated || embedded.modifiedAt || fallback.updatedAt || null;
 
+  const detectedHtmlVersion = embeddedNode
+    ? Math.max(2, Number(embedded.htmlVersion || doc.body?.dataset?.postHtmlVersion || 2) || 2)
+    : 1;
+
   return {
     post: normalizePost({
       ...fallback,
@@ -168,13 +172,13 @@ export function parseArticleHtml(html, fallbackPost = {}) {
       publishedAt,
       updatedAt,
       contentSource: 'html',
-      contentVersion: embeddedNode ? POST_HTML_VERSION : 1,
+      contentVersion: detectedHtmlVersion,
       contentSelector: '#article-content',
       searchText: textOf(contentNode).slice(0, 3000) || fallback.searchText
     }),
     contentHtml: contentNode?.innerHTML?.trim() || '',
     contentText: textOf(contentNode).slice(0, 3000),
-    format: embeddedNode ? 'html-v2' : 'html-legacy',
+    format: embeddedNode ? `html-v${detectedHtmlVersion}` : 'html-legacy',
     warnings,
     document: doc
   };

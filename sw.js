@@ -1,4 +1,4 @@
-// V26.8.11 Beta 5 - nền V26.8.6 Beta 7; tablet nav + summary mobile + footer SIM Data self-heal.
+// V26.8.11 Beta 7 - nền trực tiếp Beta 5; HTML V3 mới chỉ cho bài tạo/cập nhật từ ADMIN.
 importScripts('/js/site-version.js');
 const CACHE_NAME = self.VinhSiteVersion?.cacheName || 'vinhonhat-runtime';
 const CORE_ASSETS = [

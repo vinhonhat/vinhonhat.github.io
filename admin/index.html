@@ -667,6 +667,14 @@
 
                 <!-- 2. FORM METADATA (ẨN KHI CHƯA CHỌN BÀI) -->
                 <form id="editForm" class="admin-edit-form space-y-4" style="display: none;">
+                    <div class="article-v3-admin-card">
+                        <div class="article-v3-admin-icon">V3</div>
+                        <div class="article-v3-admin-copy">
+                            <strong>Giao diện bài viết mới</strong>
+                            <span>Bài mới và bài cũ sau khi anh bấm <b>Lưu bài &amp; chuẩn bị file cập nhật</b> sẽ xuất HTML V3. Bài đã đăng mà chưa sửa vẫn giữ nguyên giao diện cũ.</span>
+                        </div>
+                        <div class="article-v3-admin-badges"><span>Mobile rộng hơn</span><span>Ảnh xem lớn</span><span>Tab chia đều</span></div>
+                    </div>
                     
                     <!-- *** CẬP NHẬT: Thêm chọn đường dẫn *** -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -810,14 +818,14 @@
                     <!-- 3. TRÌNH SOẠN THẢO TINYMCE -->
                     <div class="mt-6">
                         <div class="editor-heading-row">
-                            <div><label class="block text-sm font-medium text-gray-700">Nội dung bài viết</label><small>Khung soạn thảo mô phỏng giao diện bài mới ngoài website.</small></div>
-                            <span class="editor-style-badge">Phong cách tin tức mới</span>
+                            <div><label class="block text-sm font-medium text-gray-700">Nội dung bài viết</label><small>Khung soạn thảo mô phỏng nội dung. Khi lưu, HTML V3 mới sẽ được tạo; 3 JSON vẫn giữ luồng cũ.</small></div>
+                            <span class="editor-style-badge">HTML V3 hiện đại</span>
                         </div>
                         <textarea id="contentEditor"></textarea>
                     </div>
 
                     <!-- 4. NÚT BẤM -->
-                    <div class="admin-note" style="margin-top:16px"><strong>Cách lưu đơn giản:</strong> Xem trước nếu cần → bấm <strong>Lưu bài &amp; chuẩn bị file cập nhật</strong> một lần → tải 1 file HTML và 3 file JSON bắt buộc ở phía dưới.</div>
+                    <div class="admin-note" style="margin-top:16px"><strong>Cách cập nhật:</strong> Xem trước nếu cần → bấm <strong>Lưu bài &amp; chuẩn bị file cập nhật</strong> → tải HTML + <strong>posts.json, posts-index.json, posts-search.json</strong>. Beta 7 chưa thay đổi luồng 3 JSON.</div>
                     <div class="admin-actions flex flex-wrap justify-end gap-4 pt-4">
                         <button type="button" id="previewButton" class="bg-blue-600 text-white font-semibold py-2 px-6 rounded-full transition-all duration-300 hover:bg-blue-700 shadow-md">
                             Xem trước (không bắt buộc)
@@ -1053,7 +1061,12 @@
                 img { display: block; max-width: 100%; height: auto; margin: 18px auto; border-radius: 14px; box-shadow: 0 6px 22px rgba(22,27,33,.09); }
                 blockquote { margin: 1.4em 0; padding: 14px 17px; border-left: 4px solid #f0b86f; border-radius: 0 12px 12px 0; color: #5d4931; background: #fff9f0; }
                 table { width: 100%; border-collapse: collapse; } th, td { padding: 10px 12px; border: 1px solid #dfe3e8; } th { background: #f4f6f8; }
-                .tab-container { margin: 20px 0; padding: 12px; border: 1px solid #e2e6eb; border-radius: 14px; } .tab-btn { padding: 8px 12px; border: 1px solid #e2e6eb; border-radius: 9px; background: #fff; } .hidden { display: none; }
+                .tab-container { margin: 20px 0; padding: 0; overflow: hidden; border: 1px solid #e2e6eb; border-radius: 12px; background: #fff; }
+                .tab-buttons { width: 100%; display: flex; gap: 0; border-bottom: 1px solid #e7e9ed; background: #f7f8fa; }
+                .tab-btn { flex: 1 1 0; min-width: 0; padding: 10px 8px; border: 0; border-bottom: 3px solid transparent; border-radius: 0; background: transparent; text-align: center; font-weight: 700; }
+                .tab-btn:first-child { border-bottom-color: #df7500; color: #b85f00; background: #fff; }
+                .tab-container > :not(.tab-buttons) { padding: 14px 16px; }
+                .hidden { display: none; }
             `,
 
             // nếu cần thêm mới thì chèn vào từ dấu { đến hết }, nếu sau cùng thì k thêm , nhé
@@ -1759,12 +1772,12 @@
                     category: parsed.post.category?.length ? parsed.post.category : post.category,
                     tags: parsed.post.tags?.length ? parsed.post.tags : post.tags,
                     contentSource: 'html',
-                    contentVersion: parsed.format === 'html-v2' ? 2 : 1
+                    contentVersion: Number(parsed.post.contentVersion || (parsed.format === 'html-legacy' ? 1 : 2))
                 });
                 applyPostFields(merged);
                 tinymce.get('contentEditor').setContent(currentLoadedContent || '');
                 const warning = parsed.warnings.length ? ` ${parsed.warnings.join(' ')}` : '';
-                setSourceState(parsed.format === 'html-v2' ? 'HTML mới – đã đồng bộ' : 'HTML cũ – sẽ tự chuyển khi lưu', `Nội dung đang lấy trực tiếp từ ${post.link}.${warning}`, parsed.format === 'html-v2' ? 'ok' : 'legacy');
+                setSourceState(parsed.format === 'html-legacy' ? 'HTML cũ – sẽ chuyển sang V3 khi lưu' : `HTML V${parsed.post.contentVersion || 2} – đã đồng bộ`, `Nội dung đang lấy trực tiếp từ ${post.link}.${warning}`, parsed.format === 'html-legacy' ? 'legacy' : 'ok');
                 return;
             } catch (error) {
                 await ensureLegacyContent();
@@ -1814,7 +1827,7 @@
                 imageUrl: '/img/posts/',
                 link: `/pages/pages-baiviet/other/tieu-de-bai-viet-moi-${dateSlug}.html`,
                 contentSource: 'html',
-                contentVersion: 2
+                contentVersion: 3
             });
             applyPostFields(newPost);
             postId.readOnly = false;
@@ -1822,9 +1835,9 @@
             postFilename.value = `tieu-de-bai-viet-moi-${dateSlug}.html`;
             isFilenameManuallyEdited = false;
             currentLoadedContent = '<p>Viết phần mở đầu ngắn gọn tại đây...</p><h2>Nội dung hướng dẫn</h2><p>Nhập nội dung chi tiết của bài viết...</p>';
-            currentSourceFormat = 'html-v2-new';
+            currentSourceFormat = 'html-v3-new';
             tinymce.get('contentEditor').setContent(currentLoadedContent);
-            setSourceState('Bài mới – HTML v2', 'Khi tải file, metadata và nội dung sẽ được nhúng vào HTML để lần sau Admin tự đọc lại.', 'ok');
+            setSourceState('Bài mới – HTML V3', 'Bài mới dùng giao diện V3. Metadata và nội dung vẫn lưu theo cấu trúc cũ; 3 JSON không đổi.', 'ok');
         }
 
         reloadPostHtml.addEventListener('click', async () => {
@@ -1844,7 +1857,7 @@
                 currentSourceFormat = parsed.format;
                 applyPostFields({ ...fallback, ...parsed.post, link: fallback.link || parsed.post.link });
                 tinymce.get('contentEditor').setContent(currentLoadedContent || '');
-                setSourceState(parsed.format === 'html-v2' ? 'Đã đọc file HTML mới' : 'Đã đọc file HTML cũ', 'Khi lưu, bài sẽ được xuất lại theo HTML v2.', parsed.format === 'html-v2' ? 'ok' : 'legacy');
+                setSourceState(parsed.format === 'html-legacy' ? 'Đã đọc file HTML cũ' : `Đã đọc HTML V${parsed.post.contentVersion || 2}`, 'Khi lưu, bài sẽ được xuất lại theo giao diện HTML V3.', parsed.format === 'html-legacy' ? 'legacy' : 'ok');
             } catch (error) {
                 alert(`Không đọc được file HTML: ${error.message}`);
             } finally {
@@ -1887,7 +1900,7 @@
                 imageUrl: postImageUrl.value.trim(),
                 link: fullLink,
                 contentSource: internalHtml ? 'html' : (fullLink.startsWith('/') ? 'page' : 'external'),
-                contentVersion: internalHtml ? 2 : Number(existing?.contentVersion || 0),
+                contentVersion: internalHtml ? 3 : Number(existing?.contentVersion || 0),
                 contentSelector: internalHtml ? '#article-content' : (existing?.contentSelector || '#article-content')
             });
         }
@@ -1898,7 +1911,7 @@
             return Boolean(postId.value.trim() && postDate.value && postTitle.value.trim() && hasLink);
         }
 
-        // --- TẠO HTML V2: metadata nằm trong HTML, posts.json không chứa nội dung dài ---
+        // --- TẠO HTML V3: giao diện mới; luồng 3 JSON vẫn giữ nguyên như Beta 5 ---
         function generateFullHtml(post) {
             if (!postTemplateHtml) {
                 alert('Lỗi: Chưa tải được file template. Vui lòng thử tải lại trang.');

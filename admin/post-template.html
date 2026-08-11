@@ -23,26 +23,26 @@
 {{POST_META_JSON}}
     </script>
 </head>
-<body class="site-body article-page" data-post-id="{{POST_ID}}" data-post-html-version="2">
+<body class="site-body article-page article-page-v3" data-post-id="{{POST_ID}}" data-post-html-version="3">
     <div id="header-placeholder" class="site-header-placeholder"></div>
 
-    <main class="article-main">
-        <header class="article-hero-card">
-            <span class="section-kicker">Bài viết hướng dẫn</span>
-            <h1 id="page-title">{{ARTICLE_TITLE}}</h1>
-            <p class="article-summary">{{META_DESCRIPTION}}</p>
-            <div class="article-meta-row">
-                <span class="article-meta-icon" aria-hidden="true">◷</span>
-                <time datetime="{{ARTICLE_DATE_ISO}}" data-date-kind="{{ARTICLE_DATE_KIND}}">{{ARTICLE_DATE_LABEL}}</time>
-            </div>
-            <figure class="article-cover">
-                <img src="{{META_IMAGE_URL}}" alt="{{ARTICLE_TITLE}}" fetchpriority="high" decoding="async" onerror="this.closest('figure').remove()">
-            </figure>
-        </header>
+    <main class="article-main article-v3-main">
+        <div class="article-layout article-v3-layout">
+            <article class="article-v3-paper">
+                <header class="article-v3-hero">
+                    <span class="section-kicker">Bài viết hướng dẫn</span>
+                    <h1 id="page-title">{{ARTICLE_TITLE}}</h1>
+                    <p class="article-summary">{{META_DESCRIPTION}}</p>
+                    <div class="article-meta-row">
+                        <span class="article-meta-icon" aria-hidden="true">◷</span>
+                        <time datetime="{{ARTICLE_DATE_ISO}}" data-date-kind="{{ARTICLE_DATE_KIND}}">{{ARTICLE_DATE_LABEL}}</time>
+                    </div>
+                    <figure class="article-cover">
+                        <img src="{{META_IMAGE_URL}}" alt="{{ARTICLE_TITLE}}" fetchpriority="high" decoding="async" onerror="this.closest('figure').remove()">
+                    </figure>
+                </header>
 
-        <div class="article-layout">
-            <article class="article-card">
-                <div id="article-content" class="article-content" data-vinh-post-content>
+                <div id="article-content" class="article-content article-content-v3" data-vinh-post-content>
                     {{ARTICLE_CONTENT}}
                 </div>
             </article>
@@ -65,20 +65,125 @@
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6"></path></svg>
     </button>
 
+    <div id="articleImageViewer" class="article-image-viewer" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-label="Xem ảnh lớn">
+        <button class="article-image-viewer-close" type="button" aria-label="Đóng ảnh">×</button>
+        <div class="article-image-viewer-stage">
+            <img class="article-image-viewer-img" alt="">
+            <p class="article-image-viewer-caption" hidden></p>
+        </div>
+    </div>
+
     <script>
-        document.addEventListener('click', function (event) {
-            const button = event.target.closest('.tab-btn');
-            if (!button) return;
-            const container = button.closest('.tab-container');
-            if (!container) return;
-            const targetId = button.getAttribute('data-tab-id');
-            container.querySelectorAll('.tab-btn').forEach(function (item) {
-                item.classList.toggle('active', item === button);
+        (function () {
+            'use strict';
+
+            document.addEventListener('click', function (event) {
+                const button = event.target.closest('.tab-btn');
+                if (!button) return;
+                const container = button.closest('.tab-container');
+                if (!container) return;
+                const targetId = button.getAttribute('data-tab-id');
+                container.querySelectorAll('.tab-btn').forEach(function (item) {
+                    const active = item === button;
+                    item.classList.toggle('active', active);
+                    item.setAttribute('aria-selected', String(active));
+                });
+                container.querySelectorAll('.tab-panel').forEach(function (panel) {
+                    const hidden = panel.getAttribute('data-panel-id') !== targetId;
+                    panel.hidden = hidden;
+                    panel.classList.toggle('hidden', hidden);
+                });
             });
-            container.querySelectorAll('.tab-panel').forEach(function (panel) {
-                panel.hidden = panel.getAttribute('data-panel-id') !== targetId;
+
+            function prepareTabs() {
+                document.querySelectorAll('.article-page-v3 .tab-container').forEach(function (container) {
+                    const buttons = Array.from(container.querySelectorAll('.tab-btn'));
+                    const panels = Array.from(container.querySelectorAll('.tab-panel'));
+                    if (!buttons.length || !panels.length) return;
+                    const visiblePanel = panels.find(function (panel) { return !panel.hidden && !panel.classList.contains('hidden'); }) || panels[0];
+                    const activeId = visiblePanel.getAttribute('data-panel-id') || buttons[0].getAttribute('data-tab-id');
+                    buttons.forEach(function (button) {
+                        const active = button.getAttribute('data-tab-id') === activeId;
+                        button.classList.toggle('active', active);
+                        button.setAttribute('role', 'tab');
+                        button.setAttribute('aria-selected', String(active));
+                    });
+                    panels.forEach(function (panel) {
+                        const hidden = panel.getAttribute('data-panel-id') !== activeId;
+                        panel.hidden = hidden;
+                        panel.classList.toggle('hidden', hidden);
+                    });
+                });
+            }
+
+            const viewer = document.getElementById('articleImageViewer');
+            const viewerImage = viewer?.querySelector('.article-image-viewer-img');
+            const viewerCaption = viewer?.querySelector('.article-image-viewer-caption');
+            const closeButton = viewer?.querySelector('.article-image-viewer-close');
+            let lastFocused = null;
+
+            function closeViewer() {
+                if (!viewer || viewer.hidden) return;
+                viewer.hidden = true;
+                viewer.setAttribute('aria-hidden', 'true');
+                document.body.classList.remove('article-image-viewer-open');
+                if (viewerImage) viewerImage.removeAttribute('src');
+                lastFocused?.focus?.({ preventScroll: true });
+            }
+
+            function openViewer(image) {
+                if (!viewer || !viewerImage || !image) return;
+                const src = image.currentSrc || image.src;
+                if (!src) return;
+                lastFocused = image;
+                viewerImage.src = src;
+                viewerImage.alt = image.alt || 'Ảnh bài viết';
+                const caption = image.getAttribute('data-caption') || image.alt || '';
+                if (viewerCaption) {
+                    viewerCaption.textContent = caption;
+                    viewerCaption.hidden = !caption;
+                }
+                viewer.hidden = false;
+                viewer.setAttribute('aria-hidden', 'false');
+                document.body.classList.add('article-image-viewer-open');
+                closeButton?.focus?.({ preventScroll: true });
+            }
+
+            function prepareImages() {
+                document.querySelectorAll('.article-page-v3 .article-content img, .article-page-v3 .article-cover img').forEach(function (image, index) {
+                    // Ảnh đang nằm trong liên kết (icon tải app, banner liên kết...) giữ nguyên hành vi của link.
+                    if (image.closest('a[href]')) return;
+                    image.classList.add('article-zoomable-image');
+                    image.setAttribute('role', 'button');
+                    image.setAttribute('tabindex', '0');
+                    image.setAttribute('aria-label', (image.alt ? image.alt + ' — ' : '') + 'Nhấn để xem ảnh lớn');
+                    if (index > 0 && !image.hasAttribute('loading')) image.loading = 'lazy';
+                    if (!image.hasAttribute('decoding')) image.decoding = 'async';
+                    image.addEventListener('click', function () { openViewer(image); });
+                    image.addEventListener('keydown', function (event) {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault();
+                            openViewer(image);
+                        }
+                    });
+                });
+            }
+
+            closeButton?.addEventListener('click', closeViewer);
+            viewer?.addEventListener('click', function (event) {
+                if (event.target === viewer || event.target.classList.contains('article-image-viewer-stage')) closeViewer();
             });
-        });
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape') closeViewer();
+            });
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function () { prepareTabs(); prepareImages(); }, { once: true });
+            } else {
+                prepareTabs();
+                prepareImages();
+            }
+        })();
     </script>
     <script src="/js/script.js" defer></script>
     <script src="/js/article-related.js" defer></script>
