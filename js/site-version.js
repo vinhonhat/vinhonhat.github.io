@@ -5,9 +5,9 @@
 (function initVinhSiteVersion(globalScope) {
   'use strict';
 
-  const RELEASE = '26.8.11';
+  const RELEASE = '26.8.6';
   const CHANNEL = 'Beta';
-  const BUILD = 2;
+  const BUILD = 7;
 
   const channelSlug = CHANNEL.toLowerCase().replace(/[^a-z0-9]+/g, '-');
   const id = `${RELEASE}-${channelSlug}${BUILD}`;

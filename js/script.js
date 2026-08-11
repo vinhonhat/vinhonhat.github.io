@@ -587,7 +587,7 @@
         window.cancelAnimationFrame(mobileMenuAnchorFrame);
         mobileMenuAnchorFrame = window.requestAnimationFrame(() => {
             const nav = document.querySelector('[data-mobile-nav], .mobile-bottom-nav');
-            if (!nav || window.innerWidth > 850) return;
+            if (!nav || window.innerWidth > 640) return;
 
             const rect = nav.getBoundingClientRect();
             const viewportHeight = document.documentElement.clientHeight || window.innerHeight || rect.bottom;
@@ -649,7 +649,7 @@
         };
 
         const begin = y => {
-            if (window.innerWidth > 850 || sheet.scrollTop > 2 || panel.hidden) return;
+            if (window.innerWidth > 640 || sheet.scrollTop > 2 || panel.hidden) return;
             startY = y;
             dragging = true;
             deltaY = 0;
