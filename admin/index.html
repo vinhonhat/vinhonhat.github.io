@@ -653,16 +653,29 @@
                 
                 <!-- 1. CHỌN BÀI VIẾT -->
                 <div class="post-picker-panel">
-                    <div class="post-picker-title"><strong>Chọn hoặc tạo bài viết</strong><small>Tìm nhanh theo tên bài</small></div>
-                    <div class="post-picker-grid">
-                    <input id="postFilterInput" type="search" placeholder="Gõ tên bài cần sửa..." aria-label="Lọc danh sách bài viết">
-                    <select id="postFilterStatus" aria-label="Lọc trạng thái"><option value="all">Tất cả trạng thái</option><option value="visible">Đang hiển thị</option><option value="hidden">Đang ẩn</option><option value="featured">Nổi bật</option><option value="new">Bài mới</option><option value="search-only">Chỉ hiện khi tìm kiếm</option></select>
-                    <select id="postFilterCategory" aria-label="Lọc danh mục"><option value="all">Tất cả danh mục</option></select>
-                    <select id="postSelector" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500">
-                        <option value="">-- Vui lòng chọn một bài viết --</option>
-                        <option value="__NEW__" class="font-bold text-green-600">-- TẠO BÀI VIẾT MỚI --</option>
-                    </select>
+                    <div class="post-picker-title">
+                        <div><strong>Tìm hoặc tạo bài viết</strong><small>Gõ để lọc · bấm vào ô để xem danh sách bài cũ</small></div>
                     </div>
+                    <div class="post-picker-main">
+                        <button id="createNewPostQuick" class="post-create-button" type="button"><span aria-hidden="true">＋</span> Tạo bài mới</button>
+                        <div id="postSearchCombo" class="post-search-combo">
+                            <div class="post-search-field">
+                                <span class="post-search-icon" aria-hidden="true">⌕</span>
+                                <input id="postFilterInput" type="search" placeholder="Tìm bài viết theo tiêu đề, tag hoặc danh mục..." aria-label="Tìm và chọn bài viết" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="postPickerResults" autocomplete="off">
+                                <button id="postPickerToggle" class="post-picker-toggle" type="button" aria-label="Mở danh sách bài viết" title="Mở danh sách bài viết">⌄</button>
+                            </div>
+                            <div id="postPickerResults" class="post-picker-results" role="listbox" hidden></div>
+                        </div>
+                    </div>
+                    <div class="post-picker-filters">
+                        <select id="postFilterStatus" aria-label="Lọc trạng thái"><option value="all">Tất cả trạng thái</option><option value="visible">Đang hiển thị</option><option value="hidden">Đang ẩn</option><option value="featured">Nổi bật</option><option value="new">Bài mới</option><option value="search-only">Chỉ hiện khi tìm kiếm</option></select>
+                        <select id="postFilterCategory" aria-label="Lọc danh mục"><option value="all">Tất cả danh mục</option></select>
+                        <span id="postFilterCount" class="post-filter-count" aria-live="polite"></span>
+                    </div>
+                    <select id="postSelector" class="post-selector-legacy" aria-hidden="true" tabindex="-1">
+                        <option value="">-- Vui lòng chọn một bài viết --</option>
+                        <option value="__NEW__">-- TẠO BÀI VIẾT MỚI --</option>
+                    </select>
                 </div>
 
                 <!-- 2. FORM METADATA (ẨN KHI CHƯA CHỌN BÀI) -->
@@ -942,6 +955,12 @@
         const postFilterInput = document.getElementById('postFilterInput');
         const postFilterStatus = document.getElementById('postFilterStatus');
         const postFilterCategory = document.getElementById('postFilterCategory');
+        const postSearchCombo = document.getElementById('postSearchCombo');
+        const postPickerResults = document.getElementById('postPickerResults');
+        const postPickerToggle = document.getElementById('postPickerToggle');
+        const createNewPostQuick = document.getElementById('createNewPostQuick');
+        const postFilterCount = document.getElementById('postFilterCount');
+        let postPickerActiveIndex = -1;
         const editForm = document.getElementById('editForm');
         
         // Form fields
@@ -1640,23 +1659,141 @@
             if (newPostsCount) newPostsCount.textContent = allPostsData.filter(post => (post.isNew === true || post.new === true) && post.status !== 0).length;
         }
 
-        function filterPostSelector() {
-            if (!postFilterInput) return;
-            const query = postFilterInput.value.trim().toLowerCase();
+        function normalizePostSearch(value) {
+            return String(value || '')
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/đ/g, 'd')
+                .replace(/Đ/g, 'D')
+                .toLowerCase()
+                .trim();
+        }
+
+        function getFilteredPosts() {
+            const query = postFilterInput?.dataset.pickerMode === 'selected' ? '' : normalizePostSearch(postFilterInput?.value);
             const status = postFilterStatus?.value || 'all';
             const category = postFilterCategory?.value || 'all';
-            Array.from(postSelector.options).forEach((option, index) => {
-                if (index < 2) return;
-                const post = allPostsData.find(item => item.id === option.value);
-                if (!post) return;
-                const matchesText = !query || [post.title, post.summary, ...(post.tags || []), ...(post.category || [])].join(' ').toLowerCase().includes(query);
-                const matchesStatus = status === 'all' || (status === 'visible' && post.status !== 0) || (status === 'hidden' && post.status === 0) || (status === 'featured' && post.featured === true) || (status === 'new' && (post.isNew === true || post.new === true)) || (status === 'search-only' && post.status !== 0 && post.showInLists === false && post.searchable !== false);
+            return allPostsData.filter(post => {
+                const haystack = normalizePostSearch([
+                    post.title,
+                    post.summary,
+                    ...(post.tags || []),
+                    ...(post.category || [])
+                ].join(' '));
+                const matchesText = !query || haystack.includes(query);
+                const matchesStatus = status === 'all'
+                    || (status === 'visible' && post.status !== 0)
+                    || (status === 'hidden' && post.status === 0)
+                    || (status === 'featured' && post.featured === true)
+                    || (status === 'new' && (post.isNew === true || post.new === true))
+                    || (status === 'search-only' && post.status !== 0 && post.showInLists === false && post.searchable !== false);
                 const matchesCategory = category === 'all' || (Array.isArray(post.category) && post.category.includes(category));
-                option.hidden = !(matchesText && matchesStatus && matchesCategory);
+                return matchesText && matchesStatus && matchesCategory;
             });
         }
 
-        // --- ĐƯA DỮ LIỆU VÀO DROPDOWN ---
+        function closePostPicker() {
+            if (!postPickerResults || !postFilterInput) return;
+            postPickerResults.hidden = true;
+            postFilterInput.setAttribute('aria-expanded', 'false');
+            postPickerActiveIndex = -1;
+        }
+
+        function setPickerActiveIndex(nextIndex) {
+            if (!postPickerResults || postPickerResults.hidden) return;
+            const rows = Array.from(postPickerResults.querySelectorAll('[data-post-picker-id]'));
+            if (!rows.length) return;
+            postPickerActiveIndex = Math.max(0, Math.min(nextIndex, rows.length - 1));
+            rows.forEach((row, index) => row.classList.toggle('is-active', index === postPickerActiveIndex));
+            rows[postPickerActiveIndex]?.scrollIntoView({ block: 'nearest' });
+        }
+
+        function renderPostPickerResults(open = true) {
+            if (!postPickerResults || !postFilterInput) return;
+            const filteredPosts = getFilteredPosts();
+            postPickerResults.innerHTML = '';
+
+            const createRow = document.createElement('button');
+            createRow.type = 'button';
+            createRow.className = 'post-picker-result post-picker-result-create';
+            createRow.dataset.postPickerId = '__NEW__';
+            createRow.setAttribute('role', 'option');
+            createRow.innerHTML = '<span class="post-result-plus">＋</span><span><strong>Tạo bài viết mới</strong><small>Bắt đầu một bài mới</small></span>';
+            postPickerResults.appendChild(createRow);
+
+            filteredPosts.forEach(post => {
+                const row = document.createElement('button');
+                row.type = 'button';
+                row.className = 'post-picker-result';
+                row.dataset.postPickerId = post.id;
+                row.setAttribute('role', 'option');
+
+                const copy = document.createElement('span');
+                copy.className = 'post-picker-result-copy';
+                const title = document.createElement('strong');
+                title.textContent = post.title || '(Không có tiêu đề)';
+                const meta = document.createElement('small');
+                const categories = Array.isArray(post.category) && post.category.length ? post.category.join(' · ') : 'Chưa phân loại';
+                meta.textContent = `${effectiveDate(post) || 'Chưa có ngày'} · ${categories}`;
+                copy.append(title, meta);
+
+                const badge = document.createElement('span');
+                badge.className = 'post-picker-result-badge';
+                badge.textContent = post.status === 0 ? 'Ẩn' : (post.featured ? 'Nổi bật' : 'Bài viết');
+                row.append(copy, badge);
+                postPickerResults.appendChild(row);
+            });
+
+            if (!filteredPosts.length) {
+                const empty = document.createElement('div');
+                empty.className = 'post-picker-empty';
+                empty.textContent = 'Không tìm thấy bài phù hợp. Anh có thể đổi từ khóa hoặc tạo bài mới.';
+                postPickerResults.appendChild(empty);
+            }
+
+            if (postFilterCount) postFilterCount.textContent = `${filteredPosts.length} bài phù hợp`;
+            postPickerActiveIndex = -1;
+            if (open) {
+                postPickerResults.hidden = false;
+                postFilterInput.setAttribute('aria-expanded', 'true');
+            }
+        }
+
+        function syncPostPickerSelection(post = null) {
+            if (!postFilterInput) return;
+            const selectedPost = post || allPostsData.find(item => item.id === postSelector.value);
+            if (postSelector.value === '__NEW__') {
+                postFilterInput.value = '';
+                postFilterInput.dataset.pickerMode = 'search';
+                delete postFilterInput.dataset.selectedId;
+                postFilterInput.placeholder = 'Bài mới — gõ để tìm bài cũ...';
+            } else if (selectedPost) {
+                postFilterInput.value = selectedPost.title || '';
+                postFilterInput.dataset.pickerMode = 'selected';
+                postFilterInput.dataset.selectedId = selectedPost.id || '';
+                postFilterInput.placeholder = 'Tìm bài viết theo tiêu đề, tag hoặc danh mục...';
+            }
+        }
+
+        function choosePostFromPicker(selectedId) {
+            if (!selectedId) return;
+            postSelector.value = selectedId;
+            const post = selectedId === '__NEW__' ? null : allPostsData.find(item => item.id === selectedId);
+            syncPostPickerSelection(post);
+            closePostPicker();
+            postSelector.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
+        function filterPostSelector({ open = true } = {}) {
+            const visibleIds = new Set(getFilteredPosts().map(post => post.id));
+            Array.from(postSelector.options).forEach((option, index) => {
+                if (index < 2) return;
+                option.hidden = !visibleIds.has(option.value);
+            });
+            renderPostPickerResults(open);
+        }
+
+        // --- ĐƯA DỮ LIỆU VÀO BỘ CHỌN BÀI ---
         function populateSelector() {
             while (postSelector.options.length > 2) postSelector.remove(2);
             allPostsData.forEach(post => {
@@ -1672,14 +1809,59 @@
                 if (categories.includes(selected)) postFilterCategory.value = selected;
             }
             updateDashboardStats();
-            filterPostSelector();
+            renderPostPickerResults(false);
         }
 
         if (postFilterInput) {
-            postFilterInput.addEventListener('input', filterPostSelector);
-            postFilterStatus?.addEventListener('change', filterPostSelector);
-            postFilterCategory?.addEventListener('change', filterPostSelector);
+            postFilterInput.addEventListener('focus', () => {
+                renderPostPickerResults(true);
+                if (postSelector.value && postFilterInput.value) requestAnimationFrame(() => postFilterInput.select());
+            });
+            postFilterInput.addEventListener('click', () => renderPostPickerResults(true));
+            postFilterInput.addEventListener('input', () => {
+                postFilterInput.dataset.pickerMode = 'search';
+                filterPostSelector({ open: true });
+            });
+            postFilterInput.addEventListener('keydown', event => {
+                if (event.key === 'ArrowDown') {
+                    event.preventDefault();
+                    if (postPickerResults.hidden) renderPostPickerResults(true);
+                    setPickerActiveIndex(postPickerActiveIndex + 1);
+                } else if (event.key === 'ArrowUp') {
+                    event.preventDefault();
+                    if (postPickerResults.hidden) renderPostPickerResults(true);
+                    setPickerActiveIndex(postPickerActiveIndex <= 0 ? 0 : postPickerActiveIndex - 1);
+                } else if (event.key === 'Enter' && !postPickerResults.hidden) {
+                    const rows = Array.from(postPickerResults.querySelectorAll('[data-post-picker-id]'));
+                    const row = postPickerActiveIndex >= 0 ? rows[postPickerActiveIndex] : rows.find(item => item.dataset.postPickerId !== '__NEW__');
+                    if (row) {
+                        event.preventDefault();
+                        choosePostFromPicker(row.dataset.postPickerId);
+                    }
+                } else if (event.key === 'Escape') {
+                    closePostPicker();
+                }
+            });
+            postFilterStatus?.addEventListener('change', () => filterPostSelector({ open: true }));
+            postFilterCategory?.addEventListener('change', () => filterPostSelector({ open: true }));
         }
+
+        postPickerToggle?.addEventListener('click', () => {
+            if (postPickerResults.hidden) {
+                postFilterInput.focus();
+                renderPostPickerResults(true);
+            } else {
+                closePostPicker();
+            }
+        });
+        createNewPostQuick?.addEventListener('click', () => choosePostFromPicker('__NEW__'));
+        postPickerResults?.addEventListener('click', event => {
+            const row = event.target.closest('[data-post-picker-id]');
+            if (row) choosePostFromPicker(row.dataset.postPickerId);
+        });
+        document.addEventListener('pointerdown', event => {
+            if (postSearchCombo && !postSearchCombo.contains(event.target) && event.target !== createNewPostQuick) closePostPicker();
+        });
 
         // --- XỬ LÝ KHI CHỌN BÀI VIẾT ---
         postSelector.addEventListener('change', async () => {
@@ -1696,6 +1878,7 @@
             jsonOutputContainer.style.display = 'none';
             htmlOutputContainer.style.display = 'none';
             await loadPostData(postData);
+            syncPostPickerSelection(postData);
         });
 
         function setSourceState(label, hint, tone = '') {
@@ -2090,6 +2273,7 @@
             prepareHtmlDownload(savedPost);
             populateSelector();
             postSelector.value = savedPost.id;
+            syncPostPickerSelection(savedPost);
 
             alert('✅ Đã lưu bài và chuẩn bị đủ file. Kéo xuống khung File cần đưa lên GitHub: tải HTML của bài + posts.json + posts-index.json + posts-search.json. legacy-content.json là tùy chọn.');
         });

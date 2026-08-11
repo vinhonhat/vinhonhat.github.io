@@ -1,4 +1,4 @@
-// V26.8.11 Beta 7 - nền trực tiếp Beta 5; HTML V3 mới chỉ cho bài tạo/cập nhật từ ADMIN.
+// V26.8.11 Beta 8 - ADMIN gộp tìm kiếm và danh sách bài viết thành một bộ chọn.
 importScripts('/js/site-version.js');
 const CACHE_NAME = self.VinhSiteVersion?.cacheName || 'vinhonhat-runtime';
 const CORE_ASSETS = [
