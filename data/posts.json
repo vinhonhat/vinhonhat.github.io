@@ -1,1 +1,1461 @@
-{"schemaVersion":3,"generatedAt":"2026-08-02T13:47:00+09:00","sourceOfTruth":"html","posts":[{"id":"post-20251102-1027","type":"guide","status":1,"category":["bank","other"],"tags":[],"featured":true,"title":"Hướng dẫn chuyển khoản từ ngân hàng Yucho sang ngân hàng khác","summary":"Hướng dẫn chuyển khoản từ ngân hàng Yucho sang ngân hàng khác bằng ứng dụng trên điện thoại mới nhất 2025","imageUrl":"/img/posts/bank/yucho/ycbk/ycbk.jpg","link":"/pages/pages-baiviet/other/chuyen-khoan-tu-yucho-sang-ngan-hang-khac-20251101.html","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-11-02","updatedAt":null,"contentSource":"html","contentVersion":1,"contentSelector":"#article-content","schemaVersion":2},{"id":"post-20260414-1735","type":"bank","status":1,"category":[],"tags":[],"featured":true,"title":"Chuyển khoản yucho miễn phí CONTRA","summary":"Hướng dẫn cài đặt chuyển khoản yucho miễn phí cho mọi người","imageUrl":"/img/posts/bank/yucho/ycbkcotra/ycbkcotra.jpg","link":"/pages/pages-baiviet/bank/chuyen-khoan-yucho-mien-phi-20260414.html","isNew":true,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2026-05-30","updatedAt":null,"contentSource":"html","contentVersion":1,"contentSelector":"#article-content","schemaVersion":2},{"id":"post-20251109-1056","type":"post","status":1,"category":["sim"],"tags":["sim","softbank"],"featured":true,"title":"Cấu hình Sim data, sim nghe gọi","summary":"Hướng dẫn cài cấu hình sim data các nhà mạng tại nhật như softbank loại 2gb, 5gb, 10gb, 50gb, 100gb. Và sim nghe gọi docomo","imageUrl":"/img/posts/sim/APN/APN.png","link":"/pages/pages-baiviet/sim/cau-hinh-sim-data-sim-nghe-goi-20251109.html","isNew":true,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2026-4-04","updatedAt":null,"contentSource":"html","contentVersion":1,"contentSelector":"#article-content","schemaVersion":2},{"id":"migrated-mnp-au-20250929","status":1,"type":"post","category":["sim"],"tags":["sim"],"featured":false,"title":"Hướng dẫn lấy mã MNP chuyển mạng AU","summary":"cách lấy mã MNP chuyển mạng giữ số của nhà mạng AU, UQ để chuyển sang nhà mạng khác ","imageUrl":"/img/posts/sim/MNP.jpg","link":"https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/khac/l%E1%BA%A5y-m%C3%A3-mnp-auuq?authuser=0","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-09-29","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"post-20251107-1420","type":"post","status":1,"category":["sim"],"tags":["smartpit"],"featured":true,"title":"Hướng dẫn cách đóng cước sim data bằng SmartPit tại combini","summary":"Các cách nạp tiền tiện lợi và nhanh chóng cho sim Softbank data tại combini FAMILY.","imageUrl":"/img/posts/sim/smp/avt.jpg","link":"/pages/pages-baiviet/sim/cuoc-sim-data-softbank-smartpit-tai-combini-20251107.html","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-11-07","updatedAt":null,"contentSource":"html","contentVersion":1,"contentSelector":"#article-content","schemaVersion":2},{"id":"post-kanji-20251220","type":"post","status":1,"category":["n0","nihongo"],"tags":["kanji"],"featured":true,"title":"Tạo file luyện viết kanji","summary":"Website tạo file luyện viết kanji mọi cấp độ A4 miễn phí","imageUrl":"/img/posts/hoctap/nihongo/kanji.png","link":"/pages/pages-hoctap/hoctap/luyen_kanji_A4_fixed.html","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-12-20","updatedAt":null,"contentSource":"html","contentVersion":1,"contentSelector":"#article-content","schemaVersion":2},{"id":"post-20260706-1149","type":"post","status":1,"category":["nihongo"],"tags":[],"featured":true,"title":"Ứng dụng luyện tiếng nhật","summary":"Ứng dụng dạng web để học tiếng nhật cho các bạn từ nhập môn tới N1","imageUrl":"https://vinhonhat.github.io/nihongo/nihongo.png","link":"https://vinhonhat.github.io/nihongo","isNew":true,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2026-07-06","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"migrated-tokutei-nhahang-20251008","type":"post","status":1,"category":["tokutei","nhahang"],"tags":["tokutei"],"featured":true,"title":"Tài liệu ôn thi nhà hàng","summary":"tổng hợp tài liệu ôn thi tokutei nhà hàng","imageUrl":"/img/posts/hoctap/tokutei/nhahang2.jpg","link":"/pages/pages-hoctap/tokutei/nhahang.html","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-10-08","updatedAt":null,"contentSource":"page","contentVersion":0,"contentSelector":"#article-content","schemaVersion":2},{"id":"migrated-tokutei-thucpham-20251008","type":"post","status":1,"category":["tokutei","thucpham"],"tags":["tokutei"],"featured":true,"title":"Tổng hợp kiến thức ôn thi thực phẩm QUAN TRỌNG","summary":"Tổng hợp kiến thức ôn thi thực phẩm sưu tầm ","imageUrl":"/img/posts/hoctap/tokutei/thucpham2.jpg","link":"https://tuangiao-my.sharepoint.com/:b:/g/personal/quangvinh0902jp_tuangiao_edu_vn/EYgrqdJw9k9Por6d0OO231cBNf0hjhduJ4rv8fjdBI098g?e=Rifoiv","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-11-06","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"post-20251106-tai-lieu-on-thi-thuc-hanh-thuc-pham-tieng-nhat","type":"post","status":1,"category":["tokutei","thucpham"],"tags":["tokutei"],"featured":true,"title":"Tài liệu ôn thi thực hành thực phẩm tiếng nhật","summary":"Tài liệu ôn thi thực hành tokutei thực phẩm ","imageUrl":"/img/posts/hoctap/tokutei/thucpham.jpg","link":"https://drive.google.com/file/d/12pfErYS7TAeQVSefUPJihehGy0nwZypE/preview","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-11-06","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"post-20251106-tai-lieu-on-thi-thuc-hanh-thuc-pham-tieng-viet","type":"post","status":1,"category":["tokutei","thucpham"],"tags":["tokutei"],"featured":true,"title":"Tài liệu ôn thi thực hành thực phẩm tiếng Việt","summary":"Tài liệu ôn thi thực hành tokutei thực phẩm ","imageUrl":"/img/posts/hoctap/tokutei/thucpham2.jpg","link":"https://drive.google.com/file/d/1TDPVWISXHlgpshSoJzveSqOwlaFNiU2U/preview","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-11-06","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"post-20251106-tai-lieu-on-thi-thuc-pham-ban-moi-tieng-nhat","type":"post","status":1,"category":["tokutei","thucpham"],"tags":["tokutei"],"featured":true,"title":"Tài liệu ôn thi thực phẩm bản mới tiếng nhật ","summary":"tổng hợp tài liệu ôn thi tokutei thực phẩm bản mới tiếng nhật ","imageUrl":"/img/posts/hoctap/tokutei/thucpham.jpg","link":"https://drive.google.com/file/d/1kyGtxFO9lcyC2uGNQ0jJC1jaXEUrOjC6/preview","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-11-06","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"post-20251106-tai-lieu-on-thi-thuc-pham-ban-moi-tieng-viet","type":"post","status":1,"category":["tokutei","thucpham"],"tags":["tokutei"],"featured":true,"title":"Tài liệu ôn thi thực phẩm bản mới tiếng Việt ","summary":"tổng hợp tài liệu ôn thi tokutei thực phẩm bản mới tiếng Việt ","imageUrl":"/img/posts/hoctap/tokutei/thucpham2.jpg","link":"https://drive.google.com/file/d/1KZvpNQIo0feRYHLF6T0MzVMaYSr6RB0k/preview","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-11-06","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"migrated-tokutei-kaigo-20251009","type":"post","status":1,"category":["tokutei","kaigo"],"tags":["tokutei"],"featured":false,"title":"Tài liệu ôn thi kaigo tiếng Việt","summary":"tổng hợp tài liệu ôn thi tokutei kaigo","imageUrl":"/img/posts/hoctap/tokutei/kaigo-vi.jpg","link":"https://drive.google.com/file/d/1kexk0siuQ8Wc-_k7z5GQDoUYlSSKViFm/preview","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-11-05","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"post-20251105-tai-lieu-on-thi-kaigo-tieng-nhat","type":"post","status":1,"category":["tokutei","kaigo"],"tags":["tokutei"],"featured":false,"title":"Tài liệu ôn thi kaigo tiếng nhật","summary":"tổng hợp tài liệu ôn thi tokutei kaigo","imageUrl":"/img/posts/hoctap/tokutei/kaigo-jp.jpg","link":"https://drive.google.com/file/d/18Bw3xnGKxshToQWtJOaeCeCoxcEq8J7k/preview","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-11-05","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"migrated-tokutei-channuoi","type":"post","status":1,"category":["tokutei","nongnghiep"],"tags":["tokutei"],"featured":true,"title":"Tài liệu tokutei chăn nuôi","summary":"tổng hợp tài liệu ôn thi tokutei chăn nuôi","imageUrl":"/img/posts/hoctap/tokutei/channuoi.jpg","link":"https://drive.google.com/file/d/1HDFnkOZ-Wj0mg-ZMpFZnkxUwstTcNKU1/view?usp=sharing","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-12-09","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"migrated-tokutei-trongtrot","type":"post","status":1,"category":["tokutei","nongnghiep"],"tags":["tokutei"],"featured":true,"title":"Tài liệu tokutei Trồng trọt","summary":"tổng hợp tài liệu ôn thi tokutei Trồng trọt","imageUrl":"/img/posts/hoctap/tokutei/nongnghiep.jpg","link":"https://drive.google.com/file/d/1CibrI7TFGe4ZqfASKH4lfU6beNL041n3/view?usp=sharing","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-12-09","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"migrated-tokutei-khachsan","type":"post","status":1,"category":["tokutei","hotel"],"tags":["tokutei"],"featured":true,"title":"Tài liệu tokutei khách sạn","summary":"tổng hợp tài liệu ôn thi tokutei khách sạn","imageUrl":"/img/posts/hoctap/tokutei/hotel.jpg","link":"https://drive.google.com/file/d/1jNsxXYqyeQce6RzVxUu6pabRXWMqHCw4/view?usp=sharing","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-12-09","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"post-bé học","type":"post","status":1,"category":[],"tags":[],"featured":true,"title":"Bé vừa học vừa chơi v3","summary":"cho bé từ 3 tuổi trở lên tập làm quen với hình ảnh, bảng chử cái, con số....","imageUrl":"https://vinhonhat.github.io/behoc/behoc.png","link":"https://vinhonhat.github.io/behoc/","isNew":true,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2026-7-5","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"migrated-game-vongquay-20251005","status":1,"type":"game","category":["game"],"tags":["game"],"featured":false,"title":"Vòng quay diệu kỳ","summary":"Nhập danh sách tên và quay ngẫu nhiên ngay trên trình duyệt.","imageUrl":"img/posts/giaitri/vongquay.png","link":"/pages/pages-giaitri/vongquay.html","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-10-05","updatedAt":null,"contentSource":"html","contentVersion":1,"contentSelector":"#article-content","schemaVersion":2},{"id":"migrated-game-timer","status":1,"type":"tool","category":["game"],"tags":["game"],"featured":true,"title":"Đồng hồ cát","summary":"Đồng hồ đếm ngược giúp bạn tính thời gian làm việc hay trò chơi, giải trí vui","imageUrl":"img/posts/giaitri/timer.png","link":"/pages/pages-giaitri/timer.html","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2026-04-18","updatedAt":null,"contentSource":"html","contentVersion":1,"contentSelector":"#article-content","schemaVersion":2},{"id":"migrated-game-xephinh-20251025","status":1,"type":"game","category":["game"],"tags":["game"],"featured":true,"title":"Game Xếp hình","summary":"Xoay và xếp các khối, chơi bằng bàn phím hoặc thao tác vuốt.","imageUrl":"/img/games/block.svg","link":"/pages/pages-giaitri/block.html","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-10-25","updatedAt":null,"contentSource":"html","contentVersion":1,"contentSelector":"#article-content","schemaVersion":2},{"id":"migrated-game-ran-20250930","status":1,"type":"game","category":["game"],"tags":["game"],"featured":true,"title":"Game Rắn săn mồi","summary":"Rắn săn mồi hỗ trợ phím mũi tên, WASD và vuốt trên màn hình cảm ứng.","imageUrl":"/img/games/snake.svg","link":"/pages/pages-giaitri/snake.html","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-09-30","updatedAt":null,"contentSource":"html","contentVersion":1,"contentSelector":"#article-content","schemaVersion":2},{"id":"migrated-game-flappy-20251001","status":1,"type":"game","category":["game"],"tags":["game"],"featured":true,"title":"Flappy Bird","summary":"Điều khiển chú chim bay qua các ống bằng phím Space hoặc chạm màn hình.","imageUrl":"/img/games/flappy.svg","link":"/pages/pages-giaitri/flappy.html","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-10-01","updatedAt":null,"contentSource":"html","contentVersion":1,"contentSelector":"#article-content","schemaVersion":2},{"id":"migrated-game-sudoku-20251004","status":1,"type":"game","category":["game"],"tags":["game"],"featured":true,"title":"Sudoku","summary":"Sudoku gọn nhẹ, nhập số bằng bàn phím hoặc bàn phím cảm ứng.","imageUrl":"/img/games/sudoku.svg","link":"/pages/pages-giaitri/sudoku.html","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-10-04","updatedAt":null,"contentSource":"page","contentVersion":0,"contentSelector":"#article-content","schemaVersion":2},{"id":"migrated-rakuten-bill-20251006","type":"post","category":["rakuten"],"tags":["rakuten"],"featured":true,"title":"Phát hành lại hoá đơn thanh toán combini của rakuten mobile","summary":"Hướng dẫn phát hành lại phiếu thanh toán cước sim rakuten khi bạn quên cho tiền vào thẻ để trừ tiền.","imageUrl":"https://rmcs.file.force.com/servlet/servlet.ImageServer?id=0152r0000003fDX&oid=00D2r000000CtMv&lastMod=1676526487000","link":"https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/rakuten/bill?authuser=0","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-10-06","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"migrated-rakuten-family-20251006","type":"post","category":["rakuten"],"tags":["rakuten"],"featured":true,"title":"Tham gia nhóm gia đình để giảm giá cước của rakuten mobile","summary":"Tổng hợp các họ của các bạn đang dùng rakuten để tham gia nhóm gia đình để giảm giá cước sim hàng tháng.","imageUrl":"https://network.mobile.rakuten.co.jp/assets/img/fee/family/ogp-20240410.png","link":"https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/rakuten/family?authuser=0","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-10-06","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"migrated-rakuten-cuocsim-20251005","type":"guide","category":["rakuten"],"tags":["rakuten"],"featured":true,"title":"Cách tính cước sim nhà mạng Rakuten","summary":"Hướng dẫn chi tiết xem cách tính và ngày đóng cước sim nhà mạng rakuten đơn giản nhất.","imageUrl":"https://corp.mobile.rakuten.co.jp/assets/img/common/ogp.png?200323","link":"https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/rakuten/c%C6%B0%E1%BB%9Bc-sim?authuser=0","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-10-05","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"migrated-rakuten-matthe-20251006","type":"post","category":["rakuten"],"tags":["rakuten"],"featured":false,"title":"Cách báo mất thẻ và phát hành lại thẻ Rakuten Credit","summary":"Hướng dẫn khoá thẻ và phát hành lại thẻ Credit của rakuten 1 cách nhanh chóng nhất để bảo vệ tài khoản của mình.","imageUrl":"https://image.card.jp.rakuten-static.com/card_corp/pc/contents/logo_200x200.gif","link":"https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/rakuten/b%C3%A1o-m%E1%BA%A5t-th%E1%BA%BB-rakuten-credit?authuser=0","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-10-06","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"migrated-seven-create-20250929","status":1,"type":"guide","category":["seven"],"tags":["seven"],"featured":true,"title":"Cách đăng ký tài khoản trực tuyến của Seven Bank","summary":"Hướng dẫn chi tiết từng bước để tạo tài khoản trực tuyến của Seven Bank 1 cách đơn giản nhất để dùng thanh toán tiền sim.... .","imageUrl":"/img/posts/bank/seven/acc.jpg","link":"https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/711/create-account-711?authuser=0","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-09-29","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"post-20251123-1841","type":"post","status":1,"category":["seven"],"tags":[],"featured":true,"title":"Hướng dẫn cài ứng dụng seven bank","summary":"hướng dẫn mọi người cài ứng dụng seven bank để kiểm tra tài khoản cách đơn giản nhất từ seven bank.","imageUrl":"/img/posts/bank/seven/app.jpg","link":"/pages/pages-baiviet/seven/huong-dan-cai-ung-dung-seven-bank-20251123.html","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-11-23","updatedAt":null,"contentSource":"html","contentVersion":1,"contentSelector":"#article-content","schemaVersion":2},{"id":"migrated-seven-app-20251001","status":1,"type":"guide","category":["seven"],"tags":["seven"],"featured":false,"title":"Hướng dẫn đăng nhập ứng dụng Seven Bank","summary":"cách đăng nhập ứng dụng seven bank để quản lý tài khoản, chi tiêu ngân hàng của bạn đơn giản nhất.","imageUrl":"/img/posts/bank/seven/app.jpg","link":"https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/711/app-sevenbank?authuser=0","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-10-01","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"post-20260616-1837","type":"post","status":1,"category":["bank","seven"],"tags":[],"featured":true,"title":"Hướng dẫn cập nhật thẻ ngoại kiều cho Sevenbank","summary":"Cách cập nhật thẻ ngoại kiều mới để tiếp tục dùng ngân hàng seven bank 1 cách nhanh chóng và dễ dàng.","imageUrl":"/img/posts/bank/seven/update711.jpg","link":"/pages/pages-baiviet/seven/huong-dan-cap-nhat-the-ngoai-kieu-cho-sevenbank-20260616.html","isNew":true,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2026-06-16","updatedAt":null,"contentSource":"html","contentVersion":1,"contentSelector":"#article-content","schemaVersion":2},{"id":"migrated-seven-register-20250929","status":1,"type":"guide","category":["seven"],"tags":["seven"],"featured":true,"title":"Hướng dẫn đăng ký thẻ ngân hàng seven bank","summary":"Ngoài ngân hàng yucho thì đây là ngân hàng thứ 2 cho phép người mới tới nhật cũng có thể đăng ký và rất dễ ở ngoài cây ATM.","imageUrl":"/img/posts/bank/seven/711.jpg","link":"https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/711/sevenbank?authuser=0","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-09-29","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"migrated-seven-debit-20250929","status":1,"type":"guide","category":["seven"],"tags":["seven"],"featured":true,"title":"Đăng ký thẻ Debit của Seven bank","summary":"Cách đăng ký thẻ debit cho những người có thẻ ngân hàng seven bank mà chưa có thẻ debit. .","imageUrl":"/img/posts/bank/seven/debit.jpg","link":"https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/711/debit711?authuser=0","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-09-29","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"migrated-other-checkpc-20251025","status":1,"type":"guide","category":["other"],"tags":["other"],"featured":true,"title":"Check máy tính cơ bản","summary":"trang hướng dẫn check màn hình, loa, míc, camera, và bàn phím máy tính dùng cho cả Windows và MacBook.","imageUrl":"/img/posts/other/checkpc.jpg","link":"/pages/pages-app/checklcd.html","isNew":true,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2026-5-29","updatedAt":null,"contentSource":"html","contentVersion":1,"contentSelector":"#article-content","schemaVersion":2},{"id":"post-20251120-1116","type":"post","status":0,"category":["other"],"tags":[],"featured":true,"title":"Hướng dẫn hẹn giao lại hàng Yamato","summary":"Nhiều bạn mới sang chưa biết cách hẹn giao hàng lại của Yamato (mèo đen), thì mình sẽ hướng dẫn cách đơn giản nhất sau đây để hẹn giao lại hàng nhé.","imageUrl":"/img/posts/other/yamato.jpg","link":"/pages/pages-baiviet/other/huong-dan-hen-giao-lai-hang-yamato-20251120.html","isNew":false,"showInLists":false,"showOnDesktop":false,"showOnMobile":false,"searchable":false,"publishedAt":"2025-11-19","updatedAt":null,"contentSource":"html","contentVersion":1,"contentSelector":"#article-content","schemaVersion":2},{"id":"migrated-other-cityex-20250929","status":1,"type":"guide","category":["other"],"tags":["other"],"featured":true,"title":"Cách đăng ký tài khoản City Exxpress - chuyển tiền Nhật Việt","summary":"Hướng dẫn chi tiết từng bước để tạo tài khoản chuyển tiền về Việt Nam với tỷ giá cao nhất và phí chuyển tiền rẻ nhất lại còn được hoàn point.","imageUrl":"/img/posts/bank/city.jpg","link":"https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/express-money-transfer/city_express?authuser=0","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-09-29","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"post-20251127-1435","type":"post","status":1,"category":["other","iphone"],"tags":[],"featured":true,"title":"Chặn cập nhật iphone, iPad mới nhất 2025","summary":"Hướng dẫn chặn cập nhật iphone, và không hiện thông báo cập nhật IOS mới. với TvOS 26 cho mọi dòng IPhone IPad","imageUrl":"/img/posts/other/blockota/block-ota.jpg","link":"/pages/pages-baiviet/other/chan-cap-nhat-iphone-ipad-moi-nhat-2025-20251127.html","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-11-27","updatedAt":null,"contentSource":"html","contentVersion":1,"contentSelector":"#article-content","schemaVersion":2},{"id":"post-20260612-1821","status":0,"type":"guide","category":["sim","vneid"],"tags":["sim","vneid"],"featured":true,"title":"Cách truy cập VNeID khi ở nước ngoài, cách xác nhận sim Việt Nam","summary":"Hướng dẫn cho các bạn truy cập VNeID khi đang ở nước ngoài để xác nhận sim Việt Nam, hay làm các dịch vụ công ở Việt Nam....","imageUrl":"/img/posts/other/vneid/vneid.jpg","link":"/pages/pages-baiviet/other/cach-truy-cap-vneid-khi-o-nuoc-ngoai-20260612.html","isNew":false,"showInLists":false,"showOnDesktop":false,"showOnMobile":false,"searchable":false,"publishedAt":"2026-06-12","updatedAt":null,"contentSource":"html","contentVersion":1,"contentSelector":"#article-content","schemaVersion":2},{"id":"post-20251204-1435","type":"post","status":0,"category":["other"],"tags":[],"featured":true,"title":"Thẻ thành viên siêu thị OK","summary":"thẻ thành viên siu thị ok","imageUrl":"https://placehold.co/1200x630/FBF7F0/718096?text=OK Member","link":"/pages/pages-app/ok.html","isNew":false,"showInLists":false,"showOnDesktop":false,"showOnMobile":false,"searchable":false,"publishedAt":"2025-12-04","updatedAt":null,"contentSource":"html","contentVersion":1,"contentSelector":"#article-content","schemaVersion":2},{"id":"migrated-other-mynumber-20251001","status":1,"type":"guide","category":["other"],"tags":["other"],"featured":false,"title":"Đăng ký thẻ My Numeber Online","summary":"cách đăng ký thẻ My Number online đơn giản nhất cho người mới.","imageUrl":"/img/posts/other/mynumber.jpg","link":"https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/khac/%C4%91%C4%83ng-k%C3%BD-mynumber-online?authuser=0","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-10-01","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"migrated-video-yucho-sdt-20250929","status":1,"type":"video","category":["video"],"tags":["video"],"featured":true,"title":"Hướng dẫn đổi số điện thoại tài khoản yucho","summary":"hướng dẫn đổi mật khẩu thẻ yucho tại cây ATM của bưu điện và tại family mart.","imageUrl":"/img/posts/bank/yucho/thaysdt.jpg","link":"https://vt.tiktok.com/ZSU2Vcnek/","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-09-29","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"migrated-video-yucho-banking-20241005","status":1,"type":"video","category":["video"],"tags":["video"],"featured":true,"title":"Cài ứng dụng banking của ngân hàng Yucho","summary":"Hướng dẫn cài đặt ứng dụng Yucho trên điện thoại.","imageUrl":"/img/posts/bank/yucho/yucho.jpg","link":"https://vt.tiktok.com/ZSU2qMRPW/","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2024-10-05","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"migrated-video-yucho-pass-20241005","status":1,"type":"video","category":["video"],"tags":["video"],"featured":true,"title":"Hướng dẫn đổi mật khẩu thẻ Yucho","summary":"Hướng dẫn đổi mật khẩu rút tiền của ngân hàng yucho.","imageUrl":"/img/posts/bank/yucho/yuchomk.jpg","link":"https://vt.tiktok.com/ZSU2Vc6HU/","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2024-10-05","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"migrated-video-checkcard-20250105","status":1,"type":"video","category":["video"],"tags":["video"],"featured":false,"title":"Kiểm tra thẻ ngoại kiều của bạn ","summary":"cách check thử thẻ ngoại kiều của bạn có đúng không, vài nơi đi xin việc cũng sẽ được check như thế này.","imageUrl":"/img/posts/other/check-the-cu-tru.png","link":"https://vt.tiktok.com/ZSU2qDvxy/","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-01-05","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"migrated-video-rakuten-wifi-20251005","type":"video","category":["video","rakuten"],"tags":["video","rakuten"],"featured":false,"title":"Đổi mật khẩu wifi poket 2C rakuten ","summary":"Hướng dẫn bạn đổi mật khẩu wifi cầm tay 2C của nhà mạng Rakuten.","imageUrl":"/img/posts/other/wifi-poket.jpg","link":"https://vt.tiktok.com/ZSU2qDxy5/","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-10-05","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"migrated-video-appstore-20250929","status":1,"type":"video","category":["video"],"tags":["video"],"featured":false,"title":"Cách chuyển vùng Apple Store Nhật - Việt ","summary":"Hướng dẫn chuyển vùng Apple Store qua Nhật Bản và về lại Việt Nam để tải các ứng dụng theo vùng...","imageUrl":"/img/posts/other/apple-store.jpg","link":"https://vt.tiktok.com/ZSU2VtULD/","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2025-09-29","updatedAt":null,"contentSource":"external","contentVersion":0,"schemaVersion":2},{"id":"post-20260613-1816","type":"post","status":0,"category":["app"],"tags":[],"featured":false,"title":"ứng dụng di động","summary":"","imageUrl":"https://placehold.co/1200x630/FBF7F0/718096?text=Anh+SEO","link":"/pages/pages-app/ung-dung-di-ong-20260613.html","isNew":false,"showInLists":false,"showOnDesktop":false,"showOnMobile":false,"searchable":false,"publishedAt":"2026-06-13","updatedAt":null,"contentSource":"html","contentVersion":1,"contentSelector":"#article-content","schemaVersion":2},{"id":"game-memory-beta7","type":"game","status":1,"category":["game"],"tags":["game","nối hình","trí nhớ"],"featured":true,"title":"Nối hình ghi nhớ","summary":"Lật thẻ và tìm các cặp biểu tượng giống nhau, phù hợp cả trẻ em và người lớn.","imageUrl":"/img/games/memory.svg","link":"/pages/pages-giaitri/noihinh.html","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2026-08-02","updatedAt":null,"contentSource":"page","contentVersion":1,"contentSelector":"#game"},{"id":"game-2048-beta7","type":"game","status":1,"category":["game"],"tags":["game","2048","xếp số"],"featured":true,"title":"Game 2048","summary":"Vuốt hoặc dùng phím mũi tên để ghép các ô số và đạt mốc 2048.","imageUrl":"/img/games/2048.svg","link":"/pages/pages-giaitri/2048.html","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2026-08-02","updatedAt":null,"contentSource":"page","contentVersion":1,"contentSelector":"#game"},{"id":"game-breakout-beta7","type":"game","status":1,"category":["game"],"tags":["game","phá gạch"],"featured":false,"title":"Game Phá gạch","summary":"Di chuyển thanh đỡ bóng bằng chuột, phím hoặc kéo tay trên điện thoại.","imageUrl":"/img/games/breakout.svg","link":"/pages/pages-giaitri/breakout.html","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2026-08-02","updatedAt":null,"contentSource":"page","contentVersion":1,"contentSelector":"#game"},{"id":"game-whack-beta7","type":"game","status":1,"category":["game"],"tags":["game","phản xạ","đập chuột"],"featured":false,"title":"Game Đập chuột","summary":"Trò chơi phản xạ nhanh 30 giây, chạm vào chuột khi xuất hiện.","imageUrl":"/img/games/whack.svg","link":"/pages/pages-giaitri/dap-chuot.html","isNew":false,"showInLists":true,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2026-08-02","updatedAt":null,"contentSource":"page","contentVersion":1,"contentSelector":"#game"},{"id":"sim-shop-beta8","type":"shop","status":1,"category":["sim","shop"],"tags":["sim data","esim","sim nghe gọi","bán sim nhật"],"featured":false,"title":"SIM Data Nhật Bản - 4 loại SIM phổ biến","summary":"Xem thông tin SIM data ngắn hạn, dài hạn, eSIM và SIM nghe gọi kèm data tại Nhật.","imageUrl":"/img/ads/sim-data-demo-3x1.svg","link":"/pages/pages-app/sim-data.html","isNew":false,"showInLists":false,"showOnDesktop":true,"showOnMobile":true,"searchable":true,"publishedAt":"2026-08-02","updatedAt":null,"contentSource":"html","contentVersion":2,"contentSelector":"main","schemaVersion":2}]}
+{
+    "schemaVersion": 3,
+    "generatedAt": "2026-08-02T13:47:00+09:00",
+    "sourceOfTruth": "html",
+    "posts": [
+        {
+            "id": "post-20251102-1027",
+            "type": "guide",
+            "status": 1,
+            "category": [
+                "bank",
+                "other"
+            ],
+            "tags": [],
+            "featured": true,
+            "title": "Hướng dẫn chuyển khoản từ ngân hàng Yucho sang ngân hàng khác",
+            "summary": "Hướng dẫn chuyển khoản từ ngân hàng Yucho sang ngân hàng khác bằng ứng dụng trên điện thoại mới nhất 2025",
+            "imageUrl": "/img/posts/bank/yucho/ycbk/ycbk.jpg",
+            "link": "/pages/pages-baiviet/other/chuyen-khoan-tu-yucho-sang-ngan-hang-khac-20251101.html",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-11-02",
+            "updatedAt": null,
+            "contentSource": "html",
+            "contentVersion": 1,
+            "contentSelector": "#article-content",
+            "schemaVersion": 2
+        },
+        {
+            "id": "post-20260414-1735",
+            "type": "bank",
+            "status": 1,
+            "category": [],
+            "tags": [],
+            "featured": true,
+            "title": "Chuyển khoản yucho miễn phí CONTRA",
+            "summary": "Hướng dẫn cài đặt chuyển khoản yucho miễn phí cho mọi người",
+            "imageUrl": "/img/posts/bank/yucho/ycbkcotra/ycbkcotra.jpg",
+            "link": "/pages/pages-baiviet/bank/chuyen-khoan-yucho-mien-phi-20260414.html",
+            "isNew": true,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2026-05-30",
+            "updatedAt": null,
+            "contentSource": "html",
+            "contentVersion": 1,
+            "contentSelector": "#article-content",
+            "schemaVersion": 2
+        },
+        {
+            "id": "post-20251109-1056",
+            "type": "post",
+            "status": 1,
+            "category": [
+                "sim"
+            ],
+            "tags": [
+                "sim",
+                "softbank"
+            ],
+            "featured": true,
+            "title": "Cấu hình Sim data, sim nghe gọi",
+            "summary": "Hướng dẫn cài cấu hình sim data các nhà mạng tại nhật như softbank loại 2gb, 5gb, 10gb, 50gb, 100gb. Và sim nghe gọi docomo",
+            "imageUrl": "/img/posts/sim/APN/APN.png",
+            "link": "/pages/pages-baiviet/sim/cau-hinh-sim-data-sim-nghe-goi-20251109.html",
+            "isNew": true,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2026-4-04",
+            "updatedAt": null,
+            "contentSource": "html",
+            "contentVersion": 1,
+            "contentSelector": "#article-content",
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-mnp-au-20250929",
+            "status": 1,
+            "type": "post",
+            "category": [
+                "sim"
+            ],
+            "tags": [
+                "sim"
+            ],
+            "featured": false,
+            "title": "Hướng dẫn lấy mã MNP chuyển mạng AU",
+            "summary": "cách lấy mã MNP chuyển mạng giữ số của nhà mạng AU, UQ để chuyển sang nhà mạng khác ",
+            "imageUrl": "/img/posts/sim/MNP.jpg",
+            "link": "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/khac/l%E1%BA%A5y-m%C3%A3-mnp-auuq?authuser=0",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-09-29",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "post-20251107-1420",
+            "type": "post",
+            "status": 1,
+            "category": [
+                "sim"
+            ],
+            "tags": [
+                "smartpit"
+            ],
+            "featured": true,
+            "title": "Hướng dẫn cách đóng cước sim data bằng SmartPit tại combini",
+            "summary": "Các cách nạp tiền tiện lợi và nhanh chóng cho sim Softbank data tại combini FAMILY.",
+            "imageUrl": "/img/posts/sim/smp/avt.jpg",
+            "link": "/pages/pages-baiviet/sim/cuoc-sim-data-softbank-smartpit-tai-combini-20251107.html",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-11-07",
+            "updatedAt": null,
+            "contentSource": "html",
+            "contentVersion": 1,
+            "contentSelector": "#article-content",
+            "schemaVersion": 2
+        },
+        {
+            "id": "post-kanji-20251220",
+            "type": "post",
+            "status": 1,
+            "category": [
+                "n0",
+                "nihongo"
+            ],
+            "tags": [
+                "kanji"
+            ],
+            "featured": true,
+            "title": "Tạo file luyện viết kanji",
+            "summary": "Website tạo file luyện viết kanji mọi cấp độ A4 miễn phí",
+            "imageUrl": "/img/posts/hoctap/nihongo/kanji.png",
+            "link": "/pages/pages-hoctap/hoctap/luyen_kanji_A4_fixed.html",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-12-20",
+            "updatedAt": null,
+            "contentSource": "html",
+            "contentVersion": 1,
+            "contentSelector": "#article-content",
+            "schemaVersion": 2
+        },
+        {
+            "id": "post-20260706-1149",
+            "type": "post",
+            "status": 1,
+            "category": [
+                "nihongo"
+            ],
+            "tags": [],
+            "featured": true,
+            "title": "Ứng dụng luyện tiếng nhật",
+            "summary": "Ứng dụng dạng web để học tiếng nhật cho các bạn từ nhập môn tới N1",
+            "imageUrl": "https://vinhonhat.github.io/nihongo/nihongo.png",
+            "link": "https://vinhonhat.github.io/nihongo",
+            "isNew": true,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2026-07-06",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-tokutei-nhahang-20251008",
+            "type": "post",
+            "status": 1,
+            "category": [
+                "tokutei",
+                "nhahang"
+            ],
+            "tags": [
+                "tokutei"
+            ],
+            "featured": true,
+            "title": "Tài liệu ôn thi nhà hàng",
+            "summary": "tổng hợp tài liệu ôn thi tokutei nhà hàng",
+            "imageUrl": "/img/posts/hoctap/tokutei/nhahang2.jpg",
+            "link": "/pages/pages-hoctap/tokutei/nhahang.html",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-10-08",
+            "updatedAt": null,
+            "contentSource": "page",
+            "contentVersion": 0,
+            "contentSelector": "#article-content",
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-tokutei-thucpham-20251008",
+            "type": "post",
+            "status": 1,
+            "category": [
+                "tokutei",
+                "thucpham"
+            ],
+            "tags": [
+                "tokutei"
+            ],
+            "featured": true,
+            "title": "Tổng hợp kiến thức ôn thi thực phẩm QUAN TRỌNG",
+            "summary": "Tổng hợp kiến thức ôn thi thực phẩm sưu tầm ",
+            "imageUrl": "/img/posts/hoctap/tokutei/thucpham2.jpg",
+            "link": "https://tuangiao-my.sharepoint.com/:b:/g/personal/quangvinh0902jp_tuangiao_edu_vn/EYgrqdJw9k9Por6d0OO231cBNf0hjhduJ4rv8fjdBI098g?e=Rifoiv",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-11-06",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "post-20251106-tai-lieu-on-thi-thuc-hanh-thuc-pham-tieng-nhat",
+            "type": "post",
+            "status": 1,
+            "category": [
+                "tokutei",
+                "thucpham"
+            ],
+            "tags": [
+                "tokutei"
+            ],
+            "featured": true,
+            "title": "Tài liệu ôn thi thực hành thực phẩm tiếng nhật",
+            "summary": "Tài liệu ôn thi thực hành tokutei thực phẩm ",
+            "imageUrl": "/img/posts/hoctap/tokutei/thucpham.jpg",
+            "link": "https://drive.google.com/file/d/12pfErYS7TAeQVSefUPJihehGy0nwZypE/preview",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-11-06",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "post-20251106-tai-lieu-on-thi-thuc-hanh-thuc-pham-tieng-viet",
+            "type": "post",
+            "status": 1,
+            "category": [
+                "tokutei",
+                "thucpham"
+            ],
+            "tags": [
+                "tokutei"
+            ],
+            "featured": true,
+            "title": "Tài liệu ôn thi thực hành thực phẩm tiếng Việt",
+            "summary": "Tài liệu ôn thi thực hành tokutei thực phẩm ",
+            "imageUrl": "/img/posts/hoctap/tokutei/thucpham2.jpg",
+            "link": "https://drive.google.com/file/d/1TDPVWISXHlgpshSoJzveSqOwlaFNiU2U/preview",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-11-06",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "post-20251106-tai-lieu-on-thi-thuc-pham-ban-moi-tieng-nhat",
+            "type": "post",
+            "status": 1,
+            "category": [
+                "tokutei",
+                "thucpham"
+            ],
+            "tags": [
+                "tokutei"
+            ],
+            "featured": true,
+            "title": "Tài liệu ôn thi thực phẩm bản mới tiếng nhật ",
+            "summary": "tổng hợp tài liệu ôn thi tokutei thực phẩm bản mới tiếng nhật ",
+            "imageUrl": "/img/posts/hoctap/tokutei/thucpham.jpg",
+            "link": "https://drive.google.com/file/d/1kyGtxFO9lcyC2uGNQ0jJC1jaXEUrOjC6/preview",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-11-06",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "post-20251106-tai-lieu-on-thi-thuc-pham-ban-moi-tieng-viet",
+            "type": "post",
+            "status": 1,
+            "category": [
+                "tokutei",
+                "thucpham"
+            ],
+            "tags": [
+                "tokutei"
+            ],
+            "featured": true,
+            "title": "Tài liệu ôn thi thực phẩm bản mới tiếng Việt ",
+            "summary": "tổng hợp tài liệu ôn thi tokutei thực phẩm bản mới tiếng Việt ",
+            "imageUrl": "/img/posts/hoctap/tokutei/thucpham2.jpg",
+            "link": "https://drive.google.com/file/d/1KZvpNQIo0feRYHLF6T0MzVMaYSr6RB0k/preview",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-11-06",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-tokutei-kaigo-20251009",
+            "type": "post",
+            "status": 1,
+            "category": [
+                "tokutei",
+                "kaigo"
+            ],
+            "tags": [
+                "tokutei"
+            ],
+            "featured": false,
+            "title": "Tài liệu ôn thi kaigo tiếng Việt",
+            "summary": "tổng hợp tài liệu ôn thi tokutei kaigo",
+            "imageUrl": "/img/posts/hoctap/tokutei/kaigo-vi.jpg",
+            "link": "https://drive.google.com/file/d/1kexk0siuQ8Wc-_k7z5GQDoUYlSSKViFm/preview",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-11-05",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "post-20251105-tai-lieu-on-thi-kaigo-tieng-nhat",
+            "type": "post",
+            "status": 1,
+            "category": [
+                "tokutei",
+                "kaigo"
+            ],
+            "tags": [
+                "tokutei"
+            ],
+            "featured": false,
+            "title": "Tài liệu ôn thi kaigo tiếng nhật",
+            "summary": "tổng hợp tài liệu ôn thi tokutei kaigo",
+            "imageUrl": "/img/posts/hoctap/tokutei/kaigo-jp.jpg",
+            "link": "https://drive.google.com/file/d/18Bw3xnGKxshToQWtJOaeCeCoxcEq8J7k/preview",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-11-05",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-tokutei-channuoi",
+            "type": "post",
+            "status": 1,
+            "category": [
+                "tokutei",
+                "nongnghiep"
+            ],
+            "tags": [
+                "tokutei"
+            ],
+            "featured": true,
+            "title": "Tài liệu tokutei chăn nuôi",
+            "summary": "tổng hợp tài liệu ôn thi tokutei chăn nuôi",
+            "imageUrl": "/img/posts/hoctap/tokutei/channuoi.jpg",
+            "link": "https://drive.google.com/file/d/1HDFnkOZ-Wj0mg-ZMpFZnkxUwstTcNKU1/view?usp=sharing",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-12-09",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-tokutei-trongtrot",
+            "type": "post",
+            "status": 1,
+            "category": [
+                "tokutei",
+                "nongnghiep"
+            ],
+            "tags": [
+                "tokutei"
+            ],
+            "featured": true,
+            "title": "Tài liệu tokutei Trồng trọt",
+            "summary": "tổng hợp tài liệu ôn thi tokutei Trồng trọt",
+            "imageUrl": "/img/posts/hoctap/tokutei/nongnghiep.jpg",
+            "link": "https://drive.google.com/file/d/1CibrI7TFGe4ZqfASKH4lfU6beNL041n3/view?usp=sharing",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-12-09",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-tokutei-khachsan",
+            "type": "post",
+            "status": 1,
+            "category": [
+                "tokutei",
+                "hotel"
+            ],
+            "tags": [
+                "tokutei"
+            ],
+            "featured": true,
+            "title": "Tài liệu tokutei khách sạn",
+            "summary": "tổng hợp tài liệu ôn thi tokutei khách sạn",
+            "imageUrl": "/img/posts/hoctap/tokutei/hotel.jpg",
+            "link": "https://drive.google.com/file/d/1jNsxXYqyeQce6RzVxUu6pabRXWMqHCw4/view?usp=sharing",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-12-09",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "post-bé học",
+            "type": "post",
+            "status": 1,
+            "category": [],
+            "tags": [],
+            "featured": true,
+            "title": "Bé vừa học vừa chơi v3",
+            "summary": "cho bé từ 3 tuổi trở lên tập làm quen với hình ảnh, bảng chử cái, con số....",
+            "imageUrl": "https://vinhonhat.github.io/behoc/behoc.png",
+            "link": "https://vinhonhat.github.io/behoc/",
+            "isNew": true,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2026-7-5",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-game-vongquay-20251005",
+            "status": 1,
+            "type": "game",
+            "category": [
+                "game"
+            ],
+            "tags": [
+                "game"
+            ],
+            "featured": false,
+            "title": "Vòng quay diệu kỳ",
+            "summary": "Nhập danh sách tên và quay ngẫu nhiên ngay trên trình duyệt.",
+            "imageUrl": "img/posts/giaitri/vongquay.png",
+            "link": "/pages/pages-giaitri/vongquay.html",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-10-05",
+            "updatedAt": null,
+            "contentSource": "html",
+            "contentVersion": 1,
+            "contentSelector": "#article-content",
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-game-timer",
+            "status": 1,
+            "type": "tool",
+            "category": [
+                "game"
+            ],
+            "tags": [
+                "game"
+            ],
+            "featured": true,
+            "title": "Đồng hồ cát",
+            "summary": "Đồng hồ đếm ngược giúp bạn tính thời gian làm việc hay trò chơi, giải trí vui",
+            "imageUrl": "img/posts/giaitri/timer.png",
+            "link": "/pages/pages-giaitri/timer.html",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2026-04-18",
+            "updatedAt": null,
+            "contentSource": "html",
+            "contentVersion": 1,
+            "contentSelector": "#article-content",
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-game-xephinh-20251025",
+            "status": 1,
+            "type": "game",
+            "category": [
+                "game"
+            ],
+            "tags": [
+                "game"
+            ],
+            "featured": true,
+            "title": "Game Xếp hình",
+            "summary": "Xoay và xếp các khối, chơi bằng bàn phím hoặc thao tác vuốt.",
+            "imageUrl": "/img/games/block.svg",
+            "link": "/pages/pages-giaitri/block.html",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-10-25",
+            "updatedAt": null,
+            "contentSource": "html",
+            "contentVersion": 1,
+            "contentSelector": "#article-content",
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-game-ran-20250930",
+            "status": 1,
+            "type": "game",
+            "category": [
+                "game"
+            ],
+            "tags": [
+                "game"
+            ],
+            "featured": true,
+            "title": "Game Rắn săn mồi",
+            "summary": "Rắn săn mồi hỗ trợ phím mũi tên, WASD và vuốt trên màn hình cảm ứng.",
+            "imageUrl": "/img/games/snake.svg",
+            "link": "/pages/pages-giaitri/snake.html",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-09-30",
+            "updatedAt": null,
+            "contentSource": "html",
+            "contentVersion": 1,
+            "contentSelector": "#article-content",
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-game-flappy-20251001",
+            "status": 1,
+            "type": "game",
+            "category": [
+                "game"
+            ],
+            "tags": [
+                "game"
+            ],
+            "featured": true,
+            "title": "Flappy Bird",
+            "summary": "Điều khiển chú chim bay qua các ống bằng phím Space hoặc chạm màn hình.",
+            "imageUrl": "/img/games/flappy.svg",
+            "link": "/pages/pages-giaitri/flappy.html",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-10-01",
+            "updatedAt": null,
+            "contentSource": "html",
+            "contentVersion": 1,
+            "contentSelector": "#article-content",
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-game-sudoku-20251004",
+            "status": 1,
+            "type": "game",
+            "category": [
+                "game"
+            ],
+            "tags": [
+                "game"
+            ],
+            "featured": true,
+            "title": "Sudoku",
+            "summary": "Sudoku gọn nhẹ, nhập số bằng bàn phím hoặc bàn phím cảm ứng.",
+            "imageUrl": "/img/games/sudoku.svg",
+            "link": "/pages/pages-giaitri/sudoku.html",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-10-04",
+            "updatedAt": null,
+            "contentSource": "page",
+            "contentVersion": 0,
+            "contentSelector": "#article-content",
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-rakuten-bill-20251006",
+            "type": "post",
+            "category": [
+                "rakuten"
+            ],
+            "tags": [
+                "rakuten"
+            ],
+            "featured": true,
+            "title": "Phát hành lại hoá đơn thanh toán combini của rakuten mobile",
+            "summary": "Hướng dẫn phát hành lại phiếu thanh toán cước sim rakuten khi bạn quên cho tiền vào thẻ để trừ tiền.",
+            "imageUrl": "https://rmcs.file.force.com/servlet/servlet.ImageServer?id=0152r0000003fDX&oid=00D2r000000CtMv&lastMod=1676526487000",
+            "link": "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/rakuten/bill?authuser=0",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-10-06",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-rakuten-family-20251006",
+            "type": "post",
+            "category": [
+                "rakuten"
+            ],
+            "tags": [
+                "rakuten"
+            ],
+            "featured": true,
+            "title": "Tham gia nhóm gia đình để giảm giá cước của rakuten mobile",
+            "summary": "Tổng hợp các họ của các bạn đang dùng rakuten để tham gia nhóm gia đình để giảm giá cước sim hàng tháng.",
+            "imageUrl": "https://network.mobile.rakuten.co.jp/assets/img/fee/family/ogp-20240410.png",
+            "link": "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/rakuten/family?authuser=0",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-10-06",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-rakuten-cuocsim-20251005",
+            "type": "guide",
+            "category": [
+                "rakuten"
+            ],
+            "tags": [
+                "rakuten"
+            ],
+            "featured": true,
+            "title": "Cách tính cước sim nhà mạng Rakuten",
+            "summary": "Hướng dẫn chi tiết xem cách tính và ngày đóng cước sim nhà mạng rakuten đơn giản nhất.",
+            "imageUrl": "https://corp.mobile.rakuten.co.jp/assets/img/common/ogp.png?200323",
+            "link": "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/rakuten/c%C6%B0%E1%BB%9Bc-sim?authuser=0",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-10-05",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-rakuten-matthe-20251006",
+            "type": "post",
+            "category": [
+                "rakuten"
+            ],
+            "tags": [
+                "rakuten"
+            ],
+            "featured": false,
+            "title": "Cách báo mất thẻ và phát hành lại thẻ Rakuten Credit",
+            "summary": "Hướng dẫn khoá thẻ và phát hành lại thẻ Credit của rakuten 1 cách nhanh chóng nhất để bảo vệ tài khoản của mình.",
+            "imageUrl": "https://image.card.jp.rakuten-static.com/card_corp/pc/contents/logo_200x200.gif",
+            "link": "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/rakuten/b%C3%A1o-m%E1%BA%A5t-th%E1%BA%BB-rakuten-credit?authuser=0",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-10-06",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-seven-create-20250929",
+            "status": 1,
+            "type": "guide",
+            "category": [
+                "seven"
+            ],
+            "tags": [
+                "seven"
+            ],
+            "featured": true,
+            "title": "Cách đăng ký tài khoản trực tuyến của Seven Bank",
+            "summary": "Hướng dẫn chi tiết từng bước để tạo tài khoản trực tuyến của Seven Bank 1 cách đơn giản nhất để dùng thanh toán tiền sim.... .",
+            "imageUrl": "/img/posts/bank/seven/acc.jpg",
+            "link": "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/711/create-account-711?authuser=0",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-09-29",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "post-20251123-1841",
+            "type": "post",
+            "status": 1,
+            "category": [
+                "seven"
+            ],
+            "tags": [],
+            "featured": true,
+            "title": "Hướng dẫn cài ứng dụng seven bank",
+            "summary": "hướng dẫn mọi người cài ứng dụng seven bank để kiểm tra tài khoản cách đơn giản nhất từ seven bank.",
+            "imageUrl": "/img/posts/bank/seven/app.jpg",
+            "link": "/pages/pages-baiviet/seven/huong-dan-cai-ung-dung-seven-bank-20251123.html",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-11-23",
+            "updatedAt": null,
+            "contentSource": "html",
+            "contentVersion": 1,
+            "contentSelector": "#article-content",
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-seven-app-20251001",
+            "status": 1,
+            "type": "guide",
+            "category": [
+                "seven"
+            ],
+            "tags": [
+                "seven"
+            ],
+            "featured": false,
+            "title": "Hướng dẫn đăng nhập ứng dụng Seven Bank",
+            "summary": "cách đăng nhập ứng dụng seven bank để quản lý tài khoản, chi tiêu ngân hàng của bạn đơn giản nhất.",
+            "imageUrl": "/img/posts/bank/seven/app.jpg",
+            "link": "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/711/app-sevenbank?authuser=0",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-10-01",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "post-20260616-1837",
+            "type": "post",
+            "status": 1,
+            "category": [
+                "bank",
+                "seven"
+            ],
+            "tags": [],
+            "featured": true,
+            "title": "Hướng dẫn cập nhật thẻ ngoại kiều cho Sevenbank",
+            "summary": "Cách cập nhật thẻ ngoại kiều mới để tiếp tục dùng ngân hàng seven bank 1 cách nhanh chóng và dễ dàng.",
+            "imageUrl": "/img/posts/bank/seven/update711.jpg",
+            "link": "/pages/pages-baiviet/seven/huong-dan-cap-nhat-the-ngoai-kieu-cho-sevenbank-20260616.html",
+            "isNew": true,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2026-06-16",
+            "updatedAt": null,
+            "contentSource": "html",
+            "contentVersion": 1,
+            "contentSelector": "#article-content",
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-seven-register-20250929",
+            "status": 1,
+            "type": "guide",
+            "category": [
+                "seven"
+            ],
+            "tags": [
+                "seven"
+            ],
+            "featured": true,
+            "title": "Hướng dẫn đăng ký thẻ ngân hàng seven bank",
+            "summary": "Ngoài ngân hàng yucho thì đây là ngân hàng thứ 2 cho phép người mới tới nhật cũng có thể đăng ký và rất dễ ở ngoài cây ATM.",
+            "imageUrl": "/img/posts/bank/seven/711.jpg",
+            "link": "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/711/sevenbank?authuser=0",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-09-29",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-seven-debit-20250929",
+            "status": 1,
+            "type": "guide",
+            "category": [
+                "seven"
+            ],
+            "tags": [
+                "seven"
+            ],
+            "featured": true,
+            "title": "Đăng ký thẻ Debit của Seven bank",
+            "summary": "Cách đăng ký thẻ debit cho những người có thẻ ngân hàng seven bank mà chưa có thẻ debit. .",
+            "imageUrl": "/img/posts/bank/seven/debit.jpg",
+            "link": "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/711/debit711?authuser=0",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-09-29",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-other-checkpc-20251025",
+            "status": 1,
+            "type": "guide",
+            "category": [
+                "other"
+            ],
+            "tags": [
+                "other"
+            ],
+            "featured": true,
+            "title": "Check máy tính cơ bản",
+            "summary": "trang hướng dẫn check màn hình, loa, míc, camera, và bàn phím máy tính dùng cho cả Windows và MacBook.",
+            "imageUrl": "/img/posts/other/checkpc.jpg",
+            "link": "/pages/pages-app/checklcd.html",
+            "isNew": true,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2026-5-29",
+            "updatedAt": null,
+            "contentSource": "html",
+            "contentVersion": 1,
+            "contentSelector": "#article-content",
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-other-QVIT-AIO-202608",
+            "status": 1,
+            "type": "guide",
+            "category": [
+                "other"
+            ],
+            "tags": [
+                "other"
+            ],
+            "featured": true,
+            "title": "Phần mềm QVIT TOOKIT AIO",
+            "summary": "Phần mềm hỗ trợ máy tính QVIT AIO và check máy",
+            "imageUrl": "/img/posts/other/QVIT_AIO.png",
+            "link": "https://drive.google.com/file/d/1Xb9jG8dcIUZizlx4Oz97mi34iZI1qtCi/view?usp=sharing",
+            "isNew": true,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2026-8-29",
+            "updatedAt": null,
+            "contentSource": "html",
+            "contentVersion": 1,
+            "contentSelector": "#article-content",
+            "schemaVersion": 2
+        },
+        {
+            "id": "post-20251120-1116",
+            "type": "post",
+            "status": 0,
+            "category": [
+                "other"
+            ],
+            "tags": [],
+            "featured": true,
+            "title": "Hướng dẫn hẹn giao lại hàng Yamato",
+            "summary": "Nhiều bạn mới sang chưa biết cách hẹn giao hàng lại của Yamato (mèo đen), thì mình sẽ hướng dẫn cách đơn giản nhất sau đây để hẹn giao lại hàng nhé.",
+            "imageUrl": "/img/posts/other/yamato.jpg",
+            "link": "/pages/pages-baiviet/other/huong-dan-hen-giao-lai-hang-yamato-20251120.html",
+            "isNew": false,
+            "showInLists": false,
+            "showOnDesktop": false,
+            "showOnMobile": false,
+            "searchable": false,
+            "publishedAt": "2025-11-19",
+            "updatedAt": null,
+            "contentSource": "html",
+            "contentVersion": 1,
+            "contentSelector": "#article-content",
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-other-cityex-20250929",
+            "status": 1,
+            "type": "guide",
+            "category": [
+                "other"
+            ],
+            "tags": [
+                "other"
+            ],
+            "featured": true,
+            "title": "Cách đăng ký tài khoản City Exxpress - chuyển tiền Nhật Việt",
+            "summary": "Hướng dẫn chi tiết từng bước để tạo tài khoản chuyển tiền về Việt Nam với tỷ giá cao nhất và phí chuyển tiền rẻ nhất lại còn được hoàn point.",
+            "imageUrl": "/img/posts/bank/city.jpg",
+            "link": "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/express-money-transfer/city_express?authuser=0",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-09-29",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "post-20251127-1435",
+            "type": "post",
+            "status": 1,
+            "category": [
+                "other",
+                "iphone"
+            ],
+            "tags": [],
+            "featured": true,
+            "title": "Chặn cập nhật iphone, iPad mới nhất 2025",
+            "summary": "Hướng dẫn chặn cập nhật iphone, và không hiện thông báo cập nhật IOS mới. với TvOS 26 cho mọi dòng IPhone IPad",
+            "imageUrl": "/img/posts/other/blockota/block-ota.jpg",
+            "link": "/pages/pages-baiviet/other/chan-cap-nhat-iphone-ipad-moi-nhat-2025-20251127.html",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-11-27",
+            "updatedAt": null,
+            "contentSource": "html",
+            "contentVersion": 1,
+            "contentSelector": "#article-content",
+            "schemaVersion": 2
+        },
+        {
+            "id": "post-20260612-1821",
+            "status": 0,
+            "type": "guide",
+            "category": [
+                "sim",
+                "vneid"
+            ],
+            "tags": [
+                "sim",
+                "vneid"
+            ],
+            "featured": true,
+            "title": "Cách truy cập VNeID khi ở nước ngoài, cách xác nhận sim Việt Nam",
+            "summary": "Hướng dẫn cho các bạn truy cập VNeID khi đang ở nước ngoài để xác nhận sim Việt Nam, hay làm các dịch vụ công ở Việt Nam....",
+            "imageUrl": "/img/posts/other/vneid/vneid.jpg",
+            "link": "/pages/pages-baiviet/other/cach-truy-cap-vneid-khi-o-nuoc-ngoai-20260612.html",
+            "isNew": false,
+            "showInLists": false,
+            "showOnDesktop": false,
+            "showOnMobile": false,
+            "searchable": false,
+            "publishedAt": "2026-06-12",
+            "updatedAt": null,
+            "contentSource": "html",
+            "contentVersion": 1,
+            "contentSelector": "#article-content",
+            "schemaVersion": 2
+        },
+        {
+            "id": "post-20251204-1435",
+            "type": "post",
+            "status": 0,
+            "category": [
+                "other"
+            ],
+            "tags": [],
+            "featured": true,
+            "title": "Thẻ thành viên siêu thị OK",
+            "summary": "thẻ thành viên siu thị ok",
+            "imageUrl": "https://placehold.co/1200x630/FBF7F0/718096?text=OK Member",
+            "link": "/pages/pages-app/ok.html",
+            "isNew": false,
+            "showInLists": false,
+            "showOnDesktop": false,
+            "showOnMobile": false,
+            "searchable": false,
+            "publishedAt": "2025-12-04",
+            "updatedAt": null,
+            "contentSource": "html",
+            "contentVersion": 1,
+            "contentSelector": "#article-content",
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-other-mynumber-20251001",
+            "status": 1,
+            "type": "guide",
+            "category": [
+                "other"
+            ],
+            "tags": [
+                "other"
+            ],
+            "featured": false,
+            "title": "Đăng ký thẻ My Numeber Online",
+            "summary": "cách đăng ký thẻ My Number online đơn giản nhất cho người mới.",
+            "imageUrl": "/img/posts/other/mynumber.jpg",
+            "link": "https://sites.google.com/view/rakutenchiase/b%C3%A0i-vi%E1%BA%BFt-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn/khac/%C4%91%C4%83ng-k%C3%BD-mynumber-online?authuser=0",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-10-01",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-video-yucho-sdt-20250929",
+            "status": 1,
+            "type": "video",
+            "category": [
+                "video"
+            ],
+            "tags": [
+                "video"
+            ],
+            "featured": true,
+            "title": "Hướng dẫn đổi số điện thoại tài khoản yucho",
+            "summary": "hướng dẫn đổi mật khẩu thẻ yucho tại cây ATM của bưu điện và tại family mart.",
+            "imageUrl": "/img/posts/bank/yucho/thaysdt.jpg",
+            "link": "https://vt.tiktok.com/ZSU2Vcnek/",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-09-29",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-video-yucho-banking-20241005",
+            "status": 1,
+            "type": "video",
+            "category": [
+                "video"
+            ],
+            "tags": [
+                "video"
+            ],
+            "featured": true,
+            "title": "Cài ứng dụng banking của ngân hàng Yucho",
+            "summary": "Hướng dẫn cài đặt ứng dụng Yucho trên điện thoại.",
+            "imageUrl": "/img/posts/bank/yucho/yucho.jpg",
+            "link": "https://vt.tiktok.com/ZSU2qMRPW/",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2024-10-05",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-video-yucho-pass-20241005",
+            "status": 1,
+            "type": "video",
+            "category": [
+                "video"
+            ],
+            "tags": [
+                "video"
+            ],
+            "featured": true,
+            "title": "Hướng dẫn đổi mật khẩu thẻ Yucho",
+            "summary": "Hướng dẫn đổi mật khẩu rút tiền của ngân hàng yucho.",
+            "imageUrl": "/img/posts/bank/yucho/yuchomk.jpg",
+            "link": "https://vt.tiktok.com/ZSU2Vc6HU/",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2024-10-05",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-video-checkcard-20250105",
+            "status": 1,
+            "type": "video",
+            "category": [
+                "video"
+            ],
+            "tags": [
+                "video"
+            ],
+            "featured": false,
+            "title": "Kiểm tra thẻ ngoại kiều của bạn ",
+            "summary": "cách check thử thẻ ngoại kiều của bạn có đúng không, vài nơi đi xin việc cũng sẽ được check như thế này.",
+            "imageUrl": "/img/posts/other/check-the-cu-tru.png",
+            "link": "https://vt.tiktok.com/ZSU2qDvxy/",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-01-05",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-video-rakuten-wifi-20251005",
+            "type": "video",
+            "category": [
+                "video",
+                "rakuten"
+            ],
+            "tags": [
+                "video",
+                "rakuten"
+            ],
+            "featured": false,
+            "title": "Đổi mật khẩu wifi poket 2C rakuten ",
+            "summary": "Hướng dẫn bạn đổi mật khẩu wifi cầm tay 2C của nhà mạng Rakuten.",
+            "imageUrl": "/img/posts/other/wifi-poket.jpg",
+            "link": "https://vt.tiktok.com/ZSU2qDxy5/",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-10-05",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "migrated-video-appstore-20250929",
+            "status": 1,
+            "type": "video",
+            "category": [
+                "video"
+            ],
+            "tags": [
+                "video"
+            ],
+            "featured": false,
+            "title": "Cách chuyển vùng Apple Store Nhật - Việt ",
+            "summary": "Hướng dẫn chuyển vùng Apple Store qua Nhật Bản và về lại Việt Nam để tải các ứng dụng theo vùng...",
+            "imageUrl": "/img/posts/other/apple-store.jpg",
+            "link": "https://vt.tiktok.com/ZSU2VtULD/",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2025-09-29",
+            "updatedAt": null,
+            "contentSource": "external",
+            "contentVersion": 0,
+            "schemaVersion": 2
+        },
+        {
+            "id": "post-20260613-1816",
+            "type": "post",
+            "status": 0,
+            "category": [
+                "app"
+            ],
+            "tags": [],
+            "featured": false,
+            "title": "ứng dụng di động",
+            "summary": "",
+            "imageUrl": "https://placehold.co/1200x630/FBF7F0/718096?text=Anh+SEO",
+            "link": "/pages/pages-app/ung-dung-di-ong-20260613.html",
+            "isNew": false,
+            "showInLists": false,
+            "showOnDesktop": false,
+            "showOnMobile": false,
+            "searchable": false,
+            "publishedAt": "2026-06-13",
+            "updatedAt": null,
+            "contentSource": "html",
+            "contentVersion": 1,
+            "contentSelector": "#article-content",
+            "schemaVersion": 2
+        },
+        {
+            "id": "game-memory-beta7",
+            "type": "game",
+            "status": 1,
+            "category": [
+                "game"
+            ],
+            "tags": [
+                "game",
+                "nối hình",
+                "trí nhớ"
+            ],
+            "featured": true,
+            "title": "Nối hình ghi nhớ",
+            "summary": "Lật thẻ và tìm các cặp biểu tượng giống nhau, phù hợp cả trẻ em và người lớn.",
+            "imageUrl": "/img/games/memory.svg",
+            "link": "/pages/pages-giaitri/noihinh.html",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2026-08-02",
+            "updatedAt": null,
+            "contentSource": "page",
+            "contentVersion": 1,
+            "contentSelector": "#game"
+        },
+        {
+            "id": "game-2048-beta7",
+            "type": "game",
+            "status": 1,
+            "category": [
+                "game"
+            ],
+            "tags": [
+                "game",
+                "2048",
+                "xếp số"
+            ],
+            "featured": true,
+            "title": "Game 2048",
+            "summary": "Vuốt hoặc dùng phím mũi tên để ghép các ô số và đạt mốc 2048.",
+            "imageUrl": "/img/games/2048.svg",
+            "link": "/pages/pages-giaitri/2048.html",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2026-08-02",
+            "updatedAt": null,
+            "contentSource": "page",
+            "contentVersion": 1,
+            "contentSelector": "#game"
+        },
+        {
+            "id": "game-breakout-beta7",
+            "type": "game",
+            "status": 1,
+            "category": [
+                "game"
+            ],
+            "tags": [
+                "game",
+                "phá gạch"
+            ],
+            "featured": false,
+            "title": "Game Phá gạch",
+            "summary": "Di chuyển thanh đỡ bóng bằng chuột, phím hoặc kéo tay trên điện thoại.",
+            "imageUrl": "/img/games/breakout.svg",
+            "link": "/pages/pages-giaitri/breakout.html",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2026-08-02",
+            "updatedAt": null,
+            "contentSource": "page",
+            "contentVersion": 1,
+            "contentSelector": "#game"
+        },
+        {
+            "id": "game-whack-beta7",
+            "type": "game",
+            "status": 1,
+            "category": [
+                "game"
+            ],
+            "tags": [
+                "game",
+                "phản xạ",
+                "đập chuột"
+            ],
+            "featured": false,
+            "title": "Game Đập chuột",
+            "summary": "Trò chơi phản xạ nhanh 30 giây, chạm vào chuột khi xuất hiện.",
+            "imageUrl": "/img/games/whack.svg",
+            "link": "/pages/pages-giaitri/dap-chuot.html",
+            "isNew": false,
+            "showInLists": true,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2026-08-02",
+            "updatedAt": null,
+            "contentSource": "page",
+            "contentVersion": 1,
+            "contentSelector": "#game"
+        },
+        {
+            "id": "sim-shop-beta8",
+            "type": "shop",
+            "status": 1,
+            "category": [
+                "sim",
+                "shop"
+            ],
+            "tags": [
+                "sim data",
+                "esim",
+                "sim nghe gọi",
+                "bán sim nhật"
+            ],
+            "featured": false,
+            "title": "SIM Data Nhật Bản - 4 loại SIM phổ biến",
+            "summary": "Xem thông tin SIM data ngắn hạn, dài hạn, eSIM và SIM nghe gọi kèm data tại Nhật.",
+            "imageUrl": "/img/ads/sim-data-demo-3x1.svg",
+            "link": "/pages/pages-app/sim-data.html",
+            "isNew": false,
+            "showInLists": false,
+            "showOnDesktop": true,
+            "showOnMobile": true,
+            "searchable": true,
+            "publishedAt": "2026-08-02",
+            "updatedAt": null,
+            "contentSource": "html",
+            "contentVersion": 2,
+            "contentSelector": "main",
+            "schemaVersion": 2
+        }
+    ]
+}
