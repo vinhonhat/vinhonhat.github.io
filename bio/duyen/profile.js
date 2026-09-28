@@ -71,8 +71,8 @@ window.BIO_CONFIG = {
     },
     "layout": {
       "mobileColumns": 2,
-      "tabletColumns": 2,
-      "desktopColumns": 2
+      "tabletColumns": 1,
+      "desktopColumns": 1
     },
     "appearance": {
       "primaryColor": "#f39b19",
@@ -106,9 +106,9 @@ window.BIO_CONFIG = {
     },
     "qrDesign": {
       "linkPreset": "current-current",
-      "colorMode": "solid",
+      "colorMode": "gradient",
       "color1": "#f91fdc",
-      "color2": "#f39b19",
+      "color2": "#b36b00",
       "backgroundColor": "#ffffff",
       "gradientDirection": "diagonal"
     },
@@ -120,7 +120,7 @@ window.BIO_CONFIG = {
       "icon": "facebook",
       "title": "Facebook",
       "description": "Trang Facebook chính thức",
-      "url": "https://facebook.com/ttth0308",
+      "url": "https://facebook.com/tmd0211",
       "image": "assets/fb.webp",
       "badge": "",
       "featured": false,
@@ -144,7 +144,7 @@ window.BIO_CONFIG = {
       "icon": "message-circle",
       "title": "Messenger",
       "description": "Nhắn tin trực tiếp qua Messenger",
-      "url": "https://m.me/ttth0308",
+      "url": "https://m.me/tmd0211",
       "image": "assets/mess.webp",
       "badge": "",
       "featured": false,
@@ -192,7 +192,7 @@ window.BIO_CONFIG = {
       "icon": "message-square",
       "title": "Zalo",
       "description": "Liên hệ với tôi trên Zalo",
-      "url": "https://zalo.me/84364583700",
+      "url": "https://zalo.me/84988497569",
       "image": "assets/zalo.webp",
       "badge": "",
       "featured": false,
@@ -212,7 +212,7 @@ window.BIO_CONFIG = {
       }
     },
     {
-      "enabled": true,
+      "enabled": false,
       "icon": "message-circle-more",
       "title": "LINE",
       "description": "Kết bạn hoặc nhắn tin qua LINE",
@@ -409,7 +409,7 @@ window.BIO_CONFIG = {
       "enabled": true,
       "icon": "facebook",
       "label": "Facebook",
-      "url": "https://facebook.com/ttth0308",
+      "url": "https://facebook.com/tmd0211",
       "image": "",
       "showIconBackground": false,
       "id": "social-1",
@@ -429,7 +429,7 @@ window.BIO_CONFIG = {
       "enabled": true,
       "icon": "message-circle",
       "label": "Messenger",
-      "url": "https://m.me/ttth0308",
+      "url": "https://m.me/tmd0211",
       "image": "",
       "showIconBackground": false,
       "id": "social-messenger",
@@ -469,7 +469,7 @@ window.BIO_CONFIG = {
       "enabled": true,
       "icon": "message-square",
       "label": "Zalo",
-      "url": "https://zalo.me/84364583700",
+      "url": "https://zalo.me/84988497569",
       "image": "",
       "showIconBackground": false,
       "id": "social-4",
@@ -486,7 +486,7 @@ window.BIO_CONFIG = {
       "brandIcon": "zalo"
     },
     {
-      "enabled": true,
+      "enabled": false,
       "icon": "message-circle-more",
       "label": "LINE",
       "url": "https://line.me/ti/p/MCxyrflzvM",
