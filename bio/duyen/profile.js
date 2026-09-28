@@ -1,23 +1,23 @@
-/* Dữ liệu và thiết lập riêng của hồ sơ duyen. Mã giao diện/phiên bản nằm trong file hệ thống dùng chung. */
+/* Dữ liệu và thiết lập riêng Bio Link - gói cập nhật V1.8.4 */
 window.BIO_CONFIG = {
   "profile": {
-    "name": "Duyên",
+    "name": "Thanh Hiền",
     "verified": true,
-    "handle": "@duyen",
-    "bio": "Trang liên kết của Duyên. Nhấn logo để mở cài đặt và thay nội dung.",
+    "handle": "@hien95",
+    "bio": "Hãy là phiên bản tốt nhất của chính mình, chứ không phải bản sao của bất kỳ ai.",
     "avatar": "avatar.png",
-    "footerText": "Duyên • Bio Link",
+    "footerText": "vinhonhat • Made with ❤️",
     "badges": [
       {
         "enabled": true,
         "icon": "map-pin",
-        "text": "Tokyo, Nhật Bản",
+        "text": "Nagoya, Nhật Bản",
         "translations": {
           "ja": {
-            "text": "東京、日本"
+            "text": "名古屋、日本"
           },
           "en": {
-            "text": "Tokyo, Japan"
+            "text": "Nagoya, Japan"
           }
         }
       },
@@ -38,19 +38,19 @@ window.BIO_CONFIG = {
     "favicon": "avatar.png",
     "translations": {
       "ja": {
-        "name": "ズエン",
-        "bio": "ズエンのリンクページです。",
-        "footerText": "ズエン • Bio Link"
+        "name": "タイン　ヒエン",
+        "bio": "誰かのコピーではなく、最高の自分になりなさい。",
+        "footerText": "hien95 • Made with ❤️"
       },
       "en": {
-        "name": "Duyen",
-        "bio": "This is Duyen's link page.",
-        "footerText": "Duyen • Bio Link"
+        "name": "Thanh Hien",
+        "bio": "Be the best version of yourself, not a copy of anyone else.",
+        "footerText": "hien95 • Made with ❤️"
       }
     }
   },
   "settings": {
-    "defaultTheme": "auto",
+    "defaultTheme": "light",
     "showThemeButton": true,
     "showShareButton": true,
     "showQrButton": true,
@@ -107,19 +107,20 @@ window.BIO_CONFIG = {
     "qrDesign": {
       "linkPreset": "current-current",
       "colorMode": "solid",
-      "color1": "#111111",
+      "color1": "#f91fdc",
       "color2": "#f39b19",
       "backgroundColor": "#ffffff",
       "gradientDirection": "diagonal"
-    }
+    },
+    "qrFixedUrl": "https://vinhonhat.github.io/bio/hien95/"
   },
   "links": [
     {
-      "enabled": false,
+      "enabled": true,
       "icon": "facebook",
       "title": "Facebook",
       "description": "Trang Facebook chính thức",
-      "url": "https://facebook.com/tqv2022",
+      "url": "https://facebook.com/ttth0308",
       "image": "assets/fb.webp",
       "badge": "",
       "featured": false,
@@ -139,11 +140,11 @@ window.BIO_CONFIG = {
       }
     },
     {
-      "enabled": false,
+      "enabled": true,
       "icon": "message-circle",
       "title": "Messenger",
       "description": "Nhắn tin trực tiếp qua Messenger",
-      "url": "https://m.me/tqv2022",
+      "url": "https://m.me/ttth0308",
       "image": "assets/mess.webp",
       "badge": "",
       "featured": false,
@@ -187,11 +188,11 @@ window.BIO_CONFIG = {
       }
     },
     {
-      "enabled": false,
+      "enabled": true,
       "icon": "message-square",
       "title": "Zalo",
       "description": "Liên hệ với tôi trên Zalo",
-      "url": "https://zalo.me/84966697926",
+      "url": "https://zalo.me/84364583700",
       "image": "assets/zalo.webp",
       "badge": "",
       "featured": false,
@@ -211,11 +212,11 @@ window.BIO_CONFIG = {
       }
     },
     {
-      "enabled": false,
+      "enabled": true,
       "icon": "message-circle-more",
       "title": "LINE",
       "description": "Kết bạn hoặc nhắn tin qua LINE",
-      "url": "https://line.me/ti/p/VNcwANYxzU",
+      "url": "https://line.me/ti/p/MCxyrflzvM",
       "image": "assets/line.webp",
       "badge": "",
       "featured": false,
@@ -238,23 +239,23 @@ window.BIO_CONFIG = {
       "enabled": false,
       "featured": false,
       "icon": "globe",
-      "title": "Vinh ở Nhật",
-      "description": "Bài viết, hướng dẫn và tiện ích mới nhất",
-      "url": "https://vinhonhat.github.io/",
+      "title": "CCMPhone",
+      "description": "ＣＣＭ",
+      "url": "https://ccmphone.jp/",
       "badge": "",
       "image": "assets/web.webp",
       "showIconBackground": false,
       "id": "website",
       "translations": {
         "ja": {
-          "title": "日本のVinh ウェブサイト",
-          "description": "最新記事、ガイド、便利なツール",
-          "badge": ""
+          "title": "シーシーエム",
+          "description": "",
+          "badge": "おすすめ"
         },
         "en": {
-          "title": "Vinh in Japan Website",
-          "description": "Latest articles, guides, and useful tools",
-          "badge": ""
+          "title": "ＣＣＭ Website",
+          "description": "",
+          "badge": "Featured"
         }
       }
     },
@@ -263,7 +264,7 @@ window.BIO_CONFIG = {
       "icon": "phone",
       "title": "Số điện thoại",
       "description": "Nhấn để gọi trực tiếp",
-      "url": "tel:+81XXXXXXXXXX",
+      "url": "tel:+817012102805",
       "image": "assets/phone.webp",
       "badge": "",
       "featured": false,
@@ -405,11 +406,11 @@ window.BIO_CONFIG = {
   ],
   "socialIcons": [
     {
-      "enabled": false,
+      "enabled": true,
       "icon": "facebook",
       "label": "Facebook",
-      "url": "https://facebook.com/tqv2022",
-      "image": "assets/fb.webp",
+      "url": "https://facebook.com/ttth0308",
+      "image": "",
       "showIconBackground": false,
       "id": "social-1",
       "syncFromLink": false,
@@ -425,11 +426,11 @@ window.BIO_CONFIG = {
       "brandIcon": "facebook"
     },
     {
-      "enabled": false,
+      "enabled": true,
       "icon": "message-circle",
       "label": "Messenger",
-      "url": "https://m.me/tqv2022",
-      "image": "assets/mess.webp",
+      "url": "https://m.me/ttth0308",
+      "image": "",
       "showIconBackground": false,
       "id": "social-messenger",
       "syncFromLink": false,
@@ -449,7 +450,7 @@ window.BIO_CONFIG = {
       "icon": "music-2",
       "label": "TikTok",
       "url": "https://www.tiktok.com/@tqv2020?_r=1&_t=ZS-98QazQnE1p9",
-      "image": "assets/tiktok.webp",
+      "image": "",
       "showIconBackground": false,
       "id": "social-2",
       "syncFromLink": false,
@@ -465,11 +466,11 @@ window.BIO_CONFIG = {
       "brandIcon": "tiktok"
     },
     {
-      "enabled": false,
+      "enabled": true,
       "icon": "message-square",
       "label": "Zalo",
-      "url": "https://zalo.me/84966697926",
-      "image": "assets/zalo.webp",
+      "url": "https://zalo.me/84364583700",
+      "image": "",
       "showIconBackground": false,
       "id": "social-4",
       "syncFromLink": false,
@@ -485,11 +486,11 @@ window.BIO_CONFIG = {
       "brandIcon": "zalo"
     },
     {
-      "enabled": false,
+      "enabled": true,
       "icon": "message-circle-more",
       "label": "LINE",
-      "url": "https://line.me/ti/p/VNcwANYxzU",
-      "image": "assets/line.webp",
+      "url": "https://line.me/ti/p/MCxyrflzvM",
+      "image": "",
       "showIconBackground": false,
       "id": "social-5",
       "syncFromLink": false,
@@ -509,7 +510,7 @@ window.BIO_CONFIG = {
       "icon": "youtube",
       "label": "YouTube",
       "url": "https://youtube.com/@THAY-KENH-CUA-ANH",
-      "image": "assets/youtobe.webp",
+      "image": "",
       "showIconBackground": false,
       "id": "social-3",
       "syncFromLink": false,
@@ -529,7 +530,7 @@ window.BIO_CONFIG = {
       "icon": "mail",
       "label": "Email",
       "url": "mailto:email@example.com",
-      "image": "assets/gmail.webp",
+      "image": "",
       "showIconBackground": false,
       "id": "social-6",
       "syncFromLink": false,
@@ -549,9 +550,9 @@ window.BIO_CONFIG = {
     "enabled": true,
     "logoGestureMode": "tap-cache-hold-admin",
     "logoTapCount": 2,
-    "logoHoldSeconds": 2,
-    "logoRingDelaySeconds": 0.6,
     "tapTimeout": 2500,
+    "logoHoldSeconds": 3,
+    "logoRingDelaySeconds": 0.6,
     "storageKey": "vinh-bio-admin-config-v168",
     "passwordHash": "5f3c731b478c8292b603e6dec59aaa2626f6fcb3c6d5e97bc3a844b8dc4e279b",
     "serverSave": {

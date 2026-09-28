@@ -1,10 +1,10 @@
-/* Dữ liệu và thiết lập riêng Bio Link - gói cập nhật V1.8.4 */
+/* Dữ liệu và thiết lập riêng của hồ sơ hien95. Mã giao diện/phiên bản nằm trong file hệ thống dùng chung. */
 window.BIO_CONFIG = {
   "profile": {
     "name": "Thanh Hiền",
     "verified": true,
     "handle": "@hien95",
-    "bio": "Hãy là phiên bản tốt nhất của chính mình, chứ không phải bản sao của bất kỳ ai.",
+    "bio": "",
     "avatar": "avatar.png",
     "footerText": "vinhonhat • Made with ❤️",
     "badges": [
@@ -39,13 +39,13 @@ window.BIO_CONFIG = {
     "translations": {
       "ja": {
         "name": "タイン　ヒエン",
-        "bio": "誰かのコピーではなく、最高の自分になりなさい。",
-        "footerText": "hien95 • Made with ❤️"
+        "bio": "",
+        "footerText": "日本のVinh • Made with ❤️"
       },
       "en": {
         "name": "Thanh Hien",
-        "bio": "Be the best version of yourself, not a copy of anyone else.",
-        "footerText": "hien95 • Made with ❤️"
+        "bio": "",
+        "footerText": "Vinh in Japan • Made with ❤️"
       }
     }
   },
@@ -71,8 +71,8 @@ window.BIO_CONFIG = {
     },
     "layout": {
       "mobileColumns": 2,
-      "tabletColumns": 2,
-      "desktopColumns": 2
+      "tabletColumns": 1,
+      "desktopColumns": 1
     },
     "appearance": {
       "primaryColor": "#f39b19",
