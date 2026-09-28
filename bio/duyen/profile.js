@@ -1,9 +1,9 @@
 /* Dữ liệu và thiết lập riêng Bio Link - gói cập nhật V1.8.4 */
 window.BIO_CONFIG = {
   "profile": {
-    "name": "Thanh Hiền",
+    "name": "Mỹ Duyên",
     "verified": true,
-    "handle": "@hien95",
+    "handle": "@duyen98",
     "bio": "Hãy là phiên bản tốt nhất của chính mình, chứ không phải bản sao của bất kỳ ai.",
     "avatar": "avatar.png",
     "footerText": "vinhonhat • Made with ❤️",
@@ -38,14 +38,14 @@ window.BIO_CONFIG = {
     "favicon": "avatar.png",
     "translations": {
       "ja": {
-        "name": "タイン　ヒエン",
+        "name": "ミー　リエン",
         "bio": "誰かのコピーではなく、最高の自分になりなさい。",
-        "footerText": "hien95 • Made with ❤️"
+        "footerText": "duyen98 • Made with ❤️"
       },
       "en": {
-        "name": "Thanh Hien",
+        "name": "My Duyen",
         "bio": "Be the best version of yourself, not a copy of anyone else.",
-        "footerText": "hien95 • Made with ❤️"
+        "footerText": "duyen98 • Made with ❤️"
       }
     }
   },
