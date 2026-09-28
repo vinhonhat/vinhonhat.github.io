@@ -168,7 +168,7 @@ window.BIO_CONFIG = {
       "icon": "music-2",
       "title": "TikTok",
       "description": "Video ngắn và chia sẻ cuộc sống tại Nhật",
-      "url": "https://www.tiktok.com/@tmd0211",
+      "url": "https://www.tiktok.com/@ttmd0211",
       "image": "assets/tiktok.webp",
       "badge": "",
       "featured": false,
@@ -398,10 +398,10 @@ window.BIO_CONFIG = {
       }
     },
     {
-      "enabled": false,
+      "enabled": true,
       "icon": "music-2",
       "label": "TikTok",
-      "url": "https://www.tiktok.com/@tqv2020?_r=1&_t=ZS-98QazQnE1p9",
+      "url": "https://www.tiktok.com/@ttmd0211",
       "image": "",
       "showIconBackground": false,
       "id": "social-2",
