@@ -4,7 +4,7 @@ window.BIO_CONFIG = {
     "name": "Thanh Hiền",
     "verified": true,
     "handle": "@hien95",
-    "bio": "",
+    "bio": "Hãy là phiên bản tốt nhất của chính mình, chứ không phải bản sao của bất kỳ ai.",
     "avatar": "avatar.png",
     "footerText": "vinhonhat • Made with ❤️",
     "badges": [
@@ -39,13 +39,13 @@ window.BIO_CONFIG = {
     "translations": {
       "ja": {
         "name": "タイン　ヒエン",
-        "bio": "",
-        "footerText": "日本のVinh • Made with ❤️"
+        "bio": "誰かのコピーではなく、最高の自分になりなさい。",
+        "footerText": "hien95 • Made with ❤️"
       },
       "en": {
         "name": "Thanh Hien",
-        "bio": "",
-        "footerText": "Vinh in Japan • Made with ❤️"
+        "bio": "Be the best version of yourself, not a copy of anyone else.",
+        "footerText": "hien95 • Made with ❤️"
       }
     }
   },
@@ -70,9 +70,9 @@ window.BIO_CONFIG = {
       }
     },
     "layout": {
-      "mobileColumns": 1,
-      "tabletColumns": 1,
-      "desktopColumns": 1
+      "mobileColumns": 2,
+      "tabletColumns": 2,
+      "desktopColumns": 2
     },
     "appearance": {
       "primaryColor": "#f39b19",
